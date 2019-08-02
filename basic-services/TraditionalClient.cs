@@ -1,11 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     public class TraditionalClient
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Takes an optional CultureInfo which is useful for formatting numbers. If not specified,
+        /// the user's current culture is used.
+        /// </remarks>
+        /// <param name="cultureInfo"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public TraditionalClient(CultureInfo cultureInfo = null)
+        {
+            var culture = cultureInfo ?? CultureInfo.CurrentCulture;
+            throw new NotImplementedException();
+        }
+
+        // Probably a boolean isn't good enough as it doesn't give a client any indication of what went wrong.
+        // Could return an Result structure that contains error information or nothing.
+        public bool TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2)
+        {
+            throw new NotImplementedException();
+        }
+        
+        
         public Guid GetObjectIdentifier(string itemReference)
         {
             // Consider caching results since clients may not. If we add caching, then we could  consider
