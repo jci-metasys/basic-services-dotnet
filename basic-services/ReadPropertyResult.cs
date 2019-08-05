@@ -4,8 +4,6 @@ using Newtonsoft.Json.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
-
-
     public struct ReadPropertyResult
     {
         // Follow rules for stringValue in MSSDA Bulletin, with the following
@@ -31,6 +29,9 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             Reliability = reliability;
             Priority = priority;
+            NumericValue = 0;
+            StringValue = NumericValue.ToString();
+            ArrayValue = null;
             
             // switch on token type and set the fields appropriately
             switch (token.Type)
@@ -39,10 +40,9 @@ namespace JohnsonControls.Metasys.BasicServices
                     NumericValue = (double) token.Value<double>();
                     StringValue = NumericValue.ToString();
                     ArrayValue = null;
-
                     break;
                 case JTokenType.Float:
-                    //todo
+                    // todo
                     break;
                 case JTokenType.String:
                     // todo
@@ -54,15 +54,9 @@ namespace JohnsonControls.Metasys.BasicServices
                     // todo
                     break;
                 default:
-                    //todo
+                    // todo
                     break;
             }
-            
         }
-
     }
-
-    
-
-
 }

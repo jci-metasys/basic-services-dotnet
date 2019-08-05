@@ -1,16 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
+using Flurl.Http;
+using Newtonsoft.Json.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     public class TraditionalClient
     {
+        private FlurlClient client;
 
+        public TraditionalClient(string username, string password, string hostname, int apiVersion)
+        {
+            client = new FlurlClient($"https://{hostname}/api/v{apiVersion}");
+            var response = client.Request("login")
+                .PostJsonAsync(new {username, password})
+                .ReceiveJson<JToken>();
+            var accessToken = response.Result["accessToken"];
+            client.Headers.Add("Authorization", $"Bearer {accessToken}");
+            
+        }
+
+        ///<summary>Requests a new access token, must be called before current token expires.</summary>
+        public void Refresh() {
+            var response = client.Request("refreshToken")
+                .GetJsonAsync<JToken>();
+            var accessToken = response.Result["accessToken"];
+            client.Headers.Remove("Authorization");
+            client.Headers.Add("Authorization", $"Bearer {accessToken}");
+            
+        }
+
+        ///<summary>Returns the object identifier (id) of the specified object.</summary>
         public Guid GetObjectIdentifier(string itemReference)
         {
             // Consider caching results since clients may not. If we add caching, then we could  consider
             // taking itemReferences in ReadProperty and ReadPropertyMultiple. Until then we want to get clients
             // used to using identifiers.
+
+            //     string id = await client.Request("objectIdentifiers")
+            //         .SetSetQueryParams(new
+            //         {
+            //             fqr = itemReference
+            //         })
+            //         .GetJsonAsync();
+
+            //     return new Guid(id);
+
             throw new NotImplementedException();
         }
 
@@ -37,6 +72,13 @@ namespace JohnsonControls.Metasys.BasicServices
             // Call /objects/{id}/attributes/{attributeName}
             // You won't have schema information but we only support numbers, strings, booleans and enums which comes back as strings
             // Convert the response to appropriate result settings StringValue, NumericValue and ArrayValue 
+            // using (client)
+            // {
+            //     JToken token = await client.Request($"objects/{id}/attributes/{attributeName}").GetJsonAsync<JToken>();
+            //     return new ReadPropertyResult(token.item[attributeName]);
+            // }
+
+            // return null;
             throw new NotImplementedException();
         }
 
