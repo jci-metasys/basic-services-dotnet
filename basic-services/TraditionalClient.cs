@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
 
@@ -17,7 +18,6 @@ namespace JohnsonControls.Metasys.BasicServices
                 .ReceiveJson<JToken>();
             var accessToken = response.Result["accessToken"];
             client.Headers.Add("Authorization", $"Bearer {accessToken}");
-            
         }
 
         ///<summary>Requests a new access token, must be called before current token expires.</summary>
@@ -37,16 +37,11 @@ namespace JohnsonControls.Metasys.BasicServices
             // taking itemReferences in ReadProperty and ReadPropertyMultiple. Until then we want to get clients
             // used to using identifiers.
 
-            //     string id = await client.Request("objectIdentifiers")
-            //         .SetSetQueryParams(new
-            //         {
-            //             fqr = itemReference
-            //         })
-            //         .GetJsonAsync();
+            var response = client.Request($"objectIdentifiers")
+                .SetQueryParam("fqr", itemReference)
+                .GetStringAsync();
 
-            //     return new Guid(id);
-
-            throw new NotImplementedException();
+            return new Guid(response.Result.Trim('"'));
         }
 
         
