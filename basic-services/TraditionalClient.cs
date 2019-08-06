@@ -67,14 +67,10 @@ namespace JohnsonControls.Metasys.BasicServices
             // Call /objects/{id}/attributes/{attributeName}
             // You won't have schema information but we only support numbers, strings, booleans and enums which comes back as strings
             // Convert the response to appropriate result settings StringValue, NumericValue and ArrayValue 
-            // using (client)
-            // {
-            //     JToken token = await client.Request($"objects/{id}/attributes/{attributeName}").GetJsonAsync<JToken>();
-            //     return new ReadPropertyResult(token.item[attributeName]);
-            // }
 
-            // return null;
-            throw new NotImplementedException();
+            var response = client.Request($"objects/{id}/attributes/{attributeName}")
+                .GetJsonAsync<JToken>();
+            return new ReadPropertyResult(response.Result["item"][attributeName]);
         }
 
 

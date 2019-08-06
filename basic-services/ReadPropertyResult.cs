@@ -29,9 +29,6 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             Reliability = reliability;
             Priority = priority;
-            NumericValue = 0;
-            StringValue = NumericValue.ToString();
-            ArrayValue = null;
             
             // switch on token type and set the fields appropriately
             switch (token.Type)
@@ -42,19 +39,27 @@ namespace JohnsonControls.Metasys.BasicServices
                     ArrayValue = null;
                     break;
                 case JTokenType.Float:
-                    // todo
+                    NumericValue = (double) token.Value<double>();
+                    StringValue = NumericValue.ToString();
+                    ArrayValue = null;
                     break;
                 case JTokenType.String:
-                    // todo
+                    NumericValue = 0;
+                    StringValue = (string) token.Value<string>();
+                    ArrayValue = null;
                     break;
-                case JTokenType.Array:
-                    // todo
-                    break;
-                case JTokenType.Boolean:
-                    // todo
-                    break;
+                // case JTokenType.Array:
+                //     // todo
+                //     NumericValue = 0;
+                //     break;
+                // case JTokenType.Boolean:
+                //     // todo
+                //     ArrayValue = null;
+                //     break;
                 default:
-                    // todo
+                    NumericValue = 1;
+                    StringValue = "Unsupported Data Type";
+                    ArrayValue = null;
                     break;
             }
         }
