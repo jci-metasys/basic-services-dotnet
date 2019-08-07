@@ -12,6 +12,10 @@ namespace JohnsonControls.Metasys.BasicServices
 
         public TraditionalClient(string username, string password, string hostname, int apiVersion)
         {
+            if (apiVersion != 2) {
+                Console.Error.WriteLine("Unsupported API Version, using Version 2.");
+                apiVersion = 2;
+            }
             client = new FlurlClient($"https://{hostname}/api/v{apiVersion}");
             var response = client.Request("login")
                 .PostJsonAsync(new {username, password})

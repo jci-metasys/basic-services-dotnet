@@ -74,6 +74,21 @@ namespace Tests
         }
 
         [Test]
+        public void TestBadVersionLogin()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 1);
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/login")
+                    .WithVerb(HttpMethod.Post)
+                    .WithContentType("application/json")
+                    .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
+                    .Times(1);
+            }
+        }
+
+        [Test]
         public void TestRefresh()
         {
             using (var httpTest = new HttpTest())
