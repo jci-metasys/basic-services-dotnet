@@ -163,6 +163,9 @@ namespace Tests
                 Assert.AreEqual(result.NumericValue, 1);
                 Assert.AreEqual(result.StringValue, "1");
                 Assert.AreEqual(result.ArrayValue, null);
+                Assert.AreEqual(result.Priority, null);
+                Assert.AreEqual(result.Reliability, null);
+                Assert.AreEqual(result.IsReliable, false);
             }
         }
 
@@ -183,6 +186,9 @@ namespace Tests
                 Assert.AreEqual(result.NumericValue, 1.1);
                 Assert.AreEqual(result.StringValue, "1.1");
                 Assert.AreEqual(result.ArrayValue, null);
+                Assert.AreEqual(result.Priority, null);
+                Assert.AreEqual(result.Reliability, null);
+                Assert.AreEqual(result.IsReliable, false);
             }
         }
 
@@ -203,6 +209,156 @@ namespace Tests
                 Assert.AreEqual(result.NumericValue, 0);
                 Assert.AreEqual(result.StringValue, "stringvalue");
                 Assert.AreEqual(result.ArrayValue, null);
+                Assert.AreEqual(result.Priority, null);
+                Assert.AreEqual(result.Reliability, null);
+                Assert.AreEqual(result.IsReliable, false);
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyObjectWithReliabilityPriorityInteger()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": {" +
+                "\"value\": 60, \"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
+                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(result.NumericValue, 60);
+                Assert.AreEqual(result.StringValue, "60");
+                Assert.AreEqual(result.ArrayValue, null);
+                Assert.AreEqual(result.Priority, "writePriorityEnumSet.priorityNone");
+                Assert.AreEqual(result.Reliability, "reliabilityEnumSet.reliable");
+                Assert.AreEqual(result.IsReliable, true);
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyObjectWithReliabilityPriorityString()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": {" +
+                "\"value\": \"stringvalue\", \"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
+                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(result.NumericValue, 0);
+                Assert.AreEqual(result.StringValue, "stringvalue");
+                Assert.AreEqual(result.ArrayValue, null);
+                Assert.AreEqual(result.Priority, "writePriorityEnumSet.priorityNone");
+                Assert.AreEqual(result.Reliability, "reliabilityEnumSet.reliable");
+                Assert.AreEqual(result.IsReliable, true);
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyObjectWithReliabilityPriorityStringNoValueField()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": { " +
+                "\"property\": \"stringvalue\", \"property2\": \"stringvalue2\", "+
+                "\"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
+                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(result.NumericValue, 0);
+                Assert.AreEqual(result.StringValue, "stringvalue");
+                Assert.AreEqual(result.ArrayValue, null);
+                Assert.AreEqual(result.Priority, "writePriorityEnumSet.priorityNone");
+                Assert.AreEqual(result.Reliability, "reliabilityEnumSet.reliable");
+                Assert.AreEqual(result.IsReliable, true);
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyArrayIntegers()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
+                "1, 2 ] } }");
+                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(result.NumericValue, 0);
+                Assert.AreEqual(result.StringValue, "Array");
+                Assert.AreEqual(result.ArrayValue[0], ("1", 1));
+                Assert.AreEqual(result.ArrayValue[1], ("2", 2));
+                Assert.AreEqual(result.Priority, null);
+                Assert.AreEqual(result.Reliability, null);
+                Assert.AreEqual(result.IsReliable, false);
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyArrayStrings()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
+                "\"stringvalue1\", \"stringvalue2\" ] } }");
+                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(result.NumericValue, 0);
+                Assert.AreEqual(result.StringValue, "Array");
+                Assert.AreEqual(result.ArrayValue[0], ("stringvalue1", 0));
+                Assert.AreEqual(result.ArrayValue[1], ("stringvalue2", 0));
+                Assert.AreEqual(result.Priority, null);
+                Assert.AreEqual(result.Reliability, null);
+                Assert.AreEqual(result.IsReliable, false);
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyArrayObjectUnsupported()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
+                "{ \"item1\": \"stringvalue1\", \"item2\": \"stringvalue2\" } ] } }");
+                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(result.NumericValue, 0);
+                Assert.AreEqual(result.StringValue, "Array");
+                Assert.AreEqual(result.ArrayValue[0], ("Unsupported Data Type", 1));
+                Assert.AreEqual(result.Priority, null);
+                Assert.AreEqual(result.Reliability, null);
+                Assert.AreEqual(result.IsReliable, false);
             }
         }
     }

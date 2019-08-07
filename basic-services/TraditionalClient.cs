@@ -70,9 +70,36 @@ namespace JohnsonControls.Metasys.BasicServices
 
             var response = client.Request($"objects/{id}/attributes/{attributeName}")
                 .GetJsonAsync<JToken>();
+            if (response.Result["item"][attributeName].GetType() == typeof(JObject)) 
+            {
+                JToken value = response.Result["item"][attributeName]["value"];
+                JToken reliabilityToken = response.Result["item"][attributeName]["reliability"];
+                JToken priorityToken = response.Result["item"][attributeName]["priority"];
+                string reliability = null;
+                string priority = null;
+                if (reliabilityToken != null) 
+                {
+                    reliability = reliabilityToken.ToString();
+                }
+                if (priorityToken != null)
+                {
+                    priority = priorityToken.ToString();
+                }
+                if (value == null) {
+                    // Search for the first value to use as the value (there could exist more than 1)
+                    JObject obj = JObject.Parse(response.Result["item"][attributeName].ToString());
+                    foreach (JProperty property in obj.Properties())
+                    {
+                        if (!property.Name.Equals("reliability") && !property.Name.Equals("priority")) {
+                            value = property.Value;
+                            break;
+                        }
+                    }
+                }
+                return new ReadPropertyResult(value, reliability, priority);
+            }
             return new ReadPropertyResult(response.Result["item"][attributeName]);
         }
-
 
         public IEnumerable<ReadPropertyResult> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)

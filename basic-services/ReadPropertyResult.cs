@@ -48,10 +48,35 @@ namespace JohnsonControls.Metasys.BasicServices
                     StringValue = (string) token.Value<string>();
                     ArrayValue = null;
                     break;
-                // case JTokenType.Array:
-                //     // todo
-                //     NumericValue = 0;
-                //     break;
+                case JTokenType.Array:
+                    JArray arr = JArray.Parse(token.ToString());
+                    ArrayValue = new (string, double)[arr.Count];
+                    int index = 0;
+                    foreach(var item in arr.Children())
+                    {
+                        double value = 0;
+                        switch (item.Type)
+                        {
+                            case JTokenType.Integer:
+                                value = (double) item.Value<double>();
+                                ArrayValue[index] = (value.ToString(), value);
+                                break;
+                            case JTokenType.Float:
+                                value = (double) item.Value<double>();
+                                ArrayValue[index] = (value.ToString(), value);
+                                break;
+                            case JTokenType.String:
+                                ArrayValue[index] = ((string) item.Value<string>(), value);
+                                break;
+                            default:
+                                ArrayValue[index] = ("Unsupported Data Type", 1);
+                                break;
+                        }
+                        index++;
+                    }
+                    NumericValue = 0;
+                    StringValue = "Array";
+                    break;
                 // case JTokenType.Boolean:
                 //     // todo
                 //     ArrayValue = null;
