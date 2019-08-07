@@ -29,7 +29,13 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             Reliability = reliability;
             Priority = priority;
-            
+
+            if (token == null) {
+                NumericValue = 1;
+                StringValue = "Unsupported Data Type";
+                ArrayValue = null;
+                return;
+            }
             // switch on token type and set the fields appropriately
             switch (token.Type)
             {

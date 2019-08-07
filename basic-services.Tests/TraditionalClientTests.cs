@@ -409,5 +409,48 @@ namespace Tests
                 Assert.AreEqual(result.IsReliable, false);
             }
         }
+
+        [Test]
+        public void TestReadPropertyDoesNotExist()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("Not Found", 404);
+                try {
+                    ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                    Assert.Fail();
+                } catch {
+                    httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                }
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyUnsupportedEmptyObject()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": {}");
+                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(result.NumericValue, 1);
+                Assert.AreEqual(result.StringValue, "Unsupported Data Type");
+                Assert.AreEqual(result.ArrayValue, null);
+                Assert.AreEqual(result.Priority, null);
+                Assert.AreEqual(result.Reliability, null);
+                Assert.AreEqual(result.IsReliable, false);
+            }
+        }
     }
 }
