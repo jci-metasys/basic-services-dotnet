@@ -77,10 +77,16 @@ namespace JohnsonControls.Metasys.BasicServices
                     NumericValue = 0;
                     StringValue = "Array";
                     break;
-                // case JTokenType.Boolean:
-                //     // todo
-                //     ArrayValue = null;
-                //     break;
+                case JTokenType.Boolean:
+                    if ((bool)(token) == true) {
+                        NumericValue = 1;
+                        StringValue = "True";
+                    } else {
+                        NumericValue = 0;
+                        StringValue = "False";
+                    }
+                    ArrayValue = null;
+                    break;
                 default:
                     NumericValue = 1;
                     StringValue = "Unsupported Data Type";

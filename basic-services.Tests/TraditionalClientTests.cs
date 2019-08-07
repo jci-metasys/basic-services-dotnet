@@ -216,6 +216,52 @@ namespace Tests
         }
 
         [Test]
+        public void TestReadPropertyBooleanTrue()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": true }}");
+                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(result.NumericValue, 1);
+                Assert.AreEqual(result.StringValue, "True");
+                Assert.AreEqual(result.ArrayValue, null);
+                Assert.AreEqual(result.Priority, null);
+                Assert.AreEqual(result.Reliability, null);
+                Assert.AreEqual(result.IsReliable, false);
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyBooleanFalse()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": false }}");
+                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(result.NumericValue, 0);
+                Assert.AreEqual(result.StringValue, "False");
+                Assert.AreEqual(result.ArrayValue, null);
+                Assert.AreEqual(result.Priority, null);
+                Assert.AreEqual(result.Reliability, null);
+                Assert.AreEqual(result.IsReliable, false);
+            }
+        }
+
+        [Test]
         public void TestReadPropertyObjectWithReliabilityPriorityInteger()
         {
             using (var httpTest = new HttpTest())
@@ -347,7 +393,8 @@ namespace Tests
                 var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
-                "{ \"item1\": \"stringvalue1\", \"item2\": \"stringvalue2\" } ] } }");
+                "{ \"item1\": \"stringvalue1\", \"item2\": \"stringvalue2\" }," +
+                "{ \"item1\": \"stringvalue3\", \"item2\": \"stringvalue4\" } ] } }");
                 ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
@@ -356,6 +403,7 @@ namespace Tests
                 Assert.AreEqual(result.NumericValue, 0);
                 Assert.AreEqual(result.StringValue, "Array");
                 Assert.AreEqual(result.ArrayValue[0], ("Unsupported Data Type", 1));
+                Assert.AreEqual(result.ArrayValue[1], ("Unsupported Data Type", 1));
                 Assert.AreEqual(result.Priority, null);
                 Assert.AreEqual(result.Reliability, null);
                 Assert.AreEqual(result.IsReliable, false);
