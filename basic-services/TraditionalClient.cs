@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
+using System.Linq;
+using System.Threading;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -113,9 +116,26 @@ namespace JohnsonControls.Metasys.BasicServices
             
             // As each object comes in, filter it down to the attributes requested
             // For each attribute calculate the stringvalue and numeric value
-            
-            
-            throw new NotImplementedException();
+
+            List<ReadPropertyResult> results = new List<ReadPropertyResult>() { };
+            Parallel.ForEach(ids, (id) => {
+                var response = client.Request($"objects/{id}")
+                .GetJsonAsync<JToken>();
+                foreach (string attributeName in attributeNames) 
+                {
+                    JToken value = response.Result["item"][attributeName];
+                    // Potentially add support for reading an object like the ReadProperty method.
+                    // If supported the functionality should be considered for migration to the ReadPropertyResult class.
+                    if (value != null) 
+                    {
+                        lock (results) 
+                        {
+                            results.Add(new ReadPropertyResult(value));
+                        }
+                    }
+                }
+            });
+            return results;
         }
     }
 }

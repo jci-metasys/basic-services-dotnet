@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Linq;
 using Flurl.Http.Testing;
 using NUnit.Framework;
 using Newtonsoft.Json.Linq;
@@ -465,6 +467,126 @@ namespace Tests
                 Assert.AreEqual(result.Priority, null);
                 Assert.AreEqual(result.Reliability, null);
                 Assert.AreEqual(result.IsReliable, false);
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyMultipleEmptyIds()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
+                List<Guid> ids = new List<Guid>() { };
+                List<string> attributes = new List<string>() { mockAttributeName };
+                IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+
+                Assert.AreEqual(results.Count(), 0);
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyMultipleEmptyAttribute()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
+                List<Guid> ids = new List<Guid>() { mockid };
+                List<string> attributes = new List<string>() { };
+                IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(results.Count(), 0);
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyMultipleOneIdOneAttribute()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
+                List<Guid> ids = new List<Guid>() { mockid };
+                List<string> attributes = new List<string>() { mockAttributeName };
+                IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(results.Count(), 1);
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyMultipleTwoIdFiveAttribute()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                string mockAttributeName2 = "property2";
+                string mockAttributeName3 = "property3";
+                string mockAttributeName4 = "property4";
+                string mockAttributeName5 = "property5";
+                Guid mockid2 = new Guid("11111111-2222-3333-4444-555555555556");
+
+                httpTest
+                    .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
+                        "\"" + mockAttributeName2 + "\": 23, " +
+                        "\"" + mockAttributeName3 + "\": 23.5, " +
+                        "\"" + mockAttributeName4 + "\": true, " +
+                        "\"" + mockAttributeName5 + "\": [ 1, 2, 3] } }")
+                    .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
+                        "\"" + mockAttributeName2 + "\": 23, " +
+                        "\"" + mockAttributeName3 + "\": 23.5, " +
+                        "\"" + mockAttributeName4 + "\": true, " +
+                        "\"" + mockAttributeName5 + "\": [ 1, 2, 3] } }");
+
+                List<Guid> ids = new List<Guid>() { mockid, mockid2 };
+                List<string> attributes = new List<string>() { mockAttributeName, mockAttributeName2, mockAttributeName3, mockAttributeName4, mockAttributeName5 };
+                IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid2}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(results.Count(), 10);
+                foreach (var result in results) {
+                    Assert.AreNotEqual(result.StringValue, "Unsupported Data Type");
+                }
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyMultipleOneIdOneAttributeDNE()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("{ \"item\": { \"attributeNoMatch\": \"stringvalue\" } }");
+                List<Guid> ids = new List<Guid>() { mockid };
+                List<string> attributes = new List<string>() { mockAttributeName };
+                IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(results.Count(), 0);
             }
         }
     }
