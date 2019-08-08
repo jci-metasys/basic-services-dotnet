@@ -27,7 +27,7 @@ namespace JohnsonControls.Metasys.BasicServices
             client.Headers.Add("Authorization", $"Bearer {accessToken}");
         }
 
-        ///<summary>Requests a new access token, must be called before current token expires.</summary>
+        /// <summary>Requests a new access token, must be called before current token expires.</summary>
         public void Refresh() {
             var response = client.Request("refreshToken")
                 .GetJsonAsync<JToken>();
@@ -37,7 +37,7 @@ namespace JohnsonControls.Metasys.BasicServices
             
         }
 
-        ///<summary>Returns the object identifier (id) of the specified object.</summary>
+        /// <summary>Returns the object identifier (id) of the specified object.</summary>
         public Guid GetObjectIdentifier(string itemReference)
         {
             // Consider caching results since clients may not. If we add caching, then we could  consider
@@ -51,9 +51,8 @@ namespace JohnsonControls.Metasys.BasicServices
             return new Guid(response.Result.Trim('"'));
         }
 
-        
         /// <summary>
-        /// 
+        /// Read one attribute value given the Guid of the object
         /// </summary>
         /// <remarks>
         /// If the data type is not supported, then this should probably throw an exception. Or the ReadPropertyResult
@@ -71,52 +70,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Other options?
         public ReadPropertyResult ReadProperty(Guid id, string attributeName)
         {
-            // Call /objects/{id}/attributes/{attributeName}
-            // You won't have schema information but we only support numbers, strings, booleans and enums which comes back as strings
-            // Convert the response to appropriate result settings StringValue, NumericValue and ArrayValue 
-
             var response = client.Request($"objects/{id}/attributes/{attributeName}")
                 .GetJsonAsync<JToken>();
-            if (response.Result["item"][attributeName].GetType() == typeof(JObject)) 
-            {
-                JToken value = response.Result["item"][attributeName]["value"];
-                JToken reliabilityToken = response.Result["item"][attributeName]["reliability"];
-                JToken priorityToken = response.Result["item"][attributeName]["priority"];
-                string reliability = null;
-                string priority = null;
-                if (reliabilityToken != null) 
-                {
-                    reliability = reliabilityToken.ToString();
-                }
-                if (priorityToken != null)
-                {
-                    priority = priorityToken.ToString();
-                }
-                if (value == null) {
-                    // Search for the first value to use as the value (there could exist more than 1)
-                    JObject obj = JObject.Parse(response.Result["item"][attributeName].ToString());
-                    foreach (JProperty property in obj.Properties())
-                    {
-                        if (!property.Name.Equals("reliability") && !property.Name.Equals("priority")) {
-                            value = property.Value;
-                            break;
-                        }
-                    }
-                }
-                return new ReadPropertyResult(value, reliability, priority);
-            }
-            return new ReadPropertyResult(response.Result["item"][attributeName]);
+            return new ReadPropertyResult(response.Result["item"][attributeName], attributeName);
         }
 
+        /// <summary>
+        /// Read many attribute values given the Guids of the objects
+        /// </summary>
         public IEnumerable<ReadPropertyResult> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
-            // Most efficient implementation would read each object (async, and then join)
-            // using /objects/{id}?includeSchema=true
-            
-            // As each object comes in, filter it down to the attributes requested
-            // For each attribute calculate the stringvalue and numeric value
-
             List<ReadPropertyResult> results = new List<ReadPropertyResult>() { };
             Parallel.ForEach(ids, (id) => {
                 var response = client.Request($"objects/{id}")
@@ -124,13 +88,11 @@ namespace JohnsonControls.Metasys.BasicServices
                 foreach (string attributeName in attributeNames) 
                 {
                     JToken value = response.Result["item"][attributeName];
-                    // Potentially add support for reading an object like the ReadProperty method.
-                    // If supported the functionality should be considered for migration to the ReadPropertyResult class.
                     if (value != null) 
                     {
                         lock (results) 
                         {
-                            results.Add(new ReadPropertyResult(value));
+                            results.Add(new ReadPropertyResult(value, attributeName));
                         }
                     }
                 }
