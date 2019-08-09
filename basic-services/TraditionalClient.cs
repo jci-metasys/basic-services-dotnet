@@ -72,7 +72,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var response = client.Request($"objects/{id}/attributes/{attributeName}")
                 .GetJsonAsync<JToken>();
-            return new ReadPropertyResult(response.Result["item"][attributeName], attributeName);
+            return new ReadPropertyResult(id, response.Result["item"][attributeName], attributeName);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     {
                         lock (results) 
                         {
-                            results.Add(new ReadPropertyResult(value, attributeName));
+                            results.Add(new ReadPropertyResult(id, value, attributeName));
                         }
                     }
                 }

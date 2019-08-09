@@ -22,12 +22,15 @@ namespace JohnsonControls.Metasys.BasicServices
         
         public string Attribute { private set; get; }
 
+        public Guid Id { private set; get; }
+
         public string Reliability { private set; get; }
         public string Priority { private set; get; }
         public bool IsReliable => Reliability == "reliabilityEnumSet.reliable";
 
-        internal ReadPropertyResult(JToken token, string attribute, string reliability = null, string priority = null)
+        internal ReadPropertyResult(Guid id, JToken token, string attribute, string reliability = null, string priority = null)
         {
+            Id = id;
             Attribute = attribute;
             Reliability = reliability;
             Priority = priority;
