@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Flurl;
 using Flurl.Http;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Threading;
@@ -106,9 +107,22 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
         /// <param name="newValue"></param>
-        public void WriteProperty(Guid id, string attributeName, string newValue, string priority = null)
+        public void WriteProperty(Guid id, string attributeName, object newValue, string priority = null)
         {
-            throw new NotImplementedException();
+            string body = "{ item: { ";
+            if (priority != null) {
+                body += $"priority: \"{priority}\", ";
+            }
+            var item = JsonConvert.SerializeObject(newValue);
+            body += $"{attributeName}: {item} }} }}";
+            
+            try {
+                var json = JsonConvert.DeserializeObject(body);
+                var response = client.Request($"objects/{id}").PatchJsonAsync(json);
+                Console.WriteLine(response.Result.StatusCode);
+            } catch (Newtonsoft.Json.JsonReaderException e) {
+                Console.Error.WriteLine("Could not format request.");
+            }
         }
 
         /// <summary>

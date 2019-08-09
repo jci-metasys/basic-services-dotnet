@@ -589,5 +589,133 @@ namespace Tests
                 Assert.AreEqual(results.Count(), 0);
             }
         }
+
+        [Test]
+        public void TestWritePropertyString()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("Accepted", 202);
+
+                traditionalClient.WriteProperty(mockid, mockAttributeName, "newValue");
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyInteger()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("Accepted", 202);
+
+                traditionalClient.WriteProperty(mockid, mockAttributeName, 32);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyFloat()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("Accepted", 202);
+
+                traditionalClient.WriteProperty(mockid, mockAttributeName, 32.5);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyBoolean()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("Accepted", 202);
+
+                traditionalClient.WriteProperty(mockid, mockAttributeName, true);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyArrayString()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("Accepted", 202);
+
+                traditionalClient.WriteProperty(mockid, mockAttributeName, new [] { "1", "2", "3" });
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyArrayInteger()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("Accepted", 202);
+
+                traditionalClient.WriteProperty(mockid, mockAttributeName, new [] { 1, 2, 3 });
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyBadRequestThrowsException()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                var traditionalClient = new TraditionalClient("username", "password", "hostname", 2);
+
+                httpTest.RespondWith("Bad Request", 400);
+                try {
+                    traditionalClient.WriteProperty(mockid, mockAttributeName, "badType");
+                    Assert.Fail();
+                } catch {
+                    httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Patch)
+                        .Times(1);
+                }
+            }
+        }
     }
 }
