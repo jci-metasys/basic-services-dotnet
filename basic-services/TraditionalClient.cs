@@ -99,5 +99,48 @@ namespace JohnsonControls.Metasys.BasicServices
             });
             return results;
         }
+
+        /// <summary>
+        /// Write a single attribute given the Guid of the object
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="newValue"></param>
+        public void WriteProperty(Guid id, string attributeName, string newValue, string priority = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Write to all attributes given the Guids of the objects
+        /// </summary>
+        /// <remarks>
+        /// If a property needs the priority field the WriteProperty method should be used
+        /// </remarks>
+        /// <param name="ids"></param>
+        /// <param name="attributeValues">The (attribute, newValue) pairs</param>
+        public void WritePropertyMultiple(IEnumerable<Guid> ids, IEnumerable<(string, string)> attributeValues)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Get all available commands given the Guid of the object
+        /// </summary>
+        public IEnumerable<string> GetCommands(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Send a command to an object
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="command"></param>
+        /// <param name="titleValues">The (title, newValue) pairs</param>
+        public void SendCommand(Guid id, string command, IEnumerable<(string, string)> titleValues = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
