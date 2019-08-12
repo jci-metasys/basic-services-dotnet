@@ -13,7 +13,8 @@ Package name and even org name can still be changed at this time. Suggestions we
 Installation
 ------
 
-Not implemented yet. This is an illustration of desired installation.
+Not implemented yet. This is an illustration of desired installation. This section should be updated when
+we release v1
 
 
 For dotnet app you can install and use like this:
@@ -44,8 +45,9 @@ This approach needs some investigation
 Usage
 -------
 
-The following is just some psuedocode. Note, we'll need a resource manager and resource files (work already begun) 
-to provide translations for enums (even for English). 
+The following is just some pseudocode. Note, we'll need a resource manager and resource files (work already begun) 
+to provide translations for enums (even for English). This section should be updated with real examples when
+we release v1
 
 ```csharp
 // Login
@@ -77,11 +79,11 @@ Console.Log(result.BooleanValue) // prints "True" or "False". This BooleanValue 
 
 // Read an array value, new for basic services, didn't exist in MSSDA
 var result = client.ReadProperty(guid5, "ipAddress") // ipAddress is an array of bytes
-var firstByteResult = result.ArrayValue
+var firstByteResult = result.ArrayValue[0]
 Console.Log(firstByteResult.Item1)   // prints "192" as Item1 is the string representation
 
 // alternatively
-var (string StringValue, double NumericValue) result = client.ReadProperty(guid5, "ipAddress") // ipAddress is an array of bytes
+var (string StringValue, double NumericValue) secondByte = result.ArrayValue[1] 
 Console.Log(result.StringValue)
 
 ```
@@ -90,11 +92,15 @@ Console.Log(result.StringValue)
 Requirements
 -----------
 
-This project will have several small phases. The first phase will
-expose add reading of objects/attributes. The second phase will writing and commanding.
-The final phase will add discover of devices and objects.
+This section should be moved into a seperate Requirements document. Or we can create cards in the 
+associated [project](https://github.com/metasys-server/basic-services-dotnet/projects/1) to track
+work/requirements. Or we can use Issues. Once development begins in earnest lets clean this up.
 
-* The project must maintain a CHANGELOG (https://keepachangelog.com/en/1.0.0/).I have example here: https://github.com/metasys-server/nodekit/blob/master/CHANGELOG.md 
+This project will have several small phases. The first phase will
+expose add reading of objects/attributes. The second phase will add writing and commanding.
+The final phase will add discovery of devices and objects.
+
+* The project must maintain a CHANGELOG (https://keepachangelog.com/en/1.0.0/ ).I have example here: https://github.com/metasys-server/nodekit/blob/master/CHANGELOG.md 
 * This package must be published in the metasys organization at nuget.org with appropriate semantic versioning, https://semver.org
 copyright, licensing, link to github repo, etc. 
 
@@ -114,6 +120,22 @@ Only the smallest of commits should be one line messages.
 * Consider adding a light weight CONTRIBUTING.md or referencing Microsoft's for guidance for outsiders and others in JCI.
 
 * Track the Issues on this repo and provide guidance (where possible) on roadmap.
+
+* We should consider the suitability of signing our dll. See this tutorial on how one might mark their dlls as
+  truste in the nuget repository. https://natemcmaster.com/blog/2018/07/02/code-signing/ 
+  
+* Every published release should be tagged with a signed tag. So if there is a v1 in nuget.org then the releases tab
+  and the tags tab of this repo should have a v1 as well.
+  
+* We want our customers to get documentation of our library while using intellisense in their IDE. Follow Microsoft
+  guidelines for writing XML Comments and making them available in nuget package for clients. Here's a stackoverflow
+  Q&A that says how to do it. https://stackoverflow.com/questions/19672943/xml-comments-in-nuget-package 
+  
+* Need CI pipeline. Once a PR is create the automated tests run. Nice to have an publish process as well so that
+  once we decide we want to publish a version it's easy to do. Perhaps a simple script. Consider an OAS in Azure that
+  we can snapshot to reset back to known state before tests run.
+  
+* Add appropriate badges to README (for example last build successful) 
 
 ### Phase 1
 
@@ -138,7 +160,9 @@ The following requirements will be met in phase 1:
 1. Implement ReadProperty
 2. Implement ReadPropertyMultiple
 3. Expose the library as COM dll for use in Excel apps
-4. Ensure signatures of the methods are easy to consume via COM
+4. Ensure signatures of the methods are easy to consume via COM (Using exceptions is probably a bad idea.
+   If we find exceptions are the best for .Net consumers then we'll want separate methods exposed for Excel
+   that return error codes rather than throw exceptions)
 5. Must provide client side resource files for translating enum values
    coming back from the server. (Unlike MSSDA, enums are not returned
    from the server as localized strings. They are returned as "symbolic
@@ -147,6 +171,7 @@ The following requirements will be met in phase 1:
    strings.
 6. Nuget package support (for deployment to metasys-server org)
 7. Script for registering dll for COM (would only be used by Excel apps, wouldn't be needed for .Net apps)
+8. Script for unregistering dll
 
 Suppoted Data Types
 
@@ -168,9 +193,9 @@ find the enum value associated (for usage in SendCommand and WriteProperty)
 ### Phase 3
 
 1. Implement GetObjectList() this will differ from MSSDA. MSSDA returned just the immediate children of given object.
-   10.1 Metasys Server has the /objects endpoint which allows you to specify a parent object and ask for children `/objects/{id}/objects`
-   but it'll return all children. And the result will be paged. So we can decide if GetObjectList should fetch all pages.
-   Probably it should. (Future release we could add support for paging in client)
+   10.1 Metasys Server has the /objects endpoint which doesn't allow you to specify a depth parameter. It returns all children
+   but the result is paged. So we can decide if GetObjectList should fetch all pages or if we should add paging support to
+   this method. First release should probably just use a large page size and loop until all children have been processed.
    
 2. Implement GetDeviceList() this will likely differ from MSSDA as well. We have the /networkDevices endpoint which will
    be the source of data. 

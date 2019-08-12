@@ -4,22 +4,33 @@ using System.Collections.Generic;
 using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
-using System.Linq;
-using System.Threading;
-
+using System.Globalization;
 namespace JohnsonControls.Metasys.BasicServices
 {
     public class TraditionalClient
     {
         private FlurlClient client;
 
-        public TraditionalClient(string username, string password, string hostname, int apiVersion)
+        /// <summary>Returns the object identifier (id) of the specified object.</summary>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Takes an optional CultureInfo which is useful for formatting numbers. If not specified,
+        /// the user's current culture is used.
+        /// </remarks>
+        /// <param name="cultureInfo"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public TraditionalClient(CultureInfo cultureInfo = null)
         {
-            if (apiVersion != 2) {
-                Console.Error.WriteLine("Unsupported API Version, using Version 2.");
-                apiVersion = 2;
-            }
-            client = new FlurlClient($"https://{hostname}/api/v{apiVersion}");
+            var culture = cultureInfo ?? CultureInfo.CurrentCulture;
+        }
+
+        // Probably a boolean isn't good enough as it doesn't give a client any indication of what went wrong.
+        // Could return an Result structure that contains error information or nothing.
+        public void TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2)
+        {
+            client = new FlurlClient($"https://{hostname}/api/{version}");
             var response = client.Request("login")
                 .PostJsonAsync(new {username, password})
                 .ReceiveJson<JToken>();
@@ -27,7 +38,7 @@ namespace JohnsonControls.Metasys.BasicServices
             client.Headers.Add("Authorization", $"Bearer {accessToken}");
         }
 
-        /// <summary>Requests a new access token, must be called before current token expires.</summary>
+                /// <summary>Requests a new access token, must be called before current token expires.</summary>
         public void Refresh() {
             var response = client.Request("refreshToken")
                 .GetJsonAsync<JToken>();
@@ -35,9 +46,8 @@ namespace JohnsonControls.Metasys.BasicServices
             client.Headers.Remove("Authorization");
             client.Headers.Add("Authorization", $"Bearer {accessToken}");
             
-        }
-
-        /// <summary>Returns the object identifier (id) of the specified object.</summary>
+        }        
+        
         public Guid GetObjectIdentifier(string itemReference)
         {
             // Consider caching results since clients may not. If we add caching, then we could  consider
