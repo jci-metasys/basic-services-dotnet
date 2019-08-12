@@ -90,9 +90,11 @@ namespace JohnsonControls.Metasys.BasicServices
                     if ((bool)(token) == true) {
                         NumericValue = 1;
                         StringValue = "True";
+                        BooleanValue = true;
                     } else {
                         NumericValue = 0;
                         StringValue = "False";
+                        BooleanValue = false;
                     }
                     break;
                 case JTokenType.Object:
