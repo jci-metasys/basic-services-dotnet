@@ -11,9 +11,8 @@ namespace JohnsonControls.Metasys.BasicServices
     {
         private FlurlClient client;
 
-        /// <summary>Returns the object identifier (id) of the specified object.</summary>
         /// <summary>
-        /// 
+        /// Creates a new TraditionalClient.
         /// </summary>
         /// <remarks>
         /// Takes an optional CultureInfo which is useful for formatting numbers. If not specified,
@@ -26,8 +25,9 @@ namespace JohnsonControls.Metasys.BasicServices
             var culture = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 
-        // Probably a boolean isn't good enough as it doesn't give a client any indication of what went wrong.
-        // Could return an Result structure that contains error information or nothing.
+        /// <summary>
+        /// Attempts to login to the given host.
+        /// </summary>
         public void TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2)
         {
             client = new FlurlClient($"https://{hostname}/api/{version}");
@@ -38,7 +38,9 @@ namespace JohnsonControls.Metasys.BasicServices
             client.Headers.Add("Authorization", $"Bearer {accessToken}");
         }
 
-                /// <summary>Requests a new access token, must be called before current token expires.</summary>
+        /// <summary>
+        /// Requests a new access token before current token expires.
+        /// </summary>
         public void Refresh() {
             var response = client.Request("refreshToken")
                 .GetJsonAsync<JToken>();
@@ -48,6 +50,9 @@ namespace JohnsonControls.Metasys.BasicServices
             
         }        
         
+        /// <summary>
+        /// Returns the object identifier (id) of the specified object.
+        /// </summary>
         public Guid GetObjectIdentifier(string itemReference)
         {
             // Consider caching results since clients may not. If we add caching, then we could  consider
@@ -72,7 +77,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
         /// <returns></returns>
-
         /// <exception cref=""></exception>
         /// which exceptions?
         /// If it's communication issues with client then perhaps CommunicationException
