@@ -180,6 +180,7 @@ namespace Tests
                     .Times(1);
                 Assert.AreEqual(1, result.NumericValue);
                 Assert.AreEqual("1", result.StringValue);
+                Assert.AreEqual(true, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
@@ -203,6 +204,7 @@ namespace Tests
                     .Times(1);
                 Assert.AreEqual(1.1, result.NumericValue);
                 Assert.AreEqual("1.1", result.StringValue);
+                Assert.AreEqual(true, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
@@ -226,6 +228,7 @@ namespace Tests
                     .Times(1);                
                 Assert.AreEqual(0, result.NumericValue);
                 Assert.AreEqual("stringvalue", result.StringValue);
+                Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
@@ -249,6 +252,7 @@ namespace Tests
                     .Times(1);
                 Assert.AreEqual(1, result.NumericValue);
                 Assert.AreEqual("True", result.StringValue);
+                Assert.AreEqual(true, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);                
                 Assert.AreEqual(null, result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
@@ -272,6 +276,7 @@ namespace Tests
                     .Times(1);
                 Assert.AreEqual(0, result.NumericValue);
                 Assert.AreEqual("False", result.StringValue);
+                Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);                
                 Assert.AreEqual(null, result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
@@ -296,6 +301,7 @@ namespace Tests
                     .Times(1);
                 Assert.AreEqual(60, result.NumericValue);
                 Assert.AreEqual("60", result.StringValue);
+                Assert.AreEqual(true, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual("writePriorityEnumSet.priorityNone", result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
@@ -320,6 +326,7 @@ namespace Tests
                     .Times(1);
                 Assert.AreEqual(0, result.NumericValue);
                 Assert.AreEqual("stringvalue", result.StringValue);
+                Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual("writePriorityEnumSet.priorityNone", result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
@@ -345,6 +352,7 @@ namespace Tests
                     .Times(1);
                 Assert.AreEqual(0, result.NumericValue);
                 Assert.AreEqual("stringvalue", result.StringValue);
+                Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual("writePriorityEnumSet.priorityDefault", result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.noInput", result.Reliability);
@@ -369,6 +377,7 @@ namespace Tests
                     .Times(1);
                 Assert.AreEqual(0, result.NumericValue);
                 Assert.AreEqual("Array", result.StringValue);
+                Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(("1", 1, true), result.ArrayValue[0]);
                 Assert.AreEqual(("2", 2, true), result.ArrayValue[1]);
                 Assert.AreEqual(null, result.Priority);
@@ -394,6 +403,7 @@ namespace Tests
                     .Times(1);
                 Assert.AreEqual(0, result.NumericValue);
                 Assert.AreEqual("Array", result.StringValue);
+                Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(("stringvalue1", 0, false), result.ArrayValue[0]);
                 Assert.AreEqual(("stringvalue2", 0, false), result.ArrayValue[1]);
                 Assert.AreEqual(null, result.Priority);
@@ -420,6 +430,7 @@ namespace Tests
                     .Times(1);
                 Assert.AreEqual(0, result.NumericValue);
                 Assert.AreEqual("Array", result.StringValue);
+                Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(("Unsupported Data Type", 1, false), result.ArrayValue[0]);
                 Assert.AreEqual(("Unsupported Data Type", 1, false), result.ArrayValue[1]);
                 Assert.AreEqual(null, result.Priority);
@@ -464,6 +475,7 @@ namespace Tests
                     .Times(1);
                 Assert.AreEqual(1, result.NumericValue);
                 Assert.AreEqual("Unsupported Data Type", result.StringValue);
+                Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
