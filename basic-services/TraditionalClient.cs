@@ -1,26 +1,40 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Linq;
-using System.Threading;
-
+using System.Globalization;
 namespace JohnsonControls.Metasys.BasicServices
 {
     public class TraditionalClient
     {
         private FlurlClient client;
 
-        public TraditionalClient(string username, string password, string hostname, int apiVersion)
+        /// <summary>
+        /// Creates a new TraditionalClient.
+        /// </summary>
+        /// <remarks>
+        /// Takes an optional CultureInfo which is useful for formatting numbers. If not specified,
+        /// the user's current culture is used.
+        /// </remarks>
+        /// <param name="cultureInfo"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public TraditionalClient(CultureInfo cultureInfo = null)
         {
-            if (apiVersion != 2) {
-                Console.Error.WriteLine("Unsupported API Version, using Version 2.");
-                apiVersion = 2;
-            }
-            client = new FlurlClient($"https://{hostname}/api/v{apiVersion}");
+            var culture = cultureInfo ?? CultureInfo.CurrentCulture;
+        }
+
+        /// <summary>
+        /// Attempts to login to the given host.
+        /// </summary>
+        public void TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2)
+        {
+            client = new FlurlClient($"https://{hostname}"
+                .AppendPathSegment("api")
+                .AppendPathSegment(version));
             var response = client.Request("login")
                 .PostJsonAsync(new {username, password})
                 .ReceiveJson<JToken>();
@@ -28,7 +42,9 @@ namespace JohnsonControls.Metasys.BasicServices
             client.Headers.Add("Authorization", $"Bearer {accessToken}");
         }
 
-        /// <summary>Requests a new access token, must be called before current token expires.</summary>
+        /// <summary>
+        /// Requests a new access token before current token expires.
+        /// </summary>
         public void Refresh() {
             var response = client.Request("refreshToken")
                 .GetJsonAsync<JToken>();
@@ -36,19 +52,20 @@ namespace JohnsonControls.Metasys.BasicServices
             client.Headers.Remove("Authorization");
             client.Headers.Add("Authorization", $"Bearer {accessToken}");
             
-        }
-
-        /// <summary>Returns the object identifier (id) of the specified object.</summary>
+        }        
+        
+        /// <summary>
+        /// Returns the object identifier (id) of the specified object.
+        /// </summary>
         public Guid GetObjectIdentifier(string itemReference)
         {
             // Consider caching results since clients may not. If we add caching, then we could  consider
             // taking itemReferences in ReadProperty and ReadPropertyMultiple. Until then we want to get clients
             // used to using identifiers.
 
-            var response = client.Request($"objectIdentifiers")
+            var response = client.Request("objectIdentifiers")
                 .SetQueryParam("fqr", itemReference)
                 .GetStringAsync();
-
             return new Guid(response.Result.Trim('"'));
         }
 
@@ -63,7 +80,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
         /// <returns></returns>
-
         /// <exception cref=""></exception>
         /// which exceptions?
         /// If it's communication issues with client then perhaps CommunicationException
@@ -71,24 +87,45 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Other options?
         public ReadPropertyResult ReadProperty(Guid id, string attributeName)
         {
-            var response = client.Request($"objects/{id}/attributes/{attributeName}")
+            var response = client.Request(new Url("objects")
+                .AppendPathSegment(id)
+                .AppendPathSegment("attributes")
+                .AppendPathSegment(attributeName))
                 .GetJsonAsync<JToken>();
             return new ReadPropertyResult(id, response.Result["item"][attributeName], attributeName);
         }
 
         /// <summary>
-        /// Read many attribute values given the Guids of the objects
+        /// Read many attribute values given the Guids of the objects.
         /// </summary>
         public IEnumerable<ReadPropertyResult> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
+            var properties = ReadPropertyMultipleAsync(ids, attributeNames);
+            return properties.Result;
+        }
+
+        /// <summary>
+        /// Read many attribute values given the Guids of the objects asynchronously.
+        /// </summary>
+        private async Task<List<ReadPropertyResult>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
+            IEnumerable<string> attributeNames)
+        {
             List<ReadPropertyResult> results = new List<ReadPropertyResult>() { };
-            Parallel.ForEach(ids, (id) => {
-                var response = client.Request($"objects/{id}")
-                .GetJsonAsync<JToken>();
+            var taskList = new List<Task<(Guid, JToken)>>();
+
+            foreach(var id in ids)
+            {
+                taskList.Add(ReadPropertyAsync(id));
+            }
+
+            await Task.WhenAll(taskList);
+
+            foreach(var task in taskList.ToArray()) {
                 foreach (string attributeName in attributeNames) 
                 {
-                    JToken value = response.Result["item"][attributeName];
+                    Guid id = task.Result.Item1;
+                    JToken value = task.Result.Item2["item"][attributeName];
                     if (value != null) 
                     {
                         lock (results) 
@@ -97,8 +134,18 @@ namespace JohnsonControls.Metasys.BasicServices
                         }
                     }
                 }
-            });
+            }
             return results;
+        }
+
+        /// Read one attribute values given the Guid of the object asynchronously.
+        /// </summary>
+        private async Task<(Guid, JToken)> ReadPropertyAsync(Guid id) 
+        {
+            var response = await client.Request(new Url("objects")
+                    .AppendPathSegment(id))
+                    .GetJsonAsync<JToken>();
+            return (id, response);
         }
 
         /// <summary>
@@ -109,19 +156,20 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="newValue"></param>
         public void WriteProperty(Guid id, string attributeName, object newValue, string priority = null)
         {
-            string body = "{ item: { ";
+            Dictionary<string, object> pairs = new Dictionary<string, object>();
+            pairs.Add(attributeName, newValue);
             if (priority != null) {
-                body += $"priority: \"{priority}\", ";
+                pairs.Add("priority", priority);
             }
-            var item = JsonConvert.SerializeObject(newValue);
-            body += $"{attributeName}: {item} }} }}";
-            
-            try {
-                var json = JsonConvert.DeserializeObject(body);
-                var response = client.Request($"objects/{id}").PatchJsonAsync(json);
-                Console.WriteLine(response.Result.StatusCode);
-            } catch (Newtonsoft.Json.JsonReaderException e) {
-                Console.Error.WriteLine("Could not format request.");
+            Dictionary<string, Dictionary<string, object>> item = new Dictionary<string, Dictionary<string, object>>();
+            item.Add("item", pairs);
+            var json = JsonConvert.SerializeObject(item);
+
+            var response = client.Request(new Url("objects")
+                .AppendPathSegment(id))
+                .PatchJsonAsync(json);
+            if (response.Result.StatusCode != System.Net.HttpStatusCode.Accepted) {
+                throw new Exception($"Request failed with status code {response.Result.StatusCode}");
             }
         }
 
