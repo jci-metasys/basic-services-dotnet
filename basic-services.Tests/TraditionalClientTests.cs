@@ -135,7 +135,7 @@ namespace Tests
                 httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
                 traditionalClient.TryLogin("username", "password", "hostname");
 
-                httpTest.RespondWith(mockid.ToString());
+                httpTest.RespondWith($"\"{mockid.ToString()}\"");
                 var id = traditionalClient.GetObjectIdentifier("fully:qualified/reference");
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
