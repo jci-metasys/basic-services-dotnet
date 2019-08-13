@@ -126,7 +126,7 @@ namespace JohnsonControls.Metasys.BasicServices
                         ArrayValue[index] = (value.ToString(), value, Convert.ToBoolean(NumericValue));
                         break;
                     case JTokenType.String:
-                        ArrayValue[index] = ((string) item.Value<string>(), value, false);
+                        ArrayValue[index] = (item.Value<string>(), value, false);
                         break;
                     default:
                         ArrayValue[index] = ("Unsupported Data Type", 1, false);
