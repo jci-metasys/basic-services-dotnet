@@ -169,21 +169,60 @@ namespace JohnsonControls.Metasys.BasicServices
                 .AppendPathSegment(id))
                 .PatchJsonAsync(json);
             if (response.Result.StatusCode != System.Net.HttpStatusCode.Accepted) {
-                throw new Exception($"Request failed with status code {response.Result.StatusCode}");
+                throw new Exception($"Patch request failed with status code {response.Result.StatusCode}");
             }
         }
 
         /// <summary>
-        /// Write to all attributes given the Guids of the objects
+        /// Write to all attributes given the Guids of the objects.
         /// </summary>
-        /// <remarks>
-        /// If a property needs the priority field the WriteProperty method should be used
-        /// </remarks>
         /// <param name="ids"></param>
-        /// <param name="attributeValues">The (attribute, newValue) pairs</param>
-        public void WritePropertyMultiple(IEnumerable<Guid> ids, IEnumerable<(string, string)> attributeValues)
+        /// <param name="attributeValues">The (attribute, value) pairs</param>
+        public void WritePropertyMultiple(IEnumerable<Guid> ids, IEnumerable<(string, object)> attributeValues, string priority = null)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> pairs = new Dictionary<string, object>();
+            foreach (var attribute in attributeValues) {
+                pairs.Add(attribute.Item1, attribute.Item2);
+            }
+
+            if (priority != null) {
+                pairs.Add("priority", priority);
+            }
+
+            Dictionary<string, Dictionary<string, object>> item = new Dictionary<string, Dictionary<string, object>>();
+            item.Add("item", pairs);
+            var json = JsonConvert.SerializeObject(item);
+
+            WritePropertyMultipleAsync(ids, json);
+        }
+
+        /// <summary>
+        /// Write many attribute values given the Guids of the objects asynchronously.
+        /// </summary>
+        private async void WritePropertyMultipleAsync(IEnumerable<Guid> ids,
+            string json)
+        {
+            var taskList = new List<Task>();
+
+            foreach(var id in ids)
+            {
+                taskList.Add(WritePropertyAsync(id, json));
+            }
+
+            await Task.WhenAll(taskList);
+        }
+
+        /// <summary>
+        /// Write many attribute values in the provided json given the Guid of the object asynchronously.
+        /// </summary>
+        private async Task WritePropertyAsync(Guid id, string json) 
+        {
+            var response = await client.Request(new Url("objects")
+                .AppendPathSegment(id))
+                .PatchJsonAsync(json);
+            if (response.StatusCode != System.Net.HttpStatusCode.Accepted) {
+                throw new Exception($"Patch request failed with status code {response.StatusCode}");
+            }
         }
 
         /// <summary>
