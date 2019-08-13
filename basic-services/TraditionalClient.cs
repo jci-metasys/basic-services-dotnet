@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Flurl;
@@ -30,7 +31,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public void TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2)
         {
-            client = new FlurlClient($"https://{hostname}/api/{version}");
+            client = new FlurlClient($"https://{hostname}"
+                .AppendPathSegment("api")
+                .AppendPathSegment(version));
             var response = client.Request("login")
                 .PostJsonAsync(new {username, password})
                 .ReceiveJson<JToken>();
@@ -59,10 +62,9 @@ namespace JohnsonControls.Metasys.BasicServices
             // taking itemReferences in ReadProperty and ReadPropertyMultiple. Until then we want to get clients
             // used to using identifiers.
 
-            var response = client.Request($"objectIdentifiers")
+            var response = client.Request("objectIdentifiers")
                 .SetQueryParam("fqr", itemReference)
                 .GetStringAsync();
-
             return new Guid(response.Result.Trim('"'));
         }
 
@@ -84,24 +86,45 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Other options?
         public ReadPropertyResult ReadProperty(Guid id, string attributeName)
         {
-            var response = client.Request($"objects/{id}/attributes/{attributeName}")
+            var response = client.Request(new Url("objects")
+                .AppendPathSegment(id)
+                .AppendPathSegment("attributes")
+                .AppendPathSegment(attributeName))
                 .GetJsonAsync<JToken>();
             return new ReadPropertyResult(id, response.Result["item"][attributeName], attributeName);
         }
 
         /// <summary>
-        /// Read many attribute values given the Guids of the objects
+        /// Read many attribute values given the Guids of the objects.
         /// </summary>
         public IEnumerable<ReadPropertyResult> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
+            var properties = ReadPropertyMultipleAsync(ids, attributeNames);
+            return properties.Result;
+        }
+
+        /// <summary>
+        /// Read many attribute values given the Guids of the objects asynchronously.
+        /// </summary>
+        private async Task<List<ReadPropertyResult>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
+            IEnumerable<string> attributeNames)
+        {
             List<ReadPropertyResult> results = new List<ReadPropertyResult>() { };
-            Parallel.ForEach(ids, (id) => {
-                var response = client.Request($"objects/{id}")
-                .GetJsonAsync<JToken>();
+            var taskList = new List<Task<(Guid, JToken)>>();
+
+            foreach(var id in ids)
+            {
+                taskList.Add(ReadPropertyAsync(id));
+            }
+
+            await Task.WhenAll(taskList);
+
+            foreach(var task in taskList.ToArray()) {
                 foreach (string attributeName in attributeNames) 
                 {
-                    JToken value = response.Result["item"][attributeName];
+                    Guid id = task.Result.Item1;
+                    JToken value = task.Result.Item2["item"][attributeName];
                     if (value != null) 
                     {
                         lock (results) 
@@ -110,8 +133,18 @@ namespace JohnsonControls.Metasys.BasicServices
                         }
                     }
                 }
-            });
+            }
             return results;
+        }
+
+        /// <summary>
+        /// Read one attribute values given the Guid of the object asynchronously.
+        /// </summary>
+        private async Task<(Guid, JToken)> ReadPropertyAsync(Guid id) {
+            var response = await client.Request(new Url("objects")
+                    .AppendPathSegment(id))
+                    .GetJsonAsync<JToken>();
+            return (id, response);
         }
     }
 }
