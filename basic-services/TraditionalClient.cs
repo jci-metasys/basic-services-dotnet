@@ -2,16 +2,19 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Globalization;
 using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Globalization;
+
 namespace JohnsonControls.Metasys.BasicServices
 {
     public class TraditionalClient
     {
         private FlurlClient client;
+
+        private const string clientUndefinedMessage = "Client undefined please login with TryLogin method.";
 
         /// <summary>
         /// Creates a new TraditionalClient.
@@ -21,10 +24,29 @@ namespace JohnsonControls.Metasys.BasicServices
         /// the user's current culture is used.
         /// </remarks>
         /// <param name="cultureInfo"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public TraditionalClient(CultureInfo cultureInfo = null)
         {
             var culture = cultureInfo ?? CultureInfo.CurrentCulture;
+            FlurlHttp.Configure(settings => settings.OnErrorAsync = HandleFlurlErrorAsync);
+            FlurlHttp.Configure(settings => settings.OnError = HandleFlurlError);
+        }
+
+        private void HandleFlurlError(HttpCall call) 
+        {
+            var task = HandleFlurlErrorAsync(call);
+        }
+
+        private async Task HandleFlurlErrorAsync(HttpCall call) 
+        {
+            if (call.Exception.GetType() != typeof(Flurl.Http.FlurlParsingException)) {
+                await LogErrorAsync(call.Exception.Message);
+            }
+            call.ExceptionHandled = true;
+        }
+
+        private async Task LogErrorAsync(String message)
+        {
+            await Console.Error.WriteLineAsync(message);
         }
 
         /// <summary>
@@ -33,40 +55,60 @@ namespace JohnsonControls.Metasys.BasicServices
         public void TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2)
         {
             client = new FlurlClient($"https://{hostname}"
-                .AppendPathSegment("api")
-                .AppendPathSegment(version));
+                .AppendPathSegments("api", version));
             var response = client.Request("login")
                 .PostJsonAsync(new {username, password})
                 .ReceiveJson<JToken>();
-            var accessToken = response.Result["accessToken"];
-            client.Headers.Add("Authorization", $"Bearer {accessToken}");
+
+            try {
+                var accessToken = response.Result["accessToken"];
+                client.Headers.Add("Authorization", $"Bearer {accessToken}");
+            } catch (System.NullReferenceException) {
+                var task = LogErrorAsync("Could not get access token.");
+            }          
         }
 
         /// <summary>
         /// Requests a new access token before current token expires.
         /// </summary>
         public void Refresh() {
+            if (client == null) {
+                Console.Error.WriteLineAsync(clientUndefinedMessage);
+                return;
+            }
+
             var response = client.Request("refreshToken")
                 .GetJsonAsync<JToken>();
-            var accessToken = response.Result["accessToken"];
-            client.Headers.Remove("Authorization");
-            client.Headers.Add("Authorization", $"Bearer {accessToken}");
-            
+
+            try {
+                var accessToken = response.Result["accessToken"];
+                client.Headers.Remove("Authorization");
+                client.Headers.Add("Authorization", $"Bearer {accessToken}");
+            } catch (System.NullReferenceException) {
+                var task = LogErrorAsync("Could not get access token.");
+            }
         }        
         
         /// <summary>
         /// Returns the object identifier (id) of the specified object.
         /// </summary>
-        public Guid GetObjectIdentifier(string itemReference)
+        public Guid? GetObjectIdentifier(string itemReference)
         {
-            // Consider caching results since clients may not. If we add caching, then we could  consider
-            // taking itemReferences in ReadProperty and ReadPropertyMultiple. Until then we want to get clients
-            // used to using identifiers.
+            if (client == null) {
+                Console.Error.WriteLineAsync(clientUndefinedMessage);
+                return null;
+            }
 
             var response = client.Request("objectIdentifiers")
                 .SetQueryParam("fqr", itemReference)
                 .GetStringAsync();
-            return new Guid(response.Result.Trim('"'));
+            
+            try {
+                var id = new Guid(response.Result.Trim('"'));
+                return id;
+            } catch (System.FormatException) {
+                return null;
+            }
         }
 
         /// <summary>
@@ -87,11 +129,15 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Other options?
         public ReadPropertyResult ReadProperty(Guid id, string attributeName)
         {
+            if (client == null) {
+                Console.Error.WriteLineAsync(clientUndefinedMessage);
+                return null;
+            }
+
             var response = client.Request(new Url("objects")
-                .AppendPathSegment(id)
-                .AppendPathSegment("attributes")
-                .AppendPathSegment(attributeName))
+                .AppendPathSegments(id, "attributes", attributeName))
                 .GetJsonAsync<JToken>();
+
             return new ReadPropertyResult(id, response.Result["item"][attributeName], attributeName);
         }
 
@@ -101,8 +147,16 @@ namespace JohnsonControls.Metasys.BasicServices
         public IEnumerable<ReadPropertyResult> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
-            var properties = ReadPropertyMultipleAsync(ids, attributeNames);
-            return properties.Result;
+            if (client == null) {
+                Console.Error.WriteLineAsync(clientUndefinedMessage);
+                return null;
+            }
+
+            if (ids == null || attributeNames == null) {
+                return null;
+            }
+
+            return ReadPropertyMultipleAsync(ids, attributeNames).Result;
         }
 
         /// <summary>
@@ -116,7 +170,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
             foreach(var id in ids)
             {
-                taskList.Add(ReadPropertyAsync(id));
+                taskList.Add(ReadObjectAsync(id));
             }
 
             await Task.WhenAll(taskList);
@@ -138,9 +192,10 @@ namespace JohnsonControls.Metasys.BasicServices
             return results;
         }
 
-        /// Read one attribute values given the Guid of the object asynchronously.
+        /// <summary>
+        /// Read entire object given the Guid of the object asynchronously.
         /// </summary>
-        private async Task<(Guid, JToken)> ReadPropertyAsync(Guid id) 
+        private async Task<(Guid, JToken)> ReadObjectAsync(Guid id) 
         {
             var response = await client.Request(new Url("objects")
                     .AppendPathSegment(id))
@@ -156,6 +211,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="newValue"></param>
         public void WriteProperty(Guid id, string attributeName, object newValue, string priority = null)
         {
+            if (client == null) {
+                Console.Error.WriteLineAsync(clientUndefinedMessage);
+                return;
+            }
             Dictionary<string, object> pairs = new Dictionary<string, object>();
             pairs.Add(attributeName, newValue);
             if (priority != null) {
@@ -163,14 +222,16 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             Dictionary<string, Dictionary<string, object>> item = new Dictionary<string, Dictionary<string, object>>();
             item.Add("item", pairs);
-            var json = JsonConvert.SerializeObject(item);
 
-            var response = client.Request(new Url("objects")
-                .AppendPathSegment(id))
-                .PatchJsonAsync(json);
-            if (response.Result.StatusCode != System.Net.HttpStatusCode.Accepted) {
-                throw new Exception($"Patch request failed with status code {response.Result.StatusCode}");
+            try {
+                var json = JsonConvert.SerializeObject(item);
+                var response = client.Request(new Url("objects")
+                    .AppendPathSegment(id))
+                    .PatchJsonAsync(json);
+            } catch (JsonSerializationException) {
+                var task = LogErrorAsync("Could not format request.");
             }
+            
         }
 
         /// <summary>
@@ -180,6 +241,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeValues">The (attribute, value) pairs</param>
         public void WritePropertyMultiple(IEnumerable<Guid> ids, IEnumerable<(string, object)> attributeValues, string priority = null)
         {
+            if (client == null) {
+                Console.Error.WriteLineAsync(clientUndefinedMessage);
+                return;
+            }
+
             Dictionary<string, object> pairs = new Dictionary<string, object>();
             foreach (var attribute in attributeValues) {
                 pairs.Add(attribute.Item1, attribute.Item2);
@@ -191,9 +257,12 @@ namespace JohnsonControls.Metasys.BasicServices
 
             Dictionary<string, Dictionary<string, object>> item = new Dictionary<string, Dictionary<string, object>>();
             item.Add("item", pairs);
-            var json = JsonConvert.SerializeObject(item);
-
-            WritePropertyMultipleAsync(ids, json);
+            try {
+                var json = JsonConvert.SerializeObject(item);
+                WritePropertyMultipleAsync(ids, json);
+            } catch (JsonSerializationException) {
+                var task = LogErrorAsync("Could not format request.");
+            }
         }
 
         /// <summary>
@@ -220,9 +289,6 @@ namespace JohnsonControls.Metasys.BasicServices
             var response = await client.Request(new Url("objects")
                 .AppendPathSegment(id))
                 .PatchJsonAsync(json);
-            if (response.StatusCode != System.Net.HttpStatusCode.Accepted) {
-                throw new Exception($"Patch request failed with status code {response.StatusCode}");
-            }
         }
 
         /// <summary>
