@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
-    public struct ReadPropertyResult
+    public class ReadPropertyResult
     {
         private const string Reliable = "reliabilityEnumSet.reliable";
 
