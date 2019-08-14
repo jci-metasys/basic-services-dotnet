@@ -52,6 +52,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Attempts to login to the given host.
         /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.NullReferenceException"></exception>
         public void TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2)
         {
             client = new FlurlClient($"https://{hostname}"
@@ -71,6 +73,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Requests a new access token before current token expires.
         /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.NullReferenceException"></exception>
         public void Refresh() {
             if (client == null) {
                 Console.Error.WriteLineAsync(clientUndefinedMessage);
@@ -92,6 +96,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Returns the object identifier (id) of the specified object.
         /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         public Guid? GetObjectIdentifier(string itemReference)
         {
             if (client == null) {
@@ -122,11 +127,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
         /// <returns></returns>
-        /// <exception cref=""></exception>
-        /// which exceptions?
-        /// If it's communication issues with client then perhaps CommunicationException
-        /// If it's an HttpStatusCode that we are prepared for then make up some Exceptions:
-        /// Other options?
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         public ReadPropertyResult ReadProperty(Guid id, string attributeName)
         {
             if (client == null) {
@@ -195,6 +196,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Read entire object given the Guid of the object asynchronously.
         /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         private async Task<(Guid, JToken)> ReadObjectAsync(Guid id) 
         {
             var response = await client.Request(new Url("objects")
@@ -209,6 +211,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
         /// <param name="newValue"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="JsonSerializationException"></exception>
         public void WriteProperty(Guid id, string attributeName, object newValue, string priority = null)
         {
             if (client == null) {
@@ -239,6 +243,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="attributeValues">The (attribute, value) pairs</param>
+        /// <exception cref="JsonSerializationException"></exception>
         public void WritePropertyMultiple(IEnumerable<Guid> ids, IEnumerable<(string, object)> attributeValues, string priority = null)
         {
             if (client == null) {
@@ -284,6 +289,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Write many attribute values in the provided json given the Guid of the object asynchronously.
         /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         private async Task WritePropertyAsync(Guid id, string json) 
         {
             var response = await client.Request(new Url("objects")
@@ -294,6 +300,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Get all available commands given the Guid of the object
         /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         public IEnumerable<string> GetCommands(Guid id)
         {
             throw new NotImplementedException();
@@ -305,6 +312,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="ids"></param>
         /// <param name="command"></param>
         /// <param name="titleValues">The (title, newValue) pairs</param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         public void SendCommand(Guid id, string command, IEnumerable<(string, string)> titleValues = null)
         {
             throw new NotImplementedException();
