@@ -168,7 +168,7 @@ namespace Tests
         }
 
         [Test]
-        public void TestGetObjectIdentifierBadRequestReturnsNull()
+        public void TestGetObjectIdentifierBadRequestReturnsEmpty()
         {
             using (var httpTest = new HttpTest())
             {
@@ -181,12 +181,12 @@ namespace Tests
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-                Assert.AreEqual(null, id);
+                Assert.AreEqual(Guid.Empty, id);
             }
         }
 
         [Test]
-        public void TestGetBadObjectIdentifierReturnsNull()
+        public void TestGetBadObjectIdentifierReturnsEmpty()
         {
             using (var httpTest = new HttpTest())
             {
@@ -199,7 +199,7 @@ namespace Tests
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-                Assert.AreEqual(null, id);
+                Assert.AreEqual(Guid.Empty, id);
             }
         }
 
@@ -906,6 +906,125 @@ namespace Tests
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                         .WithVerb(HttpMethod.Patch)
                         .WithRequestJson("{\"item\":{\"badAttributeName\":\"newValue\"}}")
+                        .Times(1);
+                } catch {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        #endregion
+    
+        #region SendCommand Tests
+
+        [Test]
+        public void TestSendCommandEmptyBody()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith("OK", 200);
+                
+                traditionalClient.SendCommand(mockid, "EnableAlarms");
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/EnableAlarms")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestSendCommandOneNumber()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith("OK", 200);
+
+                List<object> list = new List<object>() { 70 };
+                traditionalClient.SendCommand(mockid, "Adjust", list);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Adjust")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestSendCommandManyNumber()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith("OK", 200);
+
+                List<object> list = new List<object>() { 70.5, 1, 0 };
+                traditionalClient.SendCommand(mockid, "TemporaryOperatorOverride", list);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/TemporaryOperatorOverride")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestSendCommandManyEnum()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith("OK", 200);
+
+                List<object> list = new List<object>() { "attributeEnumSet.presentValue", "writePriorityEnumSet.priorityNone" };
+                traditionalClient.SendCommand(mockid, "Release", list);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestSendCommandBadRequestDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith("Bad Request", 400);
+                
+                try {
+                    List<object> list = new List<object>() { "noMatch", "noMatch" };
+                    traditionalClient.SendCommand(mockid, "Release", list);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+                        .WithVerb(HttpMethod.Put)
+                        .Times(1);
+                } catch {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        [Test]
+        public void TestSendCommandUnauthorizedDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith("Unauthorized", 401);
+                
+                try {
+                    List<object> list = new List<object>() { 40, "badDataTypes" };
+                    traditionalClient.SendCommand(mockid, "Release", list);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+                        .WithVerb(HttpMethod.Put)
                         .Times(1);
                 } catch {
                     Assert.Fail();
