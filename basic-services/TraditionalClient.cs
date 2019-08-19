@@ -14,8 +14,6 @@ namespace JohnsonControls.Metasys.BasicServices
     {
         private FlurlClient client;
 
-        private const string clientUndefinedMessage = "Client undefined please login with TryLogin method.";
-
         /// <summary>
         /// Creates a new TraditionalClient.
         /// </summary>
@@ -48,6 +46,11 @@ namespace JohnsonControls.Metasys.BasicServices
         private async Task LogErrorAsync(String message)
         {
             await Console.Error.WriteLineAsync(message);
+        }
+
+        private void LogClientUndefinedError()
+        {
+            var task = LogErrorAsync("Client undefined please login with TryLogin method.");
         }
 
         /// <summary>
@@ -83,7 +86,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (client == null)
             {
-                Console.Error.WriteLineAsync(clientUndefinedMessage);
+                LogClientUndefinedError();
                 return;
             }
 
@@ -111,7 +114,7 @@ namespace JohnsonControls.Metasys.BasicServices
             Guid empty = new Guid(new Byte[16]);
             if (client == null)
             {
-                Console.Error.WriteLineAsync(clientUndefinedMessage);
+                LogClientUndefinedError();
                 return empty;
             }
 
@@ -141,8 +144,8 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (client == null)
             {
-                Console.Error.WriteLineAsync(clientUndefinedMessage);
-                return null;
+                LogClientUndefinedError();
+                return new ReadPropertyResult(id, null, attributeName);
             }
 
             var response = client.Request(new Url("objects")
@@ -160,7 +163,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (client == null)
             {
-                Console.Error.WriteLineAsync(clientUndefinedMessage);
+                LogClientUndefinedError();
                 return null;
             }
 
@@ -230,7 +233,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (client == null)
             {
-                Console.Error.WriteLineAsync(clientUndefinedMessage);
+                LogClientUndefinedError();
                 return;
             }
             Dictionary<string, object> pairs = new Dictionary<string, object>();
@@ -266,7 +269,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (client == null)
             {
-                Console.Error.WriteLineAsync(clientUndefinedMessage);
+                LogClientUndefinedError();
                 return;
             }
 
@@ -328,22 +331,35 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         public IEnumerable<Command> GetCommands(Guid id)
         {
+            if (client == null)
+            {
+                LogClientUndefinedError();
+                return null;
+            }
+
             var token = client.Request(new Url("objects")
                 .AppendPathSegments(id, "commands"))
                 .GetJsonAsync<JToken>();
-            
+
             List<Command> commands = new List<Command>();
-            if (token.Result.Type == JTokenType.Array) {
+            if (token.Result.Type == JTokenType.Array)
+            {
                 var array = token.Result as JArray;
-                if (array != null) {
-                    foreach (JObject command in array) {
+                if (array != null)
+                {
+                    foreach (JObject command in array)
+                    {
                         Command c = new Command(command);
                         commands.Add(c);
                     }
-                } else {
+                }
+                else
+                {
                     var task = LogErrorAsync("Could not parse response data.");
                 }
-            } else {
+            }
+            else
+            {
                 var task = LogErrorAsync("Could not parse response data.");
             }
             return commands;
@@ -358,6 +374,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="JsonSerializationException"></exception>
         public void SendCommand(Guid id, string command, IEnumerable<object> values = null)
         {
+            if (client == null)
+            {
+                LogClientUndefinedError();
+                return;
+            }
+
             if (values == null)
             {
                 SendCommandRequest(id, command, new string[0]);
