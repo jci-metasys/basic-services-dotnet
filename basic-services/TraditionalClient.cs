@@ -324,10 +324,29 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Get all available commands given the Guid of the object.
         /// </summary>
+        /// <param name="id"></param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
-        public IEnumerable<string> GetCommands(Guid id)
+        public IEnumerable<Command> GetCommands(Guid id)
         {
-            throw new NotImplementedException();
+            var token = client.Request(new Url("objects")
+                .AppendPathSegments(id, "commands"))
+                .GetJsonAsync<JToken>();
+            
+            List<Command> commands = new List<Command>();
+            if (token.Result.Type == JTokenType.Array) {
+                var array = token.Result as JArray;
+                if (array != null) {
+                    foreach (JObject command in array) {
+                        Command c = new Command(command);
+                        commands.Add(c);
+                    }
+                } else {
+                    var task = LogErrorAsync("Could not parse response data.");
+                }
+            } else {
+                var task = LogErrorAsync("Could not parse response data.");
+            }
+            return commands;
         }
 
         /// <summary>
