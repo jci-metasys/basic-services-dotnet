@@ -57,13 +57,18 @@ namespace Tests
             {
                 httpTest.RespondWith("unauthorized", 401);
 
-                traditionalClient.TryLogin("username", "badpassword", "hostname");
+                try {
+                    traditionalClient.TryLogin("username", "badpassword", "hostname");
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
-                .WithVerb(HttpMethod.Post)
-                .WithContentType("application/json")
-                .WithRequestBody("{\"username\":\"username\",\"password\":\"badpassword\"")
-                .Times(1);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
+                        .WithVerb(HttpMethod.Post)
+                        .WithContentType("application/json")
+                        .WithRequestBody("{\"username\":\"username\",\"password\":\"badpassword\"")
+                        .Times(1);  
+                } catch {
+                    Assert.Fail();
+                }
+                
             }
         }
 
@@ -73,14 +78,18 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWith("Call failed. No such host is known POST https://badhost/api/V2/login");
-
-                traditionalClient.TryLogin("username", "password", "badhost");
-
-                httpTest.ShouldHaveCalled($"https://badhost/api/V2/login")
-                .WithVerb(HttpMethod.Post)
-                .WithContentType("application/json")
-                .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
-                .Times(1);
+                
+                try {
+                    traditionalClient.TryLogin("username", "password", "badhost");
+                
+                    httpTest.ShouldHaveCalled($"https://badhost/api/V2/login")
+                        .WithVerb(HttpMethod.Post)
+                        .WithContentType("application/json")
+                        .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
+                        .Times(1); 
+                } catch {
+                    Assert.Fail();
+                }
             }
         }
 
@@ -139,10 +148,15 @@ namespace Tests
 
                 httpTest.RespondWith("unauthorized", 401);
 
-                traditionalClient.Refresh();
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
-                .WithVerb(HttpMethod.Get)
-                .Times(1);
+                try {
+                    traditionalClient.Refresh();
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+                } catch {
+                    Assert.Fail();
+                }
+                
             }
         }
 
@@ -200,6 +214,24 @@ namespace Tests
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
                 Assert.AreEqual(Guid.Empty, id);
+            }
+        }
+
+        [Test]
+        public void TestGetObjectIdentifierNullClient()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Bad Request", 400);
+
+                try {
+                    var id = traditionalClient.GetObjectIdentifier("fully:qualified/reference");
+                    httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objectIdentifiers");
+                    Assert.AreEqual(Guid.Empty, id);
+                } catch {
+                    Assert.Fail();
+                }
+                
             }
         }
 
@@ -523,6 +555,29 @@ namespace Tests
                 Assert.AreEqual(null, result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyNullClient()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Not Found", 404);
+
+                try {
+                    ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                    httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}");
+                    Assert.AreEqual(1, result.NumericValue);
+                    Assert.AreEqual("Unsupported Data Type", result.StringValue);
+                    Assert.AreEqual(false, result.BooleanValue);
+                    Assert.AreEqual(null, result.ArrayValue);
+                    Assert.AreEqual(null, result.Priority);
+                    Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                    Assert.AreEqual(true, result.IsReliable);
+                } catch {
+                    Assert.Fail();
+                }
             }
         }
 
@@ -907,6 +962,25 @@ namespace Tests
                         .WithVerb(HttpMethod.Patch)
                         .WithRequestJson("{\"item\":{\"badAttributeName\":\"newValue\"}}")
                         .Times(1);
+                } catch {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyMultipleNullItemsDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith("Bad Request", 400);
+
+                try {
+                    traditionalClient.WritePropertyMultiple(null, null);
+                    httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}");
                 } catch {
                     Assert.Fail();
                 }
