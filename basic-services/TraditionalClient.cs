@@ -158,6 +158,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Read many attribute values given the Guids of the objects.
         /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="attributeNames"></param>
         public IEnumerable<ReadPropertyResult> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
@@ -178,6 +180,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Read many attribute values given the Guids of the objects asynchronously.
         /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="attributeNames"></param>
         private async Task<List<ReadPropertyResult>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
@@ -212,6 +216,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Read entire object given the Guid of the object asynchronously.
         /// </summary>
+        /// <param name="id"></param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         private async Task<(Guid, JToken)> ReadObjectAsync(Guid id)
         {
@@ -273,6 +278,10 @@ namespace JohnsonControls.Metasys.BasicServices
                 return;
             }
 
+            if (ids == null || attributeValues == null) {
+                return;
+            }
+
             Dictionary<string, object> pairs = new Dictionary<string, object>();
             foreach (var attribute in attributeValues)
             {
@@ -300,6 +309,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Write many attribute values given the Guids of the objects asynchronously.
         /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="json">The formatted request body</param>
         private async void WritePropertyMultipleAsync(IEnumerable<Guid> ids,
             string json)
         {
