@@ -1594,6 +1594,36 @@ namespace Tests
         }
 
         [Test]
+        public void TestGetNetworkDevicesMissingValues()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith(string.Concat("{",
+                    "\"total\": 1,",
+                    "\"next\": null,",
+                    "\"previous\": null,",
+                    "\"items\": [{}],",
+                    "\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=200&sort=name\"}"));
+
+                var devices = traditionalClient.GetNetworkDevices().ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(1, devices.Count);
+                Assert.AreEqual(Guid.Empty, devices[0].Id);
+                Assert.AreEqual("N/A", devices[0].ItemReference);
+                Assert.AreEqual("N/A", devices[0].Name);
+                Assert.AreEqual("N/A", devices[0].TypeUrl);
+                Assert.AreEqual("N/A", devices[0].Description);
+                Assert.AreEqual("N/A", devices[0].FirmwareVersion);
+                Assert.AreEqual("N/A", devices[0].IpAddress);
+            }
+        }
+
+        [Test]
         public void TestGetNetworkDevicesNullClient()
         {
             using (var httpTest = new HttpTest())
