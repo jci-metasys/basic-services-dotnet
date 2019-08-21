@@ -14,6 +14,8 @@ namespace JohnsonControls.Metasys.BasicServices
     {
         private FlurlClient client;
 
+        private string accessToken;
+
         /// <summary>
         /// Creates a new TraditionalClient.
         /// </summary>
@@ -69,7 +71,8 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 var accessToken = response.Result["accessToken"];
-                client.Headers.Add("Authorization", $"Bearer {accessToken}");
+                this.accessToken = $"Bearer {accessToken.Value<string>()}";
+                client.Headers.Add("Authorization", this.accessToken);
             }
             catch (System.NullReferenceException)
             {
@@ -96,8 +99,9 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 var accessToken = response.Result["accessToken"];
+                this.accessToken = $"Bearer {accessToken.Value<string>()}";
                 client.Headers.Remove("Authorization");
-                client.Headers.Add("Authorization", $"Bearer {accessToken}");
+                client.Headers.Add("Authorization", this.accessToken);
             }
             catch (System.NullReferenceException)
             {
@@ -109,6 +113,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Returns the object identifier (id) of the specified object.
         /// </summary>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.FormatException"></exception>
         public Guid GetObjectIdentifier(string itemReference)
         {
             Guid empty = new Guid(new Byte[16]);
@@ -278,7 +283,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 return;
             }
 
-            if (ids == null || attributeValues == null) {
+            if (ids == null || attributeValues == null)
+            {
                 return;
             }
 
@@ -421,6 +427,132 @@ namespace JohnsonControls.Metasys.BasicServices
             var response = client.Request(new Url("objects")
                 .AppendPathSegments(id, "commands", command))
                 .PutJsonAsync(json);
+        }
+
+        /// <summary>
+        /// Gets all network devices.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <exception cref="System.NullReferenceException"></exception>
+        public IEnumerable<NetworkDevice> GetNetworkDevices(string type = null)
+        {
+            if (client == null)
+            {
+                LogClientUndefinedError();
+                return null;
+            }
+
+            List<NetworkDevice> devices = new List<NetworkDevice>();
+            var response = GetNetworkDevicesRequest(type);
+
+            try
+            {
+                var list = response["items"] as JArray;
+                foreach (var item in list)
+                {
+                    NetworkDevice device = new NetworkDevice(item);
+                    devices.Add(device);
+                }
+
+            }
+            catch (System.NullReferenceException)
+            {
+                var task = LogErrorAsync("Could not format response.");
+            }
+
+            return devices;
+        }
+
+        /// <summary>
+        /// Gets all network devices by ensuring the pagesize is at least the total number of devices.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.NullReferenceException"></exception>
+        private JToken GetNetworkDevicesRequest(string type = null)
+        {
+            Url url = new Url("networkDevices");
+            if (type != null)
+            {
+                url.SetQueryParam("type", type);
+            }
+
+            var response = client.Request(url)
+                .GetJsonAsync<JToken>();
+
+            try
+            {
+                if (response.Result["next"].Value<string>() != null)
+                {
+                    int total = response.Result["total"].Value<int>();
+                    response = client.Request(url
+                        .SetQueryParam("pagesize", total))
+                        .GetJsonAsync<JToken>();
+                }
+            }
+            catch (System.NullReferenceException)
+            {
+                return response.Result;
+            }
+
+            return response.Result;
+        }
+
+        /// <summary>
+        /// Gets all available network device types in (id, description) pairs.
+        /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.NullReferenceException"></exception>
+        public IEnumerable<(int, string)> GetNetworkDeviceTypes()
+        {
+            if (client == null)
+            {
+                LogClientUndefinedError();
+                return null;
+            }
+
+            List<(int, string)> types = new List<(int, string)>();
+            var response = client.Request(new Url("networkDevices")
+                .AppendPathSegment("availableTypes"))
+                .GetJsonAsync<JToken>();
+
+            try
+            {
+                var list = response.Result["items"] as JArray;
+                foreach (var typeUrl in list)
+                {
+                    var item = GetWithFullUrl(typeUrl["typeUrl"].Value<string>());
+
+                    string description = item["description"].Value<string>();
+                    int type = item["id"].Value<int>();
+                    types.Add((type, description));
+                }
+            }
+            catch (System.NullReferenceException)
+            {
+                var task = LogErrorAsync("Could not format response.");
+            }
+            catch (System.ArgumentNullException)
+            {
+                var task = LogErrorAsync("Could not format response.");
+            }
+
+            return types;
+        }
+
+        /// <summary>
+        /// Creates a new Flurl client and gets a resource given the url.
+        /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        private JToken GetWithFullUrl(string url)
+        {
+            using (var temporaryClient = new FlurlClient(new Url(url)))
+            {
+                temporaryClient.Headers.Add("Authorization", this.accessToken);
+                var item = temporaryClient.Request()
+                    .GetJsonAsync<JToken>();
+                return item.Result;
+            }
         }
     }
 }
