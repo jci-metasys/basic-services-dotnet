@@ -77,7 +77,7 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith("Call failed. No such host is known POST https://badhost/api/V2/login");
+                httpTest.RespondWith("Call failed. No such host is known POST https://badhost/api/V2/login", 404);
                 
                 try {
                     traditionalClient.TryLogin("username", "password", "badhost");
@@ -222,8 +222,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith("Bad Request", 400);
-
                 try {
                     var id = traditionalClient.GetObjectIdentifier("fully:qualified/reference");
                     httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objectIdentifiers");
@@ -563,8 +561,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith("Not Found", 404);
-
                 try {
                     ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
                     httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}");
@@ -1307,6 +1303,327 @@ namespace Tests
                 Assert.AreEqual(null, items[2].EnumerationValues);
             }
         }
+        
+        #endregion
+    
+        #region GetNetworkDevices Tests
+
+        [Test]
+        public void TestGetNetworkDevicesNone()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith(string.Concat("{",
+                    "\"total\": 0,",
+                    "\"next\": null,",
+                    "\"previous\": null,",
+                    "\"items\": [ ],",
+                    "\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=200&sort=name\"}"));
+                
+                var devices = traditionalClient.GetNetworkDevices().ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(0, devices.Count);
+            }
+        }
+
+        [Test]
+        public void TestGetNetworkDevicesOnePage()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith(string.Concat("{",
+                    "\"total\": 1,",
+                    "\"next\": null,",
+                    "\"previous\": null,",
+                    "\"items\": [{",
+                        "\"id\": \"", mockid, "\",",
+                        "\"itemReference\": \"fully:qualified/reference\",",
+                        "\"name\": \"name\",",
+                        "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                        "\"description\": \"none\",",
+                        "\"firmwareVersion\": \"4.0.0.1105\",",
+                        "\"ipAddress\": \"\"",
+                    "}],",
+                    "\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=200&sort=name\"}"));
+                
+                var devices = traditionalClient.GetNetworkDevices().ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(1, devices.Count);
+                Assert.AreEqual(mockid, devices[0].Id);
+                Assert.AreEqual("fully:qualified/reference" , devices[0].ItemReference);
+                Assert.AreEqual("name" , devices[0].Name);
+                Assert.AreEqual("https://hostname/api/v2/enumSets/508/members/197" , devices[0].TypeUrl);
+                Assert.AreEqual("none" , devices[0].Description);
+                Assert.AreEqual("4.0.0.1105" , devices[0].FirmwareVersion);
+                Assert.AreEqual("" , devices[0].IpAddress);
+            }
+        }
+
+        [Test]
+        public void TestGetNetworkDevicesManyPages()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith(string.Concat("{",
+                    "\"total\": 2,",
+                    "\"next\": \"https://hostname/api/V2/networkDevices?page=2&pageSize=1&sort=name\",",
+                    "\"previous\": null,",
+                    "\"items\": [{",
+                        "\"id\": \"", mockid, "\",",
+                        "\"itemReference\": \"fully:qualified/reference\",",
+                        "\"name\": \"name\",",
+                        "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                        "\"description\": \"none\",",
+                        "\"firmwareVersion\": \"4.0.0.1105\",",
+                        "\"ipAddress\": \"\"",
+                    "}],",
+                    "\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=1&sort=name\"}"));
+
+                httpTest.RespondWith(string.Concat("{",
+                    "\"total\": 2,",
+                    "\"next\": null,",
+                    "\"previous\": null,",
+                    "\"items\": [{",
+                        "\"id\": \"", mockid, "\",",
+                        "\"itemReference\": \"fully:qualified/reference\",",
+                        "\"name\": \"name\",",
+                        "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                        "\"description\": \"none\",",
+                        "\"firmwareVersion\": \"4.0.0.1105\",",
+                        "\"ipAddress\": \"\"},",
+
+                        "{\"id\": \"", mockid2, "\",",
+                        "\"itemReference\": \"fully:qualified/reference2\",",
+                        "\"name\": \"name\",",
+                        "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                        "\"description\": \"none\",",
+                        "\"firmwareVersion\": \"4.0.0.1105\",",
+                        "\"ipAddress\": \"\"",
+                    "}],",
+                    "\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=2&sort=name\"}"));
+                
+                var devices = traditionalClient.GetNetworkDevices().ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(2);
+                Assert.AreEqual(2, devices.Count);
+            }
+        }
+
+        [Test]
+        public void TestGetNetworkDevicesWithType()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith(string.Concat("{",
+                    "\"total\": 1,",
+                    "\"next\": null,",
+                    "\"previous\": null,",
+                    "\"items\": [{",
+                        "\"id\": \"", mockid, "\",",
+                        "\"itemReference\": \"fully:qualified/reference\",",
+                        "\"name\": \"name\",",
+                        "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                        "\"description\": \"none\",",
+                        "\"firmwareVersion\": \"4.0.0.1105\",",
+                        "\"ipAddress\": \"\"",
+                    "}],",
+                    "\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=200&sort=name\"}"));
+                
+                var devices = traditionalClient.GetNetworkDevices("197").ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(1, devices.Count);
+                Assert.AreEqual(mockid, devices[0].Id);
+                Assert.AreEqual("fully:qualified/reference" , devices[0].ItemReference);
+                Assert.AreEqual("name" , devices[0].Name);
+                Assert.AreEqual("https://hostname/api/v2/enumSets/508/members/197" , devices[0].TypeUrl);
+                Assert.AreEqual("none" , devices[0].Description);
+                Assert.AreEqual("4.0.0.1105" , devices[0].FirmwareVersion);
+                Assert.AreEqual("" , devices[0].IpAddress);
+            }
+        }
+
+        [Test]
+        public void TestGetNetworkDevicesNullClient()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                try {
+                    var devices = traditionalClient.GetNetworkDevices();
+                    httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/networkDevices");
+                    Assert.AreEqual(null, devices);
+                } catch {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        #endregion
+
+        #region GetNetworkDeviceTypes
+
+        [Test]
+        public void TestGetNetworkDeviceTypesNone()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith(string.Concat("{",
+                    "\"total\": 0,",
+                    "\"items\": [ ],",
+                    "\"self\": \"https://hostname/api/V2/networkDevices/availableTypes\"}"));
+                
+                var types = traditionalClient.GetNetworkDeviceTypes().ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices/availableTypes")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(0, types.Count);
+            }
+        }
+
+        [Test]
+        public void TestGetNetworkDeviceTypesOne()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith(string.Concat("{",
+                    "\"total\": 1,",
+                    "\"items\": [{",
+                        "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/185\"",
+                    "}],",
+                    "\"self\": \"https://hostname/api/V2/networkDevices/availableTypes\"}"));
+
+                httpTest.RespondWith(string.Concat("{",
+                    "\"id\": 185,",
+                    "\"description\": \"NAE55-NIE59\",",
+                    "\"self\": \"https://hostname/api/V2/enumSets/508/members/185\",",
+                    "\"setUrl\": \"https://hostname/api/V2/enumSets/508\"}"));
+                
+                var types = traditionalClient.GetNetworkDeviceTypes().ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices/availableTypes")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/508/members/185")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(1, types.Count);
+                Assert.AreEqual(185, types[0].Item1);
+                Assert.AreEqual("NAE55-NIE59", types[0].Item2);
+            }
+        }
+
+        [Test]
+        public void TestGetNetworkDeviceTypesMany()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith(string.Concat("{",
+                    "\"total\": 2,",
+                    "\"items\": [{",
+                        "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/185\"},",
+                        "{\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/195\"",
+                    "}],",
+                    "\"self\": \"https://hostname/api/V2/networkDevices/availableTypes\"}"));
+
+                httpTest.RespondWith(string.Concat("{",
+                    "\"id\": 185,",
+                    "\"description\": \"NAE55-NIE59\",",
+                    "\"self\": \"https://hostname/api/V2/enumSets/508/members/185\",",
+                    "\"setUrl\": \"https://hostname/api/V2/enumSets/508\"}"));
+                
+                httpTest.RespondWith(string.Concat("{",
+                    "\"id\": 195,",
+                    "\"description\": \"Field Bus MSTP\",",
+                    "\"self\": \"https://hostname/api/V2/enumSets/508/members/195\",",
+                    "\"setUrl\": \"https://hostname/api/V2/enumSets/508\"}"));
+                
+                var types = traditionalClient.GetNetworkDeviceTypes().ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices/availableTypes")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/508/members/185")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/508/members/195")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+
+                Assert.AreEqual(2, types.Count);
+                Assert.AreEqual(185, types[0].Item1);
+                Assert.AreEqual("NAE55-NIE59", types[0].Item2);
+                Assert.AreEqual(195, types[1].Item1);
+                Assert.AreEqual("Field Bus MSTP", types[1].Item2);
+            }
+        }
+
+        [Test]
+        public void TestGetNetworkDeviceTypesNotFoundDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWith(string.Concat("{",
+                    "\"total\": 1,",
+                    "\"items\": [{",
+                        "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/3000\"",
+                    "}],",
+                    "\"self\": \"https://hostname/api/V2/networkDevices/availableTypes\"}"));
+                httpTest.RespondWith("No HTTP resource was found that matches the request URI.", 404);
+                
+                var types = traditionalClient.GetNetworkDeviceTypes().ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices/availableTypes")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/508/members/3000")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(0, types.Count);
+            }
+        }
+
+        [Test]
+        public void TestGetNetworkDeviceTypesNullClient()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                try {
+                    var types = traditionalClient.GetNetworkDeviceTypes();
+                    httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/networkDevices/availableTypes");
+                    Assert.AreEqual(null, types);
+                } catch {
+                    Assert.Fail();
+                }
+            }
+        }
+
         #endregion
     }
 }
