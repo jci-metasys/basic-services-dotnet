@@ -225,17 +225,11 @@ namespace JohnsonControls.Metasys.BasicServices
                     try
                     {
                         JToken value = task.Result.Item2["item"][attributeName];
-                        lock (results)
-                        {
-                            results.Add(new ReadPropertyResult(id, value, attributeName));
-                        }
+                        results.Add(new ReadPropertyResult(id, value, attributeName));
                     }
                     catch (System.NullReferenceException)
                     {
-                        lock (results)
-                        {
-                            results.Add(new ReadPropertyResult(id, null, attributeName));
-                        }
+                        results.Add(new ReadPropertyResult(id, null, attributeName));
                     }
                 }
             }
