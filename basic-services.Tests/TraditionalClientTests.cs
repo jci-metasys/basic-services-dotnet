@@ -542,13 +542,13 @@ namespace Tests
                 try
                 {
                     ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
-                    Assert.Fail();
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
                 }
                 catch
                 {
-                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
-                    .WithVerb(HttpMethod.Get)
-                    .Times(1);
+                    Assert.Fail();
                 }
             }
         }
@@ -711,12 +711,20 @@ namespace Tests
                 httpTest.RespondWith("{ \"item\": { \"attributeNoMatch\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { mockid };
                 List<string> attributes = new List<string>() { mockAttributeName };
-                IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
-                    .WithVerb(HttpMethod.Get)
-                    .Times(1);
-                Assert.AreEqual(0, results.Count());
+                try
+                {
+                    IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+                    Assert.AreEqual(1, results.Count());
+                }
+                catch
+                {
+                    Assert.Fail();
+                }
             }
         }
 
