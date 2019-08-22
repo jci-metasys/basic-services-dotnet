@@ -116,11 +116,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="System.FormatException"></exception>
         public Guid GetObjectIdentifier(string itemReference)
         {
-            Guid empty = new Guid(new Byte[16]);
             if (client == null)
             {
                 LogClientUndefinedError();
-                return empty;
+                return Guid.Empty;
             }
 
             var response = client.Request("objectIdentifiers")
@@ -134,7 +133,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch (System.FormatException)
             {
-                return empty;
+                return Guid.Empty;
             }
         }
 
@@ -157,7 +156,15 @@ namespace JohnsonControls.Metasys.BasicServices
                 .AppendPathSegments(id, "attributes", attributeName))
                 .GetJsonAsync<JToken>();
 
-            return new ReadPropertyResult(id, response.Result["item"][attributeName], attributeName);
+            try
+            {
+                var attribute = response.Result["item"][attributeName];
+                return new ReadPropertyResult(id, attribute, attributeName);
+            }
+            catch (System.NullReferenceException)
+            {
+                return new ReadPropertyResult(id, null, attributeName);
+            }
         }
 
         /// <summary>
@@ -187,6 +194,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="attributeNames"></param>
+        /// <exception cref="System.NullReferenceException"></exception>
         private async Task<List<ReadPropertyResult>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
@@ -200,17 +208,24 @@ namespace JohnsonControls.Metasys.BasicServices
 
             await Task.WhenAll(taskList);
 
-            foreach (var task in taskList.ToArray())
+            foreach (var task in taskList.ToList())
             {
                 foreach (string attributeName in attributeNames)
                 {
                     Guid id = task.Result.Item1;
-                    JToken value = task.Result.Item2["item"][attributeName];
-                    if (value != null)
+                    try
                     {
+                        JToken value = task.Result.Item2["item"][attributeName];
                         lock (results)
                         {
                             results.Add(new ReadPropertyResult(id, value, attributeName));
+                        }
+                    }
+                    catch (System.NullReferenceException)
+                    {
+                        lock (results)
+                        {
+                            results.Add(new ReadPropertyResult(id, null, attributeName));
                         }
                     }
                 }
@@ -246,6 +261,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 LogClientUndefinedError();
                 return;
             }
+
             Dictionary<string, object> pairs = new Dictionary<string, object>();
             pairs.Add(attributeName, newValue);
             if (priority != null)
@@ -266,7 +282,6 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 var task = LogErrorAsync("Could not format request.");
             }
-
         }
 
         /// <summary>
@@ -503,6 +518,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         /// <exception cref="System.NullReferenceException"></exception>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public IEnumerable<(int, string)> GetNetworkDeviceTypes()
         {
             if (client == null)
@@ -521,18 +537,24 @@ namespace JohnsonControls.Metasys.BasicServices
                 var list = response.Result["items"] as JArray;
                 foreach (var typeUrl in list)
                 {
-                    var item = GetWithFullUrl(typeUrl["typeUrl"].Value<string>());
+                    try {
+                        var item = GetWithFullUrl(typeUrl["typeUrl"].Value<string>());
 
-                    string description = item["description"].Value<string>();
-                    int type = item["id"].Value<int>();
-                    types.Add((type, description));
+                        string description = item["description"].Value<string>();
+                        int type = item["id"].Value<int>();
+                        types.Add((type, description));
+                    }
+                    catch (System.ArgumentNullException)
+                    {
+                        var task = LogErrorAsync("Could not format response.");
+                    }
+                    catch (System.NullReferenceException)
+                    {
+                        var task = LogErrorAsync("Could not format response.");
+                    }
                 }
             }
             catch (System.NullReferenceException)
-            {
-                var task = LogErrorAsync("Could not format response.");
-            }
-            catch (System.ArgumentNullException)
             {
                 var task = LogErrorAsync("Could not format response.");
             }
