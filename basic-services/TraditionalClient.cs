@@ -7,6 +7,7 @@ using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -17,6 +18,8 @@ namespace JohnsonControls.Metasys.BasicServices
         private string accessToken;
 
         private DateTime tokenExpires;
+
+        private bool refresh;
 
         /// <summary>
         /// Creates a new TraditionalClient.
@@ -62,9 +65,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         /// <exception cref="System.NullReferenceException"></exception>
-        public void TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2)
+        public void TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2, bool refresh = true)
         {
-            if (client != null) {
+            this.refresh = true;
+            if (client != null)
+            {
                 client.Dispose();
             }
             client = new FlurlClient($"https://{hostname}"
@@ -80,6 +85,10 @@ namespace JohnsonControls.Metasys.BasicServices
                 this.accessToken = $"Bearer {accessToken.Value<string>()}";
                 this.tokenExpires = expires.Value<DateTime>();
                 client.Headers.Add("Authorization", this.accessToken);
+                if (refresh)
+                {
+                    ScheduleRefresh();
+                }
             }
             catch (System.NullReferenceException)
             {
@@ -111,11 +120,40 @@ namespace JohnsonControls.Metasys.BasicServices
                 this.tokenExpires = expires.Value<DateTime>();
                 client.Headers.Remove("Authorization");
                 client.Headers.Add("Authorization", this.accessToken);
+                if (refresh)
+                {
+                    ScheduleRefresh();
+                }
             }
             catch (System.NullReferenceException)
             {
-                var task = LogErrorAsync("Could not get access token.");
+                var task = LogErrorAsync("Refresh could not get access token.");
             }
+        }
+
+        /// <summary>
+        /// Will call Refresh() a minute before the token expires.
+        /// </summary>
+        private void ScheduleRefresh()
+        {
+            DateTime now = DateTime.Now;
+            TimeSpan delay = tokenExpires - now;
+            delay.Subtract(new TimeSpan(0, 1, 0));
+
+            if (delay <= TimeSpan.Zero)
+            {
+                delay = TimeSpan.Zero;
+                var task = LogErrorAsync("Token expires in less than a minute, this may be a mismatch of the server's time and your machine's local time.");
+            }
+
+            int delayms = (int)delay.TotalMilliseconds;
+            // If the time in milliseconds is greater than max int there will be issues so set time to infinite
+            if (delayms < 0)
+            {
+                delayms = -1;
+            }
+
+            System.Threading.Tasks.Task.Delay(delayms).ContinueWith(_ => Refresh());
         }
 
         /// <summary>
@@ -540,7 +578,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 var list = response.Result["items"] as JArray;
                 foreach (var typeUrl in list)
                 {
-                    try {
+                    try
+                    {
                         var item = GetWithFullUrl(typeUrl["typeUrl"].Value<string>());
 
                         string description = item["description"].Value<string>();

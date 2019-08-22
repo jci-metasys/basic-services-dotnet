@@ -175,6 +175,27 @@ namespace Tests
             }
         }
 
+        [Test]
+        public void TestRefreshTimer()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                DateTime future = DateTime.Now;
+                future.AddSeconds(5);
+                string time = future.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
+
+                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = time });
+                traditionalClient.TryLogin("username", "password", "hostname");
+
+                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
+                System.Threading.Thread.Sleep(7000);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
         #endregion
 
         #region GetObjectIdentifier Tests
