@@ -16,6 +16,8 @@ namespace JohnsonControls.Metasys.BasicServices
 
         private string accessToken;
 
+        private DateTime tokenExpires;
+
         /// <summary>
         /// Creates a new TraditionalClient.
         /// </summary>
@@ -62,6 +64,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="System.NullReferenceException"></exception>
         public void TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2)
         {
+            if (client != null) {
+                client.Dispose();
+            }
             client = new FlurlClient($"https://{hostname}"
                 .AppendPathSegments("api", version));
             var response = client.Request("login")
@@ -71,7 +76,9 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 var accessToken = response.Result["accessToken"];
+                var expires = response.Result["expires"];
                 this.accessToken = $"Bearer {accessToken.Value<string>()}";
+                this.tokenExpires = expires.Value<DateTime>();
                 client.Headers.Add("Authorization", this.accessToken);
             }
             catch (System.NullReferenceException)
@@ -99,7 +106,9 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 var accessToken = response.Result["accessToken"];
+                var expires = response.Result["expires"];
                 this.accessToken = $"Bearer {accessToken.Value<string>()}";
+                this.tokenExpires = expires.Value<DateTime>();
                 client.Headers.Remove("Authorization");
                 client.Headers.Add("Authorization", this.accessToken);
             }
