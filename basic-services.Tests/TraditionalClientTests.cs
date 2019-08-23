@@ -1701,7 +1701,7 @@ namespace Tests
 
         #endregion
 
-        #region GetNetworkDeviceTypes
+        #region GetNetworkDeviceTypes Tests
 
         [Test]
         public void TestGetNetworkDeviceTypesNone()
@@ -1852,7 +1852,7 @@ namespace Tests
 
         #endregion
 
-        #region TestGetObjects
+        #region GetObjects Tests
 
         [Test]
         public void TestGetObjectsNone()
