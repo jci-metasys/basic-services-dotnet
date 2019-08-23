@@ -21,6 +21,8 @@ namespace JohnsonControls.Metasys.BasicServices
 
         private bool refresh;
 
+        private const int MAX_PAGE_SIZE = 1000;
+
         /// <summary>
         /// Creates a new TraditionalClient.
         /// </summary>
@@ -506,7 +508,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 var list = response["items"] as JArray;
                 foreach (var item in list)
                 {
-                    NetworkDevice device = new NetworkDevice(item);
+                    string description = GetType(item).Item2;
+                    NetworkDevice device = new NetworkDevice(item, description);
                     devices.Add(device);
                 }
 
@@ -520,7 +523,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Gets all network devices by ensuring the pagesize is at least the total number of devices.
+        /// Gets all network devices by ensuring the pagesize is at least the total number of devices or MAX_PAGE_SIZE.
         /// </summary>
         /// <param name="type"></param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
@@ -541,6 +544,10 @@ namespace JohnsonControls.Metasys.BasicServices
                 if (response.Result["next"].Value<string>() != null)
                 {
                     int total = response.Result["total"].Value<int>();
+                    if (total > MAX_PAGE_SIZE)
+                    {
+                        total = MAX_PAGE_SIZE;
+                    }
                     response = client.Request(url
                         .SetQueryParam("pagesize", total))
                         .GetJsonAsync<JToken>();
@@ -576,15 +583,12 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 var list = response.Result["items"] as JArray;
-                foreach (var typeUrl in list)
+                foreach (var item in list)
                 {
                     try
                     {
-                        var item = GetWithFullUrl(typeUrl["typeUrl"].Value<string>());
-
-                        string description = item["description"].Value<string>();
-                        int type = item["id"].Value<int>();
-                        types.Add((type, description));
+                        var type = GetType(item);
+                        types.Add(type);
                     }
                     catch (System.ArgumentNullException)
                     {
@@ -604,9 +608,82 @@ namespace JohnsonControls.Metasys.BasicServices
             return types;
         }
 
+
+        /// <summary>
+        /// Gets all child objects given a parent Guid.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <exception cref="System.NullReferenceException"></exception>
+        public IEnumerable<MetasysObject> GetObjects(Guid id)
+        {
+            if (client == null)
+            {
+                LogClientUndefinedError();
+                return null;
+            }
+
+            List<MetasysObject> objects = new List<MetasysObject>();
+            var response = GetObjectsRequest(id);
+
+            try
+            {
+                var list = response["items"] as JArray;
+                foreach (var item in list)
+                {
+                    string type = GetType(item).Item2;
+                    MetasysObject obj = new MetasysObject(item, type);
+                    objects.Add(obj);
+                }
+
+            }
+            catch (System.NullReferenceException)
+            {
+                var task = LogErrorAsync("Could not format response.");
+            }
+
+            return objects;
+        }
+
+        /// <summary>
+        /// Gets child objects by ensuring the pagesize is at least the total number of devices or MAX_PAGE_SIZE.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.NullReferenceException"></exception>
+        private JToken GetObjectsRequest(Guid id)
+        {
+            Url url = new Url("objects")
+                .AppendPathSegments(id, "objects");
+
+            var response = client.Request(url)
+                .GetJsonAsync<JToken>();
+
+            try
+            {
+                if (response.Result["next"].Value<string>() != null)
+                {
+                    int total = response.Result["total"].Value<int>();
+                    if (total > MAX_PAGE_SIZE)
+                    {
+                        total = MAX_PAGE_SIZE;
+                    }
+                    response = client.Request(url
+                        .SetQueryParam("pagesize", total))
+                        .GetJsonAsync<JToken>();
+                }
+            }
+            catch (System.NullReferenceException)
+            {
+                return response.Result;
+            }
+
+            return response.Result;
+        }
+
         /// <summary>
         /// Creates a new Flurl client and gets a resource given the url.
         /// </summary>
+        /// <param name="url"></param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         private JToken GetWithFullUrl(string url)
         {
@@ -616,6 +693,37 @@ namespace JohnsonControls.Metasys.BasicServices
                 var item = temporaryClient.Request()
                     .GetJsonAsync<JToken>();
                 return item.Result;
+            }
+        }
+
+        /// <summary>
+        /// Gets the type from a token with a typeUrl by requesting the actual description.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <exception cref="System.NullReferenceException"></exception>        
+        /// <exception cref="System.ArgumentNullException"></exception>
+        private (int, string) GetType(JToken item)
+        {
+            try
+            {
+                var url = item["typeUrl"].Value<string>();
+
+                var task = LogErrorAsync("get type: " + url);
+                var typeToken = GetWithFullUrl(url);
+
+                string description = typeToken["description"].Value<string>();
+                int type = typeToken["id"].Value<int>();
+                return (type, description);
+            }
+            catch (System.NullReferenceException)
+            {
+                var task = LogErrorAsync("Could not get type enumeration.");
+                return (-1, "");
+            }
+            catch (System.ArgumentNullException)
+            {
+                var task = LogErrorAsync("Object does not have field for typeUrl.");
+                return (-1, "");
             }
         }
     }
