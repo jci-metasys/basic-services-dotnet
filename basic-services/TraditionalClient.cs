@@ -7,12 +7,21 @@ using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     public class TraditionalClient
     {
         private FlurlClient client;
+
+        private string accessToken;
+
+        private DateTime tokenExpires;
+
+        private bool refresh;
+
+        private const int MAX_PAGE_SIZE = 1000;
 
         /// <summary>
         /// Creates a new TraditionalClient.
@@ -58,8 +67,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         /// <exception cref="System.NullReferenceException"></exception>
-        public void TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2)
+        public void TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2, bool refresh = true)
         {
+            this.refresh = true;
+            if (client != null)
+            {
+                client.Dispose();
+            }
             client = new FlurlClient($"https://{hostname}"
                 .AppendPathSegments("api", version));
             var response = client.Request("login")
@@ -69,7 +83,14 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 var accessToken = response.Result["accessToken"];
-                client.Headers.Add("Authorization", $"Bearer {accessToken}");
+                var expires = response.Result["expires"];
+                this.accessToken = $"Bearer {accessToken.Value<string>()}";
+                this.tokenExpires = expires.Value<DateTime>();
+                client.Headers.Add("Authorization", this.accessToken);
+                if (refresh)
+                {
+                    ScheduleRefresh();
+                }
             }
             catch (System.NullReferenceException)
             {
@@ -96,26 +117,58 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 var accessToken = response.Result["accessToken"];
+                var expires = response.Result["expires"];
+                this.accessToken = $"Bearer {accessToken.Value<string>()}";
+                this.tokenExpires = expires.Value<DateTime>();
                 client.Headers.Remove("Authorization");
-                client.Headers.Add("Authorization", $"Bearer {accessToken}");
+                client.Headers.Add("Authorization", this.accessToken);
+                if (refresh)
+                {
+                    ScheduleRefresh();
+                }
             }
             catch (System.NullReferenceException)
             {
-                var task = LogErrorAsync("Could not get access token.");
+                var task = LogErrorAsync("Refresh could not get access token.");
             }
+        }
+
+        /// <summary>
+        /// Will call Refresh() a minute before the token expires.
+        /// </summary>
+        private void ScheduleRefresh()
+        {
+            DateTime now = DateTime.Now;
+            TimeSpan delay = tokenExpires - now;
+            delay.Subtract(new TimeSpan(0, 1, 0));
+
+            if (delay <= TimeSpan.Zero)
+            {
+                delay = TimeSpan.Zero;
+                var task = LogErrorAsync("Token expires in less than a minute, this may be a mismatch of the server's time and your machine's local time.");
+            }
+
+            int delayms = (int)delay.TotalMilliseconds;
+            // If the time in milliseconds is greater than max int there will be issues so set time to infinite
+            if (delayms < 0)
+            {
+                delayms = -1;
+            }
+
+            System.Threading.Tasks.Task.Delay(delayms).ContinueWith(_ => Refresh());
         }
 
         /// <summary>
         /// Returns the object identifier (id) of the specified object.
         /// </summary>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.FormatException"></exception>
         public Guid GetObjectIdentifier(string itemReference)
         {
-            Guid empty = new Guid(new Byte[16]);
             if (client == null)
             {
                 LogClientUndefinedError();
-                return empty;
+                return Guid.Empty;
             }
 
             var response = client.Request("objectIdentifiers")
@@ -129,7 +182,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch (System.FormatException)
             {
-                return empty;
+                return Guid.Empty;
             }
         }
 
@@ -152,7 +205,15 @@ namespace JohnsonControls.Metasys.BasicServices
                 .AppendPathSegments(id, "attributes", attributeName))
                 .GetJsonAsync<JToken>();
 
-            return new ReadPropertyResult(id, response.Result["item"][attributeName], attributeName);
+            try
+            {
+                var attribute = response.Result["item"][attributeName];
+                return new ReadPropertyResult(id, attribute, attributeName);
+            }
+            catch (System.NullReferenceException)
+            {
+                return new ReadPropertyResult(id, null, attributeName);
+            }
         }
 
         /// <summary>
@@ -182,6 +243,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="attributeNames"></param>
+        /// <exception cref="System.NullReferenceException"></exception>
         private async Task<List<ReadPropertyResult>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
@@ -195,18 +257,19 @@ namespace JohnsonControls.Metasys.BasicServices
 
             await Task.WhenAll(taskList);
 
-            foreach (var task in taskList.ToArray())
+            foreach (var task in taskList.ToList())
             {
                 foreach (string attributeName in attributeNames)
                 {
                     Guid id = task.Result.Item1;
-                    JToken value = task.Result.Item2["item"][attributeName];
-                    if (value != null)
+                    try
                     {
-                        lock (results)
-                        {
-                            results.Add(new ReadPropertyResult(id, value, attributeName));
-                        }
+                        JToken value = task.Result.Item2["item"][attributeName];
+                        results.Add(new ReadPropertyResult(id, value, attributeName));
+                    }
+                    catch (System.NullReferenceException)
+                    {
+                        results.Add(new ReadPropertyResult(id, null, attributeName));
                     }
                 }
             }
@@ -241,6 +304,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 LogClientUndefinedError();
                 return;
             }
+
             Dictionary<string, object> pairs = new Dictionary<string, object>();
             pairs.Add(attributeName, newValue);
             if (priority != null)
@@ -261,7 +325,6 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 var task = LogErrorAsync("Could not format request.");
             }
-
         }
 
         /// <summary>
@@ -278,7 +341,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 return;
             }
 
-            if (ids == null || attributeValues == null) {
+            if (ids == null || attributeValues == null)
+            {
                 return;
             }
 
@@ -421,6 +485,246 @@ namespace JohnsonControls.Metasys.BasicServices
             var response = client.Request(new Url("objects")
                 .AppendPathSegments(id, "commands", command))
                 .PutJsonAsync(json);
+        }
+
+        /// <summary>
+        /// Gets all network devices.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <exception cref="System.NullReferenceException"></exception>
+        public IEnumerable<NetworkDevice> GetNetworkDevices(string type = null)
+        {
+            if (client == null)
+            {
+                LogClientUndefinedError();
+                return null;
+            }
+
+            List<NetworkDevice> devices = new List<NetworkDevice>();
+            var response = GetNetworkDevicesRequest(type);
+
+            try
+            {
+                var list = response["items"] as JArray;
+                foreach (var item in list)
+                {
+                    string description = GetType(item).Item2;
+                    NetworkDevice device = new NetworkDevice(item, description);
+                    devices.Add(device);
+                }
+
+            }
+            catch (System.NullReferenceException)
+            {
+                var task = LogErrorAsync("Could not format response.");
+            }
+
+            return devices;
+        }
+
+        /// <summary>
+        /// Gets all network devices by ensuring the pagesize is at least the total number of devices or MAX_PAGE_SIZE.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.NullReferenceException"></exception>
+        private JToken GetNetworkDevicesRequest(string type = null)
+        {
+            Url url = new Url("networkDevices");
+            if (type != null)
+            {
+                url.SetQueryParam("type", type);
+            }
+
+            var response = client.Request(url)
+                .GetJsonAsync<JToken>();
+
+            try
+            {
+                if (response.Result["next"].Value<string>() != null)
+                {
+                    int total = response.Result["total"].Value<int>();
+                    if (total > MAX_PAGE_SIZE)
+                    {
+                        total = MAX_PAGE_SIZE;
+                    }
+                    response = client.Request(url
+                        .SetQueryParam("pagesize", total))
+                        .GetJsonAsync<JToken>();
+                }
+            }
+            catch (System.NullReferenceException)
+            {
+                return response.Result;
+            }
+
+            return response.Result;
+        }
+
+        /// <summary>
+        /// Gets all available network device types in (id, description) pairs.
+        /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.NullReferenceException"></exception>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public IEnumerable<(int, string)> GetNetworkDeviceTypes()
+        {
+            if (client == null)
+            {
+                LogClientUndefinedError();
+                return null;
+            }
+
+            List<(int, string)> types = new List<(int, string)>();
+            var response = client.Request(new Url("networkDevices")
+                .AppendPathSegment("availableTypes"))
+                .GetJsonAsync<JToken>();
+
+            try
+            {
+                var list = response.Result["items"] as JArray;
+                foreach (var item in list)
+                {
+                    try
+                    {
+                        var type = GetType(item);
+                        types.Add(type);
+                    }
+                    catch (System.ArgumentNullException)
+                    {
+                        var task = LogErrorAsync("Could not format response.");
+                    }
+                    catch (System.NullReferenceException)
+                    {
+                        var task = LogErrorAsync("Could not format response.");
+                    }
+                }
+            }
+            catch (System.NullReferenceException)
+            {
+                var task = LogErrorAsync("Could not format response.");
+            }
+
+            return types;
+        }
+
+
+        /// <summary>
+        /// Gets all child objects given a parent Guid.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <exception cref="System.NullReferenceException"></exception>
+        public IEnumerable<MetasysObject> GetObjects(Guid id)
+        {
+            if (client == null)
+            {
+                LogClientUndefinedError();
+                return null;
+            }
+
+            List<MetasysObject> objects = new List<MetasysObject>();
+            var response = GetObjectsRequest(id);
+
+            try
+            {
+                var list = response["items"] as JArray;
+                foreach (var item in list)
+                {
+                    string type = GetType(item).Item2;
+                    MetasysObject obj = new MetasysObject(item, type);
+                    objects.Add(obj);
+                }
+
+            }
+            catch (System.NullReferenceException)
+            {
+                var task = LogErrorAsync("Could not format response.");
+            }
+
+            return objects;
+        }
+
+        /// <summary>
+        /// Gets child objects by ensuring the pagesize is at least the total number of devices or MAX_PAGE_SIZE.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.NullReferenceException"></exception>
+        private JToken GetObjectsRequest(Guid id)
+        {
+            Url url = new Url("objects")
+                .AppendPathSegments(id, "objects");
+
+            var response = client.Request(url)
+                .GetJsonAsync<JToken>();
+
+            try
+            {
+                if (response.Result["next"].Value<string>() != null)
+                {
+                    int total = response.Result["total"].Value<int>();
+                    if (total > MAX_PAGE_SIZE)
+                    {
+                        total = MAX_PAGE_SIZE;
+                    }
+                    response = client.Request(url
+                        .SetQueryParam("pagesize", total))
+                        .GetJsonAsync<JToken>();
+                }
+            }
+            catch (System.NullReferenceException)
+            {
+                return response.Result;
+            }
+
+            return response.Result;
+        }
+
+        /// <summary>
+        /// Creates a new Flurl client and gets a resource given the url.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        private JToken GetWithFullUrl(string url)
+        {
+            using (var temporaryClient = new FlurlClient(new Url(url)))
+            {
+                temporaryClient.Headers.Add("Authorization", this.accessToken);
+                var item = temporaryClient.Request()
+                    .GetJsonAsync<JToken>();
+                return item.Result;
+            }
+        }
+
+        /// <summary>
+        /// Gets the type from a token with a typeUrl by requesting the actual description.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <exception cref="System.NullReferenceException"></exception>        
+        /// <exception cref="System.ArgumentNullException"></exception>
+        private (int, string) GetType(JToken item)
+        {
+            try
+            {
+                var url = item["typeUrl"].Value<string>();
+
+                var task = LogErrorAsync("get type: " + url);
+                var typeToken = GetWithFullUrl(url);
+
+                string description = typeToken["description"].Value<string>();
+                int type = typeToken["id"].Value<int>();
+                return (type, description);
+            }
+            catch (System.NullReferenceException)
+            {
+                var task = LogErrorAsync("Could not get type enumeration.");
+                return (-1, "");
+            }
+            catch (System.ArgumentNullException)
+            {
+                var task = LogErrorAsync("Object does not have field for typeUrl.");
+                return (-1, "");
+            }
         }
     }
 }
