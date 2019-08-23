@@ -16,7 +16,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         public string Name { private set; get; }
 
-        public string TypeUrl { private set; get; }
+        public string Type { private set; get; }
 
         public string Description { private set; get; }
 
@@ -24,9 +24,11 @@ namespace JohnsonControls.Metasys.BasicServices
 
         public string IpAddress { private set; get; }
 
-        internal NetworkDevice(JToken token, CultureInfo cultureInfo = null)
+        internal NetworkDevice(JToken token, string type = "", CultureInfo cultureInfo = null)
         {
             _CultureInfo = cultureInfo;
+            Type = type;
+            
             try
             {
                 Id = new Guid(token["id"].Value<string>());
@@ -36,7 +38,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 Id = Guid.Empty;
             }
 
-            string placeholder = "N/A";
+            string placeholder = "";
             try
             {
                 ItemReference = token["itemReference"].Value<string>();
@@ -53,15 +55,6 @@ namespace JohnsonControls.Metasys.BasicServices
             catch
             {
                 Name = placeholder;
-            }
-
-            try
-            {
-                TypeUrl = token["typeUrl"].Value<string>();
-            }
-            catch
-            {
-                TypeUrl = placeholder;
             }
 
             try
