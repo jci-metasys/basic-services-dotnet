@@ -346,18 +346,18 @@ namespace Tests
         }
 
         [Test]
-        public void TestReadPropertyObjectWithReliabilityPriorityInteger()
+        public void TestReadPropertyObjectPresentValueInteger()
         {
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
                 traditionalClient.TryLogin("username", "password");
 
-                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": {" +
+                httpTest.RespondWith("{ \"item\": { \"presentValue\": {" +
                 "\"value\": 60, \"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, "presentValue");
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(60, result.NumericValue);
@@ -371,18 +371,18 @@ namespace Tests
         }
 
         [Test]
-        public void TestReadPropertyObjectWithReliabilityPriorityString()
+        public void TestReadPropertyObjectPresentValueString()
         {
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
                 traditionalClient.TryLogin("username", "password");
 
-                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": {" +
+                httpTest.RespondWith("{ \"item\": { \"presentValue\": {" +
                 "\"value\": \"stringvalue\", \"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, "presentValue");
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(0, result.NumericValue);
@@ -415,9 +415,9 @@ namespace Tests
                 Assert.AreEqual("Unsupported Data Type", result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
-                Assert.AreEqual("writePriorityEnumSet.priorityDefault", result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.noInput", result.Reliability);
-                Assert.AreEqual(false, result.IsReliable);
+                Assert.AreEqual(null, result.Priority);
+                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(true, result.IsReliable);
             }
         }
 

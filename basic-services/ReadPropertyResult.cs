@@ -124,19 +124,25 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <summary>Searches the JObject for reliability and priority fields and uses the field called 'value' as value for result.</summary>
         internal void ProcessPresentValue(JToken token) {
-            JToken valueToken = token["value"];
-            JToken reliabilityToken = token["reliability"];
-            JToken priorityToken = token["priority"];
+            if (Attribute.Equals("presentValue")) {
+                JToken valueToken = token["value"];
+                JToken reliabilityToken = token["reliability"];
+                JToken priorityToken = token["priority"];
 
-            if (reliabilityToken != null) 
-            {
-                Reliability = reliabilityToken.ToString();
+                if (reliabilityToken != null) 
+                {
+                    Reliability = reliabilityToken.ToString();
+                }
+                if (priorityToken != null)
+                {
+                    Priority = priorityToken.ToString();
+                }
+                ProcessToken(valueToken);
             }
-            if (priorityToken != null)
+            else
             {
-                Priority = priorityToken.ToString();
+                ProcessToken(null);
             }
-            ProcessToken(valueToken);
         }
     }
 }
