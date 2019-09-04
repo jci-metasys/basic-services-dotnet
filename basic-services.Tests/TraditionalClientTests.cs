@@ -462,8 +462,8 @@ namespace Tests
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
-                Assert.AreEqual(0, result.NumericValue);
-                Assert.AreEqual("stringvalue", result.StringValue);
+                Assert.AreEqual(1, result.NumericValue);
+                Assert.AreEqual("Unsupported Data Type", result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual("writePriorityEnumSet.priorityDefault", result.Priority);
@@ -481,7 +481,7 @@ namespace Tests
                 traditionalClient.TryLogin("username", "password", "hostname");
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
-                "1, 2 ] } }");
+                "0, 1 ] } }");
                 ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
@@ -490,8 +490,12 @@ namespace Tests
                 Assert.AreEqual(0, result.NumericValue);
                 Assert.AreEqual("Array", result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
-                Assert.AreEqual(("1", 1, true), result.ArrayValue[0]);
-                Assert.AreEqual(("2", 2, true), result.ArrayValue[1]);
+                Assert.AreEqual("0", result.ArrayValue[0].StringValue);
+                Assert.AreEqual(0, result.ArrayValue[0].NumericValue);
+                Assert.AreEqual(false, result.ArrayValue[0].BooleanValue);
+                Assert.AreEqual("1", result.ArrayValue[1].StringValue);
+                Assert.AreEqual(1, result.ArrayValue[1].NumericValue);
+                Assert.AreEqual(true, result.ArrayValue[1].BooleanValue);
                 Assert.AreEqual(null, result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
@@ -516,8 +520,12 @@ namespace Tests
                 Assert.AreEqual(0, result.NumericValue);
                 Assert.AreEqual("Array", result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
-                Assert.AreEqual(("stringvalue1", 0, false), result.ArrayValue[0]);
-                Assert.AreEqual(("stringvalue2", 0, false), result.ArrayValue[1]);
+                Assert.AreEqual("stringvalue1", result.ArrayValue[0].StringValue);
+                Assert.AreEqual(0, result.ArrayValue[0].NumericValue);
+                Assert.AreEqual(false, result.ArrayValue[0].BooleanValue);
+                Assert.AreEqual("stringvalue2", result.ArrayValue[1].StringValue);
+                Assert.AreEqual(0, result.ArrayValue[1].NumericValue);
+                Assert.AreEqual(false, result.ArrayValue[1].BooleanValue);
                 Assert.AreEqual(null, result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
@@ -543,8 +551,12 @@ namespace Tests
                 Assert.AreEqual(0, result.NumericValue);
                 Assert.AreEqual("Array", result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
-                Assert.AreEqual(("Unsupported Data Type", 1, false), result.ArrayValue[0]);
-                Assert.AreEqual(("Unsupported Data Type", 1, false), result.ArrayValue[1]);
+                Assert.AreEqual("Unsupported Data Type", result.ArrayValue[0].StringValue);
+                Assert.AreEqual(1, result.ArrayValue[0].NumericValue);
+                Assert.AreEqual(false, result.ArrayValue[0].BooleanValue);
+                Assert.AreEqual("Unsupported Data Type", result.ArrayValue[1].StringValue);
+                Assert.AreEqual(1, result.ArrayValue[1].NumericValue);
+                Assert.AreEqual(false, result.ArrayValue[1].BooleanValue);
                 Assert.AreEqual(null, result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);

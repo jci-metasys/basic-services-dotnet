@@ -24,7 +24,7 @@ namespace JohnsonControls.Metasys.BasicServices
         // We will support reading the entire array (asusming it's an array of primitives)
         // This will be null for non-array data types.
         // Alternatively, we could have this return a single element array 
-        public (string, double, bool)[] ArrayValue { private set; get; }
+        public ReadPropertyResult[] ArrayValue { private set; get; }
         
         public string Attribute { private set; get; }
 
@@ -42,23 +42,23 @@ namespace JohnsonControls.Metasys.BasicServices
 
         private CultureInfo _CultureInfo;
 
-        internal ReadPropertyResult(Guid id, JToken token, string attribute, CultureInfo cultureInfo = null, string reliability = null, string priority = null)
+        internal ReadPropertyResult(Guid id, JToken token, string attribute, CultureInfo cultureInfo = null)
         {
             Id = id;
             Attribute = attribute;
-            Reliability = reliability ?? Reliable;
-            Priority = priority;
+            Reliability = Reliable;
+            Priority = null;
             StringValue = null;
             NumericValue = 1;
             ArrayValue = null;
             BooleanValue = false;
             _CultureInfo = cultureInfo;
 
-            ReadToken(token);
+            ProcessToken(token);
         }
 
         /// <summary>Parses the JToken type and assigns struct values appropriately.</summary>
-        internal void ReadToken(JToken token)
+        private void ProcessToken(JToken token)
         {
             if (token == null) {
                 NumericValue = 1;
@@ -84,21 +84,22 @@ namespace JohnsonControls.Metasys.BasicServices
                     StringValue = token.Value<string>();
                     break;
                 case JTokenType.Array:
-                    ReadArray(token);
+                    ProcessArray(token);
                     break;
                 case JTokenType.Boolean:
                     if ((bool)(token) == true) {
                         NumericValue = 1;
-                        StringValue = "True";
                         BooleanValue = true;
+                        StringValue = Convert.ToString(BooleanValue);
                     } else {
                         NumericValue = 0;
-                        StringValue = "False";
                         BooleanValue = false;
+                        StringValue = Convert.ToString(BooleanValue);
                     }
                     break;
                 case JTokenType.Object:
-                    ReadObject(token);
+                    // It is assumed the attribute read was the presentValue
+                    ProcessPresentValue(token);
                     break;
                 default:
                     NumericValue = 1;
@@ -108,30 +109,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>Parses a JArray and adds (string, double) pairs to an array based on JToken type.</summary>
-        internal void ReadArray(JToken token) {
+        private void ProcessArray(JToken token) {
             JArray arr = JArray.Parse(token.ToString());
-            ArrayValue = new (string, double, bool)[arr.Count];
+            ArrayValue = new ReadPropertyResult[arr.Count];
             int index = 0;
             foreach(var item in arr.Children())
             {
-                double value = 0;
-                switch (item.Type)
-                {
-                    case JTokenType.Integer:
-                        value = (double) item.Value<double>();
-                        ArrayValue[index] = (value.ToString(), value, Convert.ToBoolean(NumericValue));
-                        break;
-                    case JTokenType.Float:
-                        value = (double) item.Value<double>();
-                        ArrayValue[index] = (value.ToString(), value, Convert.ToBoolean(NumericValue));
-                        break;
-                    case JTokenType.String:
-                        ArrayValue[index] = (item.Value<string>(), value, false);
-                        break;
-                    default:
-                        ArrayValue[index] = ("Unsupported Data Type", 1, false);
-                        break;
-                }
+                ArrayValue[index] = new ReadPropertyResult(Id, item, Attribute);
                 index++;
             }
             NumericValue = 0;
@@ -139,7 +123,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>Searches the JObject for reliability and priority fields and finds a value to use.</summary>
-        internal void ReadObject(JToken token) {
+        internal void ProcessPresentValue(JToken token) {
             JToken valueToken = token["value"];
             JToken reliabilityToken = token["reliability"];
             JToken priorityToken = token["priority"];
@@ -152,18 +136,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 Priority = priorityToken.ToString();
             }
-            if (valueToken == null) {
-                // Search for the first value to use as the value (there could exist more than 1)
-                JObject obj = JObject.Parse(token.ToString());
-                foreach (JProperty property in obj.Properties())
-                {
-                    if (!property.Name.Equals("reliability") && !property.Name.Equals("priority")) {
-                        valueToken = property.Value;
-                        break;
-                    }
-                }
-            }
-            ReadToken(valueToken);
+            ProcessToken(valueToken);
         }
     }
 }
