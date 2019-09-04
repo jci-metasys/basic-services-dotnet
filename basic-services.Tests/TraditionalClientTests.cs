@@ -23,7 +23,7 @@ namespace Tests
         [SetUp]
         public void Init()
         {
-            traditionalClient = new TraditionalClient();
+            traditionalClient = new TraditionalClient("hostname");
             mockAttributeName = "property";
             mockAttributeName2 = "property2";
             mockAttributeName3 = "property3";
@@ -41,7 +41,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/json")
@@ -59,7 +59,7 @@ namespace Tests
 
                 try
                 {
-                    traditionalClient.TryLogin("username", "badpassword", "hostname");
+                    traditionalClient.TryLogin("username", "badpassword");
 
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
                         .WithVerb(HttpMethod.Post)
@@ -71,7 +71,6 @@ namespace Tests
                 {
                     Assert.Fail();
                 }
-
             }
         }
 
@@ -84,7 +83,8 @@ namespace Tests
 
                 try
                 {
-                    traditionalClient.TryLogin("username", "password", "badhost");
+                    TraditionalClient traditionalClientBad = new TraditionalClient("badhost");
+                    traditionalClientBad.TryLogin("username", "password");
 
                     httpTest.ShouldHaveCalled($"https://badhost/api/V2/login")
                         .WithVerb(HttpMethod.Post)
@@ -99,21 +99,6 @@ namespace Tests
             }
         }
 
-        // [Test]
-        // public void TestBadVersionLogin()
-        // {
-        //     using (var httpTest = new HttpTest())
-        //     {
-        //         httpTest.RespondWithJson(new {accessToken = "faketoken", expires = "2030-01-01T00:00:00Z"});
-        //         traditionalClient.TryLogin("username", "password", "hostname");
-        //         httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
-        //             .WithVerb(HttpMethod.Post)
-        //             .WithContentType("application/json")
-        //             .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
-        //             .Times(1);
-        //     }
-        // }
-
         #endregion
 
         #region Refresh Tests
@@ -124,7 +109,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
                 traditionalClient.Refresh();
@@ -135,29 +120,12 @@ namespace Tests
         }
 
         [Test]
-        public void TestRefreshNullClient()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                try
-                {
-                    traditionalClient.Refresh();
-                    httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/refreshToken");
-                }
-                catch
-                {
-                    Assert.Fail();
-                }
-            }
-        }
-
-        [Test]
         public void TestRefreshHandlesException()
         {
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("unauthorized", 401);
 
@@ -185,7 +153,7 @@ namespace Tests
                 string time = future.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
 
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = time });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
                 System.Threading.Thread.Sleep(7000);
@@ -206,7 +174,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith($"\"{mockid.ToString()}\"");
                 var id = traditionalClient.GetObjectIdentifier("fully:qualified/reference");
@@ -223,7 +191,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("Bad Request", 400);
 
@@ -241,7 +209,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("Bad Request", 400);
 
@@ -250,25 +218,6 @@ namespace Tests
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
                 Assert.AreEqual(Guid.Empty, id);
-            }
-        }
-
-        [Test]
-        public void TestGetObjectIdentifierNullClient()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                try
-                {
-                    var id = traditionalClient.GetObjectIdentifier("fully:qualified/reference");
-                    httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objectIdentifiers");
-                    Assert.AreEqual(Guid.Empty, id);
-                }
-                catch
-                {
-                    Assert.Fail();
-                }
-
             }
         }
 
@@ -282,7 +231,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": 1 }}");
                 ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
@@ -306,7 +255,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": 1.1 }}");
                 ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
@@ -330,7 +279,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": \"stringvalue\" }}");
                 ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
@@ -354,7 +303,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": true }}");
                 ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
@@ -378,7 +327,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": false }}");
                 ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
@@ -402,7 +351,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": {" +
                 "\"value\": 60, \"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
@@ -427,7 +376,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": {" +
                 "\"value\": \"stringvalue\", \"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
@@ -452,7 +401,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": { " +
                 "\"property\": \"stringvalue\", \"property2\": \"stringvalue2\", " +
@@ -478,7 +427,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
                 "0, 1 ] } }");
@@ -508,7 +457,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
                 "\"stringvalue1\", \"stringvalue2\" ] } }");
@@ -538,7 +487,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
                 "{ \"item1\": \"stringvalue1\", \"item2\": \"stringvalue2\" }," +
@@ -569,7 +518,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("Not Found", 404);
                 try
@@ -592,7 +541,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": {}");
                 ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
@@ -610,30 +559,6 @@ namespace Tests
             }
         }
 
-        [Test]
-        public void TestReadPropertyNullClient()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                try
-                {
-                    ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
-                    httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}");
-                    Assert.AreEqual(1, result.NumericValue);
-                    Assert.AreEqual("Unsupported Data Type", result.StringValue);
-                    Assert.AreEqual(false, result.BooleanValue);
-                    Assert.AreEqual(null, result.ArrayValue);
-                    Assert.AreEqual(null, result.Priority);
-                    Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
-                    Assert.AreEqual(true, result.IsReliable);
-                }
-                catch
-                {
-                    Assert.Fail();
-                }
-            }
-        }
-
         #endregion
 
         #region ReadPropertyMultiple Tests
@@ -644,7 +569,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { };
@@ -661,7 +586,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { mockid };
@@ -681,7 +606,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { mockid };
@@ -701,7 +626,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest
                     .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
@@ -739,7 +664,7 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password", "hostname");
+                traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{ \"item\": { \"attributeNoMatch\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { mockid };
@@ -753,27 +678,6 @@ namespace Tests
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
                     Assert.AreEqual(1, results.Count());
-                }
-                catch
-                {
-                    Assert.Fail();
-                }
-            }
-        }
-
-        [Test]
-        public void TestReadPropertyMultipleNullClient()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                try
-                {
-                    List<Guid> ids = new List<Guid>() { mockid };
-                    List<string> attributes = new List<string>() { mockAttributeName };
-                    IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
-
-                    httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}");
-                    Assert.AreEqual(null, results);
                 }
                 catch
                 {

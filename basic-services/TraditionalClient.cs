@@ -31,11 +31,14 @@ namespace JohnsonControls.Metasys.BasicServices
         /// the user's current culture is used.
         /// </remarks>
         /// <param name="cultureInfo"></param>
-        public TraditionalClient(CultureInfo cultureInfo = null)
+        public TraditionalClient(string hostname, ApiVersion version = ApiVersion.V2, CultureInfo cultureInfo = null)
         {
             var culture = cultureInfo ?? CultureInfo.CurrentCulture;
             FlurlHttp.Configure(settings => settings.OnErrorAsync = HandleFlurlErrorAsync);
             FlurlHttp.Configure(settings => settings.OnError = HandleFlurlError);
+
+            client = new FlurlClient($"https://{hostname}"
+                .AppendPathSegments("api", version));
         }
 
         private void HandleFlurlError(HttpCall call)
@@ -67,15 +70,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         /// <exception cref="System.NullReferenceException"></exception>
-        public void TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2, bool refresh = true)
+        public void TryLogin(string username, string password, bool refresh = true)
         {
-            this.refresh = true;
-            if (client != null)
-            {
-                client.Dispose();
-            }
-            client = new FlurlClient($"https://{hostname}"
-                .AppendPathSegments("api", version));
+            this.refresh = refresh;
+            
             var response = client.Request("login")
                 .PostJsonAsync(new { username, password })
                 .ReceiveJson<JToken>();
@@ -105,12 +103,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="System.NullReferenceException"></exception>
         public void Refresh()
         {
-            if (client == null)
-            {
-                LogClientUndefinedError();
-                return;
-            }
-
             var response = client.Request("refreshToken")
                 .GetJsonAsync<JToken>();
 
@@ -165,12 +157,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="System.FormatException"></exception>
         public Guid GetObjectIdentifier(string itemReference)
         {
-            if (client == null)
-            {
-                LogClientUndefinedError();
-                return Guid.Empty;
-            }
-
             var response = client.Request("objectIdentifiers")
                 .SetQueryParam("fqr", itemReference)
                 .GetStringAsync();
@@ -195,12 +181,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         public ReadPropertyResult ReadProperty(Guid id, string attributeName)
         {
-            if (client == null)
-            {
-                LogClientUndefinedError();
-                return new ReadPropertyResult(id, null, attributeName);
-            }
-
             var response = client.Request(new Url("objects")
                 .AppendPathSegments(id, "attributes", attributeName))
                 .GetJsonAsync<JToken>();
@@ -224,12 +204,6 @@ namespace JohnsonControls.Metasys.BasicServices
         public IEnumerable<ReadPropertyResult> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
-            if (client == null)
-            {
-                LogClientUndefinedError();
-                return null;
-            }
-
             if (ids == null || attributeNames == null)
             {
                 return null;
