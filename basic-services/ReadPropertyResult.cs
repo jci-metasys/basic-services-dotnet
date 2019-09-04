@@ -108,7 +108,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        /// <summary>Parses a JArray and adds (string, double) pairs to an array based on JToken type.</summary>
+        /// <summary>Parses a JArray and adds each item as a ReadPropertyResult.</summary>
         private void ProcessArray(JToken token) {
             JArray arr = JArray.Parse(token.ToString());
             ArrayValue = new ReadPropertyResult[arr.Count];
@@ -122,7 +122,7 @@ namespace JohnsonControls.Metasys.BasicServices
             StringValue = "Array";
         }
 
-        /// <summary>Searches the JObject for reliability and priority fields and finds a value to use.</summary>
+        /// <summary>Searches the JObject for reliability and priority fields and uses the field called 'value' as value for result.</summary>
         internal void ProcessPresentValue(JToken token) {
             JToken valueToken = token["value"];
             JToken reliabilityToken = token["reliability"];
