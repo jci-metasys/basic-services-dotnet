@@ -234,7 +234,7 @@ namespace Tests
                 traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": 1 }}");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -258,7 +258,7 @@ namespace Tests
                 traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": 1.1 }}");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -282,7 +282,7 @@ namespace Tests
                 traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": \"stringvalue\" }}");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -306,7 +306,7 @@ namespace Tests
                 traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": true }}");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -330,7 +330,7 @@ namespace Tests
                 traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": false }}");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -355,7 +355,7 @@ namespace Tests
 
                 httpTest.RespondWith("{ \"item\": { \"presentValue\": {" +
                 "\"value\": 60, \"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, "presentValue");
+                Variant result = traditionalClient.ReadProperty(mockid, "presentValue");
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                     .WithVerb(HttpMethod.Get)
@@ -380,7 +380,7 @@ namespace Tests
 
                 httpTest.RespondWith("{ \"item\": { \"presentValue\": {" +
                 "\"value\": \"stringvalue\", \"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, "presentValue");
+                Variant result = traditionalClient.ReadProperty(mockid, "presentValue");
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                     .WithVerb(HttpMethod.Get)
@@ -406,7 +406,7 @@ namespace Tests
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": { " +
                 "\"property\": \"stringvalue\", \"property2\": \"stringvalue2\", " +
                 "\"reliability\": \"reliabilityEnumSet.noInput\", \"priority\": \"writePriorityEnumSet.priorityDefault\"} } }");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -431,7 +431,7 @@ namespace Tests
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
                 "0, 1 ] } }");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -461,7 +461,7 @@ namespace Tests
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
                 "\"stringvalue1\", \"stringvalue2\" ] } }");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -492,7 +492,7 @@ namespace Tests
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
                 "{ \"item1\": \"stringvalue1\", \"item2\": \"stringvalue2\" }," +
                 "{ \"item1\": \"stringvalue3\", \"item2\": \"stringvalue4\" } ] } }");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -523,7 +523,7 @@ namespace Tests
                 httpTest.RespondWith("Not Found", 404);
                 try
                 {
-                    ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                    Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
@@ -544,7 +544,7 @@ namespace Tests
                 traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": {}");
-                ReadPropertyResult result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -574,7 +574,7 @@ namespace Tests
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { };
                 List<string> attributes = new List<string>() { mockAttributeName };
-                IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                IEnumerable<Variant> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                 Assert.AreEqual(0, results.Count());
             }
@@ -591,7 +591,7 @@ namespace Tests
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { mockid };
                 List<string> attributes = new List<string>() { };
-                IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                IEnumerable<Variant> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Get)
@@ -611,7 +611,7 @@ namespace Tests
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { mockid };
                 List<string> attributes = new List<string>() { mockAttributeName };
-                IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                IEnumerable<Variant> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Get)
@@ -642,7 +642,7 @@ namespace Tests
 
                 List<Guid> ids = new List<Guid>() { mockid, mockid2 };
                 List<string> attributes = new List<string>() { mockAttributeName, mockAttributeName2, mockAttributeName3, mockAttributeName4, mockAttributeName5 };
-                IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                IEnumerable<Variant> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Get)
@@ -672,7 +672,7 @@ namespace Tests
 
                 try
                 {
-                    IEnumerable<ReadPropertyResult> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                    IEnumerable<Variant> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                         .WithVerb(HttpMethod.Get)

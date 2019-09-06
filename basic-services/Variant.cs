@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
-    public struct ReadPropertyResult
+    public struct Variant
     {
         private const string Reliable = "reliabilityEnumSet.reliable";
 
@@ -24,7 +24,7 @@ namespace JohnsonControls.Metasys.BasicServices
         // We will support reading the entire array (asusming it's an array of primitives)
         // This will be null for non-array data types.
         // Alternatively, we could have this return a single element array 
-        public ReadPropertyResult[] ArrayValue { private set; get; }
+        public Variant[] ArrayValue { private set; get; }
         
         public string Attribute { private set; get; }
 
@@ -42,7 +42,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         private CultureInfo _CultureInfo;
 
-        internal ReadPropertyResult(Guid id, JToken token, string attribute, CultureInfo cultureInfo = null)
+        internal Variant(Guid id, JToken token, string attribute, CultureInfo cultureInfo = null)
         {
             Id = id;
             Attribute = attribute;
@@ -108,14 +108,14 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        /// <summary>Parses a JArray and adds each item as a ReadPropertyResult.</summary>
+        /// <summary>Parses a JArray and adds each item as a Variant.</summary>
         private void ProcessArray(JToken token) {
             JArray arr = JArray.Parse(token.ToString());
-            ArrayValue = new ReadPropertyResult[arr.Count];
+            ArrayValue = new Variant[arr.Count];
             int index = 0;
             foreach(var item in arr.Children())
             {
-                ArrayValue[index] = new ReadPropertyResult(Id, item, Attribute);
+                ArrayValue[index] = new Variant(Id, item, Attribute);
                 index++;
             }
             NumericValue = 0;

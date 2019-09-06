@@ -173,13 +173,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Read one attribute value given the Guid of the object
+        /// Read one attribute value given the Guid of the object.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
         /// <returns></returns>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
-        public ReadPropertyResult ReadProperty(Guid id, string attributeName)
+        public Variant ReadProperty(Guid id, string attributeName)
         {
             var response = client.Request(new Url("objects")
                 .AppendPathSegments(id, "attributes", attributeName))
@@ -188,11 +188,11 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 var attribute = response.Result["item"][attributeName];
-                return new ReadPropertyResult(id, attribute, attributeName);
+                return new Variant(id, attribute, attributeName);
             }
             catch (System.NullReferenceException)
             {
-                return new ReadPropertyResult(id, null, attributeName);
+                return new Variant(id, null, attributeName);
             }
         }
 
@@ -201,7 +201,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="attributeNames"></param>
-        public IEnumerable<ReadPropertyResult> ReadPropertyMultiple(IEnumerable<Guid> ids,
+        public IEnumerable<Variant> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
             if (ids == null || attributeNames == null)
@@ -218,10 +218,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="ids"></param>
         /// <param name="attributeNames"></param>
         /// <exception cref="System.NullReferenceException"></exception>
-        private async Task<List<ReadPropertyResult>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
+        private async Task<List<Variant>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
-            List<ReadPropertyResult> results = new List<ReadPropertyResult>() { };
+            List<Variant> results = new List<Variant>() { };
             var taskList = new List<Task<(Guid, JToken)>>();
 
             foreach (var id in ids)
@@ -239,11 +239,11 @@ namespace JohnsonControls.Metasys.BasicServices
                     try
                     {
                         JToken value = task.Result.Item2["item"][attributeName];
-                        results.Add(new ReadPropertyResult(id, value, attributeName));
+                        results.Add(new Variant(id, value, attributeName));
                     }
                     catch (System.NullReferenceException)
                     {
-                        results.Add(new ReadPropertyResult(id, null, attributeName));
+                        results.Add(new Variant(id, null, attributeName));
                     }
                 }
             }
