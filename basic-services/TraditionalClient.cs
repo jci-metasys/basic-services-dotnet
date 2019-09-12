@@ -1,81 +1,266 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Globalization;
+using Flurl;
+using Flurl.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     public class TraditionalClient
     {
+        private FlurlClient client;
+
+        private string accessToken;
+
+        private DateTime tokenExpires;
+
+        private bool refresh;
+
+        private const int MAX_PAGE_SIZE = 1000;
 
         /// <summary>
-        /// 
+        /// Creates a new TraditionalClient.
         /// </summary>
         /// <remarks>
         /// Takes an optional CultureInfo which is useful for formatting numbers. If not specified,
         /// the user's current culture is used.
         /// </remarks>
         /// <param name="cultureInfo"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public TraditionalClient(CultureInfo cultureInfo = null)
+        public TraditionalClient(string hostname, ApiVersion version = ApiVersion.V2, CultureInfo cultureInfo = null)
         {
             var culture = cultureInfo ?? CultureInfo.CurrentCulture;
-            throw new NotImplementedException();
+            FlurlHttp.Configure(settings => settings.OnErrorAsync = HandleFlurlErrorAsync);
+            FlurlHttp.Configure(settings => settings.OnError = HandleFlurlError);
+
+            client = new FlurlClient($"https://{hostname}"
+                .AppendPathSegments("api", version));
         }
 
-        // Probably a boolean isn't good enough as it doesn't give a client any indication of what went wrong.
-        // Could return an Result structure that contains error information or nothing.
-        public bool TryLogin(string username, string password, string hostname, ApiVersion version = ApiVersion.V2)
+        private void HandleFlurlError(HttpCall call)
         {
-            throw new NotImplementedException();
+            var task = HandleFlurlErrorAsync(call);
         }
-        
-        
+
+        private async Task HandleFlurlErrorAsync(HttpCall call)
+        {
+            if (call.Exception.GetType() != typeof(Flurl.Http.FlurlParsingException))
+            {
+                await LogErrorAsync(call.Exception.Message);
+            }
+            call.ExceptionHandled = true;
+        }
+
+        private async Task LogErrorAsync(String message)
+        {
+            await Console.Error.WriteLineAsync(message);
+        }
+
+        private void LogClientUndefinedError()
+        {
+            var task = LogErrorAsync("Client undefined please login with TryLogin method.");
+        }
+
+        /// <summary>
+        /// Attempts to login to the given host.
+        /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.NullReferenceException"></exception>
+        public void TryLogin(string username, string password, bool refresh = true)
+        {
+            this.refresh = refresh;
+            
+            var response = client.Request("login")
+                .PostJsonAsync(new { username, password })
+                .ReceiveJson<JToken>();
+
+            try
+            {
+                var accessToken = response.Result["accessToken"];
+                var expires = response.Result["expires"];
+                this.accessToken = $"Bearer {accessToken.Value<string>()}";
+                this.tokenExpires = expires.Value<DateTime>();
+                client.Headers.Add("Authorization", this.accessToken);
+                if (refresh)
+                {
+                    ScheduleRefresh();
+                }
+            }
+            catch (System.NullReferenceException)
+            {
+                var task = LogErrorAsync("Could not get access token.");
+            }
+        }
+
+        /// <summary>
+        /// Requests a new access token before current token expires.
+        /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.NullReferenceException"></exception>
+        public void Refresh()
+        {
+            var response = client.Request("refreshToken")
+                .GetJsonAsync<JToken>();
+
+            try
+            {
+                var accessToken = response.Result["accessToken"];
+                var expires = response.Result["expires"];
+                this.accessToken = $"Bearer {accessToken.Value<string>()}";
+                this.tokenExpires = expires.Value<DateTime>();
+                client.Headers.Remove("Authorization");
+                client.Headers.Add("Authorization", this.accessToken);
+                if (refresh)
+                {
+                    ScheduleRefresh();
+                }
+            }
+            catch (System.NullReferenceException)
+            {
+                var task = LogErrorAsync("Refresh could not get access token.");
+            }
+        }
+
+        /// <summary>
+        /// Will call Refresh() a minute before the token expires.
+        /// </summary>
+        private void ScheduleRefresh()
+        {
+            DateTime now = DateTime.Now;
+            TimeSpan delay = tokenExpires - now;
+            delay.Subtract(new TimeSpan(0, 1, 0));
+
+            if (delay <= TimeSpan.Zero)
+            {
+                delay = TimeSpan.Zero;
+                var task = LogErrorAsync("Token expires in less than a minute, this may be a mismatch of the server's time and your machine's local time.");
+            }
+
+            int delayms = (int)delay.TotalMilliseconds;
+            // If the time in milliseconds is greater than max int there will be issues so set time to infinite
+            if (delayms < 0)
+            {
+                delayms = -1;
+            }
+
+            System.Threading.Tasks.Task.Delay(delayms).ContinueWith(_ => Refresh());
+        }
+
+        /// <summary>
+        /// Returns the object identifier (id) of the specified object.
+        /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.FormatException"></exception>
         public Guid GetObjectIdentifier(string itemReference)
         {
-            // Consider caching results since clients may not. If we add caching, then we could  consider
-            // taking itemReferences in ReadProperty and ReadPropertyMultiple. Until then we want to get clients
-            // used to using identifiers.
-            throw new NotImplementedException();
+            var response = client.Request("objectIdentifiers")
+                .SetQueryParam("fqr", itemReference)
+                .GetStringAsync();
+
+            try
+            {
+                var id = new Guid(response.Result.Trim('"'));
+                return id;
+            }
+            catch (System.FormatException)
+            {
+                return Guid.Empty;
+            }
         }
 
-        
         /// <summary>
-        /// 
+        /// Read one attribute value given the Guid of the object.
         /// </summary>
-        /// <remarks>
-        /// If the data type is not supported, then this should probably throw an exception. Or the ReadPropertyResult
-        /// could include an error code. Exception is probably simplest. Consider Excel app integration however. In those
-        /// cases adding error code field to ReadPropertyResult is better.
-        /// </remarks>
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
         /// <returns></returns>
-
-        /// <exception cref=""></exception>
-        /// which exceptions?
-        /// If it's communication issues with client then perhaps CommunicationException
-        /// If it's an HttpStatusCode that we are prepared for then make up some Exceptions:
-        /// Other options?
-        public ReadPropertyResult ReadProperty(Guid id, string attributeName)
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        public Variant ReadProperty(Guid id, string attributeName)
         {
-            // Call /objects/{id}/attributes/{attributeName}
-            // You won't have schema information but we only support numbers, strings, booleans and enums which comes back as strings
-            // Convert the response to appropriate result settings StringValue, NumericValue and ArrayValue 
-            throw new NotImplementedException();
+            var response = client.Request(new Url("objects")
+                .AppendPathSegments(id, "attributes", attributeName))
+                .GetJsonAsync<JToken>();
+
+            try
+            {
+                var attribute = response.Result["item"][attributeName];
+                return new Variant(id, attribute, attributeName);
+            }
+            catch (System.NullReferenceException)
+            {
+                return new Variant(id, null, attributeName);
+            }
         }
 
-
-        public IEnumerable<ReadPropertyResult> ReadPropertyMultiple(IEnumerable<Guid> ids,
+        /// <summary>
+        /// Read many attribute values given the Guids of the objects.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="attributeNames"></param>
+        public IEnumerable<Variant> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
-            // Most efficient implementation would read each object (async, and then join)
-            // using /objects/{id}?includeSchema=true
-            
-            // As each object comes in, filter it down to the attributes requested
-            // For each attribute calculate the stringvalue and numeric value
-            
-            
-            throw new NotImplementedException();
+            if (ids == null || attributeNames == null)
+            {
+                return null;
+            }
+
+            return ReadPropertyMultipleAsync(ids, attributeNames).Result;
+        }
+
+        /// <summary>
+        /// Read many attribute values given the Guids of the objects asynchronously.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="attributeNames"></param>
+        /// <exception cref="System.NullReferenceException"></exception>
+        private async Task<List<Variant>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
+            IEnumerable<string> attributeNames)
+        {
+            List<Variant> results = new List<Variant>() { };
+            var taskList = new List<Task<(Guid, JToken)>>();
+
+            foreach (var id in ids)
+            {
+                taskList.Add(ReadObjectAsync(id));
+            }
+
+            await Task.WhenAll(taskList);
+
+            foreach (var task in taskList.ToList())
+            {
+                foreach (string attributeName in attributeNames)
+                {
+                    Guid id = task.Result.Item1;
+                    try
+                    {
+                        JToken value = task.Result.Item2["item"][attributeName];
+                        results.Add(new Variant(id, value, attributeName));
+                    }
+                    catch (System.NullReferenceException)
+                    {
+                        results.Add(new Variant(id, null, attributeName));
+                    }
+                }
+            }
+            return results;
+        }
+
+        /// <summary>
+        /// Read entire object given the Guid of the object asynchronously.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        private async Task<(Guid, JToken)> ReadObjectAsync(Guid id)
+        {
+            var response = await client.Request(new Url("objects")
+                    .AppendPathSegment(id))
+                    .GetJsonAsync<JToken>();
+            return (id, response);
         }
     }
 }
