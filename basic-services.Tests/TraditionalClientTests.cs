@@ -6,6 +6,8 @@ using Flurl.Http.Testing;
 using NUnit.Framework;
 using Newtonsoft.Json.Linq;
 using JohnsonControls.Metasys.BasicServices;
+using Nito.AsyncEx;
+using System.Threading.Tasks;
 
 namespace Tests
 {
@@ -36,17 +38,35 @@ namespace Tests
         #region Login Tests
 
         [Test]
-        public void TestLogin()
+        public async Task TestLoginAsync()
         {
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
+                await traditionalClient.TryLoginAsync("username", "password").ConfigureAwait(false);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/json")
                     .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
                     .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestLogin()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
+                    traditionalClient.TryLogin("username", "password");
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
+                        .WithVerb(HttpMethod.Post)
+                        .WithContentType("application/json")
+                        .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
+                        .Times(1);
+                });
             }
         }
 
@@ -104,7 +124,7 @@ namespace Tests
         #region Refresh Tests
 
         [Test]
-        public void TestRefresh()
+        public async Task TestRefreshAsync()
         {
             using (var httpTest = new HttpTest())
             {
@@ -112,10 +132,29 @@ namespace Tests
                 traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.Refresh();
+                await traditionalClient.RefreshAsync().ConfigureAwait(false);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestRefresh()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
+                    traditionalClient.TryLogin("username", "password");
+
+                    httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
+                    traditionalClient.Refresh();
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+                });
             }
         }
 
@@ -169,7 +208,7 @@ namespace Tests
         #region GetObjectIdentifier Tests
 
         [Test]
-        public void TestGetObjectIdentifier()
+        public async Task TestGetObjectIdentifierAsync()
         {
             using (var httpTest = new HttpTest())
             {
@@ -177,11 +216,31 @@ namespace Tests
                 traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith($"\"{mockid.ToString()}\"");
-                var id = traditionalClient.GetObjectIdentifier("fully:qualified/reference");
+                var id = await traditionalClient.GetObjectIdentifierAsync("fully:qualified/reference").ConfigureAwait(false);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
                 Assert.AreEqual(typeof(Guid), id.GetType());
+            }
+        }
+
+        [Test]
+        public void TestGetObjectIdentifier()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
+                    traditionalClient.TryLogin("username", "password");
+
+                    httpTest.RespondWith($"\"{mockid.ToString()}\"");
+                    var id = traditionalClient.GetObjectIdentifier("fully:qualified/reference");
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                    Assert.AreEqual(typeof(Guid), id.GetType());
+                });
             }
         }
 
@@ -226,7 +285,7 @@ namespace Tests
         #region ReadProperty Tests
 
         [Test]
-        public void TestReadPropertyInteger()
+        public async Task TestReadPropertyIntegerAsync()
         {
             using (var httpTest = new HttpTest())
             {
@@ -234,7 +293,7 @@ namespace Tests
                 traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": 1 }}");
-                Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+                Variant result = await traditionalClient.ReadPropertyAsync(mockid, mockAttributeName).ConfigureAwait(false);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -246,6 +305,32 @@ namespace Tests
                 Assert.AreEqual(null, result.Priority);
                 Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
+            }
+        }
+
+        public void TestReadPropertyInteger()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
+                    traditionalClient.TryLogin("username", "password");
+
+                    httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": 1 }}");
+                    Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
+
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+                    Assert.AreEqual(1, result.NumericValue);
+                    Assert.AreEqual("1", result.StringValue);
+                    Assert.AreEqual(true, result.BooleanValue);
+                    Assert.AreEqual(null, result.ArrayValue);
+                    Assert.AreEqual(null, result.Priority);
+                    Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                    Assert.AreEqual(true, result.IsReliable);
+                });
             }
         }
 
@@ -621,7 +706,7 @@ namespace Tests
         }
 
         [Test]
-        public void TestReadPropertyMultipleTwoIdFiveAttribute()
+        public async Task TestReadPropertyMultipleTwoIdFiveAttributeAsync()
         {
             using (var httpTest = new HttpTest())
             {
@@ -642,7 +727,7 @@ namespace Tests
 
                 List<Guid> ids = new List<Guid>() { mockid, mockid2 };
                 List<string> attributes = new List<string>() { mockAttributeName, mockAttributeName2, mockAttributeName3, mockAttributeName4, mockAttributeName5 };
-                IEnumerable<Variant> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                IEnumerable<Variant> results = await traditionalClient.ReadPropertyMultipleAsync(ids, attributes).ConfigureAwait(false);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Get)
@@ -655,6 +740,46 @@ namespace Tests
                 {
                     Assert.AreNotEqual("Unsupported Data Type", result.StringValue);
                 }
+            }
+        }
+
+        public void TestReadPropertyMultipleTwoIdFiveAttribute()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
+                    traditionalClient.TryLogin("username", "password");
+
+                    httpTest
+                        .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
+                            "\"" + mockAttributeName2 + "\": 23, " +
+                            "\"" + mockAttributeName3 + "\": 23.5, " +
+                            "\"" + mockAttributeName4 + "\": true, " +
+                            "\"" + mockAttributeName5 + "\": [ 1, 2, 3] } }")
+                        .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
+                            "\"" + mockAttributeName2 + "\": 23, " +
+                            "\"" + mockAttributeName3 + "\": 23.5, " +
+                            "\"" + mockAttributeName4 + "\": true, " +
+                            "\"" + mockAttributeName5 + "\": [ 1, 2, 3] } }");
+
+                    List<Guid> ids = new List<Guid>() { mockid, mockid2 };
+                    List<string> attributes = new List<string>() { mockAttributeName, mockAttributeName2, mockAttributeName3, mockAttributeName4, mockAttributeName5 };
+                    IEnumerable<Variant> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+                    Assert.AreEqual(results.Count(), 10);
+                    foreach (var result in results)
+                    {
+                        Assert.AreNotEqual("Unsupported Data Type", result.StringValue);
+                    }
+                });
             }
         }
 
