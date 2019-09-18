@@ -334,5 +334,118 @@ namespace JohnsonControls.Metasys.BasicServices
                 .ConfigureAwait(false);
             return (id, response);
         }
+
+        /// <summary>
+        /// Write a single attribute given the Guid of the object.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="newValue"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="JsonSerializationException"></exception>
+        public void WriteProperty(Guid id, string attributeName, object newValue, string priority = null)
+        {
+            WritePropertyAsync(id, attributeName, newValue, priority).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Write a single attribute given the Guid of the object.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="newValue"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="JsonSerializationException"></exception>
+        public async Task WritePropertyAsync(Guid id, string attributeName, object newValue, string priority = null)
+        {
+            List<(string, object)> list = new List<(string, object)>();
+            list.Add((attributeName, newValue));
+            string json = GetWritePropertyBody(list, priority);
+
+            if (json != null) {
+                await WritePropertyCallAsync(id, json).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Write to all attributes given the Guids of the objects.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="attributeValues">The (attribute, value) pairs</param>
+        /// <param name="priority"></param>
+        public void WritePropertyMultiple(IEnumerable<Guid> ids, IEnumerable<(string, object)> attributeValues, string priority = null)
+        {
+            WritePropertyMultipleAsync(ids, attributeValues, priority).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Write many attribute values given the Guids of the objects asynchronously.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="attributeValues">The (attribute, value) pairs</param>
+        /// <param name="priority"></param>
+        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, IEnumerable<(string, object)> attributeValues, string priority = null)
+        {
+            if (ids == null || attributeValues == null) {
+                return;
+            }
+
+            string json = GetWritePropertyBody(attributeValues, priority);
+
+            if (json != null) {
+                var taskList = new List<Task>();
+
+                foreach (var id in ids)
+                {
+                    taskList.Add(WritePropertyCallAsync(id, json));
+                }
+
+                await Task.WhenAll(taskList).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Creates the json body for the WriteProperty and WritePropertyMultiple requests.
+        /// </summary>
+        /// <exception cref="JsonSerializationException"></exception>
+        private string GetWritePropertyBody(IEnumerable<(string, object)> attributeValues, string priority)
+        {
+            Dictionary<string, object> pairs = new Dictionary<string, object>();
+            foreach (var attribute in attributeValues)
+            {
+                pairs.Add(attribute.Item1, attribute.Item2);
+            }
+
+            if (priority != null)
+            {
+                pairs.Add("priority", priority);
+            }
+
+            Dictionary<string, Dictionary<string, object>> item = new Dictionary<string, Dictionary<string, object>>();
+            item.Add("item", pairs);
+            
+            try
+            {
+                var json = JsonConvert.SerializeObject(item);
+                return json;
+            }
+            catch (JsonSerializationException)
+            {
+                LogErrorAsync("Could not format request.").GetAwaiter().GetResult();
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Write many attribute values in the provided json given the Guid of the object asynchronously.
+        /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        private async Task WritePropertyCallAsync(Guid id, string json)
+        {
+            var response = await client.Request(new Url("objects")
+                .AppendPathSegment(id))
+                .PatchJsonAsync(json)
+                .ConfigureAwait(false);
+        }
     }
 }
