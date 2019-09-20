@@ -744,7 +744,7 @@ namespace Tests
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
-                    .WithRequestJson($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                     .Times(1);
             }
         }
@@ -762,7 +762,7 @@ namespace Tests
 
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                         .WithVerb(HttpMethod.Patch)
-                        .WithRequestJson($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                        .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                         .Times(1);
                 });
             }
@@ -779,7 +779,7 @@ namespace Tests
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
-                    .WithRequestJson($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\",\"priority\":\"writePriorityEnumSet.priorityDefault\"}}}}")
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\",\"priority\":\"writePriorityEnumSet.priorityDefault\"}}}}")
                     .Times(1);
             }
         }
@@ -795,7 +795,7 @@ namespace Tests
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
-                    .WithRequestJson($"{{\"item\":{{\"{mockAttributeName}\":32}}}}")
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":32}}}}")
                     .Times(1);
             }
         }
@@ -811,7 +811,7 @@ namespace Tests
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
-                    .WithRequestJson($"{{\"item\":{{\"{mockAttributeName}\":32.5}}}}")
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":32.5}}}}")
                     .Times(1);
             }
         }
@@ -827,7 +827,7 @@ namespace Tests
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
-                    .WithRequestJson($"{{\"item\":{{\"{mockAttributeName}\":true}}}}")
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":true}}}}")
                     .Times(1);
             }
         }
@@ -843,7 +843,7 @@ namespace Tests
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
-                    .WithRequestJson($"{{\"item\":{{\"{mockAttributeName}\":[\"1\",\"2\",\"3\"]}}}}")
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":[\"1\",\"2\",\"3\"]}}}}")
                     .Times(1);
             }
         }
@@ -859,7 +859,7 @@ namespace Tests
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
-                    .WithRequestJson($"{{\"item\":{{\"{mockAttributeName}\":[1,2,3]}}}}")
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":[1,2,3]}}}}")
                     .Times(1);
             }
         }
@@ -874,7 +874,7 @@ namespace Tests
                     traditionalClient.WriteProperty(mockid, mockAttributeName, "badType");
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                         .WithVerb(HttpMethod.Patch)
-                        .WithRequestJson($"{{\"item\":{{\"{mockAttributeName}\":\"badType\"}}}}")
+                        .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"badType\"}}}}")
                         .Times(1);
                 } catch {
                     Assert.Fail();
@@ -899,7 +899,7 @@ namespace Tests
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
-                    .WithRequestJson($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                     .Times(1);
             }
         }
@@ -917,11 +917,11 @@ namespace Tests
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
-                    .WithRequestJson($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                     .Times(1);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
                     .WithVerb(HttpMethod.Patch)
-                    .WithRequestJson($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                     .Times(1);
             }
         }
@@ -950,11 +950,11 @@ namespace Tests
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
-                    .WithRequestJson(requestBody)
+                    .WithRequestBody(requestBody)
                     .Times(1);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
                     .WithVerb(HttpMethod.Patch)
-                    .WithRequestJson(requestBody)
+                    .WithRequestBody(requestBody)
                     .Times(1);
             }
         }
@@ -985,11 +985,11 @@ namespace Tests
 
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                         .WithVerb(HttpMethod.Patch)
-                        .WithRequestJson(requestBody)
+                        .WithRequestBody(requestBody)
                         .Times(1);
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
                         .WithVerb(HttpMethod.Patch)
-                        .WithRequestJson(requestBody)
+                        .WithRequestBody(requestBody)
                         .Times(1);
                 });
             }
@@ -1009,7 +1009,7 @@ namespace Tests
                     traditionalClient.WritePropertyMultiple(ids, attributes);
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                         .WithVerb(HttpMethod.Patch)
-                        .WithRequestJson("{\"item\":{\"badAttributeName\":\"newValue\"}}")
+                        .WithRequestBody("{\"item\":{\"badAttributeName\":\"newValue\"}}")
                         .Times(1);
                 } catch {
                     Assert.Fail();
@@ -1045,6 +1045,7 @@ namespace Tests
                 
                 traditionalClient.SendCommand(mockid, "EnableAlarms");
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/EnableAlarms")
+                    .WithRequestBody("[]")
                     .WithVerb(HttpMethod.Put)
                     .Times(1);
             }
@@ -1060,6 +1061,7 @@ namespace Tests
                 List<object> list = new List<object>() { 70 };
                 traditionalClient.SendCommand(mockid, "Adjust", list);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Adjust")
+                    .WithRequestBody("[70]")
                     .WithVerb(HttpMethod.Put)
                     .Times(1);
             }
@@ -1075,6 +1077,7 @@ namespace Tests
                 List<object> list = new List<object>() { 70.5, 1, 0 };
                 await traditionalClient.SendCommandAsync(mockid, "TemporaryOperatorOverride", list).ConfigureAwait(false);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/TemporaryOperatorOverride")
+                    .WithRequestBody("[70.5,1,0]")
                     .WithVerb(HttpMethod.Put)
                     .Times(1);
             }
@@ -1092,6 +1095,7 @@ namespace Tests
                     List<object> list = new List<object>() { 70.5, 1, 0 };
                     traditionalClient.SendCommand(mockid, "TemporaryOperatorOverride", list);
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/TemporaryOperatorOverride")
+                        .WithRequestBody("[70.5,1,0]")
                         .WithVerb(HttpMethod.Put)
                         .Times(1);
                 });
@@ -1108,6 +1112,7 @@ namespace Tests
                 List<object> list = new List<object>() { "attributeEnumSet.presentValue", "writePriorityEnumSet.priorityNone" };
                 traditionalClient.SendCommand(mockid, "Release", list);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+                    .WithRequestBody("[\"attributeEnumSet.presentValue\",\"writePriorityEnumSet.priorityNone\"]")
                     .WithVerb(HttpMethod.Put)
                     .Times(1);
             }
@@ -1143,6 +1148,7 @@ namespace Tests
                     List<object> list = new List<object>() { 40, "badDataTypes" };
                     traditionalClient.SendCommand(mockid, "Release", list);
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+                        .WithRequestBody("[40,\"badDataTypes\"]")
                         .WithVerb(HttpMethod.Put)
                         .Times(1);
                 } catch {

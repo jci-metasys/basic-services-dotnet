@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Flurl;
 using Flurl.Http;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Threading;
 using System.Net.Http;
 
 namespace JohnsonControls.Metasys.BasicServices
@@ -38,7 +36,6 @@ namespace JohnsonControls.Metasys.BasicServices
             accessToken = null;
             tokenExpires = DateTime.Now;
             FlurlHttp.Configure(settings => settings.OnErrorAsync = HandleFlurlErrorAsync);
-            FlurlHttp.Configure(settings => settings.OnError = HandleFlurlError);
 
             if (ignoreCertificateErrors) {
                 HttpClientHandler httpClientHandler = new HttpClientHandler();
@@ -53,16 +50,15 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        private void HandleFlurlError(HttpCall call)
-        {
-            HandleFlurlErrorAsync(call).GetAwaiter().GetResult();
-        }
-
         private async Task HandleFlurlErrorAsync(HttpCall call)
         {
             if (call.Exception.GetType() != typeof(Flurl.Http.FlurlParsingException))
             {
-                await LogErrorAsync($"{call.Exception.Message}, with body: {call.RequestBody}").ConfigureAwait(false);
+                string error = $"{call.Exception.Message}";
+                if (call.RequestBody != null) {
+                    error += $", with body: {call.RequestBody.ToString()}";
+                }
+                await LogErrorAsync(error).ConfigureAwait(false);
             }
             call.ExceptionHandled = true;
         }
@@ -275,11 +271,6 @@ namespace JohnsonControls.Metasys.BasicServices
         public IEnumerable<Variant> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
-            if (ids == null || attributeNames == null)
-            {
-                return null;
-            }
-
             return ReadPropertyMultipleAsync(ids, attributeNames).GetAwaiter().GetResult();
         }
 
@@ -292,6 +283,11 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<List<Variant>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
+            if (ids == null || attributeNames == null)
+            {
+                return null;
+            }
+
             List<Variant> results = new List<Variant>() { };
             var taskList = new List<Task<(Guid, JToken)>>();
 
@@ -352,17 +348,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
         /// <param name="newValue"></param>
-        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
-        /// <exception cref="JsonSerializationException"></exception>
         public async Task WritePropertyAsync(Guid id, string attributeName, object newValue, string priority = null)
         {
             List<(string, object)> list = new List<(string, object)>();
             list.Add((attributeName, newValue));
-            string json = GetWritePropertyBody(list, priority);
+            var item = GetWritePropertyBody(list, priority);
 
-            if (json != null) {
-                await WritePropertyRequestAsync(id, json).ConfigureAwait(false);
-            }
+            await WritePropertyRequestAsync(id, item).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -371,7 +363,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="ids"></param>
         /// <param name="attributeValues">The (attribute, value) pairs</param>
         /// <param name="priority"></param>
-        public void WritePropertyMultiple(IEnumerable<Guid> ids, IEnumerable<(string, object)> attributeValues, string priority = null)
+        public void WritePropertyMultiple(IEnumerable<Guid> ids, 
+            IEnumerable<(string, object)> attributeValues, string priority = null)
         {
             WritePropertyMultipleAsync(ids, attributeValues, priority).GetAwaiter().GetResult();
         }
@@ -383,31 +376,30 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeValues">The (attribute, value) pairs</param>
         /// <param name="priority"></param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
-        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, IEnumerable<(string, object)> attributeValues, string priority = null)
+        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, 
+            IEnumerable<(string, object)> attributeValues, string priority = null)
         {
             if (ids == null || attributeValues == null) {
                 return;
             }
 
-            string json = GetWritePropertyBody(attributeValues, priority);
+            var item = GetWritePropertyBody(attributeValues, priority);
 
-            if (json != null) {
-                var taskList = new List<Task>();
+            var taskList = new List<Task>();
 
-                foreach (var id in ids)
-                {
-                    taskList.Add(WritePropertyRequestAsync(id, json));
-                }
-
-                await Task.WhenAll(taskList).ConfigureAwait(false);
+            foreach (var id in ids)
+            {
+                taskList.Add(WritePropertyRequestAsync(id, item));
             }
+
+            await Task.WhenAll(taskList).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Creates the json body for the WriteProperty and WritePropertyMultiple requests.
+        /// Creates the body for the WriteProperty and WritePropertyMultiple requests.
         /// </summary>
-        /// <exception cref="JsonSerializationException"></exception>
-        private string GetWritePropertyBody(IEnumerable<(string, object)> attributeValues, string priority)
+        private Dictionary<string, object> GetWritePropertyBody(
+            IEnumerable<(string, object)> attributeValues, string priority)
         {
             Dictionary<string, object> pairs = new Dictionary<string, object>();
             foreach (var attribute in attributeValues)
@@ -419,28 +411,17 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 pairs.Add("priority", priority);
             }
-
-            Dictionary<string, Dictionary<string, object>> item = new Dictionary<string, Dictionary<string, object>>();
-            item.Add("item", pairs);
             
-            try
-            {
-                var json = JsonConvert.SerializeObject(item);
-                return json;
-            }
-            catch (JsonSerializationException)
-            {
-                LogErrorAsync("Could not format request.").GetAwaiter().GetResult();
-                return null;
-            }
+            return pairs;
         }
 
         /// <summary>
-        /// Write many attribute values in the provided json given the Guid of the object asynchronously.
+        /// Write one or many attribute values in the provided json given the Guid of the object asynchronously.
         /// </summary>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
-        private async Task WritePropertyRequestAsync(Guid id, string json)
+        private async Task WritePropertyRequestAsync(Guid id, Dictionary<string, object> body)
         {
+            var json = new { item = body };
             var response = await client.Request(new Url("objects")
                 .AppendPathSegment(id))
                 .PatchJsonAsync(json)
@@ -504,7 +485,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="ids"></param>
         /// <param name="command"></param>
         /// <param name="values"></param>
-        /// <exception cref="JsonSerializationException"></exception>
         public async Task SendCommandAsync(Guid id, string command, IEnumerable<object> values = null)
         {
             if (values == null)
@@ -513,15 +493,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             else
             {
-                try
-                {
-                    var json = JsonConvert.SerializeObject(values);
-                    await SendCommandRequestAsync(id, command, json).ConfigureAwait(false);
-                }
-                catch (JsonSerializationException)
-                {
-                    await LogErrorAsync("Could not format request.").ConfigureAwait(false);
-                }
+                await SendCommandRequestAsync(id, command, values).ConfigureAwait(false);
             }
         }
 
@@ -532,11 +504,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="command"></param>
         /// <param name="json">The command body</param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
-        private async Task SendCommandRequestAsync(Guid id, string command, object json)
+        private async Task SendCommandRequestAsync(Guid id, string command, IEnumerable<object> values)
         {
             var response = await client.Request(new Url("objects")
                 .AppendPathSegments(id, "commands", command))
-                .PutJsonAsync(json)
+                .PutJsonAsync(values)
                 .ConfigureAwait(false);
         }
     }
