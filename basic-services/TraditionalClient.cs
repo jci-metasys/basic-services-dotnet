@@ -268,7 +268,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="attributeNames"></param>
-        public IEnumerable<Variant> ReadPropertyMultiple(IEnumerable<Guid> ids,
+        public IEnumerable<(Guid, IEnumerable<Variant>)> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
             return ReadPropertyMultipleAsync(ids, attributeNames).GetAwaiter().GetResult();
@@ -280,7 +280,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="ids"></param>
         /// <param name="attributeNames"></param>
         /// <exception cref="System.NullReferenceException"></exception>
-        public async Task<List<Variant>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
+        public async Task<IEnumerable<(Guid, IEnumerable<Variant>)>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
             if (ids == null || attributeNames == null)
@@ -288,7 +288,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 return null;
             }
 
-            List<Variant> results = new List<Variant>() { };
+            List<(Guid, IEnumerable<Variant>)> results = new List<(Guid, IEnumerable<Variant>)> { };
             var taskList = new List<Task<(Guid, JToken)>>();
 
             foreach (var id in ids)
@@ -300,21 +300,24 @@ namespace JohnsonControls.Metasys.BasicServices
 
             foreach (var task in taskList.ToList())
             {
+                List<Variant> attributeList = new List<Variant>() { };
+                Guid id = task.Result.Item1;
                 foreach (string attributeName in attributeNames)
                 {
-                    Guid id = task.Result.Item1;
                     try
                     {
                         JToken value = task.Result.Item2["item"][attributeName];
-                        results.Add(new Variant(id, value, attributeName));
+                        attributeList.Add(new Variant(id, value, attributeName));
                     }
                     catch (System.NullReferenceException)
                     {
-                        results.Add(new Variant(id, null, attributeName));
+                        attributeList.Add(new Variant(id, null, attributeName));
                     }
                 }
+                results.Add((id, attributeList.AsEnumerable()));
             }
-            return results;
+
+            return results.AsEnumerable();
         }
 
         /// <summary>
