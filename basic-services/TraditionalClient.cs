@@ -34,7 +34,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var culture = cultureInfo ?? CultureInfo.CurrentCulture;
             accessToken = null;
-            tokenExpires = DateTime.Now;
+            tokenExpires = DateTime.UtcNow;
             FlurlHttp.Configure(settings => settings.OnErrorAsync = HandleFlurlErrorAsync);
 
             if (ignoreCertificateErrors) {
@@ -112,7 +112,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 await LogErrorAsync("Could not get access token.").ConfigureAwait(false);
                 accessToken = null;
-                tokenExpires = DateTime.Now;
+                tokenExpires = DateTime.UtcNow;
             }
             return (this.accessToken, this.tokenExpires);
         }
@@ -159,7 +159,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 await LogErrorAsync("Refresh could not get access token.").ConfigureAwait(false);
                 accessToken = null;
-                tokenExpires = DateTime.Now;
+                tokenExpires = DateTime.UtcNow;
             }
             return (this.accessToken, this.tokenExpires);
         }
