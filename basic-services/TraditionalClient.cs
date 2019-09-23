@@ -169,7 +169,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         private void ScheduleRefresh()
         {
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.UtcNow;
             TimeSpan delay = tokenExpires - now;
             delay.Subtract(new TimeSpan(0, 1, 0));
 

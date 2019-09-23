@@ -178,7 +178,7 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                DateTime future = DateTime.Now;
+                DateTime future = DateTime.UtcNow;
                 future.AddSeconds(5);
                 string time = future.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
 
