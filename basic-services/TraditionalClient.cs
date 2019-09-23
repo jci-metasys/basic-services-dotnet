@@ -313,6 +313,10 @@ namespace JohnsonControls.Metasys.BasicServices
                     {
                         attributeList.Add(new Variant(id, null, attributeName));
                     }
+                    catch (System.InvalidOperationException)
+                    {
+                        attributeList.Add(new Variant(id, null, attributeName));
+                    }
                 }
                 results.Add((id, attributeList.AsEnumerable()));
             }

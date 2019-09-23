@@ -722,7 +722,33 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith("{ \"item\": { \"attributeNoMatch\": \"stringvalue\" } }");
+                httpTest.RespondWith("No HTTP resource was found that matches the request URI.", 404);
+                List<Guid> ids = new List<Guid>() { mockid };
+                List<string> attributes = new List<string>() { mockAttributeName };
+
+                try
+                {
+                    IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+                    Assert.AreEqual(1, results.Count());
+                    Assert.AreEqual(1, results.ElementAt(0).Item2.Count());
+                }
+                catch
+                {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        [Test]
+        public void TestReadPropertyMultipleOneIdDNE()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("No HTTP resource was found that matches the request URI.", 404);
                 List<Guid> ids = new List<Guid>() { mockid };
                 List<string> attributes = new List<string>() { mockAttributeName };
 
