@@ -129,9 +129,6 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
                 await traditionalClient.RefreshAsync().ConfigureAwait(false);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
                     .WithVerb(HttpMethod.Get)
@@ -147,9 +144,6 @@ namespace Tests
                 AsyncContext.Run(() =>
                 {
                     httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                    traditionalClient.TryLogin("username", "password");
-
-                    httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
                     traditionalClient.Refresh();
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
                         .WithVerb(HttpMethod.Get)
@@ -163,9 +157,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("unauthorized", 401);
 
                 try
@@ -187,7 +178,7 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                DateTime future = DateTime.Now;
+                DateTime future = DateTime.UtcNow;
                 future.AddSeconds(5);
                 string time = future.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
 
@@ -195,7 +186,7 @@ namespace Tests
                 traditionalClient.TryLogin("username", "password");
 
                 httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                System.Threading.Thread.Sleep(7000);
+                System.Threading.Thread.Sleep(5000);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
                     .WithVerb(HttpMethod.Get)
@@ -212,9 +203,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith($"\"{mockid.ToString()}\"");
                 var id = await traditionalClient.GetObjectIdentifierAsync("fully:qualified/reference").ConfigureAwait(false);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
@@ -231,9 +219,6 @@ namespace Tests
             {
                 AsyncContext.Run(() =>
                 {
-                    httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                    traditionalClient.TryLogin("username", "password");
-
                     httpTest.RespondWith($"\"{mockid.ToString()}\"");
                     var id = traditionalClient.GetObjectIdentifier("fully:qualified/reference");
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
@@ -249,9 +234,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("Bad Request", 400);
 
                 var id = traditionalClient.GetObjectIdentifier("fully:qualified/reference");
@@ -267,9 +249,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("Bad Request", 400);
 
                 var id = traditionalClient.GetObjectIdentifier("fully:qualified/reference");
@@ -289,9 +268,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": 1 }}");
                 Variant result = await traditionalClient.ReadPropertyAsync(mockid, mockAttributeName).ConfigureAwait(false);
 
@@ -314,9 +290,6 @@ namespace Tests
             {
                 AsyncContext.Run(() =>
                 {
-                    httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                    traditionalClient.TryLogin("username", "password");
-
                     httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": 1 }}");
                     Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
@@ -339,9 +312,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": 1.1 }}");
                 Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
@@ -363,9 +333,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": \"stringvalue\" }}");
                 Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
@@ -387,9 +354,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": true }}");
                 Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
@@ -411,9 +375,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": false }}");
                 Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
@@ -435,9 +396,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{ \"item\": { \"presentValue\": {" +
                 "\"value\": 60, \"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
                 Variant result = traditionalClient.ReadProperty(mockid, "presentValue");
@@ -460,9 +418,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{ \"item\": { \"presentValue\": {" +
                 "\"value\": \"stringvalue\", \"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
                 Variant result = traditionalClient.ReadProperty(mockid, "presentValue");
@@ -485,9 +440,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": { " +
                 "\"property\": \"stringvalue\", \"property2\": \"stringvalue2\", " +
                 "\"reliability\": \"reliabilityEnumSet.noInput\", \"priority\": \"writePriorityEnumSet.priorityDefault\"} } }");
@@ -511,9 +463,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
                 "0, 1 ] } }");
                 Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
@@ -541,9 +490,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
                 "\"stringvalue1\", \"stringvalue2\" ] } }");
                 Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
@@ -571,9 +517,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
                 "{ \"item1\": \"stringvalue1\", \"item2\": \"stringvalue2\" }," +
                 "{ \"item1\": \"stringvalue3\", \"item2\": \"stringvalue4\" } ] } }");
@@ -602,9 +545,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("Not Found", 404);
                 try
                 {
@@ -625,9 +565,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": {}");
                 Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
@@ -653,13 +590,10 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { };
                 List<string> attributes = new List<string>() { mockAttributeName };
-                IEnumerable<Variant> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                 Assert.AreEqual(0, results.Count());
             }
@@ -670,18 +604,16 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { mockid };
                 List<string> attributes = new List<string>() { };
-                IEnumerable<Variant> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
-                Assert.AreEqual(0, results.Count());
+                Assert.AreEqual(1, results.Count());
+                Assert.AreEqual(0, results.ElementAt(0).Item2.Count());
             }
         }
 
@@ -690,18 +622,16 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { mockid };
                 List<string> attributes = new List<string>() { mockAttributeName };
-                IEnumerable<Variant> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(1, results.Count());
+                Assert.AreEqual(1, results.ElementAt(0).Item2.Count());
             }
         }
 
@@ -710,24 +640,21 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
                 httpTest
                     .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
                         "\"" + mockAttributeName2 + "\": 23, " +
                         "\"" + mockAttributeName3 + "\": 23.5, " +
-                        "\"" + mockAttributeName4 + "\": true, " +
+                        "\"" + mockAttributeName4 + "\": false, " +
                         "\"" + mockAttributeName5 + "\": [ 1, 2, 3] } }")
                     .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
                         "\"" + mockAttributeName2 + "\": 23, " +
                         "\"" + mockAttributeName3 + "\": 23.5, " +
-                        "\"" + mockAttributeName4 + "\": true, " +
+                        "\"" + mockAttributeName4 + "\": false, " +
                         "\"" + mockAttributeName5 + "\": [ 1, 2, 3] } }");
 
                 List<Guid> ids = new List<Guid>() { mockid, mockid2 };
                 List<string> attributes = new List<string>() { mockAttributeName, mockAttributeName2, mockAttributeName3, mockAttributeName4, mockAttributeName5 };
-                IEnumerable<Variant> results = await traditionalClient.ReadPropertyMultipleAsync(ids, attributes).ConfigureAwait(false);
+                IEnumerable<(Guid, IEnumerable<Variant>)> results = await traditionalClient.ReadPropertyMultipleAsync(ids, attributes).ConfigureAwait(false);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Get)
@@ -735,10 +662,15 @@ namespace Tests
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
-                Assert.AreEqual(results.Count(), 10);
-                foreach (var result in results)
+                Assert.AreEqual(results.Count(), 2);
+                Assert.AreEqual(5, results.ElementAt(0).Item2.Count());
+                Assert.AreEqual(5, results.ElementAt(1).Item2.Count());
+                foreach (var result in results.ToList())
                 {
-                    Assert.AreNotEqual("Unsupported Data Type", result.StringValue);
+                    foreach (var attribute in result.Item2.ToList())
+                    {
+                        Assert.AreNotEqual(1, attribute.NumericValue);
+                    }
                 }
             }
         }
@@ -749,24 +681,21 @@ namespace Tests
             {
                 AsyncContext.Run(() =>
                 {
-                    httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                    traditionalClient.TryLogin("username", "password");
-
                     httpTest
                         .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
                             "\"" + mockAttributeName2 + "\": 23, " +
                             "\"" + mockAttributeName3 + "\": 23.5, " +
-                            "\"" + mockAttributeName4 + "\": true, " +
+                            "\"" + mockAttributeName4 + "\": false, " +
                             "\"" + mockAttributeName5 + "\": [ 1, 2, 3] } }")
                         .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
                             "\"" + mockAttributeName2 + "\": 23, " +
                             "\"" + mockAttributeName3 + "\": 23.5, " +
-                            "\"" + mockAttributeName4 + "\": true, " +
+                            "\"" + mockAttributeName4 + "\": false, " +
                             "\"" + mockAttributeName5 + "\": [ 1, 2, 3] } }");
 
                     List<Guid> ids = new List<Guid>() { mockid, mockid2 };
                     List<string> attributes = new List<string>() { mockAttributeName, mockAttributeName2, mockAttributeName3, mockAttributeName4, mockAttributeName5 };
-                    IEnumerable<Variant> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                    IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                         .WithVerb(HttpMethod.Get)
@@ -774,10 +703,15 @@ namespace Tests
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
-                    Assert.AreEqual(results.Count(), 10);
-                    foreach (var result in results)
+                    Assert.AreEqual(results.Count(), 2);
+                    Assert.AreEqual(5, results.ElementAt(0).Item2.Count());
+                    Assert.AreEqual(5, results.ElementAt(1).Item2.Count());
+                    foreach (var result in results.ToList())
                     {
-                        Assert.AreNotEqual("Unsupported Data Type", result.StringValue);
+                        foreach (var attribute in result.Item2.ToList())
+                        {
+                            Assert.AreNotEqual(1, attribute.NumericValue);
+                        }
                     }
                 });
             }
@@ -788,21 +722,19 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                traditionalClient.TryLogin("username", "password");
-
-                httpTest.RespondWith("{ \"item\": { \"attributeNoMatch\": \"stringvalue\" } }");
+                httpTest.RespondWith("No HTTP resource was found that matches the request URI.", 404);
                 List<Guid> ids = new List<Guid>() { mockid };
                 List<string> attributes = new List<string>() { mockAttributeName };
 
                 try
                 {
-                    IEnumerable<Variant> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                    IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
                     Assert.AreEqual(1, results.Count());
+                    Assert.AreEqual(1, results.ElementAt(0).Item2.Count());
                 }
                 catch
                 {
@@ -811,6 +743,662 @@ namespace Tests
             }
         }
 
+        [Test]
+        public void TestReadPropertyMultipleOneIdDNE()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("No HTTP resource was found that matches the request URI.", 404);
+                List<Guid> ids = new List<Guid>() { mockid };
+                List<string> attributes = new List<string>() { mockAttributeName };
+
+                try
+                {
+                    IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+                    Assert.AreEqual(1, results.Count());
+                    Assert.AreEqual(1, results.ElementAt(0).Item2.Count());
+                }
+                catch
+                {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        #endregion
+        #region WriteProperty Tests
+
+        [Test]
+        public async Task TestWritePropertyStringAsync()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+
+                await traditionalClient.WritePropertyAsync(mockid, mockAttributeName, "newValue").ConfigureAwait(false);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyString()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWith("Accepted", 202);
+
+                    traditionalClient.WriteProperty(mockid, mockAttributeName, "newValue");
+
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Patch)
+                        .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                        .Times(1);
+                });
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyStringWithPriority()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+
+                traditionalClient.WriteProperty(mockid, mockAttributeName, "newValue", "writePriorityEnumSet.priorityDefault");
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\",\"priority\":\"writePriorityEnumSet.priorityDefault\"}}}}")
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyInteger()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+
+                traditionalClient.WriteProperty(mockid, mockAttributeName, 32);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":32}}}}")
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyFloat()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+
+                traditionalClient.WriteProperty(mockid, mockAttributeName, 32.5);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":32.5}}}}")
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyBoolean()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+
+                traditionalClient.WriteProperty(mockid, mockAttributeName, true);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":true}}}}")
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyArrayString()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+
+                traditionalClient.WriteProperty(mockid, mockAttributeName, new [] { "1", "2", "3" });
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":[\"1\",\"2\",\"3\"]}}}}")
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyArrayInteger()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+
+                traditionalClient.WriteProperty(mockid, mockAttributeName, new [] { 1, 2, 3 });
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":[1,2,3]}}}}")
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyBadRequestDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Bad Request", 400);
+                try {
+                    traditionalClient.WriteProperty(mockid, mockAttributeName, "badType");
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Patch)
+                        .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"badType\"}}}}")
+                        .Times(1);
+                } catch {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        #endregion
+
+        #region WritePropertyMultiple Tests
+
+        [Test]
+        public void TestWritePropertyMultipleOneIdOneString()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+
+                List<Guid> ids = new List<Guid>() { mockid };
+                List<(string, object)> attributes = new List<(string, object)>() { (mockAttributeName, "newValue") };
+                traditionalClient.WritePropertyMultiple(ids, attributes);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyMultipleManyIdsOneString()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+
+                List<Guid> ids = new List<Guid>() { mockid, mockid2 };
+                List<(string, object)> attributes = new List<(string, object)>() { (mockAttributeName, "newValue") };
+                traditionalClient.WritePropertyMultiple(ids, attributes);
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                    .Times(1);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public async Task TestWritePropertyMultipleManyIdsManyAttributesAsync()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+
+                List<Guid> ids = new List<Guid>() { mockid, mockid2 };
+                List<(string, object)> attributes = new List<(string, object)>() { 
+                    (mockAttributeName, "stringvalue"),
+                    (mockAttributeName2, 23),
+                    (mockAttributeName3, 23.5),
+                    (mockAttributeName4, true),
+                    (mockAttributeName5, new [] { 1, 2, 3 })};
+                await traditionalClient.WritePropertyMultipleAsync(ids, attributes).ConfigureAwait(false);
+
+                string requestBody = "{\"item\":{\"" + mockAttributeName + "\":\"stringvalue\"," +
+                        "\"" + mockAttributeName2 + "\":23," +
+                        "\"" + mockAttributeName3 + "\":23.5," +
+                        "\"" + mockAttributeName4 + "\":true," +
+                        "\"" + mockAttributeName5 + "\":[1,2,3]}}";
+
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody(requestBody)
+                    .Times(1);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody(requestBody)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyMultipleManyIdsManyAttributes()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWith("Accepted", 202);
+
+                    List<Guid> ids = new List<Guid>() { mockid, mockid2 };
+                    List<(string, object)> attributes = new List<(string, object)>() { 
+                        (mockAttributeName, "stringvalue"),
+                        (mockAttributeName2, 23),
+                        (mockAttributeName3, 23.5),
+                        (mockAttributeName4, true),
+                        (mockAttributeName5, new [] { 1, 2, 3 })};
+                    traditionalClient.WritePropertyMultiple(ids, attributes);
+
+                    string requestBody = "{\"item\":{\"" + mockAttributeName + "\":\"stringvalue\"," +
+                            "\"" + mockAttributeName2 + "\":23," +
+                            "\"" + mockAttributeName3 + "\":23.5," +
+                            "\"" + mockAttributeName4 + "\":true," +
+                            "\"" + mockAttributeName5 + "\":[1,2,3]}}";
+
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Patch)
+                        .WithRequestBody(requestBody)
+                        .Times(1);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
+                        .WithVerb(HttpMethod.Patch)
+                        .WithRequestBody(requestBody)
+                        .Times(1);
+                });
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyMultipleBadRequestDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Bad Request", 400);
+
+                List<Guid> ids = new List<Guid>() { mockid };
+                List<(string, object)> attributes = new List<(string, object)>() { ("badAttributeName", "newValue") };
+
+                try {
+                    traditionalClient.WritePropertyMultiple(ids, attributes);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Patch)
+                        .WithRequestBody("{\"item\":{\"badAttributeName\":\"newValue\"}}")
+                        .Times(1);
+                } catch {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        [Test]
+        public void TestWritePropertyMultipleNullItemsDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Bad Request", 400);
+
+                try {
+                    traditionalClient.WritePropertyMultiple(null, null);
+                    httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}");
+                } catch {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        #endregion
+        #region SendCommand Tests
+
+        [Test]
+        public void TestSendCommandEmptyBody()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("OK", 200);
+                
+                traditionalClient.SendCommand(mockid, "EnableAlarms");
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/EnableAlarms")
+                    .WithRequestBody("[]")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestSendCommandOneNumber()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("OK", 200);
+
+                List<object> list = new List<object>() { 70 };
+                traditionalClient.SendCommand(mockid, "Adjust", list);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Adjust")
+                    .WithRequestBody("[70]")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public async Task TestSendCommandManyNumberAsync()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("OK", 200);
+
+                List<object> list = new List<object>() { 70.5, 1, 0 };
+                await traditionalClient.SendCommandAsync(mockid, "TemporaryOperatorOverride", list).ConfigureAwait(false);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/TemporaryOperatorOverride")
+                    .WithRequestBody("[70.5,1,0]")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestSendCommandManyNumber()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWith("OK", 200);
+
+                    List<object> list = new List<object>() { 70.5, 1, 0 };
+                    traditionalClient.SendCommand(mockid, "TemporaryOperatorOverride", list);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/TemporaryOperatorOverride")
+                        .WithRequestBody("[70.5,1,0]")
+                        .WithVerb(HttpMethod.Put)
+                        .Times(1);
+                });
+            }
+        }
+
+        [Test]
+        public void TestSendCommandManyEnum()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("OK", 200);
+
+                List<object> list = new List<object>() { "attributeEnumSet.presentValue", "writePriorityEnumSet.priorityNone" };
+                traditionalClient.SendCommand(mockid, "Release", list);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+                    .WithRequestBody("[\"attributeEnumSet.presentValue\",\"writePriorityEnumSet.priorityNone\"]")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void TestSendCommandBadRequestDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Bad Request", 400);
+                
+                try {
+                    List<object> list = new List<object>() { "noMatch", "noMatch" };
+                    traditionalClient.SendCommand(mockid, "Release", list);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+                        .WithVerb(HttpMethod.Put)
+                        .Times(1);
+                } catch {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        [Test]
+        public void TestSendCommandUnauthorizedDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Unauthorized", 401);
+                
+                try {
+                    List<object> list = new List<object>() { 40, "badDataTypes" };
+                    traditionalClient.SendCommand(mockid, "Release", list);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+                        .WithRequestBody("[40,\"badDataTypes\"]")
+                        .WithVerb(HttpMethod.Put)
+                        .Times(1);
+                } catch {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        #endregion
+        #region GetCommands Tests
+
+        [Test]
+        public async Task TestGetCommandsNoneAsync()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("[]");
+                
+                var commands = await traditionalClient.GetCommandsAsync(mockid).ConfigureAwait(false);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(0, commands.ToList().Count);
+            }
+        }
+
+        [Test]
+        public void TestGetCommandsNone()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWith("[]");
+                    
+                    var commands = traditionalClient.GetCommands(mockid).ToList();
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+                    Assert.AreEqual(0, commands.Count);
+                });
+            }
+        }
+
+        [Test]
+        public void TestGetCommandsEmpty()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(string.Concat("[{\"$schema\": \"http://json-schema.org/schema#\",",
+                    "\"commandId\": \"EnableAlarms\",",
+                    "\"title\": \"Enable Alarms\",",
+                    "\"type\": \"array\",",
+                    "\"items\": [],",
+                    "\"minItems\": 0,",
+                    "\"maxItems\": 0 },",
+                    "{\"$schema\": \"http://json-schema.org/schema#\",",
+                    "\"commandId\": \"DisableAlarms\",",
+                    "\"title\": \"Disable Alarms\",",
+                    "\"type\": \"array\",",
+                    "\"items\": [],",
+                    "\"minItems\": 0,",
+                    "\"maxItems\": 0 }]"));
+                
+                var commands = traditionalClient.GetCommands(mockid).ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual("Enable Alarms", commands[0].Title);
+                Assert.AreEqual("EnableAlarms", commands[0].CommandId);
+                Assert.AreEqual(null, commands[0].Items);
+                Assert.AreEqual("Disable Alarms", commands[1].Title);
+                Assert.AreEqual("DisableAlarms", commands[1].CommandId);
+                Assert.AreEqual(null, commands[1].Items);
+            }
+        }
+
+        [Test]
+        public void TestGetCommandsOneEnum()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(string.Concat("[{\"$schema\": \"http://json-schema.org/schema#\",",
+                    "\"commandId\": \"ReleaseAll\",",
+                    "\"title\": \"Release All\",",
+                    "\"type\": \"array\",",
+                    "\"items\": [{",
+                        "\"oneOf\": [{",
+                            "\"const\": \"attributeEnumSet.presentValue\",",
+                            "\"title\": \"Present Value\"}]",
+                        "}],",
+                    "\"minItems\": 1,",
+                    "\"maxItems\": 1 }]"));
+                
+                var commands = traditionalClient.GetCommands(mockid).ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual("Release All", commands[0].Title);
+                Assert.AreEqual("ReleaseAll", commands[0].CommandId);
+                Assert.AreEqual(1, commands[0].Items.Count());
+
+                var items = commands[0].Items.ToList();
+                Assert.AreEqual("oneOf", items[0].Title);
+                Assert.AreEqual("enum", items[0].Type);
+                Assert.AreEqual(1, items[0].Maximum);
+                Assert.AreEqual(1, items[0].Minimum);
+
+                var enums = items[0].EnumerationValues.ToList();
+                Assert.AreEqual("Present Value", enums[0].Title);
+                Assert.AreEqual("attributeEnumSet.presentValue", enums[0].Value);
+            }
+        }
+
+        [Test]
+        public void TestGetCommandsOneNumber()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(string.Concat("[{\"$schema\": \"http://json-schema.org/schema#\",",
+                    "\"commandId\": \"Adjust\",",
+                    "\"title\": \"Adjust\",",
+                    "\"type\": \"array\",",
+                    "\"items\": [{",
+                        "\"type\": \"number\",",
+                        "\"title\": \"Value\",",
+                        "\"minimum\": -20.0,",
+                        "\"maximum\": 120.0",
+                        "}],",
+                    "\"minItems\": 1,",
+                    "\"maxItems\": 1 }]"));
+                
+                var commands = traditionalClient.GetCommands(mockid).ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual("Adjust", commands[0].Title);
+                Assert.AreEqual("Adjust", commands[0].CommandId);
+                Assert.AreEqual(1, commands[0].Items.Count());
+
+                var items = commands[0].Items.ToList();
+                Assert.AreEqual("Value", items[0].Title);
+                Assert.AreEqual("number", items[0].Type);
+                Assert.AreEqual(120, items[0].Maximum);
+                Assert.AreEqual(-20, items[0].Minimum);
+                Assert.AreEqual(null, items[0].EnumerationValues);
+            }
+        }
+
+        [Test]
+        public void TestGetCommandsTwoEnumOneNumber()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(string.Concat("[{\"$schema\": \"http://json-schema.org/schema#\",",
+                    "\"commandId\": \"Release\",",
+                    "\"title\": \"Release\",",
+                    "\"type\": \"array\",",
+                    "\"items\": [{",
+                        "\"oneOf\": [{",
+                            "\"const\": \"attributeEnumSet.presentValue\",",
+                            "\"title\": \"Present Value\"}]",
+                        "},",
+                        "{\"oneOf\": [{",
+                            "\"const\": \"writePriorityEnumSet.priorityNone\",",
+                            "\"title\": \"0 (No Priority)\"},",
+                            "{\"const\": \"writePriorityEnumSet.priorityManualEmergency\",",
+                            "\"title\": \"1 (Manual Life Safety)\"}],",
+                        "},",
+                        "{\"type\": \"number\",",
+                        "\"title\": \"Value\",",
+                        "\"minimum\": -20.0,",
+                        "\"maximum\": 120.0",
+                        "}],",
+                    "\"minItems\": 3,",
+                    "\"maxItems\": 3 }]"));
+                
+                var commands = traditionalClient.GetCommands(mockid).ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual("Release", commands[0].Title);
+                Assert.AreEqual("Release", commands[0].CommandId);
+                Assert.AreEqual(3, commands[0].Items.Count());
+
+                var items = commands[0].Items.ToList();
+                Assert.AreEqual("oneOf", items[0].Title);
+                Assert.AreEqual("enum", items[0].Type);
+                Assert.AreEqual(1, items[0].Maximum);
+                Assert.AreEqual(1, items[0].Minimum);
+                var enums1 = items[0].EnumerationValues.ToList();
+                Assert.AreEqual("Present Value", enums1[0].Title);
+                Assert.AreEqual("attributeEnumSet.presentValue", enums1[0].Value);
+
+                Assert.AreEqual("oneOf", items[1].Title);
+                Assert.AreEqual("enum", items[1].Type);
+                Assert.AreEqual(1, items[1].Maximum);
+                Assert.AreEqual(1, items[1].Minimum);
+                var enums2 = items[1].EnumerationValues.ToList();
+                Assert.AreEqual("0 (No Priority)", enums2[0].Title);
+                Assert.AreEqual("writePriorityEnumSet.priorityNone", enums2[0].Value);
+                Assert.AreEqual("1 (Manual Life Safety)", enums2[1].Title);
+                Assert.AreEqual("writePriorityEnumSet.priorityManualEmergency", enums2[1].Value);
+
+                Assert.AreEqual("Value", items[2].Title);
+                Assert.AreEqual("number", items[2].Type);
+                Assert.AreEqual(120, items[2].Maximum);
+                Assert.AreEqual(-20, items[2].Minimum);
+                Assert.AreEqual(null, items[2].EnumerationValues);
+            }
+        }
         #endregion
     }
 }

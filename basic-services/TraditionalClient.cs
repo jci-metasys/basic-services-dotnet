@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Flurl;
 using Flurl.Http;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Threading;
 using System.Net.Http;
 
 namespace JohnsonControls.Metasys.BasicServices
@@ -36,9 +34,8 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var culture = cultureInfo ?? CultureInfo.CurrentCulture;
             accessToken = null;
-            tokenExpires = DateTime.Now;
+            tokenExpires = DateTime.UtcNow;
             FlurlHttp.Configure(settings => settings.OnErrorAsync = HandleFlurlErrorAsync);
-            FlurlHttp.Configure(settings => settings.OnError = HandleFlurlError);
 
             if (ignoreCertificateErrors) {
                 HttpClientHandler httpClientHandler = new HttpClientHandler();
@@ -53,16 +50,15 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        private void HandleFlurlError(HttpCall call)
-        {
-            HandleFlurlErrorAsync(call).GetAwaiter().GetResult();
-        }
-
         private async Task HandleFlurlErrorAsync(HttpCall call)
         {
             if (call.Exception.GetType() != typeof(Flurl.Http.FlurlParsingException))
             {
-                await LogErrorAsync(call.Exception.Message).ConfigureAwait(false);
+                string error = $"{call.Exception.Message}";
+                if (call.RequestBody != null) {
+                    error += $", with body: {call.RequestBody.ToString()}";
+                }
+                await LogErrorAsync(error).ConfigureAwait(false);
             }
             call.ExceptionHandled = true;
         }
@@ -84,7 +80,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Attempts to login to the given host.
+        /// Attempts to login to the given host asynchronously.
         /// </summary>
         /// <returns>
         /// Access token, expiration date.
@@ -116,7 +112,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 await LogErrorAsync("Could not get access token.").ConfigureAwait(false);
                 accessToken = null;
-                tokenExpires = DateTime.Now;
+                tokenExpires = DateTime.UtcNow;
             }
             return (this.accessToken, this.tokenExpires);
         }
@@ -163,7 +159,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 await LogErrorAsync("Refresh could not get access token.").ConfigureAwait(false);
                 accessToken = null;
-                tokenExpires = DateTime.Now;
+                tokenExpires = DateTime.UtcNow;
             }
             return (this.accessToken, this.tokenExpires);
         }
@@ -173,7 +169,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         private void ScheduleRefresh()
         {
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.UtcNow;
             TimeSpan delay = tokenExpires - now;
             delay.Subtract(new TimeSpan(0, 1, 0));
 
@@ -244,7 +240,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Read one attribute value asynchronously given the Guid of the object.
+        /// Read one attribute value given the Guid of the object asynchronously.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
@@ -272,14 +268,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="attributeNames"></param>
-        public IEnumerable<Variant> ReadPropertyMultiple(IEnumerable<Guid> ids,
+        public IEnumerable<(Guid, IEnumerable<Variant>)> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
-            if (ids == null || attributeNames == null)
-            {
-                return null;
-            }
-
             return ReadPropertyMultipleAsync(ids, attributeNames).GetAwaiter().GetResult();
         }
 
@@ -289,10 +280,15 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="ids"></param>
         /// <param name="attributeNames"></param>
         /// <exception cref="System.NullReferenceException"></exception>
-        public async Task<List<Variant>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
+        public async Task<IEnumerable<(Guid, IEnumerable<Variant>)>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
-            List<Variant> results = new List<Variant>() { };
+            if (ids == null || attributeNames == null)
+            {
+                return null;
+            }
+
+            List<(Guid, IEnumerable<Variant>)> results = new List<(Guid, IEnumerable<Variant>)> { };
             var taskList = new List<Task<(Guid, JToken)>>();
 
             foreach (var id in ids)
@@ -304,21 +300,28 @@ namespace JohnsonControls.Metasys.BasicServices
 
             foreach (var task in taskList.ToList())
             {
+                List<Variant> attributeList = new List<Variant>() { };
+                Guid id = task.Result.Item1;
                 foreach (string attributeName in attributeNames)
                 {
-                    Guid id = task.Result.Item1;
                     try
                     {
                         JToken value = task.Result.Item2["item"][attributeName];
-                        results.Add(new Variant(id, value, attributeName));
+                        attributeList.Add(new Variant(id, value, attributeName));
                     }
                     catch (System.NullReferenceException)
                     {
-                        results.Add(new Variant(id, null, attributeName));
+                        attributeList.Add(new Variant(id, null, attributeName));
+                    }
+                    catch (System.InvalidOperationException)
+                    {
+                        attributeList.Add(new Variant(id, null, attributeName));
                     }
                 }
+                results.Add((id, attributeList.AsEnumerable()));
             }
-            return results;
+
+            return results.AsEnumerable();
         }
 
         /// <summary>
@@ -333,6 +336,187 @@ namespace JohnsonControls.Metasys.BasicServices
                 .GetJsonAsync<JToken>()
                 .ConfigureAwait(false);
             return (id, response);
+        }
+
+        /// <summary>
+        /// Write a single attribute given the Guid of the object.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="newValue"></param>
+        public void WriteProperty(Guid id, string attributeName, object newValue, string priority = null)
+        {
+            WritePropertyAsync(id, attributeName, newValue, priority).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Write a single attribute given the Guid of the object asynchronously.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="newValue"></param>
+        public async Task WritePropertyAsync(Guid id, string attributeName, object newValue, string priority = null)
+        {
+            List<(string, object)> list = new List<(string, object)>();
+            list.Add((attributeName, newValue));
+            var item = GetWritePropertyBody(list, priority);
+
+            await WritePropertyRequestAsync(id, item).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Write to all attributes given the Guids of the objects.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="attributeValues">The (attribute, value) pairs</param>
+        /// <param name="priority"></param>
+        public void WritePropertyMultiple(IEnumerable<Guid> ids, 
+            IEnumerable<(string, object)> attributeValues, string priority = null)
+        {
+            WritePropertyMultipleAsync(ids, attributeValues, priority).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Write many attribute values given the Guids of the objects asynchronously.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="attributeValues">The (attribute, value) pairs</param>
+        /// <param name="priority"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, 
+            IEnumerable<(string, object)> attributeValues, string priority = null)
+        {
+            if (ids == null || attributeValues == null) {
+                return;
+            }
+
+            var item = GetWritePropertyBody(attributeValues, priority);
+
+            var taskList = new List<Task>();
+
+            foreach (var id in ids)
+            {
+                taskList.Add(WritePropertyRequestAsync(id, item));
+            }
+
+            await Task.WhenAll(taskList).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Creates the body for the WriteProperty and WritePropertyMultiple requests.
+        /// </summary>
+        private Dictionary<string, object> GetWritePropertyBody(
+            IEnumerable<(string, object)> attributeValues, string priority)
+        {
+            Dictionary<string, object> pairs = new Dictionary<string, object>();
+            foreach (var attribute in attributeValues)
+            {
+                pairs.Add(attribute.Item1, attribute.Item2);
+            }
+
+            if (priority != null)
+            {
+                pairs.Add("priority", priority);
+            }
+            
+            return pairs;
+        }
+
+        /// <summary>
+        /// Write one or many attribute values in the provided json given the Guid of the object asynchronously.
+        /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        private async Task WritePropertyRequestAsync(Guid id, Dictionary<string, object> body)
+        {
+            var json = new { item = body };
+            var response = await client.Request(new Url("objects")
+                .AppendPathSegment(id))
+                .PatchJsonAsync(json)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get all available commands given the Guid of the object.
+        /// </summary>
+        /// <param name="id"></param>
+        public IEnumerable<Command> GetCommands(Guid id)
+        {
+            return GetCommandsAsync(id).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Get all available commands given the Guid of the object asynchronously.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        public async Task<IEnumerable<Command>> GetCommandsAsync(Guid id)
+        {
+            var token = await client.Request(new Url("objects")
+                .AppendPathSegments(id, "commands"))
+                .GetJsonAsync<JToken>()
+                .ConfigureAwait(false);
+
+            List<Command> commands = new List<Command>();
+
+            var array = token as JArray;
+                
+            if (array != null)
+            {
+                foreach (JObject command in array)
+                {
+                    Command c = new Command(command);
+                    commands.Add(c);
+                }
+            }
+            else
+            {
+                await LogErrorAsync("Could not parse response data.").ConfigureAwait(false);
+            }
+            return commands;
+        }
+
+        /// <summary>
+        /// Send a command to an object.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="command"></param>
+        /// <param name="values"></param>
+        public void SendCommand(Guid id, string command, IEnumerable<object> values = null)
+        {
+            SendCommandAsync(id, command, values).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Send a command to an object asynchronously.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="command"></param>
+        /// <param name="values"></param>
+        public async Task SendCommandAsync(Guid id, string command, IEnumerable<object> values = null)
+        {
+            if (values == null)
+            {
+                await SendCommandRequestAsync(id, command, new string[0]).ConfigureAwait(false);
+            }
+            else
+            {
+                await SendCommandRequestAsync(id, command, values).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Send a command to an object asynchronously.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="command"></param>
+        /// <param name="json">The command body</param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        private async Task SendCommandRequestAsync(Guid id, string command, IEnumerable<object> values)
+        {
+            var response = await client.Request(new Url("objects")
+                .AppendPathSegments(id, "commands", command))
+                .PutJsonAsync(values)
+                .ConfigureAwait(false);
         }
     }
 }
