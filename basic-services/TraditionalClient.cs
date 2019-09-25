@@ -74,7 +74,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns>
         /// Access token, expiration date.
         /// </returns>
-        public (string,DateTime) TryLogin(string username, string password, bool refresh = true)
+        public (string Token, DateTime ExpirationDate) TryLogin(string username, string password, bool refresh = true)
         {
             return TryLoginAsync(username, password, refresh).GetAwaiter().GetResult();
         }
@@ -87,7 +87,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </returns>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         /// <exception cref="System.NullReferenceException"></exception>
-        public async Task<(string,DateTime)> TryLoginAsync(string username, string password, bool refresh = true)
+        public async Task<(string Token, DateTime ExpirationDate)> TryLoginAsync(string username, string password, bool refresh = true)
         {
             this.refresh = refresh;
             
@@ -114,7 +114,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 accessToken = null;
                 tokenExpires = DateTime.UtcNow;
             }
-            return (this.accessToken, this.tokenExpires);
+            return (Token: this.accessToken, ExpirationDate: this.tokenExpires);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns>
         /// Access token, expiration date.
         /// </returns>
-        public (string, DateTime) Refresh()
+        public (string Token, DateTime ExpirationDate) Refresh()
         {
             return RefreshAsync().GetAwaiter().GetResult();
         }
@@ -136,7 +136,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </returns>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         /// <exception cref="System.NullReferenceException"></exception>
-        public async Task<(string, DateTime)> RefreshAsync()
+        public async Task<(string Token, DateTime ExpirationDate)> RefreshAsync()
         {
             var response = await client.Request("refreshToken")
                 .GetJsonAsync<JToken>()
@@ -161,7 +161,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 accessToken = null;
                 tokenExpires = DateTime.UtcNow;
             }
-            return (this.accessToken, this.tokenExpires);
+            return (Token: this.accessToken, ExpirationDate: this.tokenExpires);
         }
 
         /// <summary>
@@ -193,9 +193,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns>
         /// Access token, expiration date.
         /// </returns>
-        public (string, DateTime) GetAccessToken()
+        public (string Token, DateTime ExpirationDate) GetAccessToken()
         {
-            return (this.accessToken, this.tokenExpires);
+            return (Token: this.accessToken, ExpirationDate: this.tokenExpires);
         }
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="attributeNames"></param>
-        public IEnumerable<(Guid, IEnumerable<Variant>)> ReadPropertyMultiple(IEnumerable<Guid> ids,
+        public IEnumerable<(Guid Id, IEnumerable<Variant> Variants)> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
             return ReadPropertyMultipleAsync(ids, attributeNames).GetAwaiter().GetResult();
@@ -280,7 +280,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="ids"></param>
         /// <param name="attributeNames"></param>
         /// <exception cref="System.NullReferenceException"></exception>
-        public async Task<IEnumerable<(Guid, IEnumerable<Variant>)>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
+        public async Task<IEnumerable<(Guid Id, IEnumerable<Variant> Variants)>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
             if (ids == null || attributeNames == null)
@@ -288,8 +288,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 return null;
             }
 
-            List<(Guid, IEnumerable<Variant>)> results = new List<(Guid, IEnumerable<Variant>)> { };
-            var taskList = new List<Task<(Guid, JToken)>>();
+            List<(Guid Id, IEnumerable<Variant> Variants)> results = new List<(Guid Id, IEnumerable<Variant> Variants)>();
+            var taskList = new List<Task<(Guid Id, JToken Token)>>();
 
             foreach (var id in ids)
             {
@@ -301,12 +301,12 @@ namespace JohnsonControls.Metasys.BasicServices
             foreach (var task in taskList.ToList())
             {
                 List<Variant> attributeList = new List<Variant>() { };
-                Guid id = task.Result.Item1;
+                Guid id = task.Result.Id;
                 foreach (string attributeName in attributeNames)
                 {
                     try
                     {
-                        JToken value = task.Result.Item2["item"][attributeName];
+                        JToken value = task.Result.Token["item"][attributeName];
                         attributeList.Add(new Variant(id, value, attributeName));
                     }
                     catch (System.NullReferenceException)
@@ -318,7 +318,7 @@ namespace JohnsonControls.Metasys.BasicServices
                         attributeList.Add(new Variant(id, null, attributeName));
                     }
                 }
-                results.Add((id, attributeList.AsEnumerable()));
+                results.Add((Id: id, Variants: attributeList.AsEnumerable()));
             }
 
             return results.AsEnumerable();
@@ -329,13 +329,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="id"></param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
-        private async Task<(Guid, JToken)> ReadObjectAsync(Guid id)
+        private async Task<(Guid Id, JToken Token)> ReadObjectAsync(Guid id)
         {
             var response = await client.Request(new Url("objects")
                 .AppendPathSegment(id))
                 .GetJsonAsync<JToken>()
                 .ConfigureAwait(false);
-            return (id, response);
+            return (Id: id, Token: response);
         }
 
         /// <summary>
@@ -357,8 +357,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="newValue"></param>
         public async Task WritePropertyAsync(Guid id, string attributeName, object newValue, string priority = null)
         {
-            List<(string, object)> list = new List<(string, object)>();
-            list.Add((attributeName, newValue));
+            List<(string Attribute, object Value)> list = new List<(string Attribute, object Value)>();
+            list.Add((Attribute: attributeName, Value: newValue));
             var item = GetWritePropertyBody(list, priority);
 
             await WritePropertyRequestAsync(id, item).ConfigureAwait(false);
@@ -371,7 +371,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeValues">The (attribute, value) pairs</param>
         /// <param name="priority"></param>
         public void WritePropertyMultiple(IEnumerable<Guid> ids, 
-            IEnumerable<(string, object)> attributeValues, string priority = null)
+            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null)
         {
             WritePropertyMultipleAsync(ids, attributeValues, priority).GetAwaiter().GetResult();
         }
@@ -384,7 +384,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="priority"></param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, 
-            IEnumerable<(string, object)> attributeValues, string priority = null)
+            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null)
         {
             if (ids == null || attributeValues == null) {
                 return;
@@ -406,12 +406,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Creates the body for the WriteProperty and WritePropertyMultiple requests.
         /// </summary>
         private Dictionary<string, object> GetWritePropertyBody(
-            IEnumerable<(string, object)> attributeValues, string priority)
+            IEnumerable<(string Attribute, object Value)> attributeValues, string priority)
         {
             Dictionary<string, object> pairs = new Dictionary<string, object>();
             foreach (var attribute in attributeValues)
             {
-                pairs.Add(attribute.Item1, attribute.Item2);
+                pairs.Add(attribute.Attribute, attribute.Value);
             }
 
             if (priority != null)
