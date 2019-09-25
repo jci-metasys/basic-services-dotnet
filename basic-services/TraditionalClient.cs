@@ -344,6 +344,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
         /// <param name="newValue"></param>
+        /// <param name="priority"></param>
         public void WriteProperty(Guid id, string attributeName, object newValue, string priority = null)
         {
             WritePropertyAsync(id, attributeName, newValue, priority).GetAwaiter().GetResult();
@@ -355,6 +356,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
         /// <param name="newValue"></param>
+        /// <param name="priority"></param>
         public async Task WritePropertyAsync(Guid id, string attributeName, object newValue, string priority = null)
         {
             List<(string Attribute, object Value)> list = new List<(string Attribute, object Value)>();
@@ -405,6 +407,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Creates the body for the WriteProperty and WritePropertyMultiple requests.
         /// </summary>
+        /// <param name="attributeValues">The (attribute, value) pairs</param>
+        /// <param name="priority"></param>
         private Dictionary<string, object> GetWritePropertyBody(
             IEnumerable<(string Attribute, object Value)> attributeValues, string priority)
         {
@@ -425,6 +429,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Write one or many attribute values in the provided json given the Guid of the object asynchronously.
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="body"></param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         private async Task WritePropertyRequestAsync(Guid id, Dictionary<string, object> body)
         {
@@ -478,7 +484,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Send a command to an object.
         /// </summary>
-        /// <param name="ids"></param>
+        /// <param name="id"></param>
         /// <param name="command"></param>
         /// <param name="values"></param>
         public void SendCommand(Guid id, string command, IEnumerable<object> values = null)
@@ -489,7 +495,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Send a command to an object asynchronously.
         /// </summary>
-        /// <param name="ids"></param>
+        /// <param name="id"></param>
         /// <param name="command"></param>
         /// <param name="values"></param>
         public async Task SendCommandAsync(Guid id, string command, IEnumerable<object> values = null)
@@ -507,7 +513,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Send a command to an object asynchronously.
         /// </summary>
-        /// <param name="ids"></param>
+        /// <param name="id"></param>
         /// <param name="command"></param>
         /// <param name="json">The command body</param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
@@ -517,6 +523,241 @@ namespace JohnsonControls.Metasys.BasicServices
                 .AppendPathSegments(id, "commands", command))
                 .PutJsonAsync(values)
                 .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Gets all network devices.
+        /// </summary>
+        /// <param name="type">Optional type number as a string</param>
+        public IEnumerable<MetasysObject> GetNetworkDevices(string type = null)
+        {
+            return GetNetworkDevicesAsync().GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Gets all network devices asynchronously by requesting each available page.
+        /// </summary>
+        /// <param name="type">Optional type number as a string</param>
+        /// <exception cref="System.NullReferenceException"></exception>
+        public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
+        {
+            List<MetasysObject> devices = new List<MetasysObject>() { };
+            bool hasNext = true;
+            int page = 1;
+
+            while (hasNext) {
+                hasNext = false;
+                var response = await GetNetworkDevicesRequestAsync(type, page).ConfigureAwait(false);
+                try
+                {
+                    var list = response["items"] as JArray;
+                    foreach (var item in list)
+                    {
+                        var typeInfo = await GetType(item).ConfigureAwait(false);
+                        string description = typeInfo.Description;
+                        MetasysObject device = new MetasysObject(item, description);
+                        devices.Add(device);
+                    }
+
+                    if (response["next"].Value<string>() != null)
+                    {
+                        hasNext = true;
+                        page++;
+                    }
+                }
+                catch (System.NullReferenceException)
+                {
+                    await LogErrorAsync("Could not format response.").ConfigureAwait(false);
+                }
+            }
+
+            return devices;
+        }
+
+        /// <summary>
+        /// Gets all network devices asynchronously.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="page"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        private async Task<JToken> GetNetworkDevicesRequestAsync(string type = null, int page = 1)
+        {
+            Url url = new Url("networkDevices");
+            url.SetQueryParam("page", page);
+            if (type != null)
+            {
+                url.SetQueryParam("type", type);
+            }
+
+            var response = await client.Request(url)
+                .GetJsonAsync<JToken>()
+                .ConfigureAwait(false);
+
+            return response;
+        }
+
+        /// <summary>
+        /// Gets all available network device types in (id, description) pairs asynchronously.
+        /// </summary>
+        public IEnumerable<(int Id, string Description)> GetNetworkDeviceTypes()
+        {
+            return GetNetworkDeviceTypesAsync().GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Gets all available network device types in (id, description) pairs asynchronously.
+        /// </summary>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.NullReferenceException"></exception>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public async Task<IEnumerable<(int Id, string Description)>> GetNetworkDeviceTypesAsync()
+        {
+            List<(int Id, string Description)> types = new List<(int Id, string Description)>() { };
+            var response = await client.Request(new Url("networkDevices")
+                .AppendPathSegment("availableTypes"))
+                .GetJsonAsync<JToken>()
+                .ConfigureAwait(false);
+
+            try
+            {
+                var list = response["items"] as JArray;
+                foreach (var item in list)
+                {
+                    try
+                    {
+                        var type = await GetType(item).ConfigureAwait(false);
+                        if (type.Id != -1)
+                        {
+                            types.Add(type);
+                        }
+                    }
+                    catch (System.ArgumentNullException)
+                    {
+                        await LogErrorAsync("Could not format response.").ConfigureAwait(false);
+                    }
+                }
+            }
+            catch (System.NullReferenceException)
+            {
+                await LogErrorAsync("Could not format response.").ConfigureAwait(false);
+            }
+
+            return types;
+        }
+
+        /// <summary>
+        /// Gets the type from a token with a typeUrl by requesting the actual description asynchronously.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <exception cref="System.NullReferenceException"></exception>        
+        /// <exception cref="System.ArgumentNullException"></exception>
+        private async Task<(int Id, string Description)> GetType(JToken item)
+        {
+            try
+            {
+                var url = item["typeUrl"].Value<string>();
+                var typeToken = await GetWithFullUrl(url).ConfigureAwait(false);
+
+                string description = typeToken["description"].Value<string>();
+                int type = typeToken["id"].Value<int>();
+                return (Id: type, Description: description);
+            }
+            catch (System.NullReferenceException)
+            {
+                var task = LogErrorAsync("Could not get type enumeration.");
+                return (Id: -1, Description: "");
+            }
+            catch (System.ArgumentNullException)
+            {
+                var task = LogErrorAsync("Could not get type enumeration. Token missing required field.");
+                return (Id: -1, Description: "");
+            }
+        }
+
+        /// <summary>
+        /// Creates a new Flurl client and gets a resource given the url asynchronously.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        private async Task<JToken> GetWithFullUrl(string url)
+        {
+            using (var temporaryClient = new FlurlClient(new Url(url)))
+            {
+                temporaryClient.Headers.Add("Authorization", this.accessToken);
+                var item = await temporaryClient.Request()
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+                return item;
+            }
+        }
+
+        /// <summary>
+        /// Gets all child objects given a parent Guid.
+        /// </summary>
+        /// <param name="id"></param>
+        public IEnumerable<MetasysObject> GetObjects(Guid id)
+        {
+            return GetObjectsAsync(id).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Gets all child objects given a parent Guid asynchronously by requesting each available page.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="System.NullReferenceException"></exception>
+        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id)
+        {
+            List<MetasysObject> objects = new List<MetasysObject>() { };
+            bool hasNext = true;
+            int page = 1;
+
+            while (hasNext) {
+                hasNext = false;
+                var response = await GetObjectsRequestAsync(id, page).ConfigureAwait(false);
+
+                try
+                {
+                    var list = response["items"] as JArray;
+                    foreach (var item in list)
+                    {
+                        var itemInfo = await GetType(item).ConfigureAwait(false);
+                        string description = itemInfo.Description;
+                        MetasysObject obj = new MetasysObject(item, description);
+                        objects.Add(obj);
+                    }
+
+                    if (response["next"].Value<string>() != null)
+                    {
+                        hasNext = true;
+                        page++;
+                    }
+                }
+                catch (System.NullReferenceException)
+                {
+                    await LogErrorAsync("Could not format response.").ConfigureAwait(false);
+                }
+            }
+
+            return objects;
+        }
+
+        /// <summary>
+        /// Gets all child objects given a parent Guid asynchronously.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        private async Task<JToken> GetObjectsRequestAsync(Guid id, int page = 1)
+        {
+            Url url = new Url("objects")
+                .AppendPathSegments(id, "objects")
+                .SetQueryParam("page", page);
+
+            var response = await client.Request(url)
+                .GetJsonAsync<JToken>()
+                .ConfigureAwait(false);
+
+            return response;
         }
     }
 }
