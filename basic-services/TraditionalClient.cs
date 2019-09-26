@@ -7,10 +7,11 @@ using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using JohnsonControls.Metasys.BasicServices.Interfaces;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
-    public class TraditionalClient
+    public class TraditionalClient:IMsApiClient
     {
         private FlurlClient client;
 
@@ -38,7 +39,7 @@ namespace JohnsonControls.Metasys.BasicServices
             FlurlHttp.Configure(settings => settings.OnErrorAsync = HandleFlurlErrorAsync);
 
             if (ignoreCertificateErrors) {
-                HttpClientHandler httpClientHandler = new HttpClientHandler();
+                HttpClientHandler httpClientHandler = new HttpClientHandler();              
                 httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
                 HttpClient httpClient = new HttpClient(httpClientHandler);
                 httpClient.BaseAddress = new Uri($"https://{hostname}"
@@ -286,41 +287,32 @@ namespace JohnsonControls.Metasys.BasicServices
             if (ids == null || attributeNames == null)
             {
                 return null;
-            }
-
+            }         
             List<(Guid Id, IEnumerable<Variant> Variants)> results = new List<(Guid Id, IEnumerable<Variant> Variants)>();
-            var taskList = new List<Task<(Guid Id, JToken Token)>>();
-
+            var taskList = new List<Task<Variant>>();   
+            // Prepare Tasks to Read attribute list
             foreach (var id in ids)
-            {
-                taskList.Add(ReadObjectAsync(id));
-            }
-
-            await Task.WhenAll(taskList).ConfigureAwait(false);
-
-            foreach (var task in taskList.ToList())
-            {
-                List<Variant> attributeList = new List<Variant>() { };
-                Guid id = task.Result.Id;
+            {               
                 foreach (string attributeName in attributeNames)
                 {
-                    try
-                    {
-                        JToken value = task.Result.Token["item"][attributeName];
-                        attributeList.Add(new Variant(id, value, attributeName));
-                    }
-                    catch (System.NullReferenceException)
-                    {
-                        attributeList.Add(new Variant(id, null, attributeName));
-                    }
-                    catch (System.InvalidOperationException)
-                    {
-                        attributeList.Add(new Variant(id, null, attributeName));
-                    }
-                }
-                results.Add((Id: id, Variants: attributeList.AsEnumerable()));
+                    // Much faster reading single property than the entire object, even though we have more server calls
+                    taskList.Add(ReadPropertyAsync(id, attributeName));
+                }              
             }
-
+            await Task.WhenAll(taskList).ConfigureAwait(false);
+            foreach (var id in ids)
+            {                        
+                // Get attributes of the specific Id
+                List<Task<Variant>> attributeList = taskList.Where(w => w.Result.Id == id).ToList();
+                // Get current result
+                var rIndex = results.FindIndex(c => c.Id == id);
+                List<Variant> variants = new List<Variant>();
+                foreach (var t in attributeList)
+                {
+                    variants.Add(t.Result); // Prepare variants list
+                }
+                results.Add((Id: id, Variants: variants));                            
+            }
             return results.AsEnumerable();
         }
 
@@ -517,6 +509,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 .AppendPathSegments(id, "commands", command))
                 .PutJsonAsync(values)
                 .ConfigureAwait(false);
-        }
+        }       
+
     }
 }
