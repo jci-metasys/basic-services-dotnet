@@ -593,7 +593,7 @@ namespace Tests
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { };
                 List<string> attributes = new List<string>() { mockAttributeName };
-                IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                var results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                 Assert.AreEqual(0, results.Count());
             }
@@ -607,13 +607,13 @@ namespace Tests
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { mockid };
                 List<string> attributes = new List<string>() { };
-                IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                var results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(1, results.Count());
-                Assert.AreEqual(0, results.ElementAt(0).Item2.Count());
+                Assert.AreEqual(0, results.ElementAt(0).Variants.Count());
             }
         }
 
@@ -625,13 +625,13 @@ namespace Tests
                 httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
                 List<Guid> ids = new List<Guid>() { mockid };
                 List<string> attributes = new List<string>() { mockAttributeName };
-                IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                var results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(1, results.Count());
-                Assert.AreEqual(1, results.ElementAt(0).Item2.Count());
+                Assert.AreEqual(1, results.ElementAt(0).Variants.Count());
             }
         }
 
@@ -654,7 +654,7 @@ namespace Tests
 
                 List<Guid> ids = new List<Guid>() { mockid, mockid2 };
                 List<string> attributes = new List<string>() { mockAttributeName, mockAttributeName2, mockAttributeName3, mockAttributeName4, mockAttributeName5 };
-                IEnumerable<(Guid, IEnumerable<Variant>)> results = await traditionalClient.ReadPropertyMultipleAsync(ids, attributes).ConfigureAwait(false);
+                var results = await traditionalClient.ReadPropertyMultipleAsync(ids, attributes).ConfigureAwait(false);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Get)
@@ -663,11 +663,11 @@ namespace Tests
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(results.Count(), 2);
-                Assert.AreEqual(5, results.ElementAt(0).Item2.Count());
-                Assert.AreEqual(5, results.ElementAt(1).Item2.Count());
+                Assert.AreEqual(5, results.ElementAt(0).Variants.Count());
+                Assert.AreEqual(5, results.ElementAt(1).Variants.Count());
                 foreach (var result in results.ToList())
                 {
-                    foreach (var attribute in result.Item2.ToList())
+                    foreach (var attribute in result.Variants.ToList())
                     {
                         Assert.AreNotEqual(1, attribute.NumericValue);
                     }
@@ -695,7 +695,7 @@ namespace Tests
 
                     List<Guid> ids = new List<Guid>() { mockid, mockid2 };
                     List<string> attributes = new List<string>() { mockAttributeName, mockAttributeName2, mockAttributeName3, mockAttributeName4, mockAttributeName5 };
-                    IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                    var results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                         .WithVerb(HttpMethod.Get)
@@ -704,11 +704,11 @@ namespace Tests
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
                     Assert.AreEqual(results.Count(), 2);
-                    Assert.AreEqual(5, results.ElementAt(0).Item2.Count());
-                    Assert.AreEqual(5, results.ElementAt(1).Item2.Count());
+                    Assert.AreEqual(5, results.ElementAt(0).Variants.Count());
+                    Assert.AreEqual(5, results.ElementAt(1).Variants.Count());
                     foreach (var result in results.ToList())
                     {
-                        foreach (var attribute in result.Item2.ToList())
+                        foreach (var attribute in result.Variants.ToList())
                         {
                             Assert.AreNotEqual(1, attribute.NumericValue);
                         }
@@ -728,13 +728,13 @@ namespace Tests
 
                 try
                 {
-                    IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                    var results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
                     Assert.AreEqual(1, results.Count());
-                    Assert.AreEqual(1, results.ElementAt(0).Item2.Count());
+                    Assert.AreEqual(1, results.ElementAt(0).Variants.Count());
                 }
                 catch
                 {
@@ -754,13 +754,13 @@ namespace Tests
 
                 try
                 {
-                    IEnumerable<(Guid, IEnumerable<Variant>)> results = traditionalClient.ReadPropertyMultiple(ids, attributes);
+                    var results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
                     Assert.AreEqual(1, results.Count());
-                    Assert.AreEqual(1, results.ElementAt(0).Item2.Count());
+                    Assert.AreEqual(1, results.ElementAt(0).Variants.Count());
                 }
                 catch
                 {
