@@ -609,9 +609,7 @@ namespace Tests
                 List<string> attributes = new List<string>() { };
                 var results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
-                    .WithVerb(HttpMethod.Get)
-                    .Times(1);
+                httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}");
                 Assert.AreEqual(1, results.Count());
                 Assert.AreEqual(0, results.ElementAt(0).Variants.Count());
             }
@@ -627,7 +625,7 @@ namespace Tests
                 List<string> attributes = new List<string>() { mockAttributeName };
                 var results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(1, results.Count());
@@ -641,27 +639,27 @@ namespace Tests
             using (var httpTest = new HttpTest())
             {
                 httpTest
-                    .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
-                        "\"" + mockAttributeName2 + "\": 23, " +
-                        "\"" + mockAttributeName3 + "\": 23.5, " +
-                        "\"" + mockAttributeName4 + "\": false, " +
-                        "\"" + mockAttributeName5 + "\": [ 1, 2, 3] } }")
-                    .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
-                        "\"" + mockAttributeName2 + "\": 23, " +
-                        "\"" + mockAttributeName3 + "\": 23.5, " +
-                        "\"" + mockAttributeName4 + "\": false, " +
-                        "\"" + mockAttributeName5 + "\": [ 1, 2, 3] } }");
+                    .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }")
+                    .RespondWith("{ \"item\": { \"" + mockAttributeName2 + "\": 23 } }")
+                    .RespondWith("{ \"item\": { \"" + mockAttributeName3 + "\": 23.5 } }")
+                    .RespondWith("{ \"item\": { \"" + mockAttributeName4 + "\": false } }")
+                    .RespondWith("{ \"item\": { \"" + mockAttributeName5 + "\": [ 1, 2, 3] } }")
+                    .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }")
+                    .RespondWith("{ \"item\": { \"" + mockAttributeName2 + "\": 23 } }")
+                    .RespondWith("{ \"item\": { \"" + mockAttributeName3 + "\": 23.5 } }")
+                    .RespondWith("{ \"item\": { \"" + mockAttributeName4 + "\": false } }")
+                    .RespondWith("{ \"item\": { \"" + mockAttributeName5 + "\": [ 1, 2, 3] } }");
 
                 List<Guid> ids = new List<Guid>() { mockid, mockid2 };
                 List<string> attributes = new List<string>() { mockAttributeName, mockAttributeName2, mockAttributeName3, mockAttributeName4, mockAttributeName5 };
                 var results = await traditionalClient.ReadPropertyMultipleAsync(ids, attributes).ConfigureAwait(false);
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes")
                     .WithVerb(HttpMethod.Get)
-                    .Times(1);
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
+                    .Times(5);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}/attributes")
                     .WithVerb(HttpMethod.Get)
-                    .Times(1);
+                    .Times(5);
                 Assert.AreEqual(results.Count(), 2);
                 Assert.AreEqual(5, results.ElementAt(0).Variants.Count());
                 Assert.AreEqual(5, results.ElementAt(1).Variants.Count());
@@ -669,6 +667,7 @@ namespace Tests
                 {
                     foreach (var attribute in result.Variants.ToList())
                     {
+                        Console.WriteLine($"VALUE: {attribute.NumericValue} {attribute.StringValue}");
                         Assert.AreNotEqual(1, attribute.NumericValue);
                     }
                 }
@@ -682,27 +681,27 @@ namespace Tests
                 AsyncContext.Run(() =>
                 {
                     httpTest
-                        .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
-                            "\"" + mockAttributeName2 + "\": 23, " +
-                            "\"" + mockAttributeName3 + "\": 23.5, " +
-                            "\"" + mockAttributeName4 + "\": false, " +
-                            "\"" + mockAttributeName5 + "\": [ 1, 2, 3] } }")
-                        .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\", " +
-                            "\"" + mockAttributeName2 + "\": 23, " +
-                            "\"" + mockAttributeName3 + "\": 23.5, " +
-                            "\"" + mockAttributeName4 + "\": false, " +
-                            "\"" + mockAttributeName5 + "\": [ 1, 2, 3] } }");
+                        .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }")
+                        .RespondWith("{ \"item\": { \"" + mockAttributeName2 + "\": 23 } }")
+                        .RespondWith("{ \"item\": { \"" + mockAttributeName3 + "\": 23.5 } }")
+                        .RespondWith("{ \"item\": { \"" + mockAttributeName4 + "\": false } }")
+                        .RespondWith("{ \"item\": { \"" + mockAttributeName5 + "\": [ 4, 2, 3] } }")
+                        .RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }")
+                        .RespondWith("{ \"item\": { \"" + mockAttributeName2 + "\": 23 } }")
+                        .RespondWith("{ \"item\": { \"" + mockAttributeName3 + "\": 23.5 } }")
+                        .RespondWith("{ \"item\": { \"" + mockAttributeName4 + "\": false } }")
+                        .RespondWith("{ \"item\": { \"" + mockAttributeName5 + "\": [ 4, 2, 3] } }");
 
                     List<Guid> ids = new List<Guid>() { mockid, mockid2 };
                     List<string> attributes = new List<string>() { mockAttributeName, mockAttributeName2, mockAttributeName3, mockAttributeName4, mockAttributeName5 };
                     var results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
-                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes")
                         .WithVerb(HttpMethod.Get)
-                        .Times(1);
-                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
+                        .Times(5);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}/attributes")
                         .WithVerb(HttpMethod.Get)
-                        .Times(1);
+                        .Times(5);
                     Assert.AreEqual(results.Count(), 2);
                     Assert.AreEqual(5, results.ElementAt(0).Variants.Count());
                     Assert.AreEqual(5, results.ElementAt(1).Variants.Count());
@@ -730,7 +729,7 @@ namespace Tests
                 {
                     var results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
-                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
                     Assert.AreEqual(1, results.Count());
@@ -756,7 +755,7 @@ namespace Tests
                 {
                     var results = traditionalClient.ReadPropertyMultiple(ids, attributes);
 
-                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
                     Assert.AreEqual(1, results.Count());
