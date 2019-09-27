@@ -396,8 +396,10 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith("{ \"item\": { \"presentValue\": {" +
-                "\"value\": 60, \"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
+                httpTest.RespondWith(string.Concat("{ \"item\": { \"presentValue\": {",
+                    "\"value\": 60,",
+                    "\"reliability\": \"reliabilityEnumSet.reliable\",",
+                    "\"priority\": \"writePriorityEnumSet.priorityNone\"} } }"));
                 Variant result = traditionalClient.ReadProperty(mockid, "presentValue");
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
@@ -418,8 +420,10 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith("{ \"item\": { \"presentValue\": {" +
-                "\"value\": \"stringvalue\", \"reliability\": \"reliabilityEnumSet.reliable\", \"priority\": \"writePriorityEnumSet.priorityNone\"} } }");
+                httpTest.RespondWith(string.Concat("{ \"item\": { \"presentValue\": {",
+                    "\"value\": \"stringvalue\",",
+                    "\"reliability\": \"reliabilityEnumSet.reliable\",",
+                    "\"priority\": \"writePriorityEnumSet.priorityNone\"} } }"));
                 Variant result = traditionalClient.ReadProperty(mockid, "presentValue");
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
@@ -440,9 +444,11 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": { " +
-                "\"property\": \"stringvalue\", \"property2\": \"stringvalue2\", " +
-                "\"reliability\": \"reliabilityEnumSet.noInput\", \"priority\": \"writePriorityEnumSet.priorityDefault\"} } }");
+                httpTest.RespondWith(string.Concat("{ \"item\": { \"", mockAttributeName, "\": { ",
+                "\"property\": \"stringvalue\",",
+                "\"property2\": \"stringvalue2\", ",
+                "\"reliability\": \"reliabilityEnumSet.noInput\",",
+                "\"priority\": \"writePriorityEnumSet.priorityDefault\"} } }"));
                 Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
@@ -463,8 +469,7 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
-                "0, 1 ] } }");
+                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ 0, 1 ] } }");
                 Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
@@ -490,8 +495,8 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
-                "\"stringvalue1\", \"stringvalue2\" ] } }");
+                httpTest.RespondWith(string.Concat("{ \"item\": { \"", mockAttributeName, "\": [ ",
+                "\"stringvalue1\", \"stringvalue2\" ] } }"));
                 Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
@@ -517,9 +522,9 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ " +
-                "{ \"item1\": \"stringvalue1\", \"item2\": \"stringvalue2\" }," +
-                "{ \"item1\": \"stringvalue3\", \"item2\": \"stringvalue4\" } ] } }");
+                httpTest.RespondWith(string.Concat("{ \"item\": { \"", mockAttributeName, "\": [ ",
+                "{ \"item1\": \"stringvalue1\", \"item2\": \"stringvalue2\" },",
+                "{ \"item1\": \"stringvalue3\", \"item2\": \"stringvalue4\" } ] } }"));
                 Variant result = traditionalClient.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
@@ -980,11 +985,11 @@ namespace Tests
                     (mockAttributeName5, new [] { 1, 2, 3 })};
                 await traditionalClient.WritePropertyMultipleAsync(ids, attributes).ConfigureAwait(false);
 
-                string requestBody = "{\"item\":{\"" + mockAttributeName + "\":\"stringvalue\"," +
-                        "\"" + mockAttributeName2 + "\":23," +
-                        "\"" + mockAttributeName3 + "\":23.5," +
-                        "\"" + mockAttributeName4 + "\":true," +
-                        "\"" + mockAttributeName5 + "\":[1,2,3]}}";
+                string requestBody = string.Concat("{\"item\":{\"" + mockAttributeName + "\":\"stringvalue\",",
+                        "\"" + mockAttributeName2 + "\":23,",
+                        "\"" + mockAttributeName3 + "\":23.5,",
+                        "\"" + mockAttributeName4 + "\":true,",
+                        "\"" + mockAttributeName5 + "\":[1,2,3]}}");
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
@@ -1015,11 +1020,11 @@ namespace Tests
                         (mockAttributeName5, new [] { 1, 2, 3 })};
                     traditionalClient.WritePropertyMultiple(ids, attributes);
 
-                    string requestBody = "{\"item\":{\"" + mockAttributeName + "\":\"stringvalue\"," +
-                            "\"" + mockAttributeName2 + "\":23," +
-                            "\"" + mockAttributeName3 + "\":23.5," +
-                            "\"" + mockAttributeName4 + "\":true," +
-                            "\"" + mockAttributeName5 + "\":[1,2,3]}}";
+                    string requestBody = string.Concat("{\"item\":{\"" + mockAttributeName + "\":\"stringvalue\",",
+                        "\"" + mockAttributeName2 + "\":23,",
+                        "\"" + mockAttributeName3 + "\":23.5,",
+                        "\"" + mockAttributeName4 + "\":true,",
+                        "\"" + mockAttributeName5 + "\":[1,2,3]}}");
 
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
                         .WithVerb(HttpMethod.Patch)
