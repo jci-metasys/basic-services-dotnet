@@ -13,15 +13,15 @@ namespace JohnsonControls.Metasys.BasicServices
 {
     public class TraditionalClient:IMsApiClient
     {
-        private FlurlClient client;
+        protected FlurlClient Client;
 
-        private string accessToken;
+        protected string AccessToken;
 
-        private DateTime tokenExpires;
+        protected DateTime TokenExpires;
 
-        private bool refresh;
+        protected bool RefreshToken;
 
-        private const int MAX_PAGE_SIZE = 1000;
+        protected const int MAX_PAGE_SIZE = 1000;
 
         /// <summary>
         /// Creates a new TraditionalClient.
@@ -34,8 +34,8 @@ namespace JohnsonControls.Metasys.BasicServices
         public TraditionalClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.V2,  CultureInfo cultureInfo = null)
         {
             var culture = cultureInfo ?? CultureInfo.CurrentCulture;
-            accessToken = null;
-            tokenExpires = DateTime.UtcNow;
+            AccessToken = null;
+            TokenExpires = DateTime.UtcNow;
             FlurlHttp.Configure(settings => settings.OnErrorAsync = HandleFlurlErrorAsync);
 
             if (ignoreCertificateErrors) {
@@ -44,9 +44,9 @@ namespace JohnsonControls.Metasys.BasicServices
                 HttpClient httpClient = new HttpClient(httpClientHandler);
                 httpClient.BaseAddress = new Uri($"https://{hostname}"
                     .AppendPathSegments("api", version));
-                client = new FlurlClient(httpClient);
+                Client = new FlurlClient(httpClient);
             } else {
-                client = new FlurlClient($"https://{hostname}"
+                Client = new FlurlClient($"https://{hostname}"
                     .AppendPathSegments("api", version));
             }
         }
@@ -90,9 +90,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="System.NullReferenceException"></exception>
         public async Task<(string Token, DateTime ExpirationDate)> TryLoginAsync(string username, string password, bool refresh = true)
         {
-            this.refresh = refresh;
+            this.RefreshToken = refresh;
             
-            var response = await client.Request("login")
+            var response = await Client.Request("login")
                 .PostJsonAsync(new { username, password })
                 .ReceiveJson<JToken>()
                 .ConfigureAwait(false);
@@ -101,9 +101,9 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 var accessToken = response["accessToken"];
                 var expires = response["expires"];
-                this.accessToken = $"Bearer {accessToken.Value<string>()}";
-                this.tokenExpires = expires.Value<DateTime>();
-                client.Headers.Add("Authorization", this.accessToken);
+                this.AccessToken = $"Bearer {accessToken.Value<string>()}";
+                this.TokenExpires = expires.Value<DateTime>();
+                Client.Headers.Add("Authorization", this.AccessToken);
                 if (refresh)
                 {
                     ScheduleRefresh();
@@ -112,10 +112,10 @@ namespace JohnsonControls.Metasys.BasicServices
             catch (System.NullReferenceException)
             {
                 await LogErrorAsync("Could not get access token.").ConfigureAwait(false);
-                accessToken = null;
-                tokenExpires = DateTime.UtcNow;
+                AccessToken = null;
+                TokenExpires = DateTime.UtcNow;
             }
-            return (Token: this.accessToken, ExpirationDate: this.tokenExpires);
+            return (Token: this.AccessToken, ExpirationDate: this.TokenExpires);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="System.NullReferenceException"></exception>
         public async Task<(string Token, DateTime ExpirationDate)> RefreshAsync()
         {
-            var response = await client.Request("refreshToken")
+            var response = await Client.Request("refreshToken")
                 .GetJsonAsync<JToken>()
                 .ConfigureAwait(false);
 
@@ -147,11 +147,11 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 var accessToken = response["accessToken"];
                 var expires = response["expires"];
-                this.accessToken = $"Bearer {accessToken.Value<string>()}";
-                this.tokenExpires = expires.Value<DateTime>();
-                client.Headers.Remove("Authorization");
-                client.Headers.Add("Authorization", this.accessToken);
-                if (refresh)
+                this.AccessToken = $"Bearer {accessToken.Value<string>()}";
+                this.TokenExpires = expires.Value<DateTime>();
+                Client.Headers.Remove("Authorization");
+                Client.Headers.Add("Authorization", this.AccessToken);
+                if (RefreshToken)
                 {
                     ScheduleRefresh();
                 }
@@ -159,10 +159,10 @@ namespace JohnsonControls.Metasys.BasicServices
             catch (System.NullReferenceException)
             {
                 await LogErrorAsync("Refresh could not get access token.").ConfigureAwait(false);
-                accessToken = null;
-                tokenExpires = DateTime.UtcNow;
+                AccessToken = null;
+                TokenExpires = DateTime.UtcNow;
             }
-            return (Token: this.accessToken, ExpirationDate: this.tokenExpires);
+            return (Token: this.AccessToken, ExpirationDate: this.TokenExpires);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace JohnsonControls.Metasys.BasicServices
         private void ScheduleRefresh()
         {
             DateTime now = DateTime.UtcNow;
-            TimeSpan delay = tokenExpires - now;
+            TimeSpan delay = TokenExpires - now;
             delay.Subtract(new TimeSpan(0, 1, 0));
 
             if (delay <= TimeSpan.Zero)
@@ -196,7 +196,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </returns>
         public (string Token, DateTime ExpirationDate) GetAccessToken()
         {
-            return (Token: this.accessToken, ExpirationDate: this.tokenExpires);
+            return (Token: this.AccessToken, ExpirationDate: this.TokenExpires);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="System.FormatException"></exception>
         public async Task<Guid> GetObjectIdentifierAsync(string itemReference)
         {
-            var response = await client.Request("objectIdentifiers")
+            var response = await Client.Request("objectIdentifiers")
                 .SetQueryParam("fqr", itemReference)
                 .GetStringAsync()
                 .ConfigureAwait(false);
@@ -248,7 +248,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         public async Task<Variant> ReadPropertyAsync(Guid id, string attributeName)
         {
-            var response = await client.Request(new Url("objects")
+            var response = await Client.Request(new Url("objects")
                 .AppendPathSegments(id, "attributes", attributeName))
                 .GetJsonAsync<JToken>()
                 .ConfigureAwait(false);
@@ -290,7 +290,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }         
             List<(Guid Id, IEnumerable<Variant> Variants)> results = new List<(Guid Id, IEnumerable<Variant> Variants)>();
             var taskList = new List<Task<Variant>>();   
-            // Prepare Tasks to Read attribute list
+            // Prepare Tasks to Read attributes list. In Metasys 11 this will be implemented server side
             foreach (var id in ids)
             {               
                 foreach (string attributeName in attributeNames)
@@ -303,14 +303,13 @@ namespace JohnsonControls.Metasys.BasicServices
             foreach (var id in ids)
             {                        
                 // Get attributes of the specific Id
-                List<Task<Variant>> attributeList = taskList.Where(w => w.Result.Id == id).ToList();
-                // Get current result
-                var rIndex = results.FindIndex(c => c.Id == id);
+                List<Task<Variant>> attributeList = taskList.Where(w => w.Result.Id == id).ToList();             
                 List<Variant> variants = new List<Variant>();
                 foreach (var t in attributeList)
                 {
                     variants.Add(t.Result); // Prepare variants list
                 }
+                // Aggregate results
                 results.Add((Id: id, Variants: variants));                            
             }
             return results.AsEnumerable();
@@ -323,7 +322,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         private async Task<(Guid Id, JToken Token)> ReadObjectAsync(Guid id)
         {
-            var response = await client.Request(new Url("objects")
+            var response = await Client.Request(new Url("objects")
                 .AppendPathSegment(id))
                 .GetJsonAsync<JToken>()
                 .ConfigureAwait(false);
@@ -421,7 +420,7 @@ namespace JohnsonControls.Metasys.BasicServices
         private async Task WritePropertyRequestAsync(Guid id, Dictionary<string, object> body)
         {
             var json = new { item = body };
-            var response = await client.Request(new Url("objects")
+            var response = await Client.Request(new Url("objects")
                 .AppendPathSegment(id))
                 .PatchJsonAsync(json)
                 .ConfigureAwait(false);
@@ -443,7 +442,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         public async Task<IEnumerable<Command>> GetCommandsAsync(Guid id)
         {
-            var token = await client.Request(new Url("objects")
+            var token = await Client.Request(new Url("objects")
                 .AppendPathSegments(id, "commands"))
                 .GetJsonAsync<JToken>()
                 .ConfigureAwait(false);
@@ -505,11 +504,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         private async Task SendCommandRequestAsync(Guid id, string command, IEnumerable<object> values)
         {
-            var response = await client.Request(new Url("objects")
+            var response = await Client.Request(new Url("objects")
                 .AppendPathSegments(id, "commands", command))
                 .PutJsonAsync(values)
                 .ConfigureAwait(false);
-        }       
-
+        }
+     
     }
 }
