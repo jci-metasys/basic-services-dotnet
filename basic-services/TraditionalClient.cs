@@ -11,7 +11,7 @@ using JohnsonControls.Metasys.BasicServices.Interfaces;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
-    public class TraditionalClient:IMsApiClient
+    public class TraditionalClient : IMsApiClient
     {
         protected FlurlClient Client;
 
@@ -31,21 +31,24 @@ namespace JohnsonControls.Metasys.BasicServices
         /// the user's current culture is used.
         /// </remarks>
         /// <param name="cultureInfo"></param>
-        public TraditionalClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.V2,  CultureInfo cultureInfo = null)
+        public TraditionalClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.V2, CultureInfo cultureInfo = null)
         {
             var culture = cultureInfo ?? CultureInfo.CurrentCulture;
             AccessToken = null;
             TokenExpires = DateTime.UtcNow;
             FlurlHttp.Configure(settings => settings.OnErrorAsync = HandleFlurlErrorAsync);
 
-            if (ignoreCertificateErrors) {
-                HttpClientHandler httpClientHandler = new HttpClientHandler();              
+            if (ignoreCertificateErrors)
+            {
+                HttpClientHandler httpClientHandler = new HttpClientHandler();
                 httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
                 HttpClient httpClient = new HttpClient(httpClientHandler);
                 httpClient.BaseAddress = new Uri($"https://{hostname}"
                     .AppendPathSegments("api", version));
                 Client = new FlurlClient(httpClient);
-            } else {
+            }
+            else
+            {
                 Client = new FlurlClient($"https://{hostname}"
                     .AppendPathSegments("api", version));
             }
@@ -56,7 +59,8 @@ namespace JohnsonControls.Metasys.BasicServices
             if (call.Exception.GetType() != typeof(Flurl.Http.FlurlParsingException))
             {
                 string error = $"{call.Exception.Message}";
-                if (call.RequestBody != null) {
+                if (call.RequestBody != null)
+                {
                     error += $", with body: {call.RequestBody.ToString()}";
                 }
                 await LogErrorAsync(error).ConfigureAwait(false);
@@ -91,7 +95,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<(string Token, DateTime ExpirationDate)> TryLoginAsync(string username, string password, bool refresh = true)
         {
             this.RefreshToken = refresh;
-            
+
             var response = await Client.Request("login")
                 .PostJsonAsync(new { username, password })
                 .ReceiveJson<JToken>()
@@ -211,20 +215,21 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Returns the object identifier (id) of the specified object asynchronously.
         /// </summary>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
-        /// <exception cref="System.FormatException"></exception>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public async Task<Guid> GetObjectIdentifierAsync(string itemReference)
         {
             var response = await Client.Request("objectIdentifiers")
                 .SetQueryParam("fqr", itemReference)
-                .GetStringAsync()
+                .GetJsonAsync<JToken>()
                 .ConfigureAwait(false);
 
             try
             {
-                var id = new Guid(response.Trim('"'));
+                var str = response.Value<string>();
+                var id = new Guid(str);
                 return id;
             }
-            catch (System.FormatException)
+            catch (System.ArgumentNullException)
             {
                 return Guid.Empty;
             }
@@ -246,6 +251,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.NullReferenceException"></exception>
         public async Task<Variant> ReadPropertyAsync(Guid id, string attributeName)
         {
             var response = await Client.Request(new Url("objects")
@@ -280,37 +286,36 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="attributeNames"></param>
-        /// <exception cref="System.NullReferenceException"></exception>
         public async Task<IEnumerable<(Guid Id, IEnumerable<Variant> Variants)>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
             if (ids == null || attributeNames == null)
             {
                 return null;
-            }         
+            }
             List<(Guid Id, IEnumerable<Variant> Variants)> results = new List<(Guid Id, IEnumerable<Variant> Variants)>();
-            var taskList = new List<Task<Variant>>();   
+            var taskList = new List<Task<Variant>>();
             // Prepare Tasks to Read attributes list. In Metasys 11 this will be implemented server side
             foreach (var id in ids)
-            {               
+            {
                 foreach (string attributeName in attributeNames)
                 {
                     // Much faster reading single property than the entire object, even though we have more server calls
                     taskList.Add(ReadPropertyAsync(id, attributeName));
-                }              
+                }
             }
             await Task.WhenAll(taskList).ConfigureAwait(false);
             foreach (var id in ids)
-            {                        
+            {
                 // Get attributes of the specific Id
-                List<Task<Variant>> attributeList = taskList.Where(w => w.Result.Id == id).ToList();             
+                List<Task<Variant>> attributeList = taskList.Where(w => w.Result.Id == id).ToList();
                 List<Variant> variants = new List<Variant>();
                 foreach (var t in attributeList)
                 {
                     variants.Add(t.Result); // Prepare variants list
                 }
                 // Aggregate results
-                results.Add((Id: id, Variants: variants));                            
+                results.Add((Id: id, Variants: variants));
             }
             return results.AsEnumerable();
         }
@@ -363,7 +368,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="ids"></param>
         /// <param name="attributeValues">The (attribute, value) pairs</param>
         /// <param name="priority"></param>
-        public void WritePropertyMultiple(IEnumerable<Guid> ids, 
+        public void WritePropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null)
         {
             WritePropertyMultipleAsync(ids, attributeValues, priority).GetAwaiter().GetResult();
@@ -376,10 +381,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeValues">The (attribute, value) pairs</param>
         /// <param name="priority"></param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
-        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, 
+        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null)
         {
-            if (ids == null || attributeValues == null) {
+            if (ids == null || attributeValues == null)
+            {
                 return;
             }
 
@@ -413,7 +419,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 pairs.Add("priority", priority);
             }
-            
+
             return pairs;
         }
 
@@ -456,7 +462,7 @@ namespace JohnsonControls.Metasys.BasicServices
             List<Command> commands = new List<Command>();
 
             var array = token as JArray;
-                
+
             if (array != null)
             {
                 foreach (JObject command in array)
@@ -536,7 +542,8 @@ namespace JohnsonControls.Metasys.BasicServices
             bool hasNext = true;
             int page = 1;
 
-            while (hasNext) {
+            while (hasNext)
+            {
                 hasNext = false;
                 var response = await GetNetworkDevicesRequestAsync(type, page).ConfigureAwait(false);
                 try
@@ -550,7 +557,7 @@ namespace JohnsonControls.Metasys.BasicServices
                         devices.Add(device);
                     }
 
-                    if (response["next"].Value<string>() != null)
+                    if (!(response["next"] == null || response["next"].Type == JTokenType.Null))
                     {
                         hasNext = true;
                         page++;
@@ -684,43 +691,79 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <summary>
         /// Gets all child objects given a parent Guid.
+        /// Level indicates how deep to retrieve objects with level of 1 only retrieves immediate children of the parent object.
         /// </summary>
         /// <param name="id"></param>
-        public IEnumerable<MetasysObject> GetObjects(Guid id)
+        /// <param name="levels">The depth of the children to retrieve</param>
+        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1)
         {
-            return GetObjectsAsync(id).GetAwaiter().GetResult();
+            return GetObjectsAsync(id, levels).GetAwaiter().GetResult();
         }
 
         /// <summary>
-        /// Gets all child objects given a parent Guid asynchronously by requesting each available page.
+        /// Gets all child objects recursively given a parent Guid asynchronously by requesting each available page.
+        /// Level indicates how deep to retrieve objects with level of 1 only retrieves immediate children of the parent object.
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="levels">The depth of the children to retrieve</param>
         /// <exception cref="System.NullReferenceException"></exception>
-        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id)
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1)
         {
+            if (levels < 1)
+            {
+                return null;
+            }
+
             List<MetasysObject> objects = new List<MetasysObject>() { };
             bool hasNext = true;
             int page = 1;
 
-            while (hasNext) {
+            while (hasNext)
+            {
                 hasNext = false;
                 var response = await GetObjectsRequestAsync(id, page).ConfigureAwait(false);
 
                 try
                 {
-                    var list = response["items"] as JArray;
-                    foreach (var item in list)
+                    var total = response["total"].Value<int>();
+                    if (total > 0)
                     {
-                        var itemInfo = await GetType(item).ConfigureAwait(false);
-                        string description = itemInfo.Description;
-                        MetasysObject obj = new MetasysObject(item, description);
-                        objects.Add(obj);
-                    }
+                        var list = response["items"] as JArray;
 
-                    if (response["next"].Value<string>() != null)
-                    {
-                        hasNext = true;
-                        page++;
+                        foreach (var item in list)
+                        {
+                            var itemInfo = await GetType(item).ConfigureAwait(false);
+                            string description = itemInfo.Description;
+
+                            if (levels - 1 > 0)
+                            {
+                                try
+                                {
+                                    var str = item["id"].Value<string>();
+                                    var objId = new Guid(str);
+                                    var children = await GetObjectsAsync(objId, levels - 1).ConfigureAwait(false);
+                                    MetasysObject obj = new MetasysObject(item, description, children);
+                                    objects.Add(obj);
+                                }
+                                catch (System.ArgumentNullException)
+                                {
+                                    MetasysObject obj = new MetasysObject(item, description);
+                                    objects.Add(obj);
+                                }
+                            }
+                            else
+                            {
+                                MetasysObject obj = new MetasysObject(item, description);
+                                objects.Add(obj);
+                            }
+                        }
+
+                        if (!(response["next"] == null || response["next"].Type == JTokenType.Null))
+                        {
+                            hasNext = true;
+                            page++;
+                        }
                     }
                 }
                 catch (System.NullReferenceException)
@@ -733,7 +776,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Gets all child objects given a parent Guid asynchronously.
+        /// Gets all child objects given a parent Guid asynchronously with the given page number.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="page"></param>
