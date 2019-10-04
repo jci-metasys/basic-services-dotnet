@@ -30,5 +30,11 @@ namespace JohnsonControls.Metasys.BasicServices.Interfaces
         IEnumerable<Command> GetCommands(Guid id);
         Task<IEnumerable<Command>> GetCommandsAsync(Guid id);
         void SendCommand(Guid id, string command, IEnumerable<object> values = null);
+        IEnumerable<MetasysObject> GetNetworkDevices(string type = null);
+        Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null);
+        IEnumerable<(int Id, string Description)> GetNetworkDeviceTypes();
+        Task<IEnumerable<(int Id, string Description)>> GetNetworkDeviceTypesAsync();
+        IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1);
+        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1);
     }
 }
