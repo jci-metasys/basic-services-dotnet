@@ -6,21 +6,20 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace com_services
+namespace JohnsonControls.Metasys.ComServices
 {
     [ComVisible(true)]
     [Guid("0261C5FD-2473-4EC1-A78C-31A5C27C8163")]
     [ClassInterface(ClassInterfaceType.None)]
-    public class LegacyClient : ILegacyClient
+    public class LegacyMetasysClient : ILegacyMetasysClient
     {
         MetasysClient client;
 
         /// <summary>
         /// Creates a new LegacyClient.
         /// </summary>
-        public LegacyClient(string hostname)
-        {
-           client = new MetasysClient(hostname);
+        public LegacyMetasysClient()
+        {          
         }
 
         /// <summary>
@@ -28,8 +27,9 @@ namespace com_services
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>
-        public void login(string username, string password)
+        public void login(string hostname, string username, string password)
         {
+            client = new MetasysClient(hostname);
             client.TryLogin(username, password);
         }
 
@@ -52,16 +52,15 @@ namespace com_services
         /// <param name="rawValue"></param>
         /// <param name="reliability"></param>
         /// <param name="priority"></param>
-        public int ReadProperty(string reference, string property, out string stringValue, out double rawValue, out string reliability, out string priority)
+        public string ReadProperty(string reference, string property, out double numericValue, out double rawValue, out string reliability, out string priority)
         {
             Guid fqr = GetObjectIdentifier(reference);
             var response = client.ReadProperty(fqr, property);
             reliability = response.Reliability;
-            stringValue = response.StringValue;
-            priority = response.Priority;
+            numericValue = response.NumericValue;
+            priority = response.Priority;       
             rawValue = response.NumericValue;
-
-            return (int)response.NumericValue;
+            return response.StringValue;
         }
     }
 }

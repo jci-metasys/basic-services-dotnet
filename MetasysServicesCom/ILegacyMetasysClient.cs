@@ -5,16 +5,16 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace com_services
+namespace JohnsonControls.Metasys.ComServices
 {
     [ComVisible(true)]
     [Guid("B1AF1A67-42A0-4E4A-8A07-97AA53B42D02")]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
-    public interface ILegacyClient
+    public interface ILegacyMetasysClient
     {
-       void login(string username, string password);
+       void login(string hostname, string username, string password);
 
-       int ReadProperty(string reference, string property, out string stringValue,
+       string ReadProperty(string reference, string property, out double numericValue,
             out double rawValue, out string reliability, out string priority);
     }
 }
