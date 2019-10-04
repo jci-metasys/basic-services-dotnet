@@ -21,21 +21,6 @@ namespace JohnsonControls.Metasys.BasicServices.Interfaces
         Guid GetObjectIdentifier(string itemReference);
         Variant ReadProperty(Guid id, string attributeName);
         IEnumerable<(Guid Id, IEnumerable<Variant> Variants)> ReadPropertyMultiple(IEnumerable<Guid> ids,
-            IEnumerable<string> attributeNames);
-        void WriteProperty(Guid id, string attributeName, object newValue, string priority = null);
-        Task WritePropertyAsync(Guid id, string attributeName, object newValue, string priority = null);
-        void WritePropertyMultiple(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null);
-        Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null);
-        IEnumerable<Command> GetCommands(Guid id);
-        Task<IEnumerable<Command>> GetCommandsAsync(Guid id);
-        void SendCommand(Guid id, string command, IEnumerable<object> values = null);
-        IEnumerable<MetasysObject> GetNetworkDevices(string type = null);
-        Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null);
-        IEnumerable<(int Id, string Description)> GetNetworkDeviceTypes();
-        Task<IEnumerable<(int Id, string Description)>> GetNetworkDeviceTypesAsync();
-        IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1);
-        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1);
+            IEnumerable<string> attributeNames);       
     }
 }
