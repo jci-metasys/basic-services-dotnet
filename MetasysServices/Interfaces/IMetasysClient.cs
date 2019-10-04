@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using JohnsonControls.Metasys.BasicServices.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.BasicServices.Interfaces
 {
-    public interface IMsApiClient
+    public interface IMetasysClient
     {
         (string Token, DateTime ExpirationDate) TryLogin(string username, string password, bool refresh = true);
         Task<(string Token, DateTime ExpirationDate)> TryLoginAsync(string username, string password, bool refresh = true);

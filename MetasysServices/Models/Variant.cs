@@ -3,7 +3,7 @@ using System.Globalization;
 using Newtonsoft.Json.Linq;
 
 
-namespace JohnsonControls.Metasys.BasicServices
+namespace JohnsonControls.Metasys.BasicServices.Models
 {
     public struct Variant
     {

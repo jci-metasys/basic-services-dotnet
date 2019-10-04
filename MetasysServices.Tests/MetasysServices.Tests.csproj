@@ -17,9 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="basic-services">
-      <HintPath>..\basic-services\bin\Debug\netstandard2.0\basic-services.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\MetasysServices\MetasysServices.csproj" />
   </ItemGroup>
 
 </Project>

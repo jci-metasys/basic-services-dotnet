@@ -8,10 +8,11 @@ using Flurl.Http;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using JohnsonControls.Metasys.BasicServices.Interfaces;
+using JohnsonControls.Metasys.BasicServices.Models;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
-    public class TraditionalClient : IMsApiClient
+    public class MetasysClient : IMetasysClient
     {
         protected FlurlClient Client;
 
@@ -31,7 +32,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// the user's current culture is used.
         /// </remarks>
         /// <param name="cultureInfo"></param>
-        public TraditionalClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.V2, CultureInfo cultureInfo = null)
+        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.V2, CultureInfo cultureInfo = null)
         {
             var culture = cultureInfo ?? CultureInfo.CurrentCulture;
             AccessToken = null;
