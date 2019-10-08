@@ -70,16 +70,17 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="objectList"></param>
         /// <param name="propertyList"></param>
         /// <param name="valueList"></param>
-        public List<string> ReadPropertyMultiple(string reference, string[] objectList, string[] propertyList, ref List<string> valueList)
+        public List<string> ReadPropertyMultiple(string[] objectList, string[] propertyList, ref List<string> valueList)
         {
             var guidList = new List<Guid>();
             foreach (var guid in objectList)
             {
                 guidList.Add(GetObjectIdentifier(guid));
             }
-            var response = client.ReadPropertyMultiple(guidList, propertyList);
+            var response = client.ReadPropertyMultiple(guidList, propertyList);          
             foreach (var value in response)
             {
+                valueList = new List<string>();
                 foreach (var attributeValue in value.Variants)
                 {
                     valueList.Add(attributeValue.StringValue);
