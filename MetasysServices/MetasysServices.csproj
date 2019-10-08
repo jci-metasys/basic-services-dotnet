@@ -2,8 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RootNamespace>JohnsonControls.Metasys.BasicServices</RootNamespace>
     <LangVersion>7.3</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>Johnson Controls Inc. 2019</Copyright>
+    <Company>Johnson Controls Inc.</Company>
+    <Product>Metasys Services</Product>
+    <Authors>Johnson Controls</Authors>
+    <Description>A library for accessing the most common services of the Metasys Server API.</Description>
+    <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
+    <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
+    <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
