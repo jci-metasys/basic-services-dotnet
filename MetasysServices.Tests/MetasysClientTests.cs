@@ -22,6 +22,10 @@ namespace Tests
         string mockAttributeName3;
         string mockAttributeName4;
         string mockAttributeName5;
+        string date1;
+        DateTime dateTime1;
+        string date2;
+        DateTime dateTime2;
         MetasysClient client;
 
         [SetUp]
@@ -36,6 +40,10 @@ namespace Tests
             mockid = new Guid("11111111-2222-3333-4444-555555555555");
             mockid2 = new Guid("11111111-2222-3333-4444-555555555556");
             mockid3 = new Guid("11111111-2222-3333-4444-555555555557");
+            date1 = "2030-01-01T00:00:00Z";
+            dateTime1 = DateTime.Parse(date1).ToUniversalTime();
+            date2 = "2030-01-01T00:01:00Z";
+            dateTime2 = DateTime.Parse(date2).ToUniversalTime();
         }
 
         #region Login Tests
@@ -45,13 +53,17 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
+
+                httpTest.RespondWithJson(new { accessToken = "faketoken1", expires = date1 });
                 await client.TryLoginAsync("username", "password").ConfigureAwait(false);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/json")
                     .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
                     .Times(1);
+                var token = client.GetAccessToken();
+                Assert.AreEqual("Bearer faketoken1", token.Token);
+                Assert.AreEqual(dateTime1, token.Expires);
             }
         }
 
@@ -62,13 +74,16 @@ namespace Tests
             {
                 AsyncContext.Run(() =>
                 {
-                    httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
+                    httpTest.RespondWithJson(new { accessToken = "faketoken2", expires = date2 });
                     client.TryLogin("username", "password");
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
                         .WithVerb(HttpMethod.Post)
                         .WithContentType("application/json")
                         .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
                         .Times(1);
+                    var token = client.GetAccessToken();
+                    Assert.AreEqual("Bearer faketoken2", token.Token);
+                    Assert.AreEqual(dateTime2, token.Expires);
                 });
             }
         }
@@ -131,11 +146,14 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
+                httpTest.RespondWithJson(new { accessToken = "faketoken3", expires = date1 });
                 await client.RefreshAsync().ConfigureAwait(false);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
+                var token = client.GetAccessToken();
+                Assert.AreEqual("Bearer faketoken3", token.Token);
+                Assert.AreEqual(dateTime1, token.Expires);
             }
         }
 
@@ -146,11 +164,14 @@ namespace Tests
             {
                 AsyncContext.Run(() =>
                 {
-                    httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
+                    httpTest.RespondWithJson(new { accessToken = "faketoken4", expires = date2 });
                     client.Refresh();
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
+                    var token = client.GetAccessToken();
+                    Assert.AreEqual("Bearer faketoken4", token.Token);
+                    Assert.AreEqual(dateTime2, token.Expires);
                 });
             }
         }
@@ -181,19 +202,27 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-                DateTime future = DateTime.UtcNow;
-                future.AddSeconds(5);
+                DateTime now = DateTime.UtcNow;
+                DateTime future = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond));
+                future.AddSeconds(2);
                 string time = future.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
 
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = time });
+                httpTest.RespondWithJson(new { accessToken = "faketoken5", expires = time })
+                    .RespondWithJson(new { accessToken = "faketoken6", expires = date1 });
+                
                 client.TryLogin("username", "password");
+                var token = client.GetAccessToken();
+                Assert.AreEqual("Bearer faketoken5", token.Token);
+                Assert.AreEqual(future, token.Expires);
 
-                httpTest.RespondWithJson(new { accessToken = "faketoken", expires = "2030-01-01T00:00:00Z" });
-                System.Threading.Thread.Sleep(5000);
+                System.Threading.Thread.Sleep(2000);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
+                var token2 = client.GetAccessToken();
+                Assert.AreEqual("Bearer faketoken6", token2.Token);
+                Assert.AreEqual(dateTime1, token2.Expires);
             }
         }
 
@@ -287,6 +316,7 @@ namespace Tests
             }
         }
 
+        [Test]
         public void TestReadPropertyInteger()
         {
             using (var httpTest = new HttpTest())
@@ -675,13 +705,13 @@ namespace Tests
                 {
                     foreach (var attribute in result.Variants.ToList())
                     {
-                        Console.WriteLine($"VALUE: {attribute.NumericValue} {attribute.StringValue}");
                         Assert.AreNotEqual(1, attribute.NumericValue);
                     }
                 }
             }
         }
 
+        [Test]
         public void TestReadPropertyMultipleTwoIdFiveAttribute()
         {
             using (var httpTest = new HttpTest())
