@@ -26,7 +26,9 @@ namespace JohnsonControls.Metasys.BasicServices
 
         protected const int MAX_PAGE_SIZE = 1000;
 
-        protected ResourceManager Resource;
+        // Init Resource Manager to provide translations
+        protected static ResourceManager Resource = 
+            new ResourceManager("JohnsonControls.Metasys.BasicServices.Resources.MetasysResources", typeof(MetasysClient).Assembly);
 
         /// <summary>
         /// The current Culture Used for Metasys client localization
@@ -48,8 +50,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             // Set Metasys client if specified, otherwise use Current Culture
             Culture = cultureInfo ?? CultureInfo.CurrentCulture;          
-            // Init Resource Manager to provide translations
-            Resource = new ResourceManager("JohnsonControls.Metasys.BasicServices.Resources.MetasysResources", typeof(MetasysClient).Assembly);
+            
             // Init HTTP client
             AccessToken = new AccessToken(null, DateTime.UtcNow);
             FlurlHttp.Configure(settings => settings.OnErrorAsync = HandleFlurlErrorAsync);
@@ -71,17 +72,29 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Returns localized string for the current Metasys client locale or specified culture as optional parameters
+        /// Returns localized string for the current Metasys client locale or specified culture as optional parameters.
         /// </summary>
         /// <param name="resource"></param>
         /// <param name="cultureInfo"></param>
         /// <returns></returns>
         public string Localize(string resource, CultureInfo cultureInfo = null)
         {
+            return StaticLocalize(resource, cultureInfo ?? Culture);
+        }
+
+        /// <summary>
+        /// Returns localized string for the specified culture or fallbacks to en-US localization.
+        /// Static method for exposure to outside classes.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="cultureInfo"></param>
+        /// <returns></returns>
+        public static string StaticLocalize(string resource, CultureInfo cultureInfo)
+        {
             try
             {
                 // Priority is the cultureInfo  parameter if available, otherwise Metasys client culture
-                return Resource.GetString(resource, cultureInfo ?? Culture);
+                return Resource.GetString(resource, cultureInfo);
             }
             catch(MissingManifestResourceException)
             {               
@@ -284,11 +297,11 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 var attribute = response["item"][attributeName];
-                return new Variant(id, attribute, attributeName);
+                return new Variant(id, attribute, attributeName, Culture);
             }
             catch (System.NullReferenceException)
             {
-                return new Variant(id, null, attributeName);
+                return new Variant(id, null, attributeName, Culture);
             }
         }
 

@@ -9,6 +9,10 @@ namespace JohnsonControls.Metasys.BasicServices.Models
     {
         private const string Reliable = "reliabilityEnumSet.reliable";
 
+        private const string Unsupported = "statusEnumSet.unsupportedObjectType";
+
+        private const string Array = "dataTypeEnumSet.arrayDataType";
+
         // Follow rules for stringValue in MSSDA Bulletin, with the following
         // addendum. The string value for an Array will be "Array".
         public string StringValue { private set; get; }
@@ -38,21 +42,21 @@ namespace JohnsonControls.Metasys.BasicServices.Models
         public string Priority { private set; get; }
         
         // Helper 
-        public bool IsReliable => Reliability == Reliable;
+        public bool IsReliable => Reliability == MetasysClient.StaticLocalize(Reliable, _CultureInfo);
 
         private CultureInfo _CultureInfo;
 
-        internal Variant(Guid id, JToken token, string attribute, CultureInfo cultureInfo = null)
+        internal Variant(Guid id, JToken token, string attribute, CultureInfo cultureInfo)
         {
+            _CultureInfo = cultureInfo;
             Id = id;
             Attribute = attribute;
-            Reliability = Reliable;
+            Reliability = MetasysClient.StaticLocalize(Reliable, _CultureInfo);
             Priority = null;
             StringValue = null;
             NumericValue = 1;
             ArrayValue = null;
             BooleanValue = false;
-            _CultureInfo = cultureInfo;
 
             ProcessToken(token);
         }
@@ -62,7 +66,7 @@ namespace JohnsonControls.Metasys.BasicServices.Models
         {
             if (token == null) {
                 NumericValue = 1;
-                StringValue = "Unsupported Data Type";
+                StringValue = MetasysClient.StaticLocalize(Unsupported, _CultureInfo);
                 return;
             }
             // switch on token type and set the fields appropriately
@@ -81,7 +85,7 @@ namespace JohnsonControls.Metasys.BasicServices.Models
                     break;
                 case JTokenType.String:
                     NumericValue = 0;
-                    StringValue = token.Value<string>();
+                    StringValue = MetasysClient.StaticLocalize(token.Value<string>(), _CultureInfo);
                     break;
                 case JTokenType.Array:
                     ProcessArray(token);
@@ -90,11 +94,11 @@ namespace JohnsonControls.Metasys.BasicServices.Models
                     if ((bool)(token) == true) {
                         NumericValue = 1;
                         BooleanValue = true;
-                        StringValue = Convert.ToString(BooleanValue);
+                        StringValue = Convert.ToString(BooleanValue, _CultureInfo);
                     } else {
                         NumericValue = 0;
                         BooleanValue = false;
-                        StringValue = Convert.ToString(BooleanValue);
+                        StringValue = Convert.ToString(BooleanValue, _CultureInfo);
                     }
                     break;
                 case JTokenType.Object:
@@ -103,7 +107,7 @@ namespace JohnsonControls.Metasys.BasicServices.Models
                     break;
                 default:
                     NumericValue = 1;
-                    StringValue = "Unsupported Data Type";
+                    StringValue = MetasysClient.StaticLocalize(Unsupported, _CultureInfo);
                     break;
             }
         }
@@ -115,11 +119,11 @@ namespace JohnsonControls.Metasys.BasicServices.Models
             int index = 0;
             foreach(var item in arr.Children())
             {
-                ArrayValue[index] = new Variant(Id, item, Attribute);
+                ArrayValue[index] = new Variant(Id, item, Attribute, _CultureInfo);
                 index++;
             }
             NumericValue = 0;
-            StringValue = "Array";
+            StringValue = MetasysClient.StaticLocalize(Array, _CultureInfo);
         }
 
         /// <summary>Searches the JObject for reliability and priority fields and uses the field called 'value' as value for result.</summary>
@@ -131,11 +135,11 @@ namespace JohnsonControls.Metasys.BasicServices.Models
 
                 if (reliabilityToken != null) 
                 {
-                    Reliability = reliabilityToken.ToString();
+                    Reliability = MetasysClient.StaticLocalize(reliabilityToken.ToString(), _CultureInfo);
                 }
                 if (priorityToken != null)
                 {
-                    Priority = priorityToken.ToString();
+                    Priority = MetasysClient.StaticLocalize(priorityToken.ToString(), _CultureInfo);
                 }
                 ProcessToken(valueToken);
             }

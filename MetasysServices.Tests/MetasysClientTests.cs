@@ -14,6 +14,10 @@ namespace Tests
 {
     public class MetasysClientTests
     {
+        // Update these en-US resources as needed
+        static string Unsupported = "Unsupported object type";
+        static string PriorityNone = "0 (No Priority)";
+        static string Reliable = "Reliable";
         Guid mockid;
         Guid mockid2;
         Guid mockid3;
@@ -31,7 +35,7 @@ namespace Tests
         [SetUp]
         public void Init()
         {
-            client = new MetasysClient("hostname");
+            client = new MetasysClient("hostname", false, ApiVersion.V2, new System.Globalization.CultureInfo("en-US"));
             mockAttributeName = "property";
             mockAttributeName2 = "property2";
             mockAttributeName3 = "property3";
@@ -53,7 +57,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-
                 httpTest.RespondWithJson(new { accessToken = "faketoken1", expires = date1 });
                 await client.TryLoginAsync("username", "password").ConfigureAwait(false);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
@@ -209,7 +212,7 @@ namespace Tests
 
                 httpTest.RespondWithJson(new { accessToken = "faketoken5", expires = time })
                     .RespondWithJson(new { accessToken = "faketoken6", expires = date1 });
-                
+
                 client.TryLogin("username", "password");
                 var token = client.GetAccessToken();
                 Assert.AreEqual("Bearer faketoken5", token.Token);
@@ -311,7 +314,7 @@ namespace Tests
                 Assert.AreEqual(true, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -334,7 +337,7 @@ namespace Tests
                     Assert.AreEqual(true, result.BooleanValue);
                     Assert.AreEqual(null, result.ArrayValue);
                     Assert.AreEqual(null, result.Priority);
-                    Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                    Assert.AreEqual(Reliable, result.Reliability);
                     Assert.AreEqual(true, result.IsReliable);
                 });
             }
@@ -356,7 +359,7 @@ namespace Tests
                 Assert.AreEqual(true, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -377,7 +380,7 @@ namespace Tests
                 Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -398,7 +401,7 @@ namespace Tests
                 Assert.AreEqual(true, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -419,7 +422,7 @@ namespace Tests
                 Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -442,8 +445,8 @@ namespace Tests
                 Assert.AreEqual("60", result.StringValue);
                 Assert.AreEqual(true, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
-                Assert.AreEqual("writePriorityEnumSet.priorityNone", result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(PriorityNone, result.Priority);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -466,8 +469,8 @@ namespace Tests
                 Assert.AreEqual("stringvalue", result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
-                Assert.AreEqual("writePriorityEnumSet.priorityNone", result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(PriorityNone, result.Priority);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -488,11 +491,11 @@ namespace Tests
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(1, result.NumericValue);
-                Assert.AreEqual("Unsupported Data Type", result.StringValue);
+                Assert.AreEqual(Unsupported, result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -518,7 +521,7 @@ namespace Tests
                 Assert.AreEqual(1, result.ArrayValue[1].NumericValue);
                 Assert.AreEqual(true, result.ArrayValue[1].BooleanValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -545,7 +548,7 @@ namespace Tests
                 Assert.AreEqual(0, result.ArrayValue[1].NumericValue);
                 Assert.AreEqual(false, result.ArrayValue[1].BooleanValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -566,14 +569,14 @@ namespace Tests
                 Assert.AreEqual(0, result.NumericValue);
                 Assert.AreEqual("Array", result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
-                Assert.AreEqual("Unsupported Data Type", result.ArrayValue[0].StringValue);
+                Assert.AreEqual(Unsupported, result.ArrayValue[0].StringValue);
                 Assert.AreEqual(1, result.ArrayValue[0].NumericValue);
                 Assert.AreEqual(false, result.ArrayValue[0].BooleanValue);
-                Assert.AreEqual("Unsupported Data Type", result.ArrayValue[1].StringValue);
+                Assert.AreEqual(Unsupported, result.ArrayValue[1].StringValue);
                 Assert.AreEqual(1, result.ArrayValue[1].NumericValue);
                 Assert.AreEqual(false, result.ArrayValue[1].BooleanValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -610,11 +613,11 @@ namespace Tests
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(1, result.NumericValue);
-                Assert.AreEqual("Unsupported Data Type", result.StringValue);
+                Assert.AreEqual(Unsupported, result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
