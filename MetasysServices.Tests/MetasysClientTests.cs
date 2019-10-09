@@ -101,16 +101,16 @@ namespace Tests
                 try
                 {
                     client.TryLogin("username", "badpassword");
-
+                    Assert.Fail();
+                }
+                catch (Exception e)
+                {
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
                         .WithVerb(HttpMethod.Post)
                         .WithContentType("application/json")
                         .WithRequestBody("{\"username\":\"username\",\"password\":\"badpassword\"")
                         .Times(1);
-                }
-                catch
-                {
-                    Assert.Fail();
+                    TestContext.Out.WriteLine(e.Message);
                 }
             }
         }
@@ -126,16 +126,17 @@ namespace Tests
                 {
                     MetasysClient clientBad = new MetasysClient("badhost");
                     clientBad.TryLogin("username", "password");
-
+                    Assert.Fail();
+                }
+                catch (Exception e)
+                {
                     httpTest.ShouldHaveCalled($"https://badhost/api/V2/login")
                         .WithVerb(HttpMethod.Post)
                         .WithContentType("application/json")
                         .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
                         .Times(1);
-                }
-                catch
-                {
-                    Assert.Fail();
+                    
+                    TestContext.Out.WriteLine(e.Message);
                 }
             }
         }
@@ -189,13 +190,14 @@ namespace Tests
                 try
                 {
                     client.Refresh();
+                    Assert.Fail();
+                }
+                catch (Exception e)
+                {
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
-                }
-                catch
-                {
-                    Assert.Fail();
+                    TestContext.Out.WriteLine(e.Message);
                 }
             }
         }
@@ -265,32 +267,23 @@ namespace Tests
         }
 
         [Test]
-        public void TestGetObjectIdentifierBadRequestReturnsEmpty()
+        public void TestGetObjectIdentifierBadRequestThrowsException()
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith("Bad Request", 400);
-
-                var id = client.GetObjectIdentifier("fully:qualified/reference");
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
-                .WithVerb(HttpMethod.Get)
-                .Times(1);
-                Assert.AreEqual(Guid.Empty, id);
-            }
-        }
-
-        [Test]
-        public void TestGetBadObjectIdentifierReturnsEmpty()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                httpTest.RespondWith("Bad Request", 400);
-
-                var id = client.GetObjectIdentifier("fully:qualified/reference");
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
-                .WithVerb(HttpMethod.Get)
-                .Times(1);
-                Assert.AreEqual(Guid.Empty, id);
+                try
+                {
+                    httpTest.RespondWith("Bad Request", 400);
+                    var id = client.GetObjectIdentifier("fully:qualified/reference");
+                    Assert.Fail();
+                }
+                catch (Exception e)
+                {
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+                    TestContext.Out.WriteLine(e.Message);
+                }
             }
         }
 
@@ -582,7 +575,7 @@ namespace Tests
         }
 
         [Test]
-        public void TestReadPropertyDoesNotExist()
+        public void TestReadPropertyDoesNotExistThrowsException()
         {
             using (var httpTest = new HttpTest())
             {
@@ -590,13 +583,14 @@ namespace Tests
                 try
                 {
                     Variant result = client.ReadProperty(mockid, mockAttributeName);
+                    Assert.Fail();
+                }
+                catch (Exception e)
+                {
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
-                }
-                catch
-                {
-                    Assert.Fail();
+                    TestContext.Out.WriteLine(e.Message);
                 }
             }
         }
@@ -773,8 +767,7 @@ namespace Tests
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
-                    Assert.AreEqual(1, results.Count());
-                    Assert.AreEqual(1, results.ElementAt(0).Variants.Count());
+                    Assert.AreEqual(0, results.Count());
                 }
                 catch
                 {
@@ -799,8 +792,7 @@ namespace Tests
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
-                    Assert.AreEqual(1, results.Count());
-                    Assert.AreEqual(1, results.ElementAt(0).Variants.Count());
+                    Assert.AreEqual(0, results.Count());
                 }
                 catch
                 {
