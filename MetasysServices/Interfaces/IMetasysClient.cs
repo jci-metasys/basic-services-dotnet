@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,9 @@ namespace JohnsonControls.Metasys.BasicServices.Interfaces
         Guid GetObjectIdentifier(string itemReference);
         Variant ReadProperty(Guid id, string attributeName);
         IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids,
-            IEnumerable<string> attributeNames);       
+            IEnumerable<string> attributeNames);
+        string Localize(string resource, CultureInfo cultureInfo = null );
+
+        CultureInfo Culture { get; set; }
     }
 }

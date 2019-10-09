@@ -9,14 +9,16 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using JohnsonControls.Metasys.BasicServices.Interfaces;
 using JohnsonControls.Metasys.BasicServices.Models;
+using System.Resources;
+using System.Reflection;
+using System.Threading;
+
 
 namespace JohnsonControls.Metasys.BasicServices
-{
+{  
     public class MetasysClient : IMetasysClient
     {
-        protected FlurlClient Client;
-
-        protected CultureInfo Culture;
+        protected FlurlClient Client;   
 
         protected AccessToken AccessToken;
 
@@ -24,17 +26,31 @@ namespace JohnsonControls.Metasys.BasicServices
 
         protected const int MAX_PAGE_SIZE = 1000;
 
+        protected ResourceManager Resource;
+
+        /// <summary>
+        /// The current Culture Used for Metasys client localization
+        /// </summary>
+        public CultureInfo Culture { get; set; }
+
         /// <summary>
         /// Creates a new TraditionalClient.
         /// </summary>
         /// <remarks>
-        /// Takes an optional CultureInfo which is useful for formatting numbers. If not specified,
+        /// Takes an optional CultureInfo which is useful for formatting numbers and localization of strings. If not specified,
         /// the user's current culture is used.
         /// </remarks>
+        /// <param name="hostname"></param>
+        /// <param name="ignoreCertificateErrors"></param>
+        /// <param name="version"></param>
         /// <param name="cultureInfo"></param>
         public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.V2, CultureInfo cultureInfo = null)
         {
-            Culture = cultureInfo ?? CultureInfo.CurrentCulture;
+            // Set Metasys client if specified, otherwise use Current Culture
+            Culture = cultureInfo ?? CultureInfo.CurrentCulture;          
+            // Init Resource Manager to provide translations
+            Resource = new ResourceManager("JohnsonControls.Metasys.BasicServices.Resources.MetasysResources", typeof(MetasysClient).Assembly);
+            // Init HTTP client
             AccessToken = new AccessToken(null, DateTime.UtcNow);
             FlurlHttp.Configure(settings => settings.OnErrorAsync = HandleFlurlErrorAsync);
 
@@ -51,6 +67,34 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 Client = new FlurlClient($"https://{hostname}"
                     .AppendPathSegments("api", version));
+            }
+        }
+
+        /// <summary>
+        /// Returns localized string for the current Metasys client locale or specified culture as optional parameters
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="cultureInfo"></param>
+        /// <returns></returns>
+        public string Localize(string resource, CultureInfo cultureInfo = null)
+        {
+            try
+            {
+                // Priority is the cultureInfo  parameter if available, otherwise Metasys client culture
+                return Resource.GetString(resource, cultureInfo ?? Culture);
+            }
+            catch(MissingManifestResourceException)
+            {               
+                try
+                {
+                    // Fallback to en-US language if no resource found
+                    return Resource.GetString(resource, new CultureInfo(1033));
+                }
+                catch (MissingManifestResourceException)
+                {
+                    // Just return resource placeholder when no translation found
+                    return resource;
+                }
             }
         }
 

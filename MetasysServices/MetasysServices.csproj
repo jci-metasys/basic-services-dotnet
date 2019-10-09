@@ -17,6 +17,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\MetasysResources.en-US.resources" />
+    <None Remove="Resources\MetasysResources.it-IT.resources" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="Flurl" Version="2.8.2" />
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
@@ -26,6 +31,34 @@
     <Content Include="..\README.md">
       <Link>README.md</Link>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MetasysResources.cs-CZ.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.de-DE.resources">
+      <CustomToolNamespace></CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\MetasysResources.es-ES.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.fr-FR.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.hu-HU.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.ja-JP.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.ko-KR.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.en-US.resources">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Generator></Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\MetasysResources.it-IT.resources">
+      <CustomToolNamespace></CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\MetasysResources.nb-NO.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.nl-NL.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.pl-PL.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.pt-BR.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.ru-RU.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.sv-SE.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.tr-TR.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.zh-CN.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.zh-TW.resources" />
   </ItemGroup>
 
 </Project>
