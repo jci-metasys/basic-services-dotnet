@@ -14,6 +14,10 @@ namespace Tests
 {
     public class MetasysClientTests
     {
+        // Update these en-US resources as needed
+        static string Unsupported = "Unsupported object type";
+        static string PriorityNone = "0 (No Priority)";
+        static string Reliable = "Reliable";
         Guid mockid;
         Guid mockid2;
         Guid mockid3;
@@ -31,7 +35,7 @@ namespace Tests
         [SetUp]
         public void Init()
         {
-            client = new MetasysClient("hostname");
+            client = new MetasysClient("hostname", false, ApiVersion.V2, new System.Globalization.CultureInfo("en-US"));
             mockAttributeName = "property";
             mockAttributeName2 = "property2";
             mockAttributeName3 = "property3";
@@ -53,7 +57,6 @@ namespace Tests
         {
             using (var httpTest = new HttpTest())
             {
-
                 httpTest.RespondWithJson(new { accessToken = "faketoken1", expires = date1 });
                 await client.TryLoginAsync("username", "password").ConfigureAwait(false);
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
@@ -98,16 +101,16 @@ namespace Tests
                 try
                 {
                     client.TryLogin("username", "badpassword");
-
+                    Assert.Fail();
+                }
+                catch (Exception e)
+                {
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
                         .WithVerb(HttpMethod.Post)
                         .WithContentType("application/json")
                         .WithRequestBody("{\"username\":\"username\",\"password\":\"badpassword\"")
                         .Times(1);
-                }
-                catch
-                {
-                    Assert.Fail();
+                    TestContext.Out.WriteLine(e.Message);
                 }
             }
         }
@@ -123,16 +126,17 @@ namespace Tests
                 {
                     MetasysClient clientBad = new MetasysClient("badhost");
                     clientBad.TryLogin("username", "password");
-
+                    Assert.Fail();
+                }
+                catch (Exception e)
+                {
                     httpTest.ShouldHaveCalled($"https://badhost/api/V2/login")
                         .WithVerb(HttpMethod.Post)
                         .WithContentType("application/json")
                         .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
                         .Times(1);
-                }
-                catch
-                {
-                    Assert.Fail();
+                    
+                    TestContext.Out.WriteLine(e.Message);
                 }
             }
         }
@@ -186,13 +190,14 @@ namespace Tests
                 try
                 {
                     client.Refresh();
+                    Assert.Fail();
+                }
+                catch (Exception e)
+                {
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
-                }
-                catch
-                {
-                    Assert.Fail();
+                    TestContext.Out.WriteLine(e.Message);
                 }
             }
         }
@@ -209,7 +214,7 @@ namespace Tests
 
                 httpTest.RespondWithJson(new { accessToken = "faketoken5", expires = time })
                     .RespondWithJson(new { accessToken = "faketoken6", expires = date1 });
-                
+
                 client.TryLogin("username", "password");
                 var token = client.GetAccessToken();
                 Assert.AreEqual("Bearer faketoken5", token.Token);
@@ -262,32 +267,23 @@ namespace Tests
         }
 
         [Test]
-        public void TestGetObjectIdentifierBadRequestReturnsEmpty()
+        public void TestGetObjectIdentifierBadRequestThrowsException()
         {
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith("Bad Request", 400);
-
-                var id = client.GetObjectIdentifier("fully:qualified/reference");
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
-                .WithVerb(HttpMethod.Get)
-                .Times(1);
-                Assert.AreEqual(Guid.Empty, id);
-            }
-        }
-
-        [Test]
-        public void TestGetBadObjectIdentifierReturnsEmpty()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                httpTest.RespondWith("Bad Request", 400);
-
-                var id = client.GetObjectIdentifier("fully:qualified/reference");
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
-                .WithVerb(HttpMethod.Get)
-                .Times(1);
-                Assert.AreEqual(Guid.Empty, id);
+                try
+                {
+                    httpTest.RespondWith("Bad Request", 400);
+                    var id = client.GetObjectIdentifier("fully:qualified/reference");
+                    Assert.Fail();
+                }
+                catch (Exception e)
+                {
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+                    TestContext.Out.WriteLine(e.Message);
+                }
             }
         }
 
@@ -311,7 +307,7 @@ namespace Tests
                 Assert.AreEqual(true, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -334,7 +330,7 @@ namespace Tests
                     Assert.AreEqual(true, result.BooleanValue);
                     Assert.AreEqual(null, result.ArrayValue);
                     Assert.AreEqual(null, result.Priority);
-                    Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                    Assert.AreEqual(Reliable, result.Reliability);
                     Assert.AreEqual(true, result.IsReliable);
                 });
             }
@@ -356,7 +352,7 @@ namespace Tests
                 Assert.AreEqual(true, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -377,7 +373,7 @@ namespace Tests
                 Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -398,7 +394,7 @@ namespace Tests
                 Assert.AreEqual(true, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -419,7 +415,7 @@ namespace Tests
                 Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -442,8 +438,8 @@ namespace Tests
                 Assert.AreEqual("60", result.StringValue);
                 Assert.AreEqual(true, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
-                Assert.AreEqual("writePriorityEnumSet.priorityNone", result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(PriorityNone, result.Priority);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -466,8 +462,8 @@ namespace Tests
                 Assert.AreEqual("stringvalue", result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
-                Assert.AreEqual("writePriorityEnumSet.priorityNone", result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(PriorityNone, result.Priority);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -488,11 +484,11 @@ namespace Tests
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(1, result.NumericValue);
-                Assert.AreEqual("Unsupported Data Type", result.StringValue);
+                Assert.AreEqual(Unsupported, result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -518,7 +514,7 @@ namespace Tests
                 Assert.AreEqual(1, result.ArrayValue[1].NumericValue);
                 Assert.AreEqual(true, result.ArrayValue[1].BooleanValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -545,7 +541,7 @@ namespace Tests
                 Assert.AreEqual(0, result.ArrayValue[1].NumericValue);
                 Assert.AreEqual(false, result.ArrayValue[1].BooleanValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -566,20 +562,20 @@ namespace Tests
                 Assert.AreEqual(0, result.NumericValue);
                 Assert.AreEqual("Array", result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
-                Assert.AreEqual("Unsupported Data Type", result.ArrayValue[0].StringValue);
+                Assert.AreEqual(Unsupported, result.ArrayValue[0].StringValue);
                 Assert.AreEqual(1, result.ArrayValue[0].NumericValue);
                 Assert.AreEqual(false, result.ArrayValue[0].BooleanValue);
-                Assert.AreEqual("Unsupported Data Type", result.ArrayValue[1].StringValue);
+                Assert.AreEqual(Unsupported, result.ArrayValue[1].StringValue);
                 Assert.AreEqual(1, result.ArrayValue[1].NumericValue);
                 Assert.AreEqual(false, result.ArrayValue[1].BooleanValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
 
         [Test]
-        public void TestReadPropertyDoesNotExist()
+        public void TestReadPropertyDoesNotExistThrowsException()
         {
             using (var httpTest = new HttpTest())
             {
@@ -587,13 +583,14 @@ namespace Tests
                 try
                 {
                     Variant result = client.ReadProperty(mockid, mockAttributeName);
+                    Assert.Fail();
+                }
+                catch (Exception e)
+                {
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
-                }
-                catch
-                {
-                    Assert.Fail();
+                    TestContext.Out.WriteLine(e.Message);
                 }
             }
         }
@@ -610,11 +607,11 @@ namespace Tests
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(1, result.NumericValue);
-                Assert.AreEqual("Unsupported Data Type", result.StringValue);
+                Assert.AreEqual(Unsupported, result.StringValue);
                 Assert.AreEqual(false, result.BooleanValue);
                 Assert.AreEqual(null, result.ArrayValue);
                 Assert.AreEqual(null, result.Priority);
-                Assert.AreEqual("reliabilityEnumSet.reliable", result.Reliability);
+                Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             }
         }
@@ -770,8 +767,7 @@ namespace Tests
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
-                    Assert.AreEqual(1, results.Count());
-                    Assert.AreEqual(1, results.ElementAt(0).Variants.Count());
+                    Assert.AreEqual(0, results.Count());
                 }
                 catch
                 {
@@ -796,8 +792,7 @@ namespace Tests
                     httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                         .WithVerb(HttpMethod.Get)
                         .Times(1);
-                    Assert.AreEqual(1, results.Count());
-                    Assert.AreEqual(1, results.ElementAt(0).Variants.Count());
+                    Assert.AreEqual(0, results.Count());
                 }
                 catch
                 {
