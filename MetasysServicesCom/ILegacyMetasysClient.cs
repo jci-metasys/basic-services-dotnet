@@ -17,6 +17,6 @@ namespace JohnsonControls.Metasys.ComServices
        string ReadProperty(string reference, string property, out double numericValue,
             out double rawValue, out string reliability, out string priority);
 
-       List<string> ReadPropertyMultiple(string[] objectList, string[] propertyList, ref List<string> valueList);
+        List<string> ReadPropertyMultiple(string[] objectList, string[] propertyList, out string[] values);
     }
 }

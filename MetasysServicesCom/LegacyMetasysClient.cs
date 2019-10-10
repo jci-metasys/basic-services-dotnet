@@ -44,7 +44,7 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <summary>
-        /// Read one attribute value given the Guid of the object.
+        /// Read one attribute value given the reference of the object.
         /// </summary>
         /// <param name="reference"></param>
         /// <param name="property"></param>
@@ -64,28 +64,29 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <summary>
-        /// Read many attribute values given the Guids of the objects.
-        /// </summary>
-        /// <param name="reference"></param>
+        /// Read many attribute values given the references of the objects.
+        /// </summary>       
         /// <param name="objectList"></param>
         /// <param name="propertyList"></param>
-        /// <param name="valueList"></param>
-        public List<string> ReadPropertyMultiple(string[] objectList, string[] propertyList, ref List<string> valueList)
+        /// <param name="values"></param>
+        public List<string> ReadPropertyMultiple(string[] objectList, string[] propertyList, out string[] values)
         {
             var guidList = new List<Guid>();
             foreach (var guid in objectList)
             {
                 guidList.Add(GetObjectIdentifier(guid));
             }
-            var response = client.ReadPropertyMultiple(guidList, propertyList);          
+            var response = client.ReadPropertyMultiple(guidList, propertyList);         
+            var valueList = new List<string>();
             foreach (var value in response)
             {
-                valueList = new List<string>();
+                // Return the response for all attributes in a serialized array, since limited support of custom objects in VBA
                 foreach (var attributeValue in value.Variants)
                 {
                     valueList.Add(attributeValue.StringValue);
                 }
             }
+            values = valueList.ToArray(); // Need to use output params, since return value as array is not supported in VBA   
             return valueList;
         }
     }
