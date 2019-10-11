@@ -23,17 +23,17 @@ namespace JohnsonControls.Metasys.BasicServices
 
     [System.Serializable]
     public class MetasysTokenException : Exception {
-        public MetasysTokenException(string response) : base($"Could not create AccessToken from response: {response}") { }
+        public MetasysTokenException(string response, Exception inner) : base($"Could not create AccessToken from response: {response}", inner) { }
     }
 
     [System.Serializable]
     public class MetasysGuidException : Exception {
-        public MetasysGuidException(string message) : base($"Could not create new Guid. Reason: {message}") { }
-        public MetasysGuidException(string message, string argument) : base($"Could not create new Guid. Reason: {message}. Argument: {argument}") { }
+        public MetasysGuidException(string message, Exception inner) : base($"Could not create new Guid. Reason: {message}", inner) { }
+        public MetasysGuidException(string message, string argument, Exception inner) : base($"Could not create new Guid. Reason: {message}. Argument: {argument}", inner) { }
     }
 
     [System.Serializable]
     public class MetasysPropertyException: Exception {
-        public MetasysPropertyException(string response) : base($"Could not create Variant from response: {response}") { }
+        public MetasysPropertyException(string response, Exception inner) : base($"Could not create Variant from response: {response}", inner) { }
     }
 }

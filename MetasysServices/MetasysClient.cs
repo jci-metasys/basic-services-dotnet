@@ -10,48 +10,52 @@ using System.Net.Http;
 using JohnsonControls.Metasys.BasicServices.Interfaces;
 using JohnsonControls.Metasys.BasicServices.Models;
 using System.Resources;
-using System.Reflection;
-using System.Threading;
 using System.Net;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
+    /// <summary>
+    /// An HTTP client for consuming the most commonly used endpoints of the Metasys API.
+    /// </summary>
     public class MetasysClient : IMetasysClient
     {
+        /// <summary>The http client.</summary>
         protected FlurlClient Client;
 
+        /// <summary>The current session token.</summary>
         protected AccessToken AccessToken;
 
+        /// <summary>The flag used to control automatic session refreshing.</summary>
         protected bool RefreshToken;
 
-        protected const int MAX_PAGE_SIZE = 1000;
-
-        // Init Resource Manager to provide translations
+        /// <summary>Resource Manager to provide localized translations</summary>
         protected static ResourceManager Resource =
             new ResourceManager("JohnsonControls.Metasys.BasicServices.Resources.MetasysResources", typeof(MetasysClient).Assembly);
 
-        /// <summary>
-        /// The current Culture Used for Metasys client localization
-        /// </summary>
+        /// <summary>The current Culture Used for Metasys client localization.</summary>
         public CultureInfo Culture { get; set; }
 
         /// <summary>
-        /// Creates a new TraditionalClient.
+        /// Creates a new MetasysClient.
         /// </summary>
         /// <remarks>
+        /// Takes an optional boolean flag for ignoring certificate errors by bypassing certificate verification steps.
+        /// Verification bypass is not recommended due to security concerns. If your Metasys server is missing a valid certificate it is
+        /// recommended to add one to protect your private data from attacks over external networks.
+        /// Takes an optional flag for the api version of your Metasys server.
         /// Takes an optional CultureInfo which is useful for formatting numbers and localization of strings. If not specified,
-        /// the user's current culture is used.
+        /// the machine's current culture is used.
         /// </remarks>
-        /// <param name="hostname"></param>
-        /// <param name="ignoreCertificateErrors"></param>
-        /// <param name="version"></param>
-        /// <param name="cultureInfo"></param>
+        /// <param name="hostname">The hostname of the Metasys server.</param>
+        /// <param name="ignoreCertificateErrors">Use to bypass server certificate verification.</param>
+        /// <param name="version">The server's Api version.</param>
+        /// <param name="cultureInfo">Localization culture for Metasys enumeration translations.</param>
         public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.V2, CultureInfo cultureInfo = null)
         {
-            // Set Metasys client if specified, otherwise use Current Culture
+            // Set Metasys culture if specified, otherwise use current machine Culture.
             Culture = cultureInfo ?? CultureInfo.CurrentCulture;
 
-            // Init HTTP client
+            // Initialize the HTTP client with a base URL
             AccessToken = new AccessToken(null, DateTime.UtcNow);
             FlurlHttp.Configure(settings => settings.OnErrorAsync = HandleFlurlErrorAsync);
 
@@ -72,49 +76,59 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Returns localized string for the current Metasys client locale or specified culture as optional parameters.
+        /// Localizes the specified resource key for the current MetasysClient locale or specified culture.
         /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="cultureInfo"></param>
-        /// <returns></returns>
+        /// <remarks>
+        /// The resource parameter must be the key of a Metasys enumeration resource,
+        /// otherwise no translation will be found.
+        /// </remarks>
+        /// <param name="resource">The key for the localization resource.</param>
+        /// <param name="cultureInfo">Optional culture specification.</param>
+        /// <returns>
+        /// Localized string if the resource was found, the default en-US localized string if not found,
+        /// or the resource parameter value if neither resource is found.
+        /// </returns>
         public string Localize(string resource, CultureInfo cultureInfo = null)
         {
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
             return StaticLocalize(resource, cultureInfo ?? Culture);
         }
 
         /// <summary>
-        /// Returns localized string for the specified culture or fallbacks to en-US localization.
+        /// Localizes the specified resource key for the specified culture.
         /// Static method for exposure to outside classes.
         /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="cultureInfo"></param>
-        /// <returns></returns>
+        /// <param name="resource">The key for the localization resource.</param>
+        /// <param name="cultureInfo">The culture specification.</param>
+        /// <exception cref="MissingManifestResourceException"></exception>
+        /// <returns>
+        /// Localized string if the resource was found, the default en-US localized string if not found,
+        /// or the resource parameter value if neither resource is found.
+        /// </returns>
         public static string StaticLocalize(string resource, CultureInfo cultureInfo)
         {
             try
             {
-                // Priority is the cultureInfo  parameter if available, otherwise Metasys client culture
                 return Resource.GetString(resource, cultureInfo);
             }
             catch (MissingManifestResourceException)
             {
                 try
                 {
-                    // Fallback to en-US language if no resource found
+                    // Fallback to en-US language if no resource found.
                     return Resource.GetString(resource, new CultureInfo(1033));
                 }
                 catch (MissingManifestResourceException)
                 {
-                    // Just return resource placeholder when no translation found
+                    // Just return resource placeholder when no translation found.
                     return resource;
                 }
             }
         }
 
         /// <summary>
-        /// Throws MetasysExceptions when a Flurl exception occurs
+        /// Throws MetasysExceptions when a Flurl exception occurs.
         /// </summary>
-        /// <returns>
         /// <exception cref="MetasysHttpParsingException"></exception>
         /// <exception cref="MetasysHttpTimeoutException"></exception>
         /// <exception cref="MetasysHttpException"></exception>
@@ -134,23 +148,30 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+        /// <summary>Use to log an error message from an asynchronous context.</summary>
         private async Task LogErrorAsync(String message)
         {
             await Console.Error.WriteLineAsync(message).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Attempts to login to the given host.
+        /// Attempts to login to the given host and retrieve an access token.
         /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
         public AccessToken TryLogin(string username, string password, bool refresh = true)
         {
             return TryLoginAsync(username, password, refresh).GetAwaiter().GetResult();
         }
 
         /// <summary>
-        /// Attempts to login to the given host asynchronously.
+        /// Attempts to login to the given host and retrieve an access token asynchronously.
         /// </summary>
         /// <returns>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         public async Task<AccessToken> TryLoginAsync(string username, string password, bool refresh = true)
         {
@@ -166,7 +187,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Requests a new access token before current token expires.
+        /// Requests a new access token from the server before the current token expires.
         /// </summary>
         public AccessToken Refresh()
         {
@@ -174,7 +195,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Requests a new access token before current token expires asynchronously.
+        /// Requests a new access token from the server before the current token expires asynchronously.
         /// </summary>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         public async Task<AccessToken> RefreshAsync()
@@ -189,8 +210,11 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <summary>
         /// Creates a new AccessToken from a JToken and sets the client's authorization header if successful.
-        /// On failure sets the AccessToken value to null and leaves authorization header in previous state.
+        /// On failure leaves the AccessToken and authorization header in previous state.
         /// </summary>
+        /// <param name="token"></param>
+        /// <exception cref="System.NullReferenceException"></exception>
+        /// <exception cref="System.FormatException"></exception>
         /// <exception cref="MetasysTokenException"></exception>
         private void CreateAccessToken(JToken token)
         {
@@ -208,9 +232,9 @@ namespace JohnsonControls.Metasys.BasicServices
                     ScheduleRefresh();
                 }
             }
-            catch (System.NullReferenceException)
+            catch (Exception e) when (e is System.NullReferenceException || e is System.FormatException)
             {
-                throw new MetasysTokenException(token.ToString());
+                throw new MetasysTokenException(token.ToString(), e);
             }
         }
 
@@ -238,7 +262,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Returns the current access token and it's expiration date.
+        /// Returns the current session access token.
         /// </summary>
         public AccessToken GetAccessToken()
         {
@@ -246,17 +270,28 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Returns the object identifier (id) of the specified object.
+        /// Given the Item Reference of an object, returns the object identifier.
         /// </summary>
+        /// <remarks>
+        /// The itemReference will be automatically URL encoded.
+        /// <remarks>
+        /// <param name="itemReference"></param>
         public Guid GetObjectIdentifier(string itemReference)
         {
             return GetObjectIdentifierAsync(itemReference).GetAwaiter().GetResult();
         }
 
         /// <summary>
-        /// Returns the object identifier (id) of the specified object asynchronously.
+        /// Given the Item Reference of an object, returns the object identifier asynchronously.
         /// </summary>
+        /// <remarks>
+        /// The itemReference will be automatically URL encoded.
+        /// <remarks>
+        /// <param name="itemReference"></param>
+        /// <returns>A Guid representing the id, or an empty Guid if errors occurred.</returns>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentException"></exception>
         /// <exception cref="MetasysGuidException"></exception>
         public async Task<Guid> GetObjectIdentifierAsync(string itemReference)
         {
@@ -272,13 +307,13 @@ namespace JohnsonControls.Metasys.BasicServices
                 var id = new Guid(str);
                 return id;
             }
-            catch (System.ArgumentNullException)
+            catch (System.ArgumentNullException e)
             {
-                throw new MetasysGuidException("Argument Null");
+                throw new MetasysGuidException("Argument Null", e);
             }
-            catch (System.ArgumentException)
+            catch (System.ArgumentException e)
             {
-                throw new MetasysGuidException("Bad Argument", str);
+                throw new MetasysGuidException("Bad Argument", str, e);
             }
         }
 
@@ -287,6 +322,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
+        /// <param name="throwsNotFoundException"></param>
         public Variant ReadProperty(Guid id, string attributeName, bool throwsNotFoundException = true)
         {
             return ReadPropertyAsync(id, attributeName, throwsNotFoundException).GetAwaiter().GetResult();
@@ -298,28 +334,34 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
         /// <param name="throwsNotFoundException"></param> 
+        /// <returns>Variant if the attribute exists, null if does not exist and throwsNotFoundException is false.</returns>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         /// <exception cref="System.NullReferenceException"></exception>
-        public async Task<Variant> ReadPropertyAsync(Guid id, string attributeName, bool throwsNotFoundException=true)
+        /// <exception cref="MetasysPropertyException"></exception>
+        public async Task<Variant> ReadPropertyAsync(Guid id, string attributeName, bool throwsNotFoundException = true)
         {
-            JToken response=null;
+            JToken response = null;
             try
             {
                 response = await Client.Request(new Url("objects")
-                .AppendPathSegments(id, "attributes", attributeName))
-                .GetJsonAsync<JToken>()
-                .ConfigureAwait(false);           
+                    .AppendPathSegments(id, "attributes", attributeName))
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
                 var attribute = response["item"][attributeName];
                 return new Variant(id, attribute, attributeName, Culture);
             }
-            catch (FlurlHttpException ex)
+            catch (FlurlHttpException e)
             {
-                if (ex.Call.Response.StatusCode== HttpStatusCode.NotFound && !throwsNotFoundException)
+                // When specified just return null when object is not found, for all other responses an exception is raised
+                if (!throwsNotFoundException && e.Call.Response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    // When specified just return an unknown value when object is not found, for all other responses an exception is raised
-                    return new Variant();
-                }                
-                throw new MetasysPropertyException(response.ToString());               
+                    return null;
+                }
+                throw;
+            }
+            catch (System.NullReferenceException e)
+            {
+                throw new MetasysPropertyException(response.ToString(), e);
             }
         }
 
@@ -332,7 +374,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames, bool throwsNotFoundException = false)
         {
-            return ReadPropertyMultipleAsync(ids, attributeNames,throwsNotFoundException).GetAwaiter().GetResult();
+            return ReadPropertyMultipleAsync(ids, attributeNames, throwsNotFoundException).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -358,8 +400,8 @@ namespace JohnsonControls.Metasys.BasicServices
                     // Much faster reading single property than the entire object, even though we have more server calls
                     taskList.Add(ReadPropertyAsync(id, attributeName, throwsNotFoundException)); // Suppress not found exception for read property multiple
                 }
-            }                        
-            await Task.WhenAll(taskList).ConfigureAwait(false);                       
+            }
+            await Task.WhenAll(taskList).ConfigureAwait(false);
             foreach (var id in ids)
             {
                 // Get attributes of the specific Id
@@ -372,7 +414,7 @@ namespace JohnsonControls.Metasys.BasicServices
                         variants.Add(t.Result); // Prepare variants list
                     }
                 }
-                if (variants.Count > 0 || attributeNames.Count()==0) 
+                if (variants.Count > 0 || attributeNames.Count() == 0)
                 {
                     // Aggregate results only when objects was found or no attributes specified
                     results.Add(new VariantMultiple(id, variants));

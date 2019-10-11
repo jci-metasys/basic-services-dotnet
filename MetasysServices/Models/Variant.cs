@@ -2,10 +2,17 @@ using System;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
 
-
 namespace JohnsonControls.Metasys.BasicServices.Models
 {
-    public struct Variant
+    /// <summary>
+    /// Variant is a class that holds information about an attribute/property
+    /// value from a single Metasys object.
+    /// </summary>
+    /// <remarks>
+    /// If the returned property is an array of values the ArrayValue will hold 
+    /// each of these values in a new Variant object.
+    /// </remarks>
+    public class Variant
     {
         private const string Reliable = "reliabilityEnumSet.reliable";
 
@@ -13,35 +20,50 @@ namespace JohnsonControls.Metasys.BasicServices.Models
 
         private const string Array = "dataTypeEnumSet.arrayDataType";
 
-        // Follow rules for stringValue in MSSDA Bulletin, with the following
-        // addendum. The string value for an Array will be "Array".
+        /// <summary>The string representation of the value.</summary>
+        /// <value>String value as specified in the MSSDA Bulletin stringValue.</value>
         public string StringValue { private set; get; }
-        
-        // Follow rules for rawValue in MSSDA Bulletin, with the following 
-        // addendum. The numeric value for an Array will be 0
-        // Enums will also be 0 (since we don't expose their numbers, we just expose them as strings)
+
+        /// <summary>The numeric representation of the value.</summary>
+        /// <value>
+        /// Numeric value as specified in the MSSDA Bulletin rawValue.
+        /// The numeric value for an Array will be 0.
+        /// </value>
         public double NumericValue { private set; get; }
-        
+
+        /// <summary>The boolean representation of the value.</summary>
+        /// <value>
+        /// 0 if false, numeric value is 0, or attribute is non-numeric.
+        /// 1 if true or numeric value not equal to 0.
+        /// </value>
         public bool BooleanValue { private set; get; }
-        
-        // This is new. MSSDA required you to read just one element of an array.
-        // We will support reading the entire array (asusming it's an array of primitives)
-        // This will be null for non-array data types.
-        // Alternatively, we could have this return a single element array 
+
+        /// <summary>An array of Variant values.</summary>
+        /// <value>Null unless value is an array.</value>
         public Variant[] ArrayValue { private set; get; }
-        
+
+        /// <summary>The attribute from the Metasys object.</summary>
         public string Attribute { private set; get; }
 
+        /// <summary>The id of the Metasys object.</summary>
         public Guid Id { private set; get; }
 
-        // This will be an enum value
+        /// <summary>The reliability of the value.</summary>
+        /// <value>
+        /// If the attribute is "presentValue": the reliability of the value.
+        /// Otherwise reliable by default.
+        /// </value>
         public string Reliability { private set; get; }
-        
-        // This would be an enum value. It may make sense to have a PriorityNumber property as well
-        // which would have the value 0 - 15 since that is often used in the UI of Metasys.
+
+        /// <summary>The priority of the value.</summary>
+        /// <value>
+        /// If the attribute is "presentValue": the priority of the value.
+        /// Otherwise null by default.
+        /// </value>
         public string Priority { private set; get; }
-        
-        // Helper 
+
+        /// <summary>Boolean representation of the reliability of the value.</summary>
+        /// <value>True if the reliability of the value is reliable.</value>
         public bool IsReliable => Reliability == MetasysClient.StaticLocalize(Reliable, _CultureInfo);
 
         private CultureInfo _CultureInfo;
@@ -61,10 +83,13 @@ namespace JohnsonControls.Metasys.BasicServices.Models
             ProcessToken(token);
         }
 
-        /// <summary>Parses the JToken type and assigns struct values appropriately.</summary>
+        /// <summary>
+        /// Parses the JToken type and assigns values as specified in the MSSDA Bulletin.
+        /// </summary>
         private void ProcessToken(JToken token)
         {
-            if (token == null) {
+            if (token == null)
+            {
                 NumericValue = 1;
                 StringValue = MetasysClient.StaticLocalize(Unsupported, _CultureInfo);
                 return;
@@ -91,11 +116,14 @@ namespace JohnsonControls.Metasys.BasicServices.Models
                     ProcessArray(token);
                     break;
                 case JTokenType.Boolean:
-                    if ((bool)(token) == true) {
+                    if ((bool)(token) == true)
+                    {
                         NumericValue = 1;
                         BooleanValue = true;
                         StringValue = Convert.ToString(BooleanValue, _CultureInfo);
-                    } else {
+                    }
+                    else
+                    {
                         NumericValue = 0;
                         BooleanValue = false;
                         StringValue = Convert.ToString(BooleanValue, _CultureInfo);
@@ -113,11 +141,12 @@ namespace JohnsonControls.Metasys.BasicServices.Models
         }
 
         /// <summary>Parses a JArray and adds each item as a Variant.</summary>
-        private void ProcessArray(JToken token) {
+        private void ProcessArray(JToken token)
+        {
             JArray arr = JArray.Parse(token.ToString());
             ArrayValue = new Variant[arr.Count];
             int index = 0;
-            foreach(var item in arr.Children())
+            foreach (var item in arr.Children())
             {
                 ArrayValue[index] = new Variant(Id, item, Attribute, _CultureInfo);
                 index++;
@@ -126,14 +155,16 @@ namespace JohnsonControls.Metasys.BasicServices.Models
             StringValue = MetasysClient.StaticLocalize(Array, _CultureInfo);
         }
 
-        /// <summary>Searches the JObject for reliability and priority fields and uses the field called 'value' as value for result.</summary>
-        internal void ProcessPresentValue(JToken token) {
-            if (Attribute.Equals("presentValue")) {
+        /// <summary>Searches the JObject for reliability and priority fields and uses the field called "value" as value for result.</summary>
+        internal void ProcessPresentValue(JToken token)
+        {
+            if (Attribute.Equals("presentValue"))
+            {
                 JToken valueToken = token["value"];
                 JToken reliabilityToken = token["reliability"];
                 JToken priorityToken = token["priority"];
 
-                if (reliabilityToken != null) 
+                if (reliabilityToken != null)
                 {
                     Reliability = MetasysClient.StaticLocalize(reliabilityToken.ToString(), _CultureInfo);
                 }
