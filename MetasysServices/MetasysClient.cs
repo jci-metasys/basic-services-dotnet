@@ -394,5 +394,379 @@ namespace JohnsonControls.Metasys.BasicServices
                 .ConfigureAwait(false);
             return (Id: id, Token: response);
         }
+
+        /// <summary>
+
+        /// Write a single attribute given the Guid of the object.
+
+        /// </summary>
+
+        /// <param name="id"></param>
+
+        /// <param name="attributeName"></param>
+
+        /// <param name="newValue"></param>
+
+        /// <param name="priority"></param>
+
+        public void WriteProperty(Guid id, string attributeName, object newValue, string priority = null)
+
+        {
+
+            WritePropertyAsync(id, attributeName, newValue, priority).GetAwaiter().GetResult();
+
+        }
+
+
+
+        /// <summary>
+
+        /// Write a single attribute given the Guid of the object asynchronously.
+
+        /// </summary>
+
+        /// <param name="id"></param>
+
+        /// <param name="attributeName"></param>
+
+        /// <param name="newValue"></param>
+
+        /// <param name="priority"></param>
+
+        public async Task WritePropertyAsync(Guid id, string attributeName, object newValue, string priority = null)
+
+        {
+
+            List<(string Attribute, object Value)> list = new List<(string Attribute, object Value)>();
+
+            list.Add((Attribute: attributeName, Value: newValue));
+
+            var item = GetWritePropertyBody(list, priority);
+
+
+
+            await WritePropertyRequestAsync(id, item).ConfigureAwait(false);
+
+        }
+
+
+
+        /// <summary>
+
+        /// Write to all attributes given the Guids of the objects.
+
+        /// </summary>
+
+        /// <param name="ids"></param>
+
+        /// <param name="attributeValues">The (attribute, value) pairs</param>
+
+        /// <param name="priority"></param>
+
+        public void WritePropertyMultiple(IEnumerable<Guid> ids,
+
+            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null)
+
+        {
+
+            WritePropertyMultipleAsync(ids, attributeValues, priority).GetAwaiter().GetResult();
+
+        }
+
+
+
+        /// <summary>
+
+        /// Write many attribute values given the Guids of the objects asynchronously.
+
+        /// </summary>
+
+        /// <param name="ids"></param>
+
+        /// <param name="attributeValues">The (attribute, value) pairs</param>
+
+        /// <param name="priority"></param>
+
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+
+        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
+
+            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null)
+
+        {
+
+            if (ids == null || attributeValues == null)
+
+            {
+
+                return;
+
+            }
+
+
+
+            var item = GetWritePropertyBody(attributeValues, priority);
+
+
+
+            var taskList = new List<Task>();
+
+
+
+            foreach (var id in ids)
+
+            {
+
+                taskList.Add(WritePropertyRequestAsync(id, item));
+
+            }
+
+
+
+            await Task.WhenAll(taskList).ConfigureAwait(false);
+
+        }
+
+
+
+        /// <summary>
+
+        /// Creates the body for the WriteProperty and WritePropertyMultiple requests.
+
+        /// </summary>
+
+        /// <param name="attributeValues">The (attribute, value) pairs</param>
+
+        /// <param name="priority"></param>
+
+        private Dictionary<string, object> GetWritePropertyBody(
+
+            IEnumerable<(string Attribute, object Value)> attributeValues, string priority)
+
+        {
+
+            Dictionary<string, object> pairs = new Dictionary<string, object>();
+
+            foreach (var attribute in attributeValues)
+
+            {
+
+                pairs.Add(attribute.Attribute, attribute.Value);
+
+            }
+
+
+
+            if (priority != null)
+
+            {
+
+                pairs.Add("priority", priority);
+
+            }
+
+
+
+            return pairs;
+
+        }
+
+
+
+        /// <summary>
+
+        /// Write one or many attribute values in the provided json given the Guid of the object asynchronously.
+
+        /// </summary>
+
+        /// <param name="id"></param>
+
+        /// <param name="body"></param>
+
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+
+        private async Task WritePropertyRequestAsync(Guid id, Dictionary<string, object> body)
+
+        {
+
+            var json = new { item = body };
+
+            var response = await Client.Request(new Url("objects")
+
+                .AppendPathSegment(id))
+
+                .PatchJsonAsync(json)
+
+                .ConfigureAwait(false);
+
+        }
+
+
+
+        /// <summary>
+
+        /// Get all available commands given the Guid of the object.
+
+        /// </summary>
+
+        /// <param name="id"></param>
+
+        public IEnumerable<Command> GetCommands(Guid id)
+
+        {
+
+            return GetCommandsAsync(id).GetAwaiter().GetResult();
+
+        }
+
+
+
+        /// <summary>
+
+        /// Get all available commands given the Guid of the object asynchronously.
+
+        /// </summary>
+
+        /// <param name="id"></param>
+
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+
+        public async Task<IEnumerable<Command>> GetCommandsAsync(Guid id)
+
+        {
+
+            var token = await Client.Request(new Url("objects")
+
+                .AppendPathSegments(id, "commands"))
+
+                .GetJsonAsync<JToken>()
+
+                .ConfigureAwait(false);
+
+
+
+            List<Command> commands = new List<Command>();
+
+
+
+            var array = token as JArray;
+
+
+
+            if (array != null)
+
+            {
+
+                foreach (JObject command in array)
+
+                {
+
+                    Command c = new Command(command);
+
+                    commands.Add(c);
+
+                }
+
+            }
+
+            else
+
+            {
+
+                await LogErrorAsync("Could not parse response data.").ConfigureAwait(false);
+
+            }
+
+            return commands;
+
+        }
+
+
+
+        /// <summary>
+
+        /// Send a command to an object.
+
+        /// </summary>
+
+        /// <param name="id"></param>
+
+        /// <param name="command"></param>
+
+        /// <param name="values"></param>
+
+        public void SendCommand(Guid id, string command, IEnumerable<object> values = null)
+
+        {
+
+            SendCommandAsync(id, command, values).GetAwaiter().GetResult();
+
+        }
+
+
+
+        /// <summary>
+
+        /// Send a command to an object asynchronously.
+
+        /// </summary>
+
+        /// <param name="id"></param>
+
+        /// <param name="command"></param>
+
+        /// <param name="values"></param>
+
+        public async Task SendCommandAsync(Guid id, string command, IEnumerable<object> values = null)
+
+        {
+
+            if (values == null)
+
+            {
+
+                await SendCommandRequestAsync(id, command, new string[0]).ConfigureAwait(false);
+
+            }
+
+            else
+
+            {
+
+                await SendCommandRequestAsync(id, command, values).ConfigureAwait(false);
+
+            }
+
+        }
+
+
+
+        /// <summary>
+
+        /// Send a command to an object asynchronously.
+
+        /// </summary>
+
+        /// <param name="id"></param>
+
+        /// <param name="command"></param>
+
+        /// <param name="json">The command body</param>
+
+        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+
+        private async Task SendCommandRequestAsync(Guid id, string command, IEnumerable<object> values)
+        {
+
+            var response = await Client.Request(new Url("objects")
+
+                .AppendPathSegments(id, "commands", command))
+
+                .PutJsonAsync(values)
+
+                .ConfigureAwait(false);
+
+        }
+      
     }
 }

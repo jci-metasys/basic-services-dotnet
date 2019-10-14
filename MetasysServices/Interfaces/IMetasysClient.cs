@@ -26,5 +26,22 @@ namespace JohnsonControls.Metasys.BasicServices.Interfaces
         string Localize(string resource, CultureInfo cultureInfo = null );
 
         CultureInfo Culture { get; set; }
+        void WriteProperty(Guid id, string attributeName, object newValue, string priority = null);
+
+        Task WritePropertyAsync(Guid id, string attributeName, object newValue, string priority = null);
+
+        void WritePropertyMultiple(IEnumerable<Guid> ids,
+
+            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null);
+
+        Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
+
+            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null);
+
+        IEnumerable<Command> GetCommands(Guid id);
+
+        Task<IEnumerable<Command>> GetCommandsAsync(Guid id);
+
+        void SendCommand(Guid id, string command, IEnumerable<object> values = null);
     }
 }
