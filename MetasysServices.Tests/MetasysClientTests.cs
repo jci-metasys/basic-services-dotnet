@@ -861,15 +861,605 @@ namespace Tests
 
         #endregion
 
-        #region miscellaneous
+        #region WriteProperty Tests
 
+        [Test]
+        public async Task TestWritePropertyStringAsync()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+                await client.WritePropertyAsync(mockid, mockAttributeName, "newValue").ConfigureAwait(false);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public void TestWritePropertyString()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWith("Accepted", 202);
+                    client.WriteProperty(mockid, mockAttributeName, "newValue");
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Patch)
+                        .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                        .Times(1);
+                });
+            }
+        }
+        
+        [Test]
+        public void TestWritePropertyStringWithPriority()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+                client.WriteProperty(mockid, mockAttributeName, "newValue", "writePriorityEnumSet.priorityDefault");
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\",\"priority\":\"writePriorityEnumSet.priorityDefault\"}}}}")
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public void TestWritePropertyInteger()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+                client.WriteProperty(mockid, mockAttributeName, 32);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":32}}}}")
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public void TestWritePropertyFloat()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+                client.WriteProperty(mockid, mockAttributeName, 32.5);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":32.5}}}}")
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public void TestWritePropertyBoolean()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+                client.WriteProperty(mockid, mockAttributeName, true);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":true}}}}")
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public void TestWritePropertyArrayString()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+                client.WriteProperty(mockid, mockAttributeName, new[] { "1", "2", "3" });
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":[\"1\",\"2\",\"3\"]}}}}")
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public void TestWritePropertyArrayInteger()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+                client.WriteProperty(mockid, mockAttributeName, new[] { 1, 2, 3 });
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":[1,2,3]}}}}")
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public void TestWritePropertyBadRequestDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Bad Request", 400);
+                try
+                {
+                    client.WriteProperty(mockid, mockAttributeName, "badType");
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Patch)
+                        .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"badType\"}}}}")
+                        .Times(1);
+                }
+                catch
+                {
+                    Assert.Fail();
+                }
+            }
+        }
+        #endregion
+        #region WritePropertyMultiple Tests
+        [Test]
+        public void TestWritePropertyMultipleOneIdOneString()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+                List<Guid> ids = new List<Guid>() { mockid };
+                List<(string, object)> attributes = new List<(string, object)>() { (mockAttributeName, "newValue") };
+                client.WritePropertyMultiple(ids, attributes);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public void TestWritePropertyMultipleManyIdsOneString()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+                List<Guid> ids = new List<Guid>() { mockid, mockid2 };
+                List<(string, object)> attributes = new List<(string, object)>() { (mockAttributeName, "newValue") };
+                client.WritePropertyMultiple(ids, attributes);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                    .Times(1);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public async Task TestWritePropertyMultipleManyIdsManyAttributesAsync()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Accepted", 202);
+                List<Guid> ids = new List<Guid>() { mockid, mockid2 };
+                List<(string, object)> attributes = new List<(string, object)>() {
+                    (mockAttributeName, "stringvalue"),
+                    (mockAttributeName2, 23),
+                    (mockAttributeName3, 23.5),
+                    (mockAttributeName4, true),
+                    (mockAttributeName5, new [] { 1, 2, 3 })};
+                await client.WritePropertyMultipleAsync(ids, attributes).ConfigureAwait(false);
+                string requestBody = string.Concat("{\"item\":{\"" + mockAttributeName + "\":\"stringvalue\",",
+                        "\"" + mockAttributeName2 + "\":23,",
+                        "\"" + mockAttributeName3 + "\":23.5,",
+                        "\"" + mockAttributeName4 + "\":true,",
+                        "\"" + mockAttributeName5 + "\":[1,2,3]}}");
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody(requestBody)
+                    .Times(1);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
+                    .WithVerb(HttpMethod.Patch)
+                    .WithRequestBody(requestBody)
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public void TestWritePropertyMultipleManyIdsManyAttributes()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWith("Accepted", 202);
+                    List<Guid> ids = new List<Guid>() { mockid, mockid2 };
+                    List<(string, object)> attributes = new List<(string, object)>() {
+                        (mockAttributeName, "stringvalue"),
+                        (mockAttributeName2, 23),
+                        (mockAttributeName3, 23.5),
+                        (mockAttributeName4, true),
+                        (mockAttributeName5, new [] { 1, 2, 3 })};
+                    client.WritePropertyMultiple(ids, attributes);
+                    string requestBody = string.Concat("{\"item\":{\"" + mockAttributeName + "\":\"stringvalue\",",
+                        "\"" + mockAttributeName2 + "\":23,",
+                        "\"" + mockAttributeName3 + "\":23.5,",
+                        "\"" + mockAttributeName4 + "\":true,",
+                        "\"" + mockAttributeName5 + "\":[1,2,3]}}");
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Patch)
+                        .WithRequestBody(requestBody)
+                        .Times(1);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
+                        .WithVerb(HttpMethod.Patch)
+                        .WithRequestBody(requestBody)
+                        .Times(1);
+                });
+            }
+        }
+        
+        [Test]
+        public void TestWritePropertyMultipleBadRequestDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Bad Request", 400);
+                List<Guid> ids = new List<Guid>() { mockid };
+                List<(string, object)> attributes = new List<(string, object)>() { ("badAttributeName", "newValue") };
+                try
+                {
+                    client.WritePropertyMultiple(ids, attributes);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                        .WithVerb(HttpMethod.Patch)
+                        .WithRequestBody("{\"item\":{\"badAttributeName\":\"newValue\"}}")
+                        .Times(1);
+                }
+                catch
+                {
+                    Assert.Fail();
+                }
+            }
+        }
+        
+        [Test]
+        public void TestWritePropertyMultipleNullItemsDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Bad Request", 400);
+                try
+                {
+                    client.WritePropertyMultiple(null, null);
+                    httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}");
+                }
+                catch
+                {
+                    Assert.Fail();
+                }
+            }
+        }
+        #endregion
+        #region SendCommand Tests
+        [Test]
+        public void TestSendCommandEmptyBody()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("OK", 200);
+                client.SendCommand(mockid, "EnableAlarms");
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/EnableAlarms")
+                    .WithRequestBody("[]")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public void TestSendCommandOneNumber()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("OK", 200);
+                List<object> list = new List<object>() { 70 };
+                client.SendCommand(mockid, "Adjust", list);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Adjust")
+                    .WithRequestBody("[70]")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public async Task TestSendCommandManyNumberAsync()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("OK", 200);
+                List<object> list = new List<object>() { 70.5, 1, 0 };
+                await client.SendCommandAsync(mockid, "TemporaryOperatorOverride", list).ConfigureAwait(false);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/TemporaryOperatorOverride")
+                    .WithRequestBody("[70.5,1,0]")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public void TestSendCommandManyNumber()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWith("OK", 200);
+                    List<object> list = new List<object>() { 70.5, 1, 0 };
+                    client.SendCommand(mockid, "TemporaryOperatorOverride", list);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/TemporaryOperatorOverride")
+                        .WithRequestBody("[70.5,1,0]")
+                        .WithVerb(HttpMethod.Put)
+                        .Times(1);
+                });
+            }
+        }
+        
+        [Test]
+        public void TestSendCommandManyEnum()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("OK", 200);
+                List<object> list = new List<object>() { "attributeEnumSet.presentValue", "writePriorityEnumSet.priorityNone" };
+                client.SendCommand(mockid, "Release", list);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+                    .WithRequestBody("[\"attributeEnumSet.presentValue\",\"writePriorityEnumSet.priorityNone\"]")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+        
+        [Test]
+        public void TestSendCommandBadRequestDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Bad Request", 400);
+                try
+                {
+                    List<object> list = new List<object>() { "noMatch", "noMatch" };
+                    client.SendCommand(mockid, "Release", list);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+                        .WithVerb(HttpMethod.Put)
+                        .Times(1);
+                }
+                catch
+                {
+                    Assert.Fail();
+                }
+            }
+        }
+        
+        [Test]
+        public void TestSendCommandUnauthorizedDoesNothing()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("Unauthorized", 401);
+                try
+                {
+                    List<object> list = new List<object>() { 40, "badDataTypes" };
+                    client.SendCommand(mockid, "Release", list);
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+                        .WithRequestBody("[40,\"badDataTypes\"]")
+                        .WithVerb(HttpMethod.Put)
+                        .Times(1);
+                }
+                catch
+                {
+                    Assert.Fail();
+                }
+            }
+        }
+        #endregion
+        #region GetCommands Tests
+        [Test]
+        public async Task TestGetCommandsNoneAsync()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith("[]");
+                var commands = await client.GetCommandsAsync(mockid).ConfigureAwait(false);
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual(0, commands.ToList().Count);
+            }
+        }
+        
+        [Test]
+        public void TestGetCommandsNone()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                AsyncContext.Run(() =>
+                {
+                    httpTest.RespondWith("[]");
+                    var commands = client.GetCommands(mockid).ToList();
+                    httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+                    Assert.AreEqual(0, commands.Count);
+                });
+            }
+        }
+        
+        [Test]
+        public void TestGetCommandsEmpty()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(string.Concat("[{\"$schema\": \"http://json-schema.org/schema#\",",
+                    "\"commandId\": \"EnableAlarms\",",
+                    "\"title\": \"Enable Alarms\",",
+                    "\"type\": \"array\",",
+                    "\"items\": [],",
+                    "\"minItems\": 0,",
+                    "\"maxItems\": 0 },",
+                    "{\"$schema\": \"http://json-schema.org/schema#\",",
+                    "\"commandId\": \"DisableAlarms\",",
+                    "\"title\": \"Disable Alarms\",",
+                    "\"type\": \"array\",",
+                    "\"items\": [],",
+                    "\"minItems\": 0,",
+                    "\"maxItems\": 0 }]"));
+                var commands = client.GetCommands(mockid).ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual("Enable Alarms", commands[0].Title);
+                Assert.AreEqual("EnableAlarms", commands[0].CommandId);
+                Assert.AreEqual(null, commands[0].Items);
+                Assert.AreEqual("Disable Alarms", commands[1].Title);
+                Assert.AreEqual("DisableAlarms", commands[1].CommandId);
+                Assert.AreEqual(null, commands[1].Items);
+            }
+        }
+        
+        [Test]
+        public void TestGetCommandsOneEnum()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(string.Concat("[{\"$schema\": \"http://json-schema.org/schema#\",",
+                    "\"commandId\": \"ReleaseAll\",",
+                    "\"title\": \"Release All\",",
+                    "\"type\": \"array\",",
+                    "\"items\": [{",
+                        "\"oneOf\": [{",
+                            "\"const\": \"attributeEnumSet.presentValue\",",
+                            "\"title\": \"Present Value\"}]",
+                        "}],",
+                    "\"minItems\": 1,",
+                    "\"maxItems\": 1 }]"));
+                var commands = client.GetCommands(mockid).ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual("Release All", commands[0].Title);
+                Assert.AreEqual("ReleaseAll", commands[0].CommandId);
+                Assert.AreEqual(1, commands[0].Items.Count());
+                var items = commands[0].Items.ToList();
+                Assert.AreEqual("oneOf", items[0].Title);
+                Assert.AreEqual("enum", items[0].Type);
+                Assert.AreEqual(1, items[0].Maximum);
+                Assert.AreEqual(1, items[0].Minimum);
+                var enums = items[0].EnumerationValues.ToList();
+                Assert.AreEqual("Present Value", enums[0].Title);
+                Assert.AreEqual("attributeEnumSet.presentValue", enums[0].Value);
+            }
+        }
+
+        [Test]
+        public void TestGetCommandsOneNumber()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(string.Concat("[{\"$schema\": \"http://json-schema.org/schema#\",",
+                    "\"commandId\": \"Adjust\",",
+                    "\"title\": \"Adjust\",",
+                    "\"type\": \"array\",",
+                    "\"items\": [{",
+                        "\"type\": \"number\",",
+                        "\"title\": \"Value\",",
+                        "\"minimum\": -20.0,",
+                        "\"maximum\": 120.0",
+                        "}],",
+                    "\"minItems\": 1,",
+                    "\"maxItems\": 1 }]"));
+                var commands = client.GetCommands(mockid).ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual("Adjust", commands[0].Title);
+                Assert.AreEqual("Adjust", commands[0].CommandId);
+                Assert.AreEqual(1, commands[0].Items.Count());
+                var items = commands[0].Items.ToList();
+                Assert.AreEqual("Value", items[0].Title);
+                Assert.AreEqual("number", items[0].Type);
+                Assert.AreEqual(120, items[0].Maximum);
+                Assert.AreEqual(-20, items[0].Minimum);
+                Assert.AreEqual(null, items[0].EnumerationValues);
+            }
+        }
+
+        [Test]
+        public void TestGetCommandsTwoEnumOneNumber()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(string.Concat("[{\"$schema\": \"http://json-schema.org/schema#\",",
+                    "\"commandId\": \"Release\",",
+                    "\"title\": \"Release\",",
+                    "\"type\": \"array\",",
+                    "\"items\": [{",
+                        "\"oneOf\": [{",
+                            "\"const\": \"attributeEnumSet.presentValue\",",
+                            "\"title\": \"Present Value\"}]",
+                        "},",
+                        "{\"oneOf\": [{",
+                            "\"const\": \"writePriorityEnumSet.priorityNone\",",
+                            "\"title\": \"0 (No Priority)\"},",
+                            "{\"const\": \"writePriorityEnumSet.priorityManualEmergency\",",
+                            "\"title\": \"1 (Manual Life Safety)\"}],",
+                        "},",
+                        "{\"type\": \"number\",",
+                        "\"title\": \"Value\",",
+                        "\"minimum\": -20.0,",
+                        "\"maximum\": 120.0",
+                        "}],",
+                    "\"minItems\": 3,",
+                    "\"maxItems\": 3 }]"));
+                var commands = client.GetCommands(mockid).ToList();
+                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+                Assert.AreEqual("Release", commands[0].Title);
+                Assert.AreEqual("Release", commands[0].CommandId);
+                Assert.AreEqual(3, commands[0].Items.Count());
+                var items = commands[0].Items.ToList();
+                Assert.AreEqual("oneOf", items[0].Title);
+                Assert.AreEqual("enum", items[0].Type);
+                Assert.AreEqual(1, items[0].Maximum);
+                Assert.AreEqual(1, items[0].Minimum);
+                var enums1 = items[0].EnumerationValues.ToList();
+                Assert.AreEqual("Present Value", enums1[0].Title);
+                Assert.AreEqual("attributeEnumSet.presentValue", enums1[0].Value);
+                Assert.AreEqual("oneOf", items[1].Title);
+                Assert.AreEqual("enum", items[1].Type);
+                Assert.AreEqual(1, items[1].Maximum);
+                Assert.AreEqual(1, items[1].Minimum);
+                var enums2 = items[1].EnumerationValues.ToList();
+                Assert.AreEqual("0 (No Priority)", enums2[0].Title);
+                Assert.AreEqual("writePriorityEnumSet.priorityNone", enums2[0].Value);
+                Assert.AreEqual("1 (Manual Life Safety)", enums2[1].Title);
+                Assert.AreEqual("writePriorityEnumSet.priorityManualEmergency", enums2[1].Value);
+                Assert.AreEqual("Value", items[2].Title);
+                Assert.AreEqual("number", items[2].Type);
+                Assert.AreEqual(120, items[2].Maximum);
+                Assert.AreEqual(-20, items[2].Minimum);
+                Assert.AreEqual(null, items[2].EnumerationValues);
+            }
+        }
+
+        #endregion       
+      
+        #region miscellaneous
         [Test]
         public void TestNullTokenValue()
         {
             string json = "{\"test\":null}";
             JToken o = JToken.Parse(json);
             string oString = o.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "");
-
             Assert.AreEqual(json, oString);
             Assert.AreEqual(JTokenType.Null, o["test"].Type);
         }
