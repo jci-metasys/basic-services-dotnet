@@ -9,10 +9,10 @@ namespace JohnsonControls.Metasys.BasicServices.Models
     /// </summary>
     public struct VariantMultiple
     {
-        /// <value>The object id.</value>
+        /// <summary>The object id.</summary>
         public Guid Id { private set; get; }
 
-        /// <value>The list of Variants.</value>
+        /// <summary>The list of Variants.</summary>
         public IEnumerable<Variant> Variants { private set; get; }
 
         internal VariantMultiple(Guid id, IEnumerable<Variant> variants)

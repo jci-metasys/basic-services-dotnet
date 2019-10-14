@@ -7,10 +7,11 @@ namespace JohnsonControls.Metasys.BasicServices.Models
     /// </summary>
     public struct AccessToken
     {
-        /// <value>The session access token.</value>
+        /// <summary>The session access token for bearer authentication.</summary>
+        /// <value>String in the format "Bearer ..."</value>
         public string Token { private set; get; }
 
-        /// <value>Expiration date in UTC time.</value>
+        /// <summary>Expiration date in UTC time.</summary>
         public DateTime Expires { private set; get; }
 
         internal AccessToken(string token, DateTime expires)
