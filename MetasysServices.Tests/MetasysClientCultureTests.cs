@@ -1,9 +1,6 @@
 using System;
-using System.Net.Http;
-using System.Linq;
 using NUnit.Framework;
 using JohnsonControls.Metasys.BasicServices;
-using JohnsonControls.Metasys.BasicServices.Models;
 using System.Globalization;
 
 namespace Tests
@@ -16,10 +13,20 @@ namespace Tests
         private const string Array = "dataTypeEnumSet.arrayDataType";
         MetasysClient client;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Init()
         {
             client = new MetasysClient("hostname");
+        }
+
+        [TestCase("Reliable", "Unsupported object type", "0 (No Priority)", "Array")]
+        public void TestStaticLocalizeUnsupportedCulture(string reliable, string unsupported, string priority, string array)
+        {
+            CultureInfo culture = new CultureInfo("fr-LU");
+            Assert.AreEqual(reliable, MetasysClient.StaticLocalize(Reliable, culture));
+            Assert.AreEqual(unsupported, MetasysClient.StaticLocalize(Unsupported, culture));
+            Assert.AreEqual(priority, MetasysClient.StaticLocalize(PriorityNone, culture));
+            Assert.AreEqual(array, MetasysClient.StaticLocalize(Array, culture));
         }
 
         [TestCase("Reliable", "Unsupported object type", "0 (No Priority)", "Array")]
