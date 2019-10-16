@@ -93,5 +93,6 @@ namespace JohnsonControls.Metasys.BasicServices.Interfaces
         Task<IEnumerable<Command>> GetCommandsAsync(Guid id);
 
         void SendCommand(Guid id, string command, IEnumerable<object> values = null);
+        Task SendCommandAsync(Guid id, string command, IEnumerable<object> values = null);
     }
 }
