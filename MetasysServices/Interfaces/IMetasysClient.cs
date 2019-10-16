@@ -57,12 +57,12 @@ namespace JohnsonControls.Metasys.BasicServices.Interfaces
         /// <summary>
         /// Read one attribute value given the Guid of the object.
         /// </summary>
-        Variant ReadProperty(Guid id, string attributeName, bool throwsNotFoundException = true);
+        Variant? ReadProperty(Guid id, string attributeName, bool throwsNotFoundException = true);
 
         /// <summary>
         /// Read one attribute value given the Guid of the object asynchronously.
         /// </summary>
-        Task<Variant> ReadPropertyAsync(Guid id, string attributeName, bool throwsNotFoundException = true);
+        Task<Variant?> ReadPropertyAsync(Guid id, string attributeName, bool throwsNotFoundException = true);
 
         /// <summary>
         /// Read many attribute values given the Guids of the objects.

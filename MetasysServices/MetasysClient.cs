@@ -376,7 +376,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpTimeoutException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         /// <exception cref="MetasysPropertyException"></exception>
-        public Variant ReadProperty(Guid id, string attributeName, bool throwsNotFoundException = true)
+        public Variant? ReadProperty(Guid id, string attributeName, bool throwsNotFoundException = true)
         {
             return ReadPropertyAsync(id, attributeName, throwsNotFoundException).GetAwaiter().GetResult();
         }
@@ -394,7 +394,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpTimeoutException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         /// <exception cref="MetasysPropertyException"></exception>
-        public async Task<Variant> ReadPropertyAsync(Guid id, string attributeName, bool throwsNotFoundException = true)
+        public async Task<Variant?> ReadPropertyAsync(Guid id, string attributeName, bool throwsNotFoundException = true)
         {
             JToken response = null;
             try
@@ -469,7 +469,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 return null;
             }
             List<VariantMultiple> results = new List<VariantMultiple>();
-            var taskList = new List<Task<Variant>>();
+            var taskList = new List<Task<Variant?>>();
             // Prepare Tasks to Read attributes list. In Metasys 11 this will be implemented server side
             foreach (var id in ids)
             {
@@ -483,14 +483,14 @@ namespace JohnsonControls.Metasys.BasicServices
             foreach (var id in ids)
             {
                 // Get attributes of the specific Id
-                List<Task<Variant>> attributeList = taskList.Where(w =>
-                    (w.Result != null && w.Result.Id == id)).ToList();
+                List<Task<Variant?>> attributeList = taskList.Where(w =>
+                    (w.Result != null && w.Result.Value.Id == id)).ToList();
                 List<Variant> variants = new List<Variant>();
                 foreach (var t in attributeList)
                 {
-                    if (t.Result.Id != Guid.Empty) // Something went wrong if the result is unknown
+                    if (t.Result != null) // Something went wrong if the result is unknown
                     {
-                        variants.Add(t.Result); // Prepare variants list
+                        variants.Add(t.Result.Value); // Prepare variants list
                     }
                 }
                 if (variants.Count > 0 || attributeNames.Count() == 0)

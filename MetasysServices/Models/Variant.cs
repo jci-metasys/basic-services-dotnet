@@ -12,7 +12,7 @@ namespace JohnsonControls.Metasys.BasicServices.Models
     /// If the returned property is an array of values the ArrayValue will hold 
     /// each of these values in a new Variant object.
     /// </remarks>
-    public class Variant
+    public struct Variant
     {
         private const string Reliable = "reliabilityEnumSet.reliable";
 

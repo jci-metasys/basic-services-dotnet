@@ -55,7 +55,7 @@ namespace JohnsonControls.Metasys.ComServices
         public string ReadProperty(string reference, string property, out double numericValue, out double rawValue, out string reliability, out string priority)
         {
             Guid fqr = GetObjectIdentifier(reference);
-            var response = client.ReadProperty(fqr, property);
+            var response = client.ReadProperty(fqr, property).Value;
             reliability = response.Reliability;
             numericValue = response.NumericValue;
             priority = response.Priority;

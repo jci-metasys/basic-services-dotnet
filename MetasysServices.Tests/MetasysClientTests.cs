@@ -322,7 +322,7 @@ namespace Tests
         public async Task TestReadPropertyIntegerAsync()
         {
             httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": 1 }}");
-            Variant result = await client.ReadPropertyAsync(mockid, mockAttributeName).ConfigureAwait(false);
+            Variant result = (await client.ReadPropertyAsync(mockid, mockAttributeName).ConfigureAwait(false)).Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -345,7 +345,7 @@ namespace Tests
             AsyncContext.Run(() =>
             {
                 httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": 1 }}");
-                Variant result = client.ReadProperty(mockid, mockAttributeName);
+                Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -367,7 +367,7 @@ namespace Tests
         public void TestReadPropertyFloat()
         {
             httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": 1.1 }}");
-            Variant result = client.ReadProperty(mockid, mockAttributeName);
+            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -389,7 +389,7 @@ namespace Tests
         public void TestReadPropertyString()
         {
             httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": \"stringvalue\" }}");
-            Variant result = client.ReadProperty(mockid, mockAttributeName);
+            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -410,7 +410,7 @@ namespace Tests
         public void TestReadPropertyBooleanTrue()
         {
             httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": true }}");
-            Variant result = client.ReadProperty(mockid, mockAttributeName);
+            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -431,7 +431,7 @@ namespace Tests
         public void TestReadPropertyBooleanFalse()
         {
             httpTest.RespondWith("{\"item\": { \"" + mockAttributeName + "\": false }}");
-            Variant result = client.ReadProperty(mockid, mockAttributeName);
+            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -453,7 +453,7 @@ namespace Tests
         {
             httpTest.RespondWith(string.Concat("{ \"item\": { \"presentValue\": {",
                 "\"value\": 60 } } }"));
-            Variant result = client.ReadProperty(mockid, "presentValue");
+            Variant result = client.ReadProperty(mockid, "presentValue").Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
@@ -475,7 +475,7 @@ namespace Tests
         {
             httpTest.RespondWith(string.Concat("{ \"item\": { \"presentValue\": {",
                 "\"value\": \"stringvalue\" } } }"));
-            Variant result = client.ReadProperty(mockid, "presentValue");
+            Variant result = client.ReadProperty(mockid, "presentValue").Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
@@ -499,7 +499,7 @@ namespace Tests
             "\"property\": \"stringvalue\",",
             "\"reliability\": \"", ReliableHighEnum, "\",",
             "\"priority\": \"", PriorityNoneEnum, "\"} } }"));
-            Variant result = client.ReadProperty(mockid, "presentValue");
+            Variant result = client.ReadProperty(mockid, "presentValue").Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
@@ -523,7 +523,7 @@ namespace Tests
             "\"property\": \"stringvalue\",",
             "\"reliability\": \"", ReliableHighEnum, "\",",
             "\"priority\": \"", PriorityNoneEnum, "\"} } }"));
-            Variant result = client.ReadProperty(mockid, mockAttributeName);
+            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -544,7 +544,7 @@ namespace Tests
         public void TestReadPropertyArrayIntegers()
         {
             httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": [ 0, 1 ] } }");
-            Variant result = client.ReadProperty(mockid, mockAttributeName);
+            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -575,7 +575,7 @@ namespace Tests
         {
             httpTest.RespondWith(string.Concat("{ \"item\": { \"", mockAttributeName, "\": [ ",
             "\"stringvalue1\", \"stringvalue2\" ] } }"));
-            Variant result = client.ReadProperty(mockid, mockAttributeName);
+            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -606,7 +606,7 @@ namespace Tests
             httpTest.RespondWith(string.Concat("{ \"item\": { \"", mockAttributeName, "\": [ ",
             "{ \"item1\": \"stringvalue1\", \"item2\": \"stringvalue2\" },",
             "{ \"item1\": \"stringvalue3\", \"item2\": \"stringvalue4\" } ] } }"));
-            Variant result = client.ReadProperty(mockid, mockAttributeName);
+            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -636,7 +636,7 @@ namespace Tests
         public void TestReadPropertyUnsupportedEmptyObject()
         {
             httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": {}");
-            Variant result = client.ReadProperty(mockid, mockAttributeName);
+            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -669,7 +669,7 @@ namespace Tests
         public void TestReadPropertyDoesNotExistDoesNotThrowException()
         {
             httpTest.RespondWith("Not Found", 404);
-            Variant result = client.ReadProperty(mockid, mockAttributeName, false);
+            Variant? result = client.ReadProperty(mockid, mockAttributeName, false);
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
