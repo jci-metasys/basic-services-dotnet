@@ -37,9 +37,9 @@ namespace JohnsonControls.Metasys.ComServices
         /// Returns the object identifier (id) of the specified object.
         /// </summary>
         /// <param name="itemReference"></param>
-        public Guid GetObjectIdentifier(string itemReference)
+        public Guid? GetObjectIdentifier(string itemReference)
         {
-            Guid response = client.GetObjectIdentifier(itemReference);
+            Guid? response = client.GetObjectIdentifier(itemReference);
             return response;
         }
 
@@ -54,8 +54,8 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="priority"></param>
         public string ReadProperty(string reference, string property, out double numericValue, out double rawValue, out string reliability, out string priority)
         {
-            Guid fqr = GetObjectIdentifier(reference);
-            var response = client.ReadProperty(fqr, property).Value;
+            Guid? fqr = GetObjectIdentifier(reference);
+            var response = client.ReadProperty(fqr.Value, property).Value;
             reliability = response.Reliability;
             numericValue = response.NumericValue;
             priority = response.Priority;
@@ -74,7 +74,7 @@ namespace JohnsonControls.Metasys.ComServices
             var guidList = new List<Guid>();
             foreach (var guid in objectList)
             {
-                guidList.Add(GetObjectIdentifier(guid));
+                guidList.Add(GetObjectIdentifier(guid).Value);
             }
             var response = client.ReadPropertyMultiple(guidList, propertyList);         
             var valueList = new List<string>();
@@ -88,6 +88,43 @@ namespace JohnsonControls.Metasys.ComServices
             }
             values = valueList.ToArray(); // Need to use output params, since return value as array is not supported in VBA   
             return valueList;
+        }
+        
+        public int WriteProperty(string reference, string attributeName, string newValue, string priority=null)
+        {
+            Guid? guid = GetObjectIdentifier(reference);          
+            client.WriteProperty(guid.Value, attributeName, newValue, priority);
+            return 0;
+        }
+
+        public List<string> WritePropertyMultiple(string[] references, string[] attributes, string[] values, string priority = null)
+        {
+            var guidList = new List<Guid>();
+            foreach (var guid in references)
+            {
+                guidList.Add(GetObjectIdentifier(guid).Value);
+            }
+            // Convert positional arrays to Enumerable
+            var valueList = new List<(string,object)>();          
+            for (int i=0; i< attributes.Length;i++)
+            {
+                valueList.Add((attributes[i],values[i]));
+            }
+            client.WritePropertyMultiple(guidList, valueList, priority);
+            return new List<string>(); // Work around to manage VBA error
+        }
+
+        public List<string> SendCommand(string reference, string command, string[] values = null)
+        {
+            Guid? guid = GetObjectIdentifier(reference);
+            // Convert positional arrays to Enumerable
+            var valueList = new List<string>();
+            foreach (var v in values)
+            {
+                valueList.Add(v);
+            }
+            client.SendCommand(guid.Value, command, valueList);
+            return new List<string>(); // Work around to manage VBA error
         }
     }
 }
