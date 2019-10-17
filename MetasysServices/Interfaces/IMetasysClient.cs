@@ -47,34 +47,34 @@ namespace JohnsonControls.Metasys.BasicServices.Interfaces
         /// <summary>
         /// Given the Item Reference of an object, returns the object identifier.
         /// </summary>
-        Guid GetObjectIdentifier(string itemReference);
+        Guid? GetObjectIdentifier(string itemReference);
 
         /// <summary>
         /// Given the Item Reference of an object, returns the object identifier asynchronously.
         /// </summary>
-        Task<Guid> GetObjectIdentifierAsync(string itemReference);
+        Task<Guid?> GetObjectIdentifierAsync(string itemReference);
 
         /// <summary>
         /// Read one attribute value given the Guid of the object.
         /// </summary>
-        Variant? ReadProperty(Guid id, string attributeName, bool throwsNotFoundException = true);
+        Variant? ReadProperty(Guid id, string attributeName);
 
         /// <summary>
         /// Read one attribute value given the Guid of the object asynchronously.
         /// </summary>
-        Task<Variant?> ReadPropertyAsync(Guid id, string attributeName, bool throwsNotFoundException = true);
+        Task<Variant?> ReadPropertyAsync(Guid id, string attributeName);
 
         /// <summary>
         /// Read many attribute values given the Guids of the objects.
         /// </summary>
         IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids,
-            IEnumerable<string> attributeNames, bool throwsNotFoundException = false);
+            IEnumerable<string> attributeNames);
 
         /// <summary>
         /// Read many attribute values given the Guids of the objects asynchronously.
         /// </summary>
         Task<IEnumerable<VariantMultiple>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
-            IEnumerable<string> attributeNames, bool throwsNotFoundException = false);
+            IEnumerable<string> attributeNames);
 
         void WriteProperty(Guid id, string attributeName, object newValue, string priority = null);
 

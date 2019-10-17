@@ -651,25 +651,13 @@ namespace Tests
                 Assert.AreEqual(Reliable, result.Reliability);
                 Assert.AreEqual(true, result.IsReliable);
             });
-        }
-
-        [Test]
-        public void TestReadPropertyDoesNotExistThrowsException()
-        {
-            httpTest.RespondWith("Not Found", 404);
-            var e = Assert.Throws<MetasysHttpException>(() =>
-                client.ReadProperty(mockid, mockAttributeName));
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
-                .WithVerb(HttpMethod.Get)
-                .Times(1);
-            writer.WriteLine("TestReadPropertyDoesNotExistThrowsException: ", e.Message);
-        }
+        }    
 
         [Test]
         public void TestReadPropertyDoesNotExistDoesNotThrowException()
         {
             httpTest.RespondWith("Not Found", 404);
-            Variant? result = client.ReadProperty(mockid, mockAttributeName, false);
+            Variant? result = client.ReadProperty(mockid, mockAttributeName);
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -825,39 +813,7 @@ namespace Tests
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, results.Count());
-        }
-
-        [Test]
-        public void TestReadPropertyMultipleOneIdOneAttributeDNEThrowsException()
-        {
-            httpTest.RespondWith("No HTTP resource was found that matches the request URI.", 404);
-            List<Guid> ids = new List<Guid>() { mockid };
-            List<string> attributes = new List<string>() { mockAttributeName };
-
-            var e = Assert.Throws<MetasysHttpException>(() =>
-                client.ReadPropertyMultiple(ids, attributes, true));
-
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
-                .WithVerb(HttpMethod.Get)
-                .Times(1);
-            writer.WriteLine("TestReadPropertyMultipleOneIdOneAttributeDNEThrowsException: ", e.Message);
-        }
-
-        [Test]
-        public void TestReadPropertyMultipleOneIdDNEThrowsException()
-        {
-            httpTest.RespondWith("No HTTP resource was found that matches the request URI.", 404);
-            List<Guid> ids = new List<Guid>() { mockid };
-            List<string> attributes = new List<string>() { mockAttributeName };
-
-            var e = Assert.Throws<MetasysHttpException>(() =>
-                client.ReadPropertyMultiple(ids, attributes, true));
-
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
-                .WithVerb(HttpMethod.Get)
-                .Times(1);
-            writer.WriteLine("TestReadPropertyMultipleOneIdDNEThrowsException: ", e.Message);
-        }
+        }      
 
         #endregion
 
