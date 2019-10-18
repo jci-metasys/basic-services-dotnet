@@ -1,69 +1,40 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{63C93DDC-9151-40EA-9C17-1004DBC48BD0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net472</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RegisterForComInterop>true</RegisterForComInterop>
     <RootNamespace>JohnsonControls.Metasys.ComServices</RootNamespace>
-    <AssemblyName>MetasysServicesCom</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <RegisterForComInterop>true</RegisterForComInterop>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <RegisterForComInterop>true</RegisterForComInterop>
+    <LangVersion>7.3</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>Johnson Controls Inc. 2019</Copyright>
+    <Company>Johnson Controls Inc.</Company>
+    <Product>Metasys Services COM</Product>
+    <Authors>Johnson Controls</Authors>
+    <Description>A library for accessing the most common services of the Metasys Server API through COM</Description>
+    <PackageId>JohnsonControls.Metasys.ComServices</PackageId>
+    <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
+    <PackageTags>Johnson Controls, Metasys, API, .NET, Services, COM</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Flurl, Version=2.8.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.2.8.2\lib\net40\Flurl.dll</HintPath>
-    </Reference>
-    <Reference Include="Flurl.Http, Version=2.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.Http.2.4.2\lib\net46\Flurl.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <None Remove="Scripts\dotnetfx472_full_x86_x64-4.7.3081.0.exe" />
+    <None Remove="Scripts\RegCOM.bat" />
+    <None Remove="Scripts\UnregCOM.bat" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ILegacyMetasysClient.cs" />
-    <Compile Include="LegacyMetasysClient.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
+    <Content Include="Scripts\dotnetfx472_full_x86_x64-4.7.3081.0.exe">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <PackagePath>scripts</PackagePath>
+    </Content>
+    <Content Include="Scripts\RegCOM.bat">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <PackagePath>scripts</PackagePath>
+    </Content>
+    <Content Include="Scripts\UnregCOM.bat">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <PackagePath>scripts</PackagePath>
+    </Content>
+  </ItemGroup>   
   <ItemGroup>
-    <ProjectReference Include="..\MetasysServices\MetasysServices.csproj">
-      <Project>{695edf1f-786a-443e-89d6-34fbaefea43b}</Project>
-      <Name>MetasysServices</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <ProjectReference Include="..\MetasysServices\MetasysServices.csproj" />
+  </ItemGroup>  
 </Project>
