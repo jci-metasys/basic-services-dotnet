@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Packaging.Targets" Version="0.1.56" />
+  </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RegisterForComInterop>true</RegisterForComInterop>
     <RootNamespace>JohnsonControls.Metasys.ComServices</RootNamespace>
@@ -15,26 +19,28 @@
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services, COM</PackageTags>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Scripts\dotnetfx472_full_x86_x64-4.7.3081.0.exe" />
-    <None Remove="Scripts\RegCOM.bat" />
-    <None Remove="Scripts\UnregCOM.bat" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup> 
   <ItemGroup>
     <Content Include="Scripts\dotnetfx472_full_x86_x64-4.7.3081.0.exe">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <PackagePath>scripts</PackagePath>
     </Content>
     <Content Include="Scripts\RegCOM.bat">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <PackagePath>scripts</PackagePath>
     </Content>
     <Content Include="Scripts\UnregCOM.bat">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <PackagePath>scripts</PackagePath>
     </Content>
   </ItemGroup>   
   <ItemGroup>
     <ProjectReference Include="..\MetasysServices\MetasysServices.csproj" />
+  </ItemGroup>   
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>  
 </Project>

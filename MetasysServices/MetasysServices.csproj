@@ -16,6 +16,11 @@
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Resources\MetasysResources.en-US.resources" />
     <None Remove="Resources\MetasysResources.it-IT.resources" />
