@@ -1,4 +1,5 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.ComServices.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Attempts to login to the given host.
         /// </summary>
+        /// <param name="hostname"></param>
         /// <param name="username"></param>
         /// <param name="password"></param>
         public void login(string hostname, string username, string password)
@@ -48,7 +50,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="reference"></param>
         /// <param name="property"></param>
-        /// <param name="stringValue"></param>
+        /// <param name="numericValue"></param>
         /// <param name="rawValue"></param>
         /// <param name="reliability"></param>
         /// <param name="priority"></param>
