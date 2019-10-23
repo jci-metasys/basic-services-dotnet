@@ -76,23 +76,48 @@ namespace JohnsonControls.Metasys.BasicServices.Interfaces
         Task<IEnumerable<VariantMultiple>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames);
 
+        /// <summary>
+        /// Write a single attribute given the Guid of the object. 
+        /// </summary>
         void WriteProperty(Guid id, string attributeName, object newValue, string priority = null);
 
+        /// <summary>
+        /// Write a single attribute given the Guid of the object asynchronously.
+        /// </summary>
         Task WritePropertyAsync(Guid id, string attributeName, object newValue, string priority = null);
 
+        /// <summary>
+        /// Write to many attribute values given the Guids of the objects.
+        /// </summary>
         void WritePropertyMultiple(IEnumerable<Guid> ids,
 
             IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null);
 
+        /// <summary>
+        /// Write to many attribute values given the Guids of the objects asynchronously.
+        /// </summary>
         Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
 
             IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null);
 
+        /// <summary>
+        /// Get all available commands given the Guid of the object.
+        /// </summary>
         IEnumerable<Command> GetCommands(Guid id);
 
+        /// <summary>
+        /// Get all available commands given the Guid of the object asynchronously.
+        /// </summary>
         Task<IEnumerable<Command>> GetCommandsAsync(Guid id);
 
+        /// <summary>
+        /// Send a command to an object.
+        /// </summary>
         void SendCommand(Guid id, string command, IEnumerable<object> values = null);
+        
+        /// <summary>
+        /// Send a command to an object asynchronously.
+        /// </summary>
         Task SendCommandAsync(Guid id, string command, IEnumerable<object> values = null);
     }
 }
