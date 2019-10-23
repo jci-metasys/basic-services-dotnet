@@ -22,6 +22,6 @@ namespace JohnsonControls.Metasys.ComServices.Interfaces
         List<string> WritePropertyMultiple(string[] references, string[] attributes, string[] values, string priority = null);
         List<string> SendCommand(string reference, string command, string[] values = null);
         List<string> GetNetworkDevices(out string[] deviceList);
-        List<string> GetObjectList(string reference, out string[] objectList)
+        List<string> GetObjectList(string reference, out string[] objectList);
     }
 }
