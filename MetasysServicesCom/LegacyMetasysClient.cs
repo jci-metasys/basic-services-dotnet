@@ -67,7 +67,7 @@ namespace JohnsonControls.Metasys.ComServices
 
         /// <summary>
         /// Read many attribute values given the references of the objects.
-        /// </summary>       
+        /// </summary>
         /// <param name="objectList"></param>
         /// <param name="propertyList"></param>
         /// <param name="values"></param>
@@ -88,17 +88,31 @@ namespace JohnsonControls.Metasys.ComServices
                     valueList.Add(attributeValue.StringValue);
                 }
             }
-            values = valueList.ToArray(); // Need to use output params, since return value as array is not supported in VBA   
+            values = valueList.ToArray(); // Need to use output params, since return value as array is not supported in VBA
             return valueList;
         }
-        
+
+        /// <summary>
+        /// write attribute values given the references of the objects.
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="newValue"></param>
+        /// <param name="priority"></param>
         public int WriteProperty(string reference, string attributeName, string newValue, string priority=null)
         {
-            Guid? guid = GetObjectIdentifier(reference);          
+            Guid? guid = GetObjectIdentifier(reference);
             client.WriteProperty(guid.Value, attributeName, newValue, priority);
             return 0;
         }
 
+        /// <summary>
+        /// write many attribute values given the references of the objects.
+        /// </summary>
+        /// <param name="references"></param>
+        /// <param name="attributes"></param>
+        /// <param name="values"></param>
+        /// <param name="priority"></param>
         public List<string> WritePropertyMultiple(string[] references, string[] attributes, string[] values, string priority = null)
         {
             var guidList = new List<Guid>();
@@ -107,7 +121,7 @@ namespace JohnsonControls.Metasys.ComServices
                 guidList.Add(GetObjectIdentifier(guid).Value);
             }
             // Convert positional arrays to Enumerable
-            var valueList = new List<(string,object)>();          
+            var valueList = new List<(string,object)>();
             for (int i=0; i< attributes.Length;i++)
             {
                 valueList.Add((attributes[i],values[i]));
@@ -116,6 +130,13 @@ namespace JohnsonControls.Metasys.ComServices
             return new List<string>(); // Work around to manage VBA error
         }
 
+
+        /// <summary>
+        /// send command to the object.
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <param name="command"></param>
+        /// <param name="values"></param>
         public List<string> SendCommand(string reference, string command, string[] values = null)
         {
             Guid? guid = GetObjectIdentifier(reference);
@@ -127,6 +148,41 @@ namespace JohnsonControls.Metasys.ComServices
             }
             client.SendCommand(guid.Value, command, valueList);
             return new List<string>(); // Work around to manage VBA error
+        }
+
+
+        /// <summary>
+        /// Gets all child objects given a reference.
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <param name="objectList"></param>
+        public List<string> GetObjectList(string reference, out string[] objectList)
+        {
+            Guid? guid = GetObjectIdentifier(reference);
+            var response = new List<string>();
+            var res = client.GetObjects(guid.Value).ToList();
+           foreach(var val in res)
+            {
+                response.Add(val.ToString());
+            }
+            objectList = response.ToArray(); // Need to use out params, since return value as array is not supported in VBA
+            return response;
+        }
+
+        /// <summary>
+        /// Gets all device list
+        /// </summary>
+        /// <param name="deviceList"></param>
+        public List<string> GetNetworkDevices(out string[] deviceList)
+        {
+            var response = new List<string>();
+            var res = client.GetNetworkDevices().ToList();
+            foreach (var val in res)
+            {
+                response.Add(val.ToString());
+            }
+            deviceList = response.ToArray(); // Need to use out params, since return value as array is not supported in VBA
+            return response;
         }
     }
 }
