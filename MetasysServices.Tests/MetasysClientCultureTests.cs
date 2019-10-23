@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 using JohnsonControls.Metasys.BasicServices;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace Tests
 {
@@ -63,6 +64,19 @@ namespace Tests
             Assert.AreEqual(unsupported, client.Localize(Unsupported, testCulture));
             Assert.AreEqual(priority, client.Localize(PriorityNone, testCulture));
             Assert.AreEqual(array, client.Localize(Array, testCulture));
+        }
+
+        
+        [Test]
+        public void TestDictionaryCreationPerformance()
+        {
+            Stopwatch timer = new System.Diagnostics.Stopwatch();
+            timer.Start();
+            MetasysClient testClient = new MetasysClient("");
+            string test = testClient.LocalizeCommand("Reset Field Device", new CultureInfo("es-ES"));
+            timer.Stop();
+            Console.Error.WriteLine($"Time for dictionary creation: {timer.Elapsed.Milliseconds}ms");
+            Assert.AreEqual("Reiniciar dispositivo de campo", test);
         }
     }
 }
