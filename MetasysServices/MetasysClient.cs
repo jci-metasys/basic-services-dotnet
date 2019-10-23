@@ -852,7 +852,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             using (var temporaryClient = new FlurlClient(new Url(url)))
             {
-                temporaryClient.Headers.Add("Authorization", this.AccessToken);
+                temporaryClient.Headers.Add("Authorization", this.AccessToken.Token);
                 var item = await temporaryClient.Request()
                     .GetJsonAsync<JToken>()
                     .ConfigureAwait(false);
