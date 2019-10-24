@@ -1470,8 +1470,7 @@ namespace Tests
                 Assert.AreEqual(1, devices.Count);
                 Assert.AreEqual(mockid, devices[0].Id);
                 Assert.AreEqual("fully:qualified/reference", devices[0].ItemReference);
-                Assert.AreEqual("name", devices[0].Name);
-                Assert.AreEqual("JCI Family BACnet Device", devices[0].Type);
+                Assert.AreEqual("name", devices[0].Name);           
                 Assert.AreEqual("none", devices[0].Description);
             }
         }
@@ -1564,8 +1563,7 @@ namespace Tests
                 Assert.AreEqual(1, devices.Count);
                 Assert.AreEqual(mockid, devices[0].Id);
                 Assert.AreEqual("fully:qualified/reference", devices[0].ItemReference);
-                Assert.AreEqual("name", devices[0].Name);
-                Assert.AreEqual("JCI Family BACnet Device", devices[0].Type);
+                Assert.AreEqual("name", devices[0].Name);         
                 Assert.AreEqual("none", devices[0].Description);
             }
         }
@@ -1589,8 +1587,7 @@ namespace Tests
                 Assert.AreEqual(1, devices.Count);
                 Assert.AreEqual(Guid.Empty, devices[0].Id);
                 Assert.AreEqual("", devices[0].ItemReference);
-                Assert.AreEqual("", devices[0].Name);
-                Assert.AreEqual("", devices[0].Type);
+                Assert.AreEqual("", devices[0].Name);     
                 Assert.AreEqual("", devices[0].Description);
             }
         }
@@ -1826,7 +1823,6 @@ namespace Tests
                 Assert.AreEqual(mockid, objects[0].Id);
                 Assert.AreEqual("fully:qualified/reference", objects[0].ItemReference);
                 Assert.AreEqual("name", objects[0].Name);
-                Assert.AreEqual("JCI Family BACnet Device", objects[0].Type);
                 Assert.AreEqual("", objects[0].Description);
                 Assert.AreEqual(-1, objects[0].ChildrenCount);
             }
@@ -1927,8 +1923,7 @@ namespace Tests
                 Assert.AreEqual(1, objects.Count);
                 Assert.AreEqual(mockid2, objects[0].Id);
                 Assert.AreEqual("fully:qualified/reference", objects[0].ItemReference);
-                Assert.AreEqual("name", objects[0].Name);
-                Assert.AreEqual("JCI Family BACnet Device", objects[0].Type);
+                Assert.AreEqual("name", objects[0].Name);  
                 Assert.AreEqual("", objects[0].Description);
                 Assert.AreEqual(1, objects[0].ChildrenCount);
 
@@ -1936,7 +1931,6 @@ namespace Tests
                 Assert.AreEqual(mockid3, children[0].Id);
                 Assert.AreEqual("fully:qualified/reference2", children[0].ItemReference);
                 Assert.AreEqual("name2", children[0].Name);
-                Assert.AreEqual("JCI Family BACnet Device", children[0].Type);
                 Assert.AreEqual("", children[0].Description);
                 Assert.AreEqual(-1, children[0].ChildrenCount);
             }
@@ -1962,7 +1956,6 @@ namespace Tests
                 Assert.AreEqual(Guid.Empty, objects[0].Id);
                 Assert.AreEqual("", objects[0].ItemReference);
                 Assert.AreEqual("", objects[0].Name);
-                Assert.AreEqual("", objects[0].Type);
                 Assert.AreEqual("", objects[0].Description);
                 Assert.AreEqual(-1, objects[0].ChildrenCount);
             }

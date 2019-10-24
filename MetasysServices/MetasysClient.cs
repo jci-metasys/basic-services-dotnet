@@ -721,10 +721,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     var list = response["items"] as JArray;
                     foreach (var item in list)
-                    {
-                        var typeInfo = await GetType(item).ConfigureAwait(false);
-                        string description = typeInfo.Description;
-                        MetasysObject device = new MetasysObject(item, description);
+                    {                                 
+                        MetasysObject device = new MetasysObject(item);
                         devices.Add(device);
                     }
 
@@ -849,7 +847,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="url"></param>
         /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
         private async Task<JToken> GetWithFullUrl(string url)
-        {
+        {         
             using (var temporaryClient = new FlurlClient(new Url(url)))
             {
                 temporaryClient.Headers.Add("Authorization", this.AccessToken.Token);
@@ -903,9 +901,7 @@ namespace JohnsonControls.Metasys.BasicServices
                         var list = response["items"] as JArray;
 
                         foreach (var item in list)
-                        {
-                            var itemInfo = await GetType(item).ConfigureAwait(false);
-                            string description = itemInfo.Description;
+                        {                           
 
                             if (levels - 1 > 0)
                             {
@@ -914,18 +910,18 @@ namespace JohnsonControls.Metasys.BasicServices
                                     var str = item["id"].Value<string>();
                                     var objId = new Guid(str);
                                     var children = await GetObjectsAsync(objId, levels - 1).ConfigureAwait(false);
-                                    MetasysObject obj = new MetasysObject(item, description, children);
+                                    MetasysObject obj = new MetasysObject(item, children);
                                     objects.Add(obj);
                                 }
                                 catch (System.ArgumentNullException)
                                 {
-                                    MetasysObject obj = new MetasysObject(item, description);
+                                    MetasysObject obj = new MetasysObject(item);
                                     objects.Add(obj);
                                 }
                             }
                             else
                             {
-                                MetasysObject obj = new MetasysObject(item, description);
+                                MetasysObject obj = new MetasysObject(item);
                                 objects.Add(obj);
                             }
                         }

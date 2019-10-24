@@ -14,9 +14,7 @@ namespace JohnsonControls.Metasys.BasicServices.Models
 
         public Guid Id { private set; get; }
 
-        public string Name { private set; get; }
-
-        public string Type { private set; get; }
+        public string Name { private set; get; }   
 
         public string Description { private set; get; }
 
@@ -25,10 +23,9 @@ namespace JohnsonControls.Metasys.BasicServices.Models
         // The number of children, -1 if there is no children data
         public int ChildrenCount { private set; get; }
 
-        internal MetasysObject(JToken token, string type = "", IEnumerable<MetasysObject> children = null, CultureInfo cultureInfo = null)
+        internal MetasysObject(JToken token, IEnumerable<MetasysObject> children = null, CultureInfo cultureInfo = null)
         {
-            _CultureInfo = cultureInfo;
-            Type = type;
+            _CultureInfo = cultureInfo;           
             Children = children;
             if (Children != null)
             {
@@ -81,8 +78,7 @@ namespace JohnsonControls.Metasys.BasicServices.Models
         {
             return string.Concat("Id: ", Id, "\n",
                 "ItemReference: ", ItemReference, "\n",
-                "Name: ", Name, "\n",
-                "Type: ", Type, "\n",
+                "Name: ", Name, "\n",             
                 "Description: ", Description, "\n",
                 "Number of Children: ", ChildrenCount);
         }
