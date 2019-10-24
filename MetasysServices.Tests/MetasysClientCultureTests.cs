@@ -66,17 +66,32 @@ namespace Tests
             Assert.AreEqual(array, client.Localize(Array, testCulture));
         }
 
-        
-        [Test]
-        public void TestDictionaryCreationPerformance()
+        [TestCase("en-US", "Reset Field Device")]
+        [TestCase("cs-CZ", "Resetovat zařízení pole")]
+        [TestCase("de-DE", "Feldgerät zurücksetzen")]
+        [TestCase("es-ES", "Reiniciar dispositivo de campo")]
+        [TestCase("fr-FR", "Réinitialiser appareil terrain")]
+        [TestCase("hu-HU", "Terepi eszköz újraindítása")]
+        [TestCase("it-IT", "Reset Dispositivo di Campo")]
+        [TestCase("ja-JP", "Reset Field Device")]
+        [TestCase("ko-KR", "Reset Field Device")]
+        [TestCase("nb-NO", "Tilbakestill undersentral")]
+        [TestCase("nl-NL", "Veldapparaat resetten")]
+        [TestCase("pl-PL", "Resetuj urządzenie polowe")]
+        [TestCase("pt-BR", "Restaurar Dispositivo de Campo")]
+        [TestCase("ru-RU", "Сбросить полевое устройство")]
+        [TestCase("sv-SE", "Återställ fältenhet(DUC)")]
+        [TestCase("tr-TR", "Alan Cihazını Sıfırla")]
+        [TestCase("zh-CN", "重置现场设备")]
+        [TestCase("zh-TW", "重置现场设备")]
+        public void TestDictionaryCreationPerformance(string culture, string expected)
         {
             Stopwatch timer = new System.Diagnostics.Stopwatch();
             timer.Start();
-            MetasysClient testClient = new MetasysClient("");
-            string test = testClient.LocalizeCommand("Reset Field Device", new CultureInfo("es-ES"));
+            string test = MetasysClient.StaticLocalizeCommand("Reset Field Device", new CultureInfo(culture));
             timer.Stop();
-            Console.Error.WriteLine($"Time for dictionary creation: {timer.Elapsed.Milliseconds}ms");
-            Assert.AreEqual("Reiniciar dispositivo de campo", test);
+            Console.Error.WriteLine($"Time for {culture} translation: {timer.Elapsed.Milliseconds}ms");
+            Assert.AreEqual(expected, test);
         }
     }
 }
