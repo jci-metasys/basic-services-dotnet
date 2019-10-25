@@ -66,4 +66,10 @@
     <EmbeddedResource Include="Resources\MetasysResources.zh-TW.resources" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>MetasysServices.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
 </Project>

@@ -21,7 +21,7 @@ namespace Tests
         }
 
         [TestCase("Reliable", "Unsupported object type", "0 (No Priority)", "Array")]
-        public void TestStaticLocalizeUnsupportedCulture(string reliable, string unsupported, string priority, string array)
+        public void TestLocalizeCultureUnsupportedCulture(string reliable, string unsupported, string priority, string array)
         {
             CultureInfo culture = new CultureInfo("fr-LU");
             Assert.AreEqual(reliable, MetasysClient.StaticLocalize(Reliable, culture));
@@ -31,7 +31,7 @@ namespace Tests
         }
 
         [TestCase("Reliable", "Unsupported object type", "0 (No Priority)", "Array")]
-        public void TestCultureDefault(string reliable, string unsupported, string priority, string array)
+        public void TestLocalizeCultureDefault(string reliable, string unsupported, string priority, string array)
         {
             Assert.AreEqual(reliable, client.Localize(Reliable));
             Assert.AreEqual(unsupported, client.Localize(Unsupported));
@@ -57,7 +57,7 @@ namespace Tests
         [TestCase("tr-TR", "Güvenilir", "Desteklenmeyen nesne türü", "0 (Öncelik Yok)", "Dizi")]
         [TestCase("zh-CN", "可靠", "不支持的对象类型", "0 (无优先级)", "数组")]
         [TestCase("zh-TW", "可靠", "不支持的对象类型", "0 (无优先级)", "数组")]
-        public void TestCultures(string culture, string reliable, string unsupported, string priority, string array)
+        public void TestLocalizeCulture(string culture, string reliable, string unsupported, string priority, string array)
         {
             CultureInfo testCulture = new CultureInfo(culture);
             Assert.AreEqual(reliable, client.Localize(Reliable, testCulture));
@@ -84,14 +84,15 @@ namespace Tests
         [TestCase("tr-TR", "Alan Cihazını Sıfırla")]
         [TestCase("zh-CN", "重置现场设备")]
         [TestCase("zh-TW", "重置现场设备")]
-        public void TestDictionaryCreationPerformance(string culture, string expected)
+        public void TestLocalizeDictionaries(string culture, string expected)
         {
             Stopwatch timer = new System.Diagnostics.Stopwatch();
             timer.Start();
             string test = MetasysClient.StaticLocalizeCommand("Reset Field Device", new CultureInfo(culture));
             timer.Stop();
-            Console.Error.WriteLine($"Time for {culture} translation: {timer.Elapsed.Milliseconds}ms");
+            // Console.Error.WriteLine($"Time for {culture} translation: {timer.Elapsed.Milliseconds}ms");
             Assert.AreEqual(expected, test);
+            Assert.GreaterOrEqual(2, timer.Elapsed.TotalSeconds);
         }
     }
 }
