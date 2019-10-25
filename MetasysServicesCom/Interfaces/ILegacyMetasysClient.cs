@@ -14,14 +14,15 @@ namespace JohnsonControls.Metasys.ComServices.Interfaces
     {
        void login(string hostname, string username, string password);
 
-       string ReadProperty(string reference, string property, out double numericValue,
+       string ReadProperty(string id, string property, out double numericValue,
             out double rawValue, out string reliability, out string priority);
 
-        List<string> ReadPropertyMultiple(string[] objectList, string[] propertyList, out string[] values);
-        int WriteProperty(string reference, string attributeName, string newValue, string priority=null);
-        List<string> WritePropertyMultiple(string[] references, string[] attributes, string[] values, string priority = null);
-        List<string> SendCommand(string reference, string command, string[] values = null);
+        List<string> ReadPropertyMultiple(string[] objectIdList, string[] propertyList, out string[] values);
+        int WriteProperty(string id, string attributeName, string newValue, string priority=null);
+        List<string> WritePropertyMultiple(string[] ids, string[] attributes, string[] values, string priority = null);
+        List<string> SendCommand(string id, string command, string[] values = null);
         List<string> GetNetworkDevices(out string[] deviceList);
-        List<string> GetObjectList(string reference, out string[] objectList);
+        List<string> GetObjects(string id, out string[] objectList);
+        string GetObjectIdentifier(string itemReference);
     }
 }
