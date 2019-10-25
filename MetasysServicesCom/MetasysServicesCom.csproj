@@ -4,7 +4,7 @@
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <RuntimeIdentifier>any</RuntimeIdentifier>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RegisterForComInterop>true</RegisterForComInterop>
     <RootNamespace>JohnsonControls.Metasys.ComServices</RootNamespace>
@@ -14,7 +14,7 @@
     <Company>Johnson Controls Inc.</Company>
     <Product>Metasys Services COM</Product>
     <Authors>Johnson Controls</Authors>
-    <Description>A library for accessing the most common services of the Metasys Server API through COM</Description>
+    <Description>Metasys Services Object Library</Description>
     <PackageId>JohnsonControls.Metasys.ComServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services, COM</PackageTags>
