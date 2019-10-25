@@ -193,15 +193,13 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             // First time setup, there are about 349 values in the set
             CommandEnumerations = new Dictionary<string, string>();
-            using (ResourceSet ResourcesEnUS = Resource.GetResourceSet(CultureEnUS, true, true))
+            ResourceSet ResourcesEnUS = Resource.GetResourceSet(CultureEnUS, true, true);
+            IDictionaryEnumerator ide = ResourcesEnUS.GetEnumerator();
+            while (ide.MoveNext())
             {
-                IDictionaryEnumerator ide = ResourcesEnUS.GetEnumerator();
-                while (ide.MoveNext())
+                if (ide.Key.ToString().Contains("commandIdEnumSet."))
                 {
-                    if (ide.Key.ToString().Contains("commandIdEnumSet."))
-                    {
-                        CommandEnumerations.Add(ide.Value.ToString(), ide.Key.ToString());
-                    }
+                    CommandEnumerations.Add(ide.Value.ToString(), ide.Key.ToString());
                 }
             }
         }
