@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.ComServices
 {
+    /// <summary>
+    /// A client which is COM visible consuming the MetasysClient
+    /// </summary>
     [ComVisible(true)]
     [Guid("0261C5FD-2473-4EC1-A78C-31A5C27C8163")]
     [ClassInterface(ClassInterfaceType.None)]
@@ -93,7 +96,7 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <summary>
-        /// write attribute values given the references of the objects.
+        /// Write attribute values given the references of the objects.
         /// </summary>
         /// <param name="reference"></param>
         /// <param name="attributeName"></param>
@@ -107,7 +110,7 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <summary>
-        /// write many attribute values given the references of the objects.
+        /// Write many attribute values given the references of the objects.
         /// </summary>
         /// <param name="references"></param>
         /// <param name="attributes"></param>
@@ -132,7 +135,7 @@ namespace JohnsonControls.Metasys.ComServices
 
 
         /// <summary>
-        /// send command to the object.
+        /// Send command to the object.
         /// </summary>
         /// <param name="reference"></param>
         /// <param name="command"></param>
