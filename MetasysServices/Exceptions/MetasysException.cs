@@ -131,7 +131,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="argument">The argument passed to the Guid constructor.</param>
         /// <param name="inner">The inner exception.</param>
         public MetasysGuidException(string message, string argument, Exception inner) :
-            base($"Could not create new Guid. Reason: {message}. Argument: {argument}", inner) { }
+            base($"Could not create new Guid. Reason: {message}, Argument: {argument}", inner) { }
     }
 
     /// <summary>
