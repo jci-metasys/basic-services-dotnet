@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 namespace JohnsonControls.Metasys.BasicServices.Models
 {
     /// <summary>
-    /// Variant is a class that holds information about an attribute/property
+    /// Variant is a structure that holds information about an attribute/property
     /// value from a single Metasys object.
     /// </summary>
     /// <remarks>
