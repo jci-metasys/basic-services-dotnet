@@ -54,6 +54,28 @@ namespace JohnsonControls.Metasys.BasicServices
             this.Call = e.Call;
             this.ResponseBody = e.GetResponseStringAsync().GetAwaiter().GetResult();
         }
+
+        /// <summary>
+        /// Initializes a new instance of the MetasysHttpException class without an HttpCall.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="response"></param>
+        /// <param name="inner">The inner exception.</param>
+        public MetasysHttpException(string message, string response, Exception inner) : base(message, inner) { 
+            this.Call = null;
+            this.ResponseBody = response;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the MetasysHttpException class without an HttpCall.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public MetasysHttpException(string message, string response) : base(message) { 
+            this.Call = null;
+            this.ResponseBody = response;
+        }
     }
 
     /// <summary>
@@ -80,65 +102,73 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="e">The Flurl.Http exception.</param>
         public MetasysHttpParsingException(FlurlParsingException e) : base(e) { }
+
+        /// <summary>
+        /// Initializes a new instance of the MetasysHttpParsingException class with a message and inner exception.
+        /// </summary>
+        /// <param name="message">The original exception message.</param>
+        /// <param name="response">The Http response.</param>
+        /// <param name="inner">The inner exception.</param>
+        public MetasysHttpParsingException(string message, string response, Exception inner) : 
+            base(message, response, inner) { }
+
+        /// <summary>
+        /// Initializes a new instance of the MetasysHttpParsingException class with an inner exception.
+        /// </summary>
+        /// <param name="response">The Http response.</param>
+        /// <param name="inner">The inner exception.</param>
+        public MetasysHttpParsingException(string response, Exception inner) : 
+            base("Error occurred when parsing the Http response.", response, inner) { }
+
+        /// <summary>
+        /// Initializes a new generic instance of the MetasysHttpParsingException class.
+        /// </summary>
+        /// <param name="response">The Http response.</param>
+        public MetasysHttpParsingException(string response) : base(
+            "Error occurred when parsing the Http response.", response) { }
     }
 
     /// <summary>
     /// An exception that is thrown when an AccessToken could not be created from a Http response.
     /// </summary>
     [System.Serializable]
-    public class MetasysTokenException : MetasysException
+    public class MetasysTokenException : MetasysHttpParsingException
     {
         /// <summary>
-        /// The server response that could not be formatted into an AccessToken.
+        /// Initializes a new instance of the MetasysTokenException.
         /// </summary>
         /// <remarks>
         /// Since access tokens are sensitive information it is important to protect them from
         /// being automatically logged. For this reason the response should not be passed into
-        /// the base Exception in the message, but rather accessed through this property.
+        /// the base Exception in the message, but rather accessed through the MetasysHttpException
+        /// ResponseBody property.
         /// </remarks>
-        public string Response { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the MetasysTokenException.
-        /// </summary>
         /// <param name="response">The Http response.</param>
         /// <param name="inner">The inner exception.</param>
         public MetasysTokenException(string response, Exception inner) :
-            base($"Could not create AccessToken from response.", inner) 
-        { 
-            Response = response;
-        }
+            base($"Could not create AccessToken from response.", response, inner) { }
     }
 
     /// <summary>
     /// An exception that is thrown when a Guid could not be created from a Http response.
     /// </summary>
     [System.Serializable]
-    public class MetasysGuidException : MetasysException
+    public class MetasysGuidException : MetasysHttpParsingException
     {
-        /// <summary>
-        /// Initializes a new instance of the MetasysGuidException.
-        /// </summary>
-        /// <param name="message">The reason the exception was thrown.</param>
-        /// <param name="inner">The inner exception.</param>
-        public MetasysGuidException(string message, Exception inner) :
-            base($"Could not create new Guid. Reason: {message}", inner) { }
-
         /// <summary>
         /// Initializes a new instance of the MetasysGuidException with the given argument for the Guid.
         /// </summary>
-        /// <param name="message">The reason the exception was thrown.</param>
-        /// <param name="argument">The argument passed to the Guid constructor.</param>
+        /// <param name="response">The argument passed to the Guid constructor.</param>
         /// <param name="inner">The inner exception.</param>
-        public MetasysGuidException(string message, string argument, Exception inner) :
-            base($"Could not create new Guid. Reason: {message}, Argument: {argument}", inner) { }
+        public MetasysGuidException(string response, Exception inner) :
+            base($"Could not create Guid from response.", response, inner) { }
     }
 
     /// <summary>
     /// An exception that is thrown when a Variant could not be created from a Http response.
     /// </summary>
     [System.Serializable]
-    public class MetasysPropertyException : MetasysException
+    public class MetasysPropertyException : MetasysHttpParsingException
     {
         /// <summary>
         /// Initializes a new instance of the MetasysPropertyException.
@@ -150,6 +180,36 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="response">The Http response.</param>
         /// <param name="inner">The inner exception.</param>
         public MetasysPropertyException(string response, Exception inner) :
-            base($"Could not create Variant from response: {response}", inner) { }
+            base($"Could not create Variant from response.", response, inner) { }
+    }
+
+    /// <summary>
+    /// An exception that is thrown when a MetasysObject could not be created from a Http response.
+    /// </summary>
+    [System.Serializable]
+    public class MetasysObjectException : MetasysHttpParsingException
+    {
+        /// <summary>
+        /// Initializes a new instance of the MetasysObjectException.
+        /// </summary>
+        /// <param name="response">The Http response.</param>
+        /// <param name="inner">The inner exception.</param>
+        public MetasysObjectException(string response, Exception inner) :
+            base($"Could not create MetasysObject from response.", response, inner) { }
+    }
+
+    /// <summary>
+    /// An exception that is thrown when a MetasysObjectType could not be created from a Http response.
+    /// </summary>
+    [System.Serializable]
+    public class MetasysObjectTypeException : MetasysHttpParsingException
+    {
+        /// <summary>
+        /// Initializes a new instance of the MetasysObjectTypeException.
+        /// </summary>
+        /// <param name="response">The Http response.</param>
+        /// <param name="inner">The inner exception.</param>
+        public MetasysObjectTypeException(string response, Exception inner) :
+            base($"Could not create MetasysObjectType from response.", response, inner) { }
     }
 }
