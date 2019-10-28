@@ -1,4 +1,6 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices.Models;
+using JohnsonControls.Metasys.ComServices.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -21,8 +23,8 @@ namespace JohnsonControls.Metasys.ComServices.Interfaces
         int WriteProperty(string id, string attributeName, string newValue, string priority=null);
         List<string> WritePropertyMultiple(string[] ids, string[] attributes, string[] values, string priority = null);
         List<string> SendCommand(string id, string command, string[] values = null);
-        List<string> GetNetworkDevices(out string[] deviceList);
-        List<string> GetObjects(string id, out string[] objectList);
+        MetasysObjectsContainer GetNetworkDevices();
+        MetasysObjectsContainer GetObjects(string id, int levels = 1);
         string GetObjectIdentifier(string itemReference);
     }
 }

@@ -1,5 +1,9 @@
-﻿using JohnsonControls.Metasys.BasicServices;
+﻿using AutoMapper;
+using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.BasicServices.Interfaces;
+using JohnsonControls.Metasys.BasicServices.Models;
 using JohnsonControls.Metasys.ComServices.Interfaces;
+using JohnsonControls.Metasys.ComServices.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +18,15 @@ namespace JohnsonControls.Metasys.ComServices
     [ClassInterface(ClassInterfaceType.None)]
     public class LegacyMetasysClient : ILegacyMetasysClient
     {
-        MetasysClient client;
+        protected IMetasysClient Client;
+        protected IMapper Mapper;
 
         /// <summary>
         /// Creates a new LegacyClient.
         /// </summary>
         public LegacyMetasysClient()
-        {          
+        {
+           Mapper = new MapperConfiguration(cfg => cfg.CreateMap<MetasysObject, ComMetasysObject>()).CreateMapper(); 
         }
 
         /// <summary>
@@ -31,8 +37,8 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="password"></param>
         public void login(string hostname, string username, string password)
         {
-            client = new MetasysClient(hostname);
-            client.TryLogin(username, password);
+            Client = new MetasysClient(hostname);
+            Client.TryLogin(username, password);
         }
 
         /// <summary>
@@ -41,7 +47,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="itemReference"></param>
         public string GetObjectIdentifier(string itemReference)
         {
-            Guid? response = client.GetObjectIdentifier(itemReference);
+            Guid? response = Client.GetObjectIdentifier(itemReference);
             return response?.ToString();
         }
 
@@ -58,7 +64,7 @@ namespace JohnsonControls.Metasys.ComServices
         {
             // Parse Id and generate GUID
             Guid guid = new Guid(id);
-            var response = client.ReadProperty(guid, property).Value;
+            var response = Client.ReadProperty(guid, property).Value;
             reliability = response.Reliability;
             numericValue = response.NumericValue;
             priority = response.Priority;
@@ -79,7 +85,7 @@ namespace JohnsonControls.Metasys.ComServices
             {
                 guidList.Add(new Guid(id));
             }
-            var response = client.ReadPropertyMultiple(guidList, propertyList);         
+            var response = Client.ReadPropertyMultiple(guidList, propertyList);         
             var valueList = new List<string>();
             foreach (var value in response)
             {
@@ -102,7 +108,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="priority"></param>
         public int WriteProperty(string id, string attributeName, string newValue, string priority=null)
         {        
-            client.WriteProperty(new Guid(id), attributeName, newValue, priority);
+            Client.WriteProperty(new Guid(id), attributeName, newValue, priority);
             return 0;
         }
 
@@ -126,7 +132,7 @@ namespace JohnsonControls.Metasys.ComServices
             {
                 valueList.Add((attributes[i],values[i]));
             }
-            client.WritePropertyMultiple(guidList, valueList, priority);
+            Client.WritePropertyMultiple(guidList, valueList, priority);
             return new List<string>(); // Work around to manage VBA error
         }
 
@@ -146,7 +152,7 @@ namespace JohnsonControls.Metasys.ComServices
             {
                 valueList.Add(v);
             }
-            client.SendCommand(guid, command, valueList);
+            Client.SendCommand(guid, command, valueList);
             return new List<string>(); // Work around to manage VBA error
         }
 
@@ -155,34 +161,21 @@ namespace JohnsonControls.Metasys.ComServices
         /// Gets all child objects given a reference.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="objectList"></param>
-        public List<string> GetObjects(string id, out string[] objectList)
+        /// <param name="levels"></param>       
+        public MetasysObjectsContainer GetObjects(string id, int levels = 1)
         {
-            Guid guid = new Guid(id);
-            var response = new List<string>();
-            var res = client.GetObjects(guid).ToList();
-           foreach(var val in res)
-            {
-                response.Add(val.ToString());
-            }
-            objectList = response.ToArray(); // Need to use out params, since return value as array is not supported in VBA
-            return response;
+            Guid guid = new Guid(id); 
+            var res = Client.GetObjects(guid,levels).ToList();  
+            return new MetasysObjectsContainer { Objects = Mapper.Map<ComMetasysObject[]>(res) };     
         }
 
         /// <summary>
         /// Gets all device list
         /// </summary>
-        /// <param name="deviceList"></param>
-        public List<string> GetNetworkDevices(out string[] deviceList)
-        {
-            var response = new List<string>();
-            var res = client.GetNetworkDevices().ToList();
-            foreach (var val in res)
-            {
-                response.Add(val.ToString());
-            }
-            deviceList = response.ToArray(); // Need to use out params, since return value as array is not supported in VBA
-            return response;
+        public MetasysObjectsContainer GetNetworkDevices()
+        {                  
+            var res = Client.GetNetworkDevices().ToList();
+            return new MetasysObjectsContainer { Objects = Mapper.Map<ComMetasysObject[]>(res) };           
         }    
     }
 }

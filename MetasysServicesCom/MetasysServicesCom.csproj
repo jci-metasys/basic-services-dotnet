@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Packaging.Targets" Version="0.1.56" />
   </ItemGroup>
   <PropertyGroup>
@@ -9,15 +10,14 @@
     <RegisterForComInterop>true</RegisterForComInterop>
     <RootNamespace>JohnsonControls.Metasys.ComServices</RootNamespace>
     <LangVersion>7.3</LangVersion>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Copyright>Johnson Controls Inc. 2019</Copyright>
     <Company>Johnson Controls Inc.</Company>
     <Product>Metasys Services COM</Product>
     <Authors>Johnson Controls</Authors>
     <Description>Metasys Services Object Library</Description>
-    <PackageId>JohnsonControls.Metasys.ComServices</PackageId>
-    <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
-    <PackageTags>Johnson Controls, Metasys, API, .NET, Services, COM</PackageTags>
+    <PackageId />
+    <Version>1.0.0</Version>    
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebugType>none</DebugType>
