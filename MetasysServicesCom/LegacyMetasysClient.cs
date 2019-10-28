@@ -1,9 +1,5 @@
 ﻿using AutoMapper;
 using JohnsonControls.Metasys.BasicServices;
-using JohnsonControls.Metasys.BasicServices.Interfaces;
-using JohnsonControls.Metasys.BasicServices.Models;
-using JohnsonControls.Metasys.ComServices.Interfaces;
-using JohnsonControls.Metasys.ComServices.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
