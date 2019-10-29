@@ -57,7 +57,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="id"></param>
         /// <param name="property"></param>       
-        public ComVariant ReadProperty(string id, string property)
+        public IComVariant ReadProperty(string id, string property)
         {
             // Parse Id and generate GUID
             Guid guid = new Guid(id);
@@ -70,7 +70,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="objectIdList"></param>
         /// <param name="propertyList"></param>
-        public VariantMultiplesContainer ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] objectIdList, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] propertyList)
+        public IVariantMultiplesContainer ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] objectIdList, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] propertyList)
         {
             // Note: MarshalAs decorator is needed for arrays, otherwise will cause a VBA app crash
             var guidList = new List<Guid>();
@@ -139,7 +139,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="id"></param>
         /// <param name="levels"></param>       
-        public MetasysObjectsContainer GetObjects(string id, int levels = 1)
+        public IMetasysObjectsContainer GetObjects(string id, int levels = 1)
         {
             Guid guid = new Guid(id); 
             var res = Client.GetObjects(guid,levels).ToList();  
@@ -149,7 +149,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Gets all device list
         /// </summary>
-        public MetasysObjectsContainer GetNetworkDevices()
+        public IMetasysObjectsContainer GetNetworkDevices()
         {                  
             var res = Client.GetNetworkDevices().ToList();
             return new MetasysObjectsContainer { Objects = Mapper.Map<ComMetasysObject[]>(res) };           
