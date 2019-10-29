@@ -102,10 +102,9 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="attributeName"></param>
         /// <param name="newValue"></param>
         /// <param name="priority"></param>
-        public int WriteProperty(string id, string attributeName, string newValue, string priority=null)
+        public void WriteProperty(string id, string attributeName, string newValue, string priority=null)
         {        
-            Client.WriteProperty(new Guid(id), attributeName, newValue, priority);
-            return 0;
+            Client.WriteProperty(new Guid(id), attributeName, newValue, priority);            
         }
 
         /// <summary>
@@ -115,8 +114,9 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="attributes"></param>
         /// <param name="values"></param>
         /// <param name="priority"></param>
-        public List<string> WritePropertyMultiple(string[] ids, string[] attributes, string[] values, string priority = null)
+        public void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] values, string priority = null)
         {
+            // Note: MasharAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
             var guidList = new List<Guid>();
             foreach (var id in ids)
             {
@@ -128,28 +128,22 @@ namespace JohnsonControls.Metasys.ComServices
             {
                 valueList.Add((attributes[i],values[i]));
             }
-            Client.WritePropertyMultiple(guidList, valueList, priority);
-            return new List<string>(); // Work around to manage VBA error
+            Client.WritePropertyMultiple(guidList, valueList, priority);            
         }
 
 
+       
         /// <summary>
-        /// send command to the object.
+        /// 
         /// </summary>
         /// <param name="id"></param>
         /// <param name="command"></param>
         /// <param name="values"></param>
-        public List<string> SendCommand(string id, string command, string[] values = null)
+        public void  SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] values=null)
         {
-            Guid guid = new Guid(id);
-            // Convert positional arrays to Enumerable
-            var valueList = new List<string>();
-            foreach (var v in values)
-            {
-                valueList.Add(v);
-            }
-            Client.SendCommand(guid, command, valueList);
-            return new List<string>(); // Work around to manage VBA error
+            // Note: MasharAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
+            Guid guid = new Guid(id);          
+            Client.SendCommand(guid, command, values?.ToList());           
         }
 
 

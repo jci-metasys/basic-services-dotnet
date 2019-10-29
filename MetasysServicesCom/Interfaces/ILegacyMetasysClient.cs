@@ -19,9 +19,9 @@ namespace JohnsonControls.Metasys.ComServices
             out double rawValue, out string reliability, out string priority);
 
         List<string> ReadPropertyMultiple(string[] objectIdList, string[] propertyList, out string[] values);
-        int WriteProperty(string id, string attributeName, string newValue, string priority=null);
-        List<string> WritePropertyMultiple(string[] ids, string[] attributes, string[] values, string priority = null);
-        List<string> SendCommand(string id, string command, string[] values = null);
+        void WriteProperty(string id, string attributeName, string newValue, string priority=null);
+        void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] values, string priority = null);
+        void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] values=null);
         MetasysObjectsContainer GetNetworkDevices();
         MetasysObjectsContainer GetObjects(string id, int levels = 1);
         string GetObjectIdentifier(string itemReference);
