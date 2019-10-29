@@ -1,5 +1,4 @@
-﻿using JohnsonControls.Metasys.BasicServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -8,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.ComServices
 {
-    [Guid("49E803EC-BED9-4a08-B42B-E0499864A169")]
+    [Guid("c810227d-17fa-464e-97cc-868a3257f0de")]
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
-    public class MetasysObjectsContainer : IMetasysObjectsContainer
+    public class VariantMultiplesContainer:IVariantMultiplesContainer
     { // Note: this structure is needed to correctly retrieve VBA return type, otherwise resulted in a type mismatch array
-        public ComMetasysObject[] Objects { get; set; }
+        public ComVariantMultiple[] Multiples { get; set; }
     }
 }

@@ -22,7 +22,12 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         public LegacyMetasysClient()
         {
-           Mapper = new MapperConfiguration(cfg => cfg.CreateMap<MetasysObject, ComMetasysObject>()).CreateMapper(); 
+            // Defines a Mapper From Basic Services structure to COM
+            Mapper = new MapperConfiguration(cfg => {
+                                                    cfg.CreateMap<MetasysObject, ComMetasysObject>();
+                                                    cfg.CreateMap<Variant, ComVariant>();
+                                                    cfg.CreateMap<VariantMultiple, ComVariantMultiple>();
+                                            }).CreateMapper(); 
         }
 
         /// <summary>
@@ -51,21 +56,13 @@ namespace JohnsonControls.Metasys.ComServices
         /// Read one attribute value given the reference of the object.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="property"></param>
-        /// <param name="numericValue"></param>
-        /// <param name="rawValue"></param>
-        /// <param name="reliability"></param>
-        /// <param name="priority"></param>
-        public string ReadProperty(string id, string property, out double numericValue, out double rawValue, out string reliability, out string priority)
+        /// <param name="property"></param>       
+        public ComVariant ReadProperty(string id, string property)
         {
             // Parse Id and generate GUID
             Guid guid = new Guid(id);
             var response = Client.ReadProperty(guid, property).Value;
-            reliability = response.Reliability;
-            numericValue = response.NumericValue;
-            priority = response.Priority;
-            rawValue = response.NumericValue;
-            return response.StringValue;
+            return Mapper.Map<ComVariant>(response);
         }
 
         /// <summary>
@@ -73,26 +70,16 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="objectIdList"></param>
         /// <param name="propertyList"></param>
-        /// <param name="values"></param>
-        public List<string> ReadPropertyMultiple(string[] objectIdList, string[] propertyList, out string[] values)
+        public VariantMultiplesContainer ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] objectIdList, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] propertyList)
         {
+            // Note: MarshalAs decorator is needed for arrays, otherwise will cause a VBA app crash
             var guidList = new List<Guid>();
             foreach (var id in objectIdList)
             {
                 guidList.Add(new Guid(id));
             }
-            var response = Client.ReadPropertyMultiple(guidList, propertyList);         
-            var valueList = new List<string>();
-            foreach (var value in response)
-            {
-                // Return the response for all attributes in a serialized array, since limited support of custom objects in VBA
-                foreach (var attributeValue in value.Variants)
-                {
-                    valueList.Add(attributeValue.StringValue);
-                }
-            }
-            values = valueList.ToArray(); // Need to use output params, since return value as array is not supported in VBA
-            return valueList;
+            var response = Client.ReadPropertyMultiple(guidList, propertyList);
+            return new VariantMultiplesContainer { Multiples= Mapper.Map<ComVariantMultiple[]>(response) };
         }
 
         /// <summary>
@@ -116,7 +103,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="priority"></param>
         public void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] values, string priority = null)
         {
-            // Note: MasharAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
+            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
             var guidList = new List<Guid>();
             foreach (var id in ids)
             {
@@ -141,7 +128,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="values"></param>
         public void  SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] values=null)
         {
-            // Note: MasharAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
+            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
             Guid guid = new Guid(id);          
             Client.SendCommand(guid, command, values?.ToList());           
         }

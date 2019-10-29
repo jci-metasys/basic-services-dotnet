@@ -11,7 +11,8 @@ namespace JohnsonControls.Metasys.ComServices
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
     public class ComMetasysObject:IComMetasysObject
-    {
+    { // Note: in order to correctly work with VBA registered types, class need to implement a defined interface. Neither inheritance nor encapsulation will work when the defined class is in another assembly
+
 
         public string ItemReference { set; get; }
 
