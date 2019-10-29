@@ -1,5 +1,4 @@
-﻿using JohnsonControls.Metasys.BasicServices.Models;
-using JohnsonControls.Metasys.ComServices.Models;
+﻿using JohnsonControls.Metasys.BasicServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JohnsonControls.Metasys.ComServices.Interfaces
+namespace JohnsonControls.Metasys.ComServices
 {
     [ComVisible(true)]
     [Guid("B1AF1A67-42A0-4E4A-8A07-97AA53B42D02")]

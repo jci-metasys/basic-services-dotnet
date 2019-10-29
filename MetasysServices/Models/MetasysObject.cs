@@ -4,23 +4,34 @@ using System.Globalization;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 
-namespace JohnsonControls.Metasys.BasicServices.Models
+namespace JohnsonControls.Metasys.BasicServices
 {
+    /// <summary>
+    /// MetasysObject is a structure that holds information about a Metasys object.
+    /// </summary>
     public struct MetasysObject
     {
         private CultureInfo _CultureInfo;
 
+        /// <summary>The item reference of the Metasys object.</summary>
         public string ItemReference { private set; get; }
 
+        /// <summary>The id of the Metasys object.</summary>
         public Guid Id { private set; get; }
 
+        /// <summary>The name of the Metasys object.</summary>
         public string Name { private set; get; }   
 
+        /// <summary>The description of the Metasys object.</summary>
         public string Description { private set; get; }
 
+        /// <summary>The direct children objects of the Metasys object.</summary>
         public IEnumerable<MetasysObject> Children { private set; get; }
 
-        // The number of children, -1 if there is no children data
+        /// <summary>
+        /// The number of direct children objects.
+        /// </summary>
+        /// <value>The number of children or -1 if there is no children data.</value>
         public int ChildrenCount { private set; get; }
 
         internal MetasysObject(JToken token, IEnumerable<MetasysObject> children = null, CultureInfo cultureInfo = null)
@@ -74,6 +85,10 @@ namespace JohnsonControls.Metasys.BasicServices.Models
             }
         }
 
+        /// <summary>
+        /// Overwrites the ToString method to print out an object's information.
+        /// </summary>
+        /// <returns>A string representation of the Command.</returns>
         public override string ToString()
         {
             return string.Concat("Id: ", Id, "\n",

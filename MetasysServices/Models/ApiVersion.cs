@@ -1,4 +1,4 @@
-namespace JohnsonControls.Metasys.BasicServices.Models
+namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// The supported Metasys server Api versions.

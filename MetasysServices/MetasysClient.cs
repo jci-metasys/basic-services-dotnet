@@ -10,8 +10,6 @@ using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
-using JohnsonControls.Metasys.BasicServices.Interfaces;
-using JohnsonControls.Metasys.BasicServices.Models;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -36,6 +34,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>Dictionary to provide keys from the commandIdEnumSet.</summary>
         /// <value>Keys as en-US translations, values as the commandIdEnumSet Enumerations.</value>
         protected static Dictionary<string, string> CommandEnumerations;
+
+        /// <summary>Dictionaries to provide keys from the objectTypeEnumSet since there are duplicate keys.</summary>
+        /// <value>Keys as en-US translations, values as the objectTypeEnumSet Enumerations.</value>
+        protected static List<Dictionary<string, string>> ObjectTypeEnumerations;
 
         /// <summary>The current Culture Used for Metasys client localization.</summary>
         public CultureInfo Culture { get; set; }
@@ -131,48 +133,88 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="resource">The en-US value for the localization resource.</param>
-        /// <param name="cultureInfo">Optional culture specification.</param>
-        /// <returns>
-        /// Localized string if the resource was found, the default en-US localized string if not found.
-        /// </returns>
-        public string LocalizeCommand(string resource, CultureInfo cultureInfo = null)
-        {
-            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-            return StaticLocalizeCommand(resource, cultureInfo ?? Culture);
-        }
-
-        /// <summary>
-        /// Localizes the specified command resource for the current MetasysClient locale or specified culture.
+        /// Attempts to get the enumeration key of a given en-US localized command.
         /// </summary>
         /// <remarks>
         /// The resource parameter must be the value of a Metasys commandIdEnumSet en-US value,
-        /// otherwise no translation will be found.
+        /// otherwise no key will be found.
         /// </remarks>
         /// <param name="resource">The en-US value for the localization resource.</param>
-        /// <param name="cultureInfo">The culture specification.</param>
         /// <returns>
-        /// Localized string if the resource was found, the default en-US string if not found.
+        /// The enumeration key of the en-US command if found, original resource if not.
         /// </returns>
-        public static string StaticLocalizeCommand(string resource, CultureInfo cultureInfo)
+        public string GetCommandEnumeration(string resource)
         {
-            // Do not need to translate en-US strings.
-            if (cultureInfo != null && !cultureInfo.Equals(CultureEnUS))
-            {
-                if (CommandEnumerations == null)
-                {
-                    SetEnumerationDictionaries();
-                }
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+            return StaticGetCommandEnumeration(resource);
+        }
 
-                if (CommandEnumerations.TryGetValue(resource, out string value))
+        /// <summary>
+        /// Attempts to get the enumeration key of a given en-US localized command.
+        /// </summary>
+        /// <remarks>
+        /// The resource parameter must be the value of a Metasys commandIdEnumSet en-US value,
+        /// otherwise no key will be found.
+        /// </remarks>
+        /// <param name="resource">The en-US value for the localization resource.</param>
+        /// <returns>
+        /// The enumeration key of the en-US command if found, original resource if not.
+        /// </returns>
+        public static string StaticGetCommandEnumeration(string resource)
+        {
+            if (CommandEnumerations == null)
+            {
+                SetEnumerationDictionaries();
+            }
+
+            if (CommandEnumerations.TryGetValue(resource, out string value))
+            {
+                return value;
+            }
+
+            return resource;
+        }
+
+        /// <summary>
+        /// Attempts to get the enumeration key of a given en-US localized objectType.
+        /// </summary>
+        /// <remarks>
+        /// The resource parameter must be the value of a Metasys objectTypeEnumSet en-US value,
+        /// otherwise no key will be found.
+        /// </remarks>
+        /// <param name="resource">The en-US value for the localization resource.</param>
+        /// <returns>
+        /// The enumeration key of the en-US objectType if found, original resource if not.
+        /// </returns>
+        public string GetObjectTypeEnumeration(string resource)
+        {
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+            return StaticGetObjectTypeEnumeration(resource);
+        }
+
+        /// <summary>
+        /// Attempts to get the enumeration key of a given en-US localized objectType.
+        /// </summary>
+        /// <remarks>
+        /// The resource parameter must be the value of a Metasys objectTypeEnumSet en-US value,
+        /// otherwise no key will be found.
+        /// </remarks>
+        /// <param name="resource">The en-US value for the localization resource.</param>
+        /// <returns>
+        /// The enumeration key of the en-US objectType if found, original resource if not.
+        /// </returns>
+        public static string StaticGetObjectTypeEnumeration(string resource)
+        {
+            if (ObjectTypeEnumerations == null)
+            {
+                SetEnumerationDictionaries();
+            }
+
+            foreach(var dict in ObjectTypeEnumerations)
+            {
+                if (dict.TryGetValue(resource, out string value))
                 {
-                    // Try to get translated string
-                    return StaticLocalize(value, cultureInfo);
+                    return value;
                 }
             }
 
@@ -191,8 +233,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </remarks>
         private static void SetEnumerationDictionaries()
         {
-            // First time setup, there are about 349 values in the set
+            // First time setup, there are about 349 values in the command set, 800 in the objectType set
             CommandEnumerations = new Dictionary<string, string>();
+            ObjectTypeEnumerations = new List<Dictionary<string, string>>();
+            var ObjectTypeEnumerations1 = new Dictionary<string, string>();
+            var ObjectTypeEnumerations2 = new Dictionary<string, string>();
             ResourceSet ResourcesEnUS = Resource.GetResourceSet(CultureEnUS, true, true);
             IDictionaryEnumerator ide = ResourcesEnUS.GetEnumerator();
             while (ide.MoveNext())
@@ -201,7 +246,20 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     CommandEnumerations.Add(ide.Value.ToString(), ide.Key.ToString());
                 }
+                else if (ide.Key.ToString().Contains("objectTypeEnumSet."))
+                {
+                    try
+                    {
+                        ObjectTypeEnumerations1.Add(ide.Value.ToString(), ide.Key.ToString());
+                    }
+                    catch
+                    {
+                        ObjectTypeEnumerations2.Add(ide.Value.ToString(), ide.Key.ToString());
+                    }
+                }
             }
+            ObjectTypeEnumerations.Add(ObjectTypeEnumerations1);
+            ObjectTypeEnumerations.Add(ObjectTypeEnumerations2);
         }
 
         /// <summary>
@@ -414,13 +472,10 @@ namespace JohnsonControls.Metasys.BasicServices
                     var id = new Guid(str);
                     return id;
                 }
-                catch (System.ArgumentNullException e)
+                catch (Exception e) when (e is System.ArgumentNullException || 
+                    e is System.ArgumentException || e is System.FormatException)
                 {
-                    throw new MetasysGuidException("Argument Null", e);
-                }
-                catch (Exception e) when (e is System.ArgumentException || e is System.FormatException)
-                {
-                    throw new MetasysGuidException("Bad Argument", str, e);
+                    throw new MetasysGuidException(str, e);
                 }
             }
             catch (FlurlHttpException e)
@@ -774,6 +829,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Gets all network devices.
         /// </summary>
         /// <param name="type">Optional type number as a string</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
         public IEnumerable<MetasysObject> GetNetworkDevices(string type = null)
         {
             return GetNetworkDevicesAsync().GetAwaiter().GetResult();
@@ -783,7 +840,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Gets all network devices asynchronously by requesting each available page.
         /// </summary>
         /// <param name="type">Optional type number as a string</param>
-        /// <exception cref="System.NullReferenceException"></exception>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
             List<MetasysObject> devices = new List<MetasysObject>() { };
@@ -809,9 +867,9 @@ namespace JohnsonControls.Metasys.BasicServices
                         page++;
                     }
                 }
-                catch (System.NullReferenceException)
+                catch (System.NullReferenceException e)
                 {
-                    await LogErrorAsync("Could not format response.").ConfigureAwait(false);
+                    throw new MetasysHttpParsingException(response.ToString(), e);
                 }
             }
 
@@ -823,7 +881,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="type"></param>
         /// <param name="page"></param>
-        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="MetasysHttpException"></exception>
         private async Task<JToken> GetNetworkDevicesRequestAsync(string type = null, int page = 1)
         {
             Url url = new Url("networkDevices");
@@ -833,57 +891,76 @@ namespace JohnsonControls.Metasys.BasicServices
                 url.SetQueryParam("type", type);
             }
 
-            var response = await Client.Request(url)
-                .GetJsonAsync<JToken>()
-                .ConfigureAwait(false);
+            try
+            {
+                var response = await Client.Request(url)
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
 
-            return response;
+                return response;
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+
+            return null;
         }
 
         /// <summary>
-        /// Gets all available network device types in (id, description) pairs asynchronously.
+        /// Gets all available network device types.
         /// </summary>
-        public IEnumerable<(int Id, string Description)> GetNetworkDeviceTypes()
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        public IEnumerable<MetasysObjectType> GetNetworkDeviceTypes()
         {
             return GetNetworkDeviceTypesAsync().GetAwaiter().GetResult();
         }
 
         /// <summary>
-        /// Gets all available network device types in (id, description) pairs asynchronously.
+        /// Gets all available network device types asynchronously.
         /// </summary>
-        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
-        /// <exception cref="System.NullReferenceException"></exception>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public async Task<IEnumerable<(int Id, string Description)>> GetNetworkDeviceTypesAsync()
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        public async Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync()
         {
-            List<(int Id, string Description)> types = new List<(int Id, string Description)>() { };
-            var response = await Client.Request(new Url("networkDevices")
-                .AppendPathSegment("availableTypes"))
-                .GetJsonAsync<JToken>()
-                .ConfigureAwait(false);
+            List<MetasysObjectType> types = new List<MetasysObjectType>() { };
 
             try
             {
-                var list = response["items"] as JArray;
-                foreach (var item in list)
+                var response = await Client.Request(new Url("networkDevices")
+                    .AppendPathSegment("availableTypes"))
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+
+                try
                 {
-                    try
+                    // The response is a list of typeUrls, not the type data
+                    var list = response["items"] as JArray;
+                    foreach (var item in list)
                     {
-                        var type = await GetType(item).ConfigureAwait(false);
-                        if (type.Id != -1)
+                        try
                         {
-                            types.Add(type);
+                            var type = await GetType(item).ConfigureAwait(false);
+                            if (type != null)
+                            {
+                                types.Add(type.Value);
+                            }
+                        }
+                        catch (System.ArgumentNullException e)
+                        {
+                            throw new MetasysHttpParsingException(response.ToString(), e);
                         }
                     }
-                    catch (System.ArgumentNullException)
-                    {
-                        await LogErrorAsync("Could not format response.").ConfigureAwait(false);
-                    }
+                }
+                catch (System.NullReferenceException e)
+                {
+                    throw new MetasysHttpParsingException(response.ToString(), e);
                 }
             }
-            catch (System.NullReferenceException)
+            catch (FlurlHttpException e)
             {
-                await LogErrorAsync("Could not format response.").ConfigureAwait(false);
+                ThrowHttpException(e);
             }
 
             return types;
@@ -893,28 +970,35 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Gets the type from a token with a typeUrl by requesting the actual description asynchronously.
         /// </summary>
         /// <param name="item"></param>
-        /// <exception cref="System.NullReferenceException"></exception>        
-        /// <exception cref="System.ArgumentNullException"></exception>
-        private async Task<(int Id, string Description)> GetType(JToken item)
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysObjectTypeException"></exception>
+        private async Task<MetasysObjectType?> GetType(JToken item)
         {
+            JToken typeToken = null;
             try
             {
                 var url = item["typeUrl"].Value<string>();
-                var typeToken = await GetWithFullUrl(url).ConfigureAwait(false);
+                typeToken = await GetWithFullUrl(url).ConfigureAwait(false);
 
                 string description = typeToken["description"].Value<string>();
-                int type = typeToken["id"].Value<int>();
-                return (Id: type, Description: description);
+                int id = typeToken["id"].Value<int>();
+                string key = GetObjectTypeEnumeration(description);
+                string translation = Localize(key);
+                if (translation != key)
+                {
+                    // A translation was found
+                    return new MetasysObjectType(id, key, translation);
+                }
+                else
+                {
+                    // A translation could not be found
+                    return new MetasysObjectType(id, key, description);
+                }
             }
-            catch (System.NullReferenceException)
+            catch (Exception e) when (e is System.ArgumentNullException
+                || e is System.NullReferenceException || e is System.FormatException)
             {
-                var task = LogErrorAsync("Could not get type enumeration.");
-                return (Id: -1, Description: "");
-            }
-            catch (System.ArgumentNullException)
-            {
-                var task = LogErrorAsync("Could not get type enumeration. Token missing required field.");
-                return (Id: -1, Description: "");
+                throw new MetasysObjectTypeException(typeToken.ToString(), e);
             }
         }
 
@@ -922,38 +1006,55 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Creates a new Flurl client and gets a resource given the url asynchronously.
         /// </summary>
         /// <param name="url"></param>
-        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="MetasysHttpException"></exception>
         private async Task<JToken> GetWithFullUrl(string url)
         {         
             using (var temporaryClient = new FlurlClient(new Url(url)))
             {
                 temporaryClient.Headers.Add("Authorization", this.AccessToken.Token);
-                var item = await temporaryClient.Request()
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
-                return item;
+                try
+                {
+                    var item = await temporaryClient.Request()
+                        .GetJsonAsync<JToken>()
+                        .ConfigureAwait(false);
+                    return item;
+                }
+                catch (FlurlHttpException e)
+                {
+                    ThrowHttpException(e);
+                }
+                return null;
             }
         }
 
         /// <summary>
         /// Gets all child objects given a parent Guid.
-        /// Level indicates how deep to retrieve objects with level of 1 only retrieves immediate children of the parent object.
+        /// Level indicates how deep to retrieve objects.
         /// </summary>
+        /// <remarks>
+        /// A level of 1 only retrieves immediate children of the parent object.
+        /// </remarks>
         /// <param name="id"></param>
-        /// <param name="levels">The depth of the children to retrieve</param>
+        /// <param name="levels">The depth of the children to retrieve.</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+
         public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1)
         {
             return GetObjectsAsync(id, levels).GetAwaiter().GetResult();
         }
 
         /// <summary>
-        /// Gets all child objects recursively given a parent Guid asynchronously by requesting each available page.
-        /// Level indicates how deep to retrieve objects with level of 1 only retrieves immediate children of the parent object.
+        /// Gets all child objects given a parent Guid asynchronously by requesting each available page.
+        /// Level indicates how deep to retrieve objects.
         /// </summary>
+        /// <remarks>
+        /// A level of 1 only retrieves immediate children of the parent object.
+        /// </remarks>
         /// <param name="id"></param>
         /// <param name="levels">The depth of the children to retrieve</param>
-        /// <exception cref="System.NullReferenceException"></exception>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
         public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1)
         {
             if (levels < 1)
@@ -1010,9 +1111,9 @@ namespace JohnsonControls.Metasys.BasicServices
                         }
                     }
                 }
-                catch (System.NullReferenceException)
+                catch (System.NullReferenceException e)
                 {
-                    await LogErrorAsync("Could not format response.").ConfigureAwait(false);
+                    throw new MetasysHttpParsingException(response.ToString(), e);
                 }
             }
 
@@ -1024,18 +1125,26 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="id"></param>
         /// <param name="page"></param>
-        /// <exception cref="Flurl.Http.FlurlHttpException"></exception>
+        /// <exception cref="MetasysHttpException"></exception>
         private async Task<JToken> GetObjectsRequestAsync(Guid id, int page = 1)
         {
             Url url = new Url("objects")
                 .AppendPathSegments(id, "objects")
                 .SetQueryParam("page", page);
 
-            var response = await Client.Request(url)
+            try
+            {
+                var response = await Client.Request(url)
                 .GetJsonAsync<JToken>()
                 .ConfigureAwait(false);
 
-            return response;
+                return response;
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return null;
         }
     }
 }

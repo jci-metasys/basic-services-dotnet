@@ -1,10 +1,9 @@
-﻿using JohnsonControls.Metasys.BasicServices.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 
-namespace JohnsonControls.Metasys.BasicServices.Interfaces
+namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// An HTTP client for consuming the most commonly used endpoints of the Metasys API.
@@ -120,16 +119,36 @@ namespace JohnsonControls.Metasys.BasicServices.Interfaces
         /// </summary>
         Task SendCommandAsync(Guid id, string command, IEnumerable<object> values = null);
 
+        /// <summary>
+        /// Gets all network devices.
+        /// </summary>
         IEnumerable<MetasysObject> GetNetworkDevices(string type = null);
 
+        /// <summary>
+        /// Gets all network devices asynchronously.
+        /// </summary>
         Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null);
 
-        IEnumerable<(int Id, string Description)> GetNetworkDeviceTypes();
+        /// <summary>
+        /// Gets all available network device types.
+        /// </summary>
+        IEnumerable<MetasysObjectType> GetNetworkDeviceTypes();
 
-        Task<IEnumerable<(int Id, string Description)>> GetNetworkDeviceTypesAsync();
+        /// <summary>
+        /// Gets all available network device types asynchronously.
+        /// </summary>
+        Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync();
 
+        /// <summary>
+        /// Gets all child objects given a parent Guid.
+        /// Level indicates how deep to retrieve objects.
+        /// </summary>
         IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1);
 
+        /// <summary>
+        /// Gets all child objects given a parent Guid asynchronously.
+        /// Level indicates how deep to retrieve objects.
+        /// </summary>
         Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1);
     }
 }

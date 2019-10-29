@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
 
-namespace JohnsonControls.Metasys.BasicServices.Models
+namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
-    /// Command is a structure that hold information about a Metasys object command.
+    /// Command is a structure that holds information about a Metasys object command.
     /// </summary>
     public struct Command
     {
@@ -17,6 +17,12 @@ namespace JohnsonControls.Metasys.BasicServices.Models
         /// </summary>
         /// <value>The translated title of the command or the default en-US version.</value>
         public string Title { private set; get; }
+
+        /// <summary>
+        /// The title enumeration key of the command.
+        /// </summary>
+        /// <value>An enumeration key from the commandIdEnumSet or the default en-US title if not found .</value>
+        public string TitleEnumerationKey { private set; get; }
 
         /// <summary>
         /// The command id used to send command requests.
@@ -82,26 +88,28 @@ namespace JohnsonControls.Metasys.BasicServices.Models
             /// <summary>
             /// The translated string of the enumeration value.
             /// </summary>
+            /// <value>Translated title or default en-US value if not found.</value>
             public string Title;
 
             /// <summary>
-            /// The enumeration value used when sending the command request.
+            /// The title enumeration key used when sending the command request.
             /// </summary>
-            public string Value;
+            /// <value>An enumeration key.</value>
+            public string TitleEnumerationKey { private set; get; }
 
-            internal EnumerationItem(string title, string value)
+            internal EnumerationItem(string title, string key)
             {
                 Title = title;
-                Value = value;
+                TitleEnumerationKey = key;
             }
         }
 
         internal Command(JToken token, CultureInfo cultureInfo)
         {
             _CultureInfo = cultureInfo;
-            string title = token["title"].Value<string>();
+            TitleEnumerationKey = token["title"].Value<string>();
             // Translate the title from en-US to specified culture.
-            Title = MetasysClient.StaticLocalizeCommand(title, _CultureInfo);
+            Title = MetasysClient.StaticLocalize(TitleEnumerationKey, _CultureInfo);
             CommandId = token["commandId"].Value<string>();
             Items = null;
             List<Item> itemsList = new List<Item>();
@@ -128,11 +136,21 @@ namespace JohnsonControls.Metasys.BasicServices.Models
 
                         foreach (var e in enumSet)
                         {
-                            // string eTitle = e["title"].Value<string>();
-                            string eValue = e["const"].Value<string>();
+                            string eTitle = e["title"].Value<string>();
+                            string eKey = e["const"].Value<string>();
                             // The title returned is an en-US value, translate the enum
-                            string eTitle = MetasysClient.StaticLocalize(eValue, _CultureInfo);
-                            enumList.Add(new EnumerationItem(eTitle, eValue));
+                            string translatedTitle = MetasysClient.StaticLocalize(eKey, _CultureInfo);
+                            if (translatedTitle != eKey)
+                            {
+                                // A translation was found
+                                enumList.Add(new EnumerationItem(translatedTitle, eKey));
+                            }
+                            else
+                            {
+                                // A translation could not be found
+                                enumList.Add(new EnumerationItem(eTitle, eKey));
+                            }
+                            
                         }
                         itemsList.Add(new Item("oneOf", "enum", 1, 1, enumList));
                     }
@@ -147,7 +165,7 @@ namespace JohnsonControls.Metasys.BasicServices.Models
         /// <returns>A string representation of the Command.</returns>
         public override string ToString()
         {
-            string str = string.Concat("Title: ", Title, "\nCommandId: ", CommandId, "\nItems: ");
+            string str = string.Concat("Title: ", Title, "\nKey: ", TitleEnumerationKey, "\nCommandId: ", CommandId, "\nItems: ");
             if (Items != null)
             {
                 foreach (var item in Items)
@@ -158,7 +176,7 @@ namespace JohnsonControls.Metasys.BasicServices.Models
                         str = string.Concat(str, "\n  Items: ");
                         foreach (var value in item.EnumerationValues)
                         {
-                            str = string.Concat(str, "\n\n    Title: ", value.Title, "\n    Value: ", value.Value);
+                            str = string.Concat(str, "\n\n    Title: ", value.Title, "\n    Key: ", value.TitleEnumerationKey);
                         }
                     }
                     else

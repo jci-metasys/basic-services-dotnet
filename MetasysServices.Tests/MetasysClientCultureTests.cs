@@ -66,32 +66,20 @@ namespace Tests
             Assert.AreEqual(array, client.Localize(Array, testCulture));
         }
 
-        [TestCase("en-US", "Reset Field Device")]
-        [TestCase("cs-CZ", "Resetovat zařízení pole")]
-        [TestCase("de-DE", "Feldgerät zurücksetzen")]
-        [TestCase("es-ES", "Reiniciar dispositivo de campo")]
-        [TestCase("fr-FR", "Réinitialiser appareil terrain")]
-        [TestCase("hu-HU", "Terepi eszköz újraindítása")]
-        [TestCase("it-IT", "Reset Dispositivo di Campo")]
-        [TestCase("ja-JP", "Reset Field Device")]
-        [TestCase("ko-KR", "Reset Field Device")]
-        [TestCase("nb-NO", "Tilbakestill undersentral")]
-        [TestCase("nl-NL", "Veldapparaat resetten")]
-        [TestCase("pl-PL", "Resetuj urządzenie polowe")]
-        [TestCase("pt-BR", "Restaurar Dispositivo de Campo")]
-        [TestCase("ru-RU", "Сбросить полевое устройство")]
-        [TestCase("sv-SE", "Återställ fältenhet(DUC)")]
-        [TestCase("tr-TR", "Alan Cihazını Sıfırla")]
-        [TestCase("zh-CN", "重置现场设备")]
-        [TestCase("zh-TW", "重置现场设备")]
-        public void TestLocalizeDictionaries(string culture, string expected)
+        public void TestLocalizeDictionaries()
         {
             Stopwatch timer = new System.Diagnostics.Stopwatch();
             timer.Start();
-            string test = MetasysClient.StaticLocalizeCommand("Reset Field Device", new CultureInfo(culture));
+            string commandEnum = MetasysClient.StaticGetCommandEnumeration("Reset Field Device");
             timer.Stop();
-            // Console.Error.WriteLine($"Time for {culture} translation: {timer.Elapsed.Milliseconds}ms");
-            Assert.AreEqual(expected, test);
+            Assert.AreEqual("commandIdEnumSet.resetFieldDeviceCommand", commandEnum);
+            Assert.GreaterOrEqual(2, timer.Elapsed.TotalSeconds);
+
+            timer.Reset();
+            timer.Start();
+            string typeEnum = MetasysClient.StaticGetObjectTypeEnumeration("AV");
+            timer.Stop();
+            Assert.AreEqual("objectTypeEnumSet.bacAvClass", commandEnum);
             Assert.GreaterOrEqual(2, timer.Elapsed.TotalSeconds);
         }
     }

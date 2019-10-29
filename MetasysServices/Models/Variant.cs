@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
 
-namespace JohnsonControls.Metasys.BasicServices.Models
+namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// Variant is a structure that holds information about an attribute/property
@@ -21,8 +21,18 @@ namespace JohnsonControls.Metasys.BasicServices.Models
         private const string Array = "dataTypeEnumSet.arrayDataType";
 
         /// <summary>The string representation of the value.</summary>
-        /// <value>String value as specified in the MSSDA Bulletin stringValue.</value>
+        /// <value>
+        /// String value as specified in the MSSDA Bulletin stringValue or a translated string if
+        /// a type of enumeration.
+        /// </value>
         public string StringValue { private set; get; }
+
+        /// <summary>The enumeration key of the StringValue.</summary>
+        /// <value>
+        /// The pre-translated StringValue as an enumeration key or the StringValue if it 
+        /// was not an enumeration key. Null if value is not a string, array, or unsupported type.
+        /// </value>
+        public string StringValueEnumerationKey { private set; get; }
 
         /// <summary>The numeric representation of the value.</summary>
         /// <value>
@@ -55,6 +65,13 @@ namespace JohnsonControls.Metasys.BasicServices.Models
         /// </value>
         public string Reliability { private set; get; }
 
+        /// <summary>The reliability enumeration key of the reliability.</summary>
+        /// <value>
+        /// If the attribute is "presentValue": the reliability enumeration key of the reliability.
+        /// Otherwise reliabilityEnumSet.reliable by default.
+        /// </value>
+        public string ReliabilityEnumerationKey  { private set; get; }
+
         /// <summary>The priority of the value.</summary>
         /// <value>
         /// If the attribute is "presentValue": the priority of the value.
@@ -62,9 +79,16 @@ namespace JohnsonControls.Metasys.BasicServices.Models
         /// </value>
         public string Priority { private set; get; }
 
+        /// <summary>The priority enumeration key of the priority.</summary>
+        /// <value>
+        /// If the attribute is "presentValue": the priority enumeration key of the priority.
+        /// Otherwise null by default.
+        /// </value>
+        public string PriorityEnumerationKey  { private set; get; }
+
         /// <summary>Boolean representation of the reliability of the value.</summary>
         /// <value>True if the reliability of the value is reliable.</value>
-        public bool IsReliable => Reliability == MetasysClient.StaticLocalize(Reliable, _CultureInfo);
+        public bool IsReliable => ReliabilityEnumerationKey == Reliable;
 
         private CultureInfo _CultureInfo;
 
@@ -73,8 +97,11 @@ namespace JohnsonControls.Metasys.BasicServices.Models
             _CultureInfo = cultureInfo;
             Id = id;
             Attribute = attribute;
+            ReliabilityEnumerationKey = Reliable;
             Reliability = MetasysClient.StaticLocalize(Reliable, _CultureInfo);
             Priority = null;
+            PriorityEnumerationKey = null;
+            StringValueEnumerationKey = null;
             StringValue = null;
             NumericValue = 1;
             ArrayValue = null;
@@ -91,7 +118,8 @@ namespace JohnsonControls.Metasys.BasicServices.Models
             if (token == null)
             {
                 NumericValue = 1;
-                StringValue = MetasysClient.StaticLocalize(Unsupported, _CultureInfo);
+                StringValueEnumerationKey = Unsupported;
+                StringValue = MetasysClient.StaticLocalize(StringValueEnumerationKey, _CultureInfo);
                 return;
             }
             // switch on token type and set the fields appropriately
@@ -110,7 +138,8 @@ namespace JohnsonControls.Metasys.BasicServices.Models
                     break;
                 case JTokenType.String:
                     NumericValue = 0;
-                    StringValue = MetasysClient.StaticLocalize(token.Value<string>(), _CultureInfo);
+                    StringValueEnumerationKey = token.Value<string>();
+                    StringValue = MetasysClient.StaticLocalize(StringValueEnumerationKey, _CultureInfo);
                     break;
                 case JTokenType.Array:
                     ProcessArray(token);
@@ -135,7 +164,8 @@ namespace JohnsonControls.Metasys.BasicServices.Models
                     break;
                 default:
                     NumericValue = 1;
-                    StringValue = MetasysClient.StaticLocalize(Unsupported, _CultureInfo);
+                    StringValueEnumerationKey = Unsupported;
+                    StringValue = MetasysClient.StaticLocalize(StringValueEnumerationKey, _CultureInfo);
                     break;
             }
         }
@@ -152,7 +182,8 @@ namespace JohnsonControls.Metasys.BasicServices.Models
                 index++;
             }
             NumericValue = 0;
-            StringValue = MetasysClient.StaticLocalize(Array, _CultureInfo);
+            StringValueEnumerationKey = Array;
+            StringValue = MetasysClient.StaticLocalize(StringValueEnumerationKey, _CultureInfo);
         }
 
         /// <summary>Searches the JObject for reliability and priority fields and uses the field called "value" as value for result.</summary>
@@ -166,11 +197,13 @@ namespace JohnsonControls.Metasys.BasicServices.Models
 
                 if (reliabilityToken != null)
                 {
-                    Reliability = MetasysClient.StaticLocalize(reliabilityToken.ToString(), _CultureInfo);
+                    ReliabilityEnumerationKey = reliabilityToken.ToString();
+                    Reliability = MetasysClient.StaticLocalize(ReliabilityEnumerationKey, _CultureInfo);
                 }
                 if (priorityToken != null)
                 {
-                    Priority = MetasysClient.StaticLocalize(priorityToken.ToString(), _CultureInfo);
+                    PriorityEnumerationKey = priorityToken.ToString();
+                    Priority = MetasysClient.StaticLocalize(PriorityEnumerationKey, _CultureInfo);
                 }
                 ProcessToken(valueToken);
             }

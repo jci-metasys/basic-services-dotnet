@@ -1,6 +1,6 @@
 using System;
 
-namespace JohnsonControls.Metasys.BasicServices.Models
+namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// The session access token and expiration in UTC time.
