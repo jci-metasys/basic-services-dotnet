@@ -29,7 +29,9 @@ namespace JohnsonControls.Metasys.ComServices
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Children, opt => opt.MapFrom(src => Mapper.Map<IComMetasysObject[]>(src.Children)));
                 cfg.CreateMap<Variant, IComVariant>();
-                cfg.CreateMap<VariantMultiple, IComVariantMultiple>();
+                cfg.CreateMap<VariantMultiple, IComVariantMultiple>()
+                    // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
+                    .ForMember(dest => dest.Variants, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.Variants)));
             }).CreateMapper(); 
         }
 
@@ -73,16 +75,17 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="objectIdList"></param>
         /// <param name="propertyList"></param>
-        public IVariantMultiplesContainer ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] objectIdList, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] propertyList)
+        public object ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] objectIdList, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] propertyList)
         {
             // Note: MarshalAs decorator is needed for arrays, otherwise will cause a VBA app crash
+            // Note: need a generic object as return type in order to map correctly to VBA type array
             var guidList = new List<Guid>();
             foreach (var id in objectIdList)
             {
                 guidList.Add(new Guid(id));
             }
             var response = Client.ReadPropertyMultiple(guidList, propertyList);
-            return new VariantMultiplesContainer { Multiples= Mapper.Map<IComVariantMultiple[]>(response) };
+            return Mapper.Map<IComVariantMultiple[]>(response);
         }
 
         /// <summary>
