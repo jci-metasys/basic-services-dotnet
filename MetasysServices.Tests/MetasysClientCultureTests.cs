@@ -55,8 +55,8 @@ namespace Tests
         [TestCase("ru-RU", "Надежный", "Неподдерживаемый тип объектов", "0 (приоритет отсутствует)", "Массив")]
         [TestCase("sv-SE", "Tillförlitlig", "Objekttypen stöds inte", "0 (Ingen prioritet)", "Uppsättning")]
         [TestCase("tr-TR", "Güvenilir", "Desteklenmeyen nesne türü", "0 (Öncelik Yok)", "Dizi")]
-        [TestCase("zh-CN", "可靠", "不支持的对象类型", "0 (无优先级)", "数组")]
-        [TestCase("zh-TW", "可靠", "不支持的对象类型", "0 (无优先级)", "数组")]
+        [TestCase("zh-Hans-CN", "可靠", "不支持的对象类型", "0 (无优先级)", "数组")]
+        [TestCase("zh-Hant-TW", "可靠", "不支持的对象类型", "0 (无优先级)", "数组")]
         public void TestLocalizeCulture(string culture, string reliable, string unsupported, string priority, string array)
         {
             CultureInfo testCulture = new CultureInfo(culture);

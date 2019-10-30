@@ -24,6 +24,12 @@
   <ItemGroup>
     <None Remove="Resources\MetasysResources.en-US.resources" />
     <None Remove="Resources\MetasysResources.it-IT.resources" />
+    <None Remove="Resources\MetasysResources.zh-CN.resources" />
+    <None Remove="Resources\MetasysResources.zh-Hans-CN.resources" />
+    <None Remove="Resources\MetasysResources.zh-Hans.resources" />
+    <None Remove="Resources\MetasysResources.zh-Hant-TW.resources" />
+    <None Remove="Resources\MetasysResources.zh-Hant.resources" />
+    <None Remove="Resources\MetasysResources.zh-TW.resources" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,6 +69,8 @@
     <EmbeddedResource Include="Resources\MetasysResources.sv-SE.resources" />
     <EmbeddedResource Include="Resources\MetasysResources.tr-TR.resources" />
     <EmbeddedResource Include="Resources\MetasysResources.zh-CN.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.zh-Hans-CN.resources" />
+    <EmbeddedResource Include="Resources\MetasysResources.zh-Hant-TW.resources" />
     <EmbeddedResource Include="Resources\MetasysResources.zh-TW.resources" />
   </ItemGroup>
 
