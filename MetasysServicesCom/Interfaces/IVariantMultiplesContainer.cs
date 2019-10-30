@@ -12,6 +12,6 @@ namespace JohnsonControls.Metasys.ComServices
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface IVariantMultiplesContainer
     {
-        ComVariantMultiple[] Multiples { get; set; }
+        IComVariantMultiple[] Multiples { get; set; }
     }
 }

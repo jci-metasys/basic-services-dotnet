@@ -12,6 +12,6 @@ namespace JohnsonControls.Metasys.ComServices
     [ClassInterface(ClassInterfaceType.None)]
     public class MetasysObjectsContainer : IMetasysObjectsContainer
     { // Note: this structure is needed to correctly retrieve VBA return type, otherwise resulted in a type mismatch array
-        public ComMetasysObject[] Objects { get; set; }
+        public object[] Objects { get; set; }
     }
 }

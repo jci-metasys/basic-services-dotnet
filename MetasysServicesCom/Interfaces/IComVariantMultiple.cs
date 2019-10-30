@@ -19,6 +19,6 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>The object id.</summary>
         string Id { set; get; }
         /// <summary>The list of Variants. </summary>
-        ComVariant[] Variants { set; get; }
+        IComVariant[] Variants { set; get; }
     }
 }

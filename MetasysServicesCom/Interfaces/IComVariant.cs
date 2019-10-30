@@ -46,13 +46,13 @@ namespace JohnsonControls.Metasys.ComServices
 
         /// <summary>An array of Variant values.</summary>
         /// <value>Null unless value is an array.</value>
-         ComVariant[] ArrayValue {  set; get; }
+         IComVariant[] ArrayValue {  set; get; }
 
         /// <summary>The attribute from the Metasys object.</summary>
          string Attribute {  set; get; }
 
         /// <summary>The id of the Metasys object.</summary>
-         String Id {  set; get; }
+         string Id {  set; get; }
 
         /// <summary>The reliability of the value.</summary>
         /// <value>

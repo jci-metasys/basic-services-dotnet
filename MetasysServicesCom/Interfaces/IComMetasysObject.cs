@@ -20,7 +20,7 @@ namespace JohnsonControls.Metasys.ComServices
 
          string Description {  set; get; }
 
-         ComMetasysObject[] Children {  set; get; }
+         object Children {  set; get; }
 
         // The number of children, -1 if there is no children data
          int ChildrenCount {  set; get; }

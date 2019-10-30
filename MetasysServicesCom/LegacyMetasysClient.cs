@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JohnsonControls.Metasys.BasicServices;
+using Microsoft.TeamFoundation.Common.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +25,12 @@ namespace JohnsonControls.Metasys.ComServices
         {
             // Defines a Mapper From Basic Services structure to COM
             Mapper = new MapperConfiguration(cfg => {
-                                                    cfg.CreateMap<MetasysObject, ComMetasysObject>();
-                                                    cfg.CreateMap<Variant, ComVariant>();
-                                                    cfg.CreateMap<VariantMultiple, ComVariantMultiple>();
-                                            }).CreateMapper(); 
+                cfg.CreateMap<MetasysObject, IComMetasysObject>()
+                    // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
+                    .ForMember(dest => dest.Children, opt => opt.MapFrom(src => Mapper.Map<IComMetasysObject[]>(src.Children)));
+                cfg.CreateMap<Variant, IComVariant>();
+                cfg.CreateMap<VariantMultiple, IComVariantMultiple>();
+            }).CreateMapper(); 
         }
 
         /// <summary>
@@ -62,7 +65,7 @@ namespace JohnsonControls.Metasys.ComServices
             // Parse Id and generate GUID
             Guid guid = new Guid(id);
             var response = Client.ReadProperty(guid, property).Value;
-            return Mapper.Map<ComVariant>(response);
+            return Mapper.Map<IComVariant>(response);
         }
 
         /// <summary>
@@ -79,7 +82,7 @@ namespace JohnsonControls.Metasys.ComServices
                 guidList.Add(new Guid(id));
             }
             var response = Client.ReadPropertyMultiple(guidList, propertyList);
-            return new VariantMultiplesContainer { Multiples= Mapper.Map<ComVariantMultiple[]>(response) };
+            return new VariantMultiplesContainer { Multiples= Mapper.Map<IComVariantMultiple[]>(response) };
         }
 
         /// <summary>
@@ -139,20 +142,22 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="id"></param>
         /// <param name="levels"></param>       
-        public IMetasysObjectsContainer GetObjects(string id, int levels = 1)
+        public object GetObjects(string id, int levels = 1)
         {
             Guid guid = new Guid(id); 
             var res = Client.GetObjects(guid,levels).ToList();  
-            return new MetasysObjectsContainer { Objects = Mapper.Map<ComMetasysObject[]>(res) };     
+            return Mapper.Map<IComMetasysObject[]>(res);     
         }
 
         /// <summary>
         /// Gets all device list
-        /// </summary>
-        public IMetasysObjectsContainer GetNetworkDevices()
-        {                  
+        /// </summary>      
+        public object GetNetworkDevices()
+        {
+            // Note: need a generic object as return type in order to map correctly to VBA type array
             var res = Client.GetNetworkDevices().ToList();
-            return new MetasysObjectsContainer { Objects = Mapper.Map<ComMetasysObject[]>(res) };           
-        }    
+            return Mapper.Map<IComMetasysObject[]>(res);         
+        }
+      
     }
 }

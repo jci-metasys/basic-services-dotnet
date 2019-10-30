@@ -12,6 +12,6 @@ namespace JohnsonControls.Metasys.ComServices
     [ClassInterface(ClassInterfaceType.None)]
     public class VariantMultiplesContainer:IVariantMultiplesContainer
     { // Note: this structure is needed to correctly retrieve VBA return type, otherwise resulted in a type mismatch array
-        public ComVariantMultiple[] Multiples { get; set; }
+        public IComVariantMultiple[] Multiples { get; set; }
     }
 }

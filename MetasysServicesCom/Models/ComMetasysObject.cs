@@ -22,7 +22,7 @@ namespace JohnsonControls.Metasys.ComServices
 
         public string Description { set; get; }
 
-        public ComMetasysObject[] Children { set; get; }
+        public object Children { set; get; } // Note: need a generic object as return type in order to map correctly to VBA type array (can't assign to array error)
 
         // The number of children, -1 if there is no children data
         public int ChildrenCount { set; get; }

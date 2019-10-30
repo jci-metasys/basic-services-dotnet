@@ -17,9 +17,9 @@ namespace JohnsonControls.Metasys.ComServices
         IVariantMultiplesContainer ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] objectIdList, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] propertyList);
         void WriteProperty(string id, string attributeName, string newValue, string priority = null);
         void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] values, string priority = null);
-        void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] values = null);
-        IMetasysObjectsContainer GetNetworkDevices();
-        IMetasysObjectsContainer GetObjects(string id, int levels = 1);
+        void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] values = null);       
+        object GetNetworkDevices();
+        object GetObjects(string id, int levels = 1);
         string GetObjectIdentifier(string itemReference);
     }
 }
