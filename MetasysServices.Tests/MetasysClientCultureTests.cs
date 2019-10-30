@@ -14,7 +14,7 @@ namespace Tests
         private const string Array = "dataTypeEnumSet.arrayDataType";
         MetasysClient client;
 
-        [OneTimeSetUp]
+        [OneTimeSetUp] 
         public void Init()
         {
             client = new MetasysClient("hostname");
