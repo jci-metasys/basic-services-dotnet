@@ -11,7 +11,7 @@ namespace JohnsonControls.Metasys.ComServices
     /// <summary>
     /// A structure for grouping Variant values with the same id.
     /// </summary>
-    ///   [ComVisible(true)]
+    [ComVisible(true)]
     [Guid("3b7dbcd6-f507-4cbe-bd0c-ecd418bed227")]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface IComVariantMultiple
