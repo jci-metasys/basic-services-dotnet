@@ -1,4 +1,4 @@
-# Metasys Basic Services <!-- omit in toc --> ![Nuget](https://img.shields.io/nuget/v/JohnsonControls.Metasys.BasicServices)
+# Metasys Basic Services <!-- omit in toc --> <a href="https://www.nuget.org/packages/JohnsonControls.Metasys.BasicServices/" rel="Johnson Controls Metasys BasicServices">![Nuget](https://img.shields.io/nuget/v/JohnsonControls.Metasys.BasicServices)</a>
 
 This project provides a library for accessing the most common services of the Metasys Server API.
 The intent is to provide an API that is very similar to the original MSSDA
