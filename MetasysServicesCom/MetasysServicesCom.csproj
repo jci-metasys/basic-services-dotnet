@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <None Remove="Icons\ComLib.ico" />
+    <None Remove="Icons\libraries.ico" />
+    <None Remove="Icons\Uninstall.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Packaging.Targets" Version="0.1.56" />
   </ItemGroup>
@@ -24,6 +29,12 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup> 
   <ItemGroup>
+    <Content Include="Icons\ComLib.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\Uninstall.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\dotnetfx472_full_x86_x64-4.7.3081.0.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <PackagePath>scripts</PackagePath>

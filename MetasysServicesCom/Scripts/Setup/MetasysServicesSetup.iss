@@ -20,6 +20,7 @@ DisableProgramGroupPage=yes
 OutputBaseFilename={#MyAppShortName}_{#MyAppVersion}_Setup
 OutputDir=Output
 SetupIconFile="JCSetup.ico"
+UninstallDisplayIcon={app}\Icons\Uninstall.ico"
 
 [Files]
 Source: "..\..\bin\release\net472\any\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
@@ -35,3 +36,6 @@ Filename: "{app}\Scripts\RegCom.bat"; Flags: runhidden;
 [UninstallRun]
 ; postinstall launch: unregistering COM DLL 
 Filename: "{app}\Scripts\UnregCom.bat"; Flags: runhidden;
+[UninstallDelete]
+; remove registered DLL tlb file outside Setup
+Type: files; Name: "{app}\MetasysServicesCom.tlb"

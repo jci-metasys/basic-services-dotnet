@@ -329,3 +329,5 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/MetasysServicesCom/Scripts/Setup/Output
+/MetasysServicesCom/Scripts/Setup
