@@ -11,7 +11,8 @@ For versioning information see the [changelog](CHANGELOG).
 - [Installation](#installation)
   - [Prerequisites](#prerequisites)
   - [.NET](#net)
-  - [Excel Applications & COM (Component Object Model)](#excel-applications--com-component-object-model)
+  - [COM (Component Object Model)](#com-component-object-model)
+  - [Excel and Visual Basic for Applications (VBA)](#excel-and-visual-basic-for-applications-vba)
 - [Usage (.NET)](#usage-net)
   - [Creating a Client](#creating-a-client)
   - [Login and Access Tokens](#login-and-access-tokens)
@@ -67,12 +68,21 @@ This workflow shows how to use the nuget.exe CLI (command line interface).
     nuget restore
     ```
 
-### Excel Applications & COM (Component Object Model)
+### COM (Component Object Model)
 
-The package should automatically register with the COM interop when the project is built. To register or unregister use the RegCOM.bat and UnregCOM.bat scripts located in the Scripts directory.
+Use the one click setup provided with the release tag to install the required dependencies in your system and register the COM DLL.
+Keep in mind that for developing purposes the solution is already configured to register with the COM interop when the project is built. Alternatively, you can manually register or unregister the DLL use the RegCOM.bat and UnregCOM.bat scripts located in the Scripts directory.
 
-To manually register for COM interop use the Regasm.exe (Assembly Registration Tool) or similar tool.
+To manually register for COM interop you can also use the Regasm.exe (Assembly Registration Tool) or similar tool.
 [See more information here](https://docs.microsoft.com/en-us/dotnet/framework/tools/regasm-exe-assembly-registration-tool).
+
+### Excel and Visual Basic for Applications (VBA)
+
+LegacyMetasysClient allows you to interact with your Metasys server from a VBA application using COM interop.
+To get start, enable the Developer Tab in Excel from the menu File-->Options-->Customize Ribbon.
+[See more information here](https://support.office.com/en-us/article/show-the-developer-tab-e1192344-5e56-4d45-931b-e5fd9bea2d45).
+Finally, from the Developer Tab click the Visual Basic button to open the editor and add the reference to the Metasys Services Object Library from the references list.
+[See more information here](https://docs.microsoft.com/en-us/office/vba/language/how-to/check-or-add-an-object-library-reference).
 
 ## Usage (.NET)
 
