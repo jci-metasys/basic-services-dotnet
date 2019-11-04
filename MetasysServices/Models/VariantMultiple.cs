@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -19,6 +20,41 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             Id = id;
             Variants = variants;
+        }
+
+        /// <summary>
+        /// Returns a value indicating whither this instance has values equal to a specified object.
+        /// </summary>
+        /// <param name="obj"></param>
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj is VariantMultiple)
+            {
+                var other = (VariantMultiple)obj;
+                bool areEqual = this.Id.Equals(other.Id);
+                if (areEqual)
+                {
+                    if (this.Variants == null ^ other.Variants == null)
+                    {
+                        return false;
+                    } 
+                    else if (this.Variants != null && other.Variants != null)
+                    {
+                        return Enumerable.SequenceEqual(this.Variants, other.Variants);
+                    }
+                }
+                return areEqual;                
+            }
+            return false;
+        }
+
+        /// <summary></summary>
+        public override int GetHashCode()
+        {
+            var code = 13;
+            code = (code * 7) + Id.GetHashCode();
+            code = (code * 7) + Variants.GetHashCode();
+            return code;
         }
     }
 }

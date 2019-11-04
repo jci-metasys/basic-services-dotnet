@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices
@@ -78,6 +79,48 @@ namespace JohnsonControls.Metasys.BasicServices
                 Maximum = maximum;
                 EnumerationValues = enums;
             }
+
+            /// <summary>
+            /// Returns a value indicating whither this instance has values equal to a specified object.
+            /// </summary>
+            /// <param name="obj"></param>
+            public override bool Equals(object obj)
+            {
+                if (obj != null && obj is Item)
+                {
+                    var other = (Item)obj;
+                    bool areEqual = (((this.Type == null && other.Type == null) || (this.Type != null && this.Type.Equals(other.Type))) &&
+                        ((this.Title == null && other.Title == null) || (this.Title != null && this.Title.Equals(other.Title))) &&
+                        this.Maximum == other.Maximum &&
+                        this.Minimum == other.Minimum);
+                        
+                    if (areEqual)
+                    {
+                        if (this.EnumerationValues == null ^ other.EnumerationValues == null)
+                        {
+                            return false;
+                        } 
+                        else if (this.EnumerationValues != null && other.EnumerationValues != null)
+                        {
+                            return Enumerable.SequenceEqual(this.EnumerationValues, other.EnumerationValues);
+                        }
+                    }
+                    return areEqual;                        
+                }
+                return false;
+            }
+
+            /// <summary></summary>
+            public override int GetHashCode()
+            {
+                var code = 13;
+                code = (code * 7) + Type.GetHashCode();
+                code = (code * 7) + Title.GetHashCode();
+                code = (code * 7) + Maximum.GetHashCode();
+                code = (code * 7) + Minimum.GetHashCode();
+                code = (code * 7) + EnumerationValues.GetHashCode();
+                return code;
+            }
         }
 
         /// <summary>
@@ -101,6 +144,26 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 Title = title;
                 TitleEnumerationKey = key;
+            }
+
+            /// <summary>
+            /// Returns a value indicating whither this instance has values equal to a specified object.
+            /// </summary>
+            /// <param name="obj"></param>
+            public override bool Equals(object obj)
+            {
+                if (obj != null && obj is EnumerationItem)
+                {
+                    var other = (EnumerationItem)obj;
+                    return this.TitleEnumerationKey.Equals(other.TitleEnumerationKey);
+                }
+                return false;
+            }
+
+            /// <summary></summary>
+            public override int GetHashCode()
+            {
+                return TitleEnumerationKey.GetHashCode();
             }
         }
 
@@ -187,6 +250,43 @@ namespace JohnsonControls.Metasys.BasicServices
                 str = string.Concat(str, "\n");
             }
             return str;
+        }
+
+        /// <summary>
+        /// Returns a value indicating whither this instance has values equal to a specified object.
+        /// </summary>
+        /// <param name="obj"></param>
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj is Command)
+            {
+                var other = (Command)obj;
+                bool areEqual = this.CommandId.Equals(other.CommandId) && 
+                    this.TitleEnumerationKey.Equals(other.TitleEnumerationKey);
+                if (areEqual)
+                {
+                    if (this.Items == null ^ other.Items == null)
+                    {
+                        return false;
+                    } 
+                    else if (this.Items != null && other.Items != null)
+                    {
+                        return Enumerable.SequenceEqual(this.Items, other.Items);
+                    }
+                }
+                return areEqual;
+            }
+            return false;
+        }
+
+        /// <summary></summary>
+        public override int GetHashCode()
+        {
+            var code = 13;
+            code = (code * 7) + CommandId.GetHashCode();
+            code = (code * 7) + TitleEnumerationKey.GetHashCode();
+            code = (code * 7) + Items.GetHashCode();
+            return code;
         }
     }
 }
