@@ -128,10 +128,10 @@ At any time you want to manually refresh the access token before it expires use 
 client.Refresh();
 ```
 
-To use the authorization token in an different HttpClient use the AccessToken object returned by these methods. A successful token will be in the form "Bearer ...".
+To use the authorization token in an different HttpClient use the AccessToken object returned by these methods or use the GetAccessToken method. A successful token will be in the form "Bearer ...".
 
 ```csharp
-AccessToken token = client.Refresh();
+AccessToken token = client.GetAccessToken();
 Console.WriteLine($"Token: {token.Token}\nExpires: {dateToDisplay.ToString("g", token.Expires)}");
 
 // Token: Bearer eyJ0eXAi...
