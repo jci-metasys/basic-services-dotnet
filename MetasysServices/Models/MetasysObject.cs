@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
@@ -50,39 +50,14 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 Id = new Guid(token["id"].Value<string>());
-            }
-            catch
-            {
-                Id = Guid.Empty;
-            }
-
-            string placeholder = "";
-            try
-            {
                 ItemReference = token["itemReference"].Value<string>();
-            }
-            catch
-            {
-                ItemReference = placeholder;
-            }
-
-            try
-            {
                 Name = token["name"].Value<string>();
-            }
-            catch
-            {
-                Name = placeholder;
-            }
-
-            try
-            {
                 Description = token["description"].Value<string>();
             }
-            catch
+            catch (Exception e)
             {
-                Description = placeholder;
-            }
+                throw new MetasysObjectException(token.ToString(), e);
+            }   
         }
 
         /// <summary>
