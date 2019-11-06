@@ -465,24 +465,35 @@ namespace JohnsonControls.Metasys.BasicServices
                     .GetJsonAsync<JToken>()
                     .ConfigureAwait(false);
 
-                string str = null;
-                try
-                {
-                    str = response.Value<string>();
-                    var id = new Guid(str);
-                    return id;
-                }
-                catch (Exception e) when (e is System.ArgumentNullException || 
-                    e is System.ArgumentException || e is System.FormatException)
-                {
-                    throw new MetasysGuidException(str, e);
-                }
+                return ParseObjectIdentifier(response);
             }
             catch (FlurlHttpException e)
             {
                 ThrowHttpException(e);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Parses a JToken and creates a Guid.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <exception cref="MetasysGuidException"></exception>
+        /// <returns>A Guid representation of the JToken.</returns>
+        private Guid ParseObjectIdentifier(JToken token)
+        {
+            string str = null;
+            try
+            {
+                str = token.Value<string>();
+                var id = new Guid(str);
+                return id;
+            }
+            catch (Exception e) when (e is System.ArgumentNullException || 
+                e is System.ArgumentException || e is System.FormatException)
+            {
+                throw new MetasysGuidException(str, e);
+            }
         }
 
         /// <summary>
@@ -756,8 +767,15 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     foreach (JObject command in array)
                     {
-                        Command c = new Command(command, Culture);
-                        commands.Add(c);
+                        try
+                        {
+                            Command c = new Command(command, Culture);
+                            commands.Add(c);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new MetasysCommandException(command.ToString(), e);
+                        }
                     }
                 }
 
@@ -854,17 +872,28 @@ namespace JohnsonControls.Metasys.BasicServices
                 var response = await GetNetworkDevicesRequestAsync(type, page).ConfigureAwait(false);
                 try
                 {
-                    var list = response["items"] as JArray;
-                    foreach (var item in list)
-                    {                                 
-                        MetasysObject device = new MetasysObject(item);
-                        devices.Add(device);
-                    }
-
-                    if (!(response["next"] == null || response["next"].Type == JTokenType.Null))
+                    var total = response["total"].Value<int>();
+                    if (total > 0)
                     {
-                        hasNext = true;
-                        page++;
+                        var list = response["items"] as JArray;
+                        foreach (var item in list)
+                        {
+                            try
+                            {
+                                MetasysObject device = new MetasysObject(item);
+                                devices.Add(device);
+                            }
+                            catch (MetasysObjectException e)
+                            {
+                                throw e;
+                            }
+                        }
+
+                        if (!(response["next"] == null || response["next"].Type == JTokenType.Null))
+                        {
+                            hasNext = true;
+                            page++;
+                        }
                     }
                 }
                 catch (System.NullReferenceException e)
@@ -1079,28 +1108,41 @@ namespace JohnsonControls.Metasys.BasicServices
                         var list = response["items"] as JArray;
 
                         foreach (var item in list)
-                        {                           
-
+                        {
                             if (levels - 1 > 0)
                             {
                                 try
                                 {
-                                    var str = item["id"].Value<string>();
-                                    var objId = new Guid(str);
+                                    var objId = ParseObjectIdentifier(item["id"]);
                                     var children = await GetObjectsAsync(objId, levels - 1).ConfigureAwait(false);
+
                                     MetasysObject obj = new MetasysObject(item, children);
                                     objects.Add(obj);
+                                    
                                 }
-                                catch (System.ArgumentNullException)
+                                catch (MetasysGuidException)
                                 {
-                                    MetasysObject obj = new MetasysObject(item);
-                                    objects.Add(obj);
+                                    // Error with this item's id, skip and do not create object
+                                }
+                                catch (MetasysObjectException e)
+                                {
+                                    // There was another issue creating the object
+                                    throw e;
                                 }
                             }
                             else
                             {
-                                MetasysObject obj = new MetasysObject(item);
-                                objects.Add(obj);
+                                // Do not get children
+                                try
+                                {
+                                    MetasysObject obj = new MetasysObject(item);
+                                    objects.Add(obj);
+                                }
+                                catch (MetasysObjectException e)
+                                {
+                                    // There was another issue creating the object
+                                    throw e;
+                                }
                             }
                         }
 
