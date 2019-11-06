@@ -187,6 +187,21 @@ namespace JohnsonControls.Metasys.BasicServices
     /// An exception that is thrown when a MetasysObject could not be created from a Http response.
     /// </summary>
     [System.Serializable]
+    public class MetasysCommandException : MetasysHttpParsingException
+    {
+        /// <summary>
+        /// Initializes a new instance of the MetasysObjectException.
+        /// </summary>
+        /// <param name="response">The Http response.</param>
+        /// <param name="inner">The inner exception.</param>
+        public MetasysCommandException(string response, Exception inner) :
+            base($"Could not create Command from response.", response, inner) { }
+    }
+
+    /// <summary>
+    /// An exception that is thrown when a MetasysObject could not be created from a Http response.
+    /// </summary>
+    [System.Serializable]
     public class MetasysObjectException : MetasysHttpParsingException
     {
         /// <summary>
