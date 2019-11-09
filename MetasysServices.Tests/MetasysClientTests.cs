@@ -1319,6 +1319,32 @@ namespace Tests
         }
 
         [Test]
+        public void TestGetCommandsOneNumberNullValues()
+        {
+            string command1 = string.Concat("{\"$schema\": \"http://json-schema.org/schema#\",",
+                "\"commandId\": \"Adjust\",",
+                "\"title\": \"Adjust\",",
+                "\"type\": \"array\",",
+                "\"items\": [{",
+                    "\"type\": \"number\",",
+                    "\"title\": \"Value\",",
+                    "\"minimum\": null,",
+                    "\"maximum\": null",
+                    "}],",
+                "\"minItems\": 1,",
+                "\"maxItems\": 1 }");
+            httpTest.RespondWith(string.Concat("[", command1, "]"));
+                
+            var commands = client.GetCommands(mockid);
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            Command expected = new Command(JToken.Parse(command1), testCulture);
+            Assert.AreEqual(expected, commands.ElementAt(0));
+        }
+
+        [Test]
         public void TestGetCommandsTwoEnumOneNumber()
         {
             string command1 = string.Concat("{\"$schema\": \"http://json-schema.org/schema#\",",

@@ -37,6 +37,11 @@ namespace Tests
             Assert.AreEqual(unsupported, client.Localize(Unsupported));
             Assert.AreEqual(priority, client.Localize(PriorityNone));
             Assert.AreEqual(array, client.Localize(Array));
+
+            Assert.AreEqual(reliable, MetasysClient.StaticLocalize(Reliable));
+            Assert.AreEqual(unsupported, MetasysClient.StaticLocalize(Unsupported));
+            Assert.AreEqual(priority, MetasysClient.StaticLocalize(PriorityNone));
+            Assert.AreEqual(array, MetasysClient.StaticLocalize(Array));
         }
 
         [TestCase("en-US", "Reliable", "Unsupported object type", "0 (No Priority)", "Array")]
