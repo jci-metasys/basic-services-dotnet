@@ -265,12 +265,16 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var code = 13;
             code = (code * 7) + Id.GetHashCode();
-            code = (code * 7) + Attribute.GetHashCode();
+            if (Attribute != null)
+                code = (code * 7) + Attribute.GetHashCode();
             code = (code * 7) + NumericValue.GetHashCode();
-            code = (code * 7) + StringValueEnumerationKey.GetHashCode();
+            if (StringValueEnumerationKey != null)
+                code = (code * 7) + StringValueEnumerationKey.GetHashCode();
             code = (code * 7) + BooleanValue.GetHashCode();
-            code = (code * 7) + PriorityEnumerationKey.GetHashCode();
-            code = (code * 7) + ReliabilityEnumerationKey.GetHashCode();
+            if (PriorityEnumerationKey != null)
+                code = (code * 7) + PriorityEnumerationKey.GetHashCode();
+            if (ReliabilityEnumerationKey != null)
+                code = (code * 7) + ReliabilityEnumerationKey.GetHashCode();
             var arrCode = 13;
             if (ArrayValue != null)
             {

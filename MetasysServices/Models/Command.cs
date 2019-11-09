@@ -63,15 +63,15 @@ namespace JohnsonControls.Metasys.BasicServices
             /// The minimum value the number can be if a number.
             /// </summary>
             /// <value>The minimum value of the number or 1 if not a number.</value>
-            public double Minimum;
+            public double? Minimum;
 
             /// <summary>
             /// The maximum value the number can be if a number.
             /// </summary>
             /// <value>The maximum value of the number or 1 if not a number.</value>
-            public double Maximum;
+            public double? Maximum;
 
-            internal Item(string title, string type, double minimum = 1, double maximum = 1, IEnumerable<EnumerationItem> enums = null)
+            internal Item(string title, string type, double? minimum = 1, double? maximum = 1, IEnumerable<EnumerationItem> enums = null)
             {
                 Title = title;
                 Type = type;
@@ -91,8 +91,10 @@ namespace JohnsonControls.Metasys.BasicServices
                     var other = (Item)obj;
                     bool areEqual = (((this.Type == null && other.Type == null) || (this.Type != null && this.Type.Equals(other.Type))) &&
                         ((this.Title == null && other.Title == null) || (this.Title != null && this.Title.Equals(other.Title))) &&
-                        this.Maximum == other.Maximum &&
-                        this.Minimum == other.Minimum);
+                        ((this.Maximum == null && other.Maximum == null) || (this.Maximum != null && this.Maximum.Equals(other.Maximum))) &&
+                        ((this.Minimum == null && other.Minimum == null) || (this.Minimum != null && this.Minimum.Equals(other.Minimum))));
+                        // this.Maximum == other.Maximum &&
+                        // this.Minimum == other.Minimum);
                         
                     if (areEqual)
                     {
@@ -113,12 +115,24 @@ namespace JohnsonControls.Metasys.BasicServices
             /// <summary></summary>
             public override int GetHashCode()
             {
-                var code = 13;
-                code = (code * 7) + Type.GetHashCode();
-                code = (code * 7) + Title.GetHashCode();
-                code = (code * 7) + Maximum.GetHashCode();
-                code = (code * 7) + Minimum.GetHashCode();
-                code = (code * 7) + EnumerationValues.GetHashCode();
+                var code = 13 * 13;
+                if (Type != null)
+                    code = (code * 7) + Type.GetHashCode();
+                if (Title != null)
+                    code = (code * 7) + Title.GetHashCode();
+                if (Maximum != null)
+                    code = (code * 7) + Maximum.GetHashCode();
+                if (Minimum != null)
+                    code = (code * 7) + Minimum.GetHashCode();
+                if (EnumerationValues != null)
+                {
+                    var arrCode = 0;
+                    foreach(var item in EnumerationValues)
+                    {
+                        arrCode += item.GetHashCode();
+                    }
+                    code = (code * 7) + arrCode;
+                }
                 return code;
             }
         }
@@ -163,7 +177,9 @@ namespace JohnsonControls.Metasys.BasicServices
             /// <summary></summary>
             public override int GetHashCode()
             {
-                return TitleEnumerationKey.GetHashCode();
+                if (TitleEnumerationKey != null)
+                    return TitleEnumerationKey.GetHashCode();
+                return 17;
             }
         }
 
@@ -189,8 +205,13 @@ namespace JohnsonControls.Metasys.BasicServices
                     {
                         string iTitle = item["title"].Value<string>();
                         string type = item["type"].Value<string>();
-                        double maximum = item["maximum"].Value<double>();
-                        double minimum = item["minimum"].Value<double>();
+                        double? maximum = null;
+                        double? minimum = null;
+                        if (item["maximum"].Type != JTokenType.Null)
+                            maximum = item["maximum"].Value<double>();
+                        if (item["minimum"].Type != JTokenType.Null)
+                            minimum = item["minimum"].Value<double>();
+                        
                         itemsList.Add(new Item(iTitle, type, minimum, maximum));
                     }
                     else
@@ -284,8 +305,17 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var code = 13;
             code = (code * 7) + CommandId.GetHashCode();
-            code = (code * 7) + TitleEnumerationKey.GetHashCode();
-            code = (code * 7) + Items.GetHashCode();
+            if (TitleEnumerationKey != null)
+                code = (code * 7) + TitleEnumerationKey.GetHashCode();
+            if (Items != null)
+            {
+                var arrCode = 0;
+                foreach(var item in Items)
+                {
+                    arrCode += item.GetHashCode();
+                }
+                code = (code * 7) + arrCode;
+            }
             return code;
         }
     }

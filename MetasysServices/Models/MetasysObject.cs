@@ -110,10 +110,21 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var code = 13;
             code = (code * 7) + Id.GetHashCode();
-            code = (code * 7) + ItemReference.GetHashCode();
-            code = (code * 7) + Description.GetHashCode();
+            if (ItemReference != null)
+                code = (code * 7) + ItemReference.GetHashCode();
+            if (Description != null)
+                code = (code * 7) + Description.GetHashCode();
             code = (code * 7) + ChildrenCount.GetHashCode();
-            code = (code * 7) + Children.GetHashCode();
+            if (Children != null)
+            {
+                var arrCode = 0;
+                foreach(var item in Children)
+                {
+                    arrCode += item.GetHashCode();
+                }
+                code = (code * 7) + arrCode;
+            }
+                
             return code;
         }
     }

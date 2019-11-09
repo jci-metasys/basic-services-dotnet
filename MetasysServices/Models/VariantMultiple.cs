@@ -53,7 +53,15 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var code = 13;
             code = (code * 7) + Id.GetHashCode();
-            code = (code * 7) + Variants.GetHashCode();
+            if (Variants != null)
+            {
+                var arrCode = 0;
+                foreach(var item in Variants)
+                {
+                    arrCode += item.GetHashCode();
+                }
+                code = (code * 7) + arrCode;
+            }
             return code;
         }
     }

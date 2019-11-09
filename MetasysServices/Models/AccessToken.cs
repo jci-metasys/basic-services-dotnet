@@ -39,8 +39,10 @@ namespace JohnsonControls.Metasys.BasicServices
         public override int GetHashCode()
         {
             var code = 13;
-            code = (code * 7) + Token.GetHashCode();
-            code = (code * 7) + Expires.GetHashCode();
+            if (Token != null)
+                code = (code * 7) + Token.GetHashCode();
+            if (Expires != null)
+                code = (code * 7) + Expires.GetHashCode();
             return code;
         }
     }
