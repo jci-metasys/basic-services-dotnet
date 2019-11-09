@@ -50,7 +50,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Initializes a new instance of the MetasysHttpException class using the Flurl.Http.FlurlHttpException class.
         /// </summary>
         /// <param name="e">The Flurl.Http exception.</param>
-        public MetasysHttpException(FlurlHttpException e) : base(e.Message, e) { 
+        public MetasysHttpException(FlurlHttpException e) : base(e.Message, e.InnerException) { 
             this.Call = e.Call;
             this.ResponseBody = e.GetResponseStringAsync().GetAwaiter().GetResult();
         }
