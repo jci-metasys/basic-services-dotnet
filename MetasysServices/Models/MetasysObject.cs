@@ -47,17 +47,35 @@ namespace JohnsonControls.Metasys.BasicServices
                 ChildrenCount = -1;
             }
 
+            string placeholder = "NULL";
+
             try
             {
                 Id = new Guid(token["id"].Value<string>());
                 ItemReference = token["itemReference"].Value<string>();
-                Name = token["name"].Value<string>();
-                Description = token["description"].Value<string>();
             }
             catch (Exception e)
             {
                 throw new MetasysObjectException(token.ToString(), e);
-            }   
+            }
+
+            try
+            {
+                Name = token["name"].Value<string>();
+            }
+            catch
+            {
+                Name = placeholder;
+            }
+
+            try
+            {
+                Description = token["description"].Value<string>();
+            }
+            catch
+            {
+                Description = placeholder;
+            }
         }
 
         /// <summary>
