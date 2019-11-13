@@ -89,13 +89,16 @@ namespace JohnsonControls.Metasys.BasicServices
                 if (obj != null && obj is Item)
                 {
                     var other = (Item)obj;
-                    bool areEqual = (((this.Type == null && other.Type == null) || (this.Type != null && this.Type.Equals(other.Type))) &&
-                        ((this.Title == null && other.Title == null) || (this.Title != null && this.Title.Equals(other.Title))) &&
-                        ((this.Maximum == null && other.Maximum == null) || (this.Maximum != null && this.Maximum.Equals(other.Maximum))) &&
-                        ((this.Minimum == null && other.Minimum == null) || (this.Minimum != null && this.Minimum.Equals(other.Minimum))));
-                        // this.Maximum == other.Maximum &&
-                        // this.Minimum == other.Minimum);
-                        
+                    bool areEqual = (((this.Type == null && other.Type == null) || 
+                        (this.Type != null && this.Type.Equals(other.Type))) &&
+                        ((this.Title == null && other.Title == null) || 
+                            (this.Title != null && this.Title.Equals(other.Title))) &&
+                        ((!this.Maximum.HasValue && !other.Maximum.HasValue) || 
+                            (this.Maximum.HasValue && other.Maximum.HasValue && 
+                            this.Maximum.Value.Equals(other.Maximum.Value))) &&
+                        ((!this.Minimum.HasValue && !other.Minimum.HasValue) || 
+                            (this.Minimum.HasValue && other.Minimum.HasValue && 
+                            this.Minimum.Value.Equals(other.Minimum.Value))));
                     if (areEqual)
                     {
                         if (this.EnumerationValues == null ^ other.EnumerationValues == null)
@@ -120,10 +123,10 @@ namespace JohnsonControls.Metasys.BasicServices
                     code = (code * 7) + Type.GetHashCode();
                 if (Title != null)
                     code = (code * 7) + Title.GetHashCode();
-                if (Maximum != null)
-                    code = (code * 7) + Maximum.GetHashCode();
-                if (Minimum != null)
-                    code = (code * 7) + Minimum.GetHashCode();
+                if (Maximum.HasValue)
+                    code = (code * 7) + Maximum.Value.GetHashCode();
+                if (Minimum.HasValue)
+                    code = (code * 7) + Minimum.Value.GetHashCode();
                 if (EnumerationValues != null)
                 {
                     var arrCode = 0;
@@ -185,61 +188,65 @@ namespace JohnsonControls.Metasys.BasicServices
 
         internal Command(JToken token, CultureInfo cultureInfo)
         {
-            _CultureInfo = cultureInfo;
-            TitleEnumerationKey = token["title"].Value<string>();
-            // Translate the title from en-US to specified culture.
-            Title = MetasysClient.StaticLocalize(TitleEnumerationKey, _CultureInfo);
-            CommandId = token["commandId"].Value<string>();
-            Items = null;
-            List<Item> itemsList = new List<Item>();
-            var items = token["items"] as JArray;
-
-            if (items != null && items.Count > 0)
+            try
             {
-                foreach (var item in items)
+                _CultureInfo = cultureInfo;
+                Title = token["title"].Value<string>();
+                // Translate the title from en-US to specified culture.
+                TitleEnumerationKey = MetasysClient.StaticGetCommandEnumeration(Title);
+                string translatedTitle = MetasysClient.StaticLocalize(TitleEnumerationKey, _CultureInfo);
+                if (translatedTitle != TitleEnumerationKey)
                 {
-                    // Check if a value or an enum
-                    var enumSet = item["oneOf"] as JArray;
+                    // A translation was found
+                    Title = translatedTitle;
+                }
 
-                    if (enumSet == null)
-                    {
-                        string iTitle = item["title"].Value<string>();
-                        string type = item["type"].Value<string>();
-                        double? maximum = null;
-                        double? minimum = null;
-                        if (item["maximum"].Type != JTokenType.Null)
-                            maximum = item["maximum"].Value<double>();
-                        if (item["minimum"].Type != JTokenType.Null)
-                            minimum = item["minimum"].Value<double>();
-                        
-                        itemsList.Add(new Item(iTitle, type, minimum, maximum));
-                    }
-                    else
-                    {
-                        List<EnumerationItem> enumList = new List<EnumerationItem>();
+                CommandId = token["commandId"].Value<string>();
+                Items = null;
+                List<Item> itemsList = new List<Item>();
+                var items = token["items"] as JArray;
 
-                        foreach (var e in enumSet)
+                if (items != null && items.Count > 0)
+                {
+                    foreach (var item in items)
+                    {
+                        // Check if a value or an enum
+                        var enumSet = item["oneOf"] as JArray;
+
+                        if (enumSet == null)
                         {
-                            string eTitle = e["title"].Value<string>();
-                            string eKey = e["const"].Value<string>();
-                            // The title returned is an en-US value, translate the enum
-                            string translatedTitle = MetasysClient.StaticLocalize(eKey, _CultureInfo);
-                            if (translatedTitle != eKey)
+                            string iTitle = item["title"].Value<string>();
+                            string type = item["type"].Value<string>();
+                            double? maximum = item["maximum"].Value<double?>();
+                            double? minimum = item["minimum"].Value<double?>();
+                            itemsList.Add(new Item(iTitle, type, minimum, maximum));
+                        }
+                        else
+                        {
+                            List<EnumerationItem> enumList = new List<EnumerationItem>();
+
+                            foreach (var e in enumSet)
                             {
-                                // A translation was found
-                                enumList.Add(new EnumerationItem(translatedTitle, eKey));
-                            }
-                            else
-                            {
-                                // A translation could not be found
+                                string eTitle = e["title"].Value<string>();
+                                string eKey = e["const"].Value<string>();
+                                // The title returned is an en-US value, translate the key
+                                string eTranslatedTitle = MetasysClient.StaticLocalize(eKey, _CultureInfo);
+                                if (eTranslatedTitle != eKey)
+                                {
+                                    // A translation was found
+                                    eTitle = eTranslatedTitle;
+                                }
                                 enumList.Add(new EnumerationItem(eTitle, eKey));
                             }
-                            
+                            itemsList.Add(new Item("oneOf", "enum", 1, 1, enumList));
                         }
-                        itemsList.Add(new Item("oneOf", "enum", 1, 1, enumList));
                     }
+                    Items = itemsList;
                 }
-                Items = itemsList;
+            } 
+            catch (Exception e)
+            {
+                throw new MetasysCommandException(token.ToString(), e);
             }
         }
 
@@ -265,7 +272,11 @@ namespace JohnsonControls.Metasys.BasicServices
                     }
                     else
                     {
-                        str = string.Concat(str, "\n  Maximum: ", item.Maximum, "\n  Minimum: ", item.Minimum);
+                        if (item.Maximum.HasValue)
+                            str = string.Concat(str, "\n  Maximum: ", item.Maximum.Value.ToString());
+
+                        if (item.Minimum.HasValue)
+                            str = string.Concat(str, "\n  Minimum: ", item.Minimum.Value.ToString());
                     }
                 }
                 str = string.Concat(str, "\n");
