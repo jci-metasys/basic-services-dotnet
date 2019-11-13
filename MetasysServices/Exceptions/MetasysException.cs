@@ -211,6 +211,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="inner">The inner exception.</param>
         public MetasysObjectException(string response, Exception inner) :
             base($"Could not create MetasysObject from response.", response, inner) { }
+
+        /// <summary>
+        /// Initializes a new instance of the MetasysObjectException.
+        /// </summary>
+        /// <param name="inner">The inner exception.</param>
+        public MetasysObjectException(Exception inner) :
+            base($"An error occurred while creating the MetasysObject.", inner) { }
     }
 
     /// <summary>
