@@ -1827,7 +1827,7 @@ namespace Tests
                     "\"items\": [", obj2, "],",
                     $"\"self\": \"https://hostname/api/V2/objects/{mockid2}/objects?page=1&pageSize=200&sort=name\"}}"));
 
-            var objects = client.GetObjects(mockid3, 2).ToList();
+            var objects = client.GetObjects(mockid3, 3).ToList();
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid3}/objects")
                 .WithVerb(HttpMethod.Get)
@@ -1856,6 +1856,15 @@ namespace Tests
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, objects.Count());
+        }
+
+        [Test]
+        public void TestGetObjectsLevelLessThanOne()
+        {
+            var objects = client.GetObjects(mockid, 0);
+
+            httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects");
+            Assert.IsNull(objects);
         }
 
         [Test]
