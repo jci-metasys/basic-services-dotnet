@@ -22,6 +22,14 @@ For versioning information see the [changelog](CHANGELOG).
   - [Get and Send Commands](#get-and-send-commands)
   - [Get Network Devices and other Objects](#get-network-devices-and-other-objects)
   - [Localization of Metasys Enumerations](#localization-of-metasys-enumerations)
+- [Usage (COM)](#usage-com)
+  - [Creating a Client](#creating-a-client-1)
+  - [Login and Access Tokens](#login-and-access-tokens-1)
+  - [Get an Object Id](#get-an-object-id-1)
+  - [Get a Property](#get-a-property-1)
+  - [Write a Property](#write-a-property-1)
+  - [Send Commands](#send-commands)
+  - [Get Network Devices and other Objects](#get-network-devices-and-other-objects-1)
 - [License](#license)
 - [Contributing](#contributing)
 - [Additional Information](#additional-information)
@@ -163,13 +171,7 @@ There is a method to get multiple properties from multiple objects. This can be 
 ```csharp
 List<Guid> ids = new List<Guid> { id1, id2 };
 List<string> attributes = new List<string> { "name", "description" };
-
-// Do not throw exceptions for missing resources
 IEnumerable<VariantMultiple> results = client.ReadPropertyMultiple(ids, attributes);
-
-// Throw exceptions if an attribute is not found by the server
-IEnumerable<VariantMultiple> results = client.ReadPropertyMultiple(ids, attributes, true);
-
 IEnumerable<Variant> id1Variants = results.ElementAt(0).Variants;
 ```
 
@@ -293,7 +295,125 @@ Note: If an automatically translated value (such as Variant.StringValue) contain
 
 If the enumeration key is desired over the translated value use the EnumerationKey attribute. For example, the translated Variant.Reliability has the enumeration key under the attribute: Variant.ReliabilityEnumerationKey. See the documentation of each Model for more information.
 
-<!-- ## Usage (COM) -->
+
+## Usage (COM)
+
+This section demonstrates how to use the LegacyMetasysClient to interact with your Metasys server from a VBA application.
+<!-- Download the sample project [here](https://github.com/metasys-server). -->
+
+### Creating a Client
+
+To create a new client and connect to a Metasys server with the default settings use:
+
+```vb
+Dim client As New LegacyMetasysClient
+```
+
+### Login and Access Tokens
+
+After creating the client, to login use the TryLogin method which takes a host, username, password, and an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true.
+
+```vb
+'Automatically refresh token
+client.TryLogin "host", "username", "password"
+'Do not automatically refresh token
+client.TryLogin "host", "username", "password", false
+```
+
+### Get an Object Id
+
+In order to use most of the methods in LegacyMetasysClient the id of the target object must be known. This id is in the form of a Guid and can be requested using the following given you know the item reference of the object:
+
+```vb
+Dim id As String
+id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1")
+```
+
+### Get a Property
+
+In order to get a property you must know the Guid of the target object. An object called "ComVariant" is returned when getting a property from an object. ComVariant contains the property received in many different forms. There is a bit of intuition when handling a ComVariant since it will not explicitly provide the type of object received by the server. If the server cannot find the target object or attribute on the object this method will return a null value.
+
+```vb
+Dim result As ComVariant
+Set result = client.ReadProperty(id, "presentValue")
+string stringValue = result.StringValue;
+double numericValue = result.NumericValue;
+boolean booleanValue = result.BooleanValue;
+```
+
+There is a method to get multiple properties from multiple objects. This can be very useful if the objects all are of the same type or have the same target properties.
+
+```vb
+Dim ids() As String
+ids = Split("id1,id2", ",")
+Dim attributes() As String
+ids = Split("name,description", ",")
+Dim results() As Object
+results = client.ReadPropertyMultiple(ids, attributes)
+Dim id1 As IComVariantMultiple
+Set id1 = results(0)
+Dim variants() As Object
+variants=id1.Variants
+```
+
+### Write a Property
+
+In order to write a property you must have the Guid of the object and know the attribute name and type. This method contains an optional priority parameter to specify the write priority of the value. This priority is in the form of an enumeration such as "writePriorityEnumSet.priorityNone". To see more options use the "api/v2/enumSets/1/members" or "api/v2/schemas/enums/writePriorityEnumSet" http requests defined in the [Metasys API](https://metasys-server.github.io/api-landing/api/v2/).
+
+```vb
+Dim id As String
+id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1")
+client.WriteProperty id, "description", "This is an AV."
+client.WriteProperty id, "description", "This is an AV.", "writePriorityEnumSet.priorityNone"
+```
+
+To change the same attribute values of many objects use the WritePropertyMultiple method. This method also accepts an optional write priority.
+
+```vb
+Dim ids() As String
+ids = Split("id1,id2", ",")
+Dim attributes() As String
+attributes = Split("name,description", ",")
+Dim attributeValues() As String
+attributeValues = Split("AV,This is an AV", ",")
+client.WritePropertyMultiple ids, attributes, attributeValues
+client.WritePropertyMultiple ids, attributes, attributeValues, "writePriorityEnumSet.priorityNone"
+```
+
+### Send Commands
+
+When sending a command there may or may not be a single value or list of values that needs to be sent with the command. The Command.Items property will list all of these values as Items which contains the Title and Type of the value to change. If the type of an Item is "oneOf" this indicates the values is an enumeration and the possible values will be contained in the EnumerationValues list. Keep in mind the values to be sent in the command is the TitleEnumerationKey not the Title. The Title is the user friendly translated value that describes the enumeration. 
+```vb
+
+Dim parameters() As String
+parameters = Split("offonEnumSet.0,", ",")
+client.SendCommand id, "OperatorOverride", parameters
+
+```
+
+### Get Network Devices and other Objects
+
+To get all the available network devices use the GetNetworkDevices method which returns a list of MetasysObjects. This accepts an optional type number as a string to filter the response. To get all of the available types on your server use the GetNetworkDeviceTypes method which returns a list of MetasysObjectType.
+
+```vb
+Dim devices() As Object
+devices = client.GetNetworkDevices()
+Dim device As IComMetasysObject
+Set device = devices(0)
+Dim itemReference as String
+itemReference=device.itemReference
+```
+
+To get the child devices or objects of an object use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete.
+
+```vb
+Dim devices() As Object
+devices = client.GetObjects(id)
+Dim device As IComMetasysObject
+Set device = devices(0)
+Dim children() As Object
+children=device.children
+```
 
 ## License
 
