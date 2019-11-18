@@ -20,5 +20,5 @@ REM set base path for DLL
 SET JCI_COM_PATH=%Home_Drive%\ProgramData\Johnson Controls\Metasys Services
 REM Register using x86 .NET Framework according to the client lib
 cd %windir%\Microsoft.NET\Framework\v4.0.30319
-regasm "%JCI_COM_PATH%\MetasysServicesCom.dll" /tlb:"%JCI_COM_PATH%\MetasysServicesCom.tlb"
+regasm "%JCI_COM_PATH%\MetasysServicesCom.dll" /codebase /tlb:"%JCI_COM_PATH%\MetasysServicesCom.tlb"
 
