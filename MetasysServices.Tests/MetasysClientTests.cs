@@ -1905,6 +1905,172 @@ namespace Tests
 
         #endregion
 
+        #region GetSpaces Tests
+
+        [Test]
+        public void TestGetSpacesNone()
+        {
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 0,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [ ],",
+                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+
+            var devices = client.GetSpaces();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            Assert.AreEqual(0, devices.Count());
+        }
+
+        [Test]
+        public void TestGetSpacesOnePage()
+        {
+            string space = string.Concat("{",
+                "\"id\": \"", mockid, "\",",
+                "\"itemReference\": \"fully:qualified/reference\",",
+                "\"name\": \"name\",",
+                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 1,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [", space, "],",
+                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+
+            var devices = client.GetSpaces();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
+            Assert.AreEqual(expected, devices.ElementAt(0));
+        }
+
+        [Test]
+        public void TestGetSpacesManyPages()
+        {
+            string space1 = string.Concat("{",
+                 "\"id\": \"", mockid, "\",",
+                 "\"itemReference\": \"fully:qualified/reference1\",",
+                 "\"name\": \"name\",",
+                 "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                 $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+            string space2 = string.Concat("{",
+                "\"id\": \"", mockid, "\",",
+                "\"itemReference\": \"fully:qualified/reference2\",",
+                "\"name\": \"name\",",
+                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+            httpTest
+                .RespondWith(string.Concat("{",
+                    "\"total\": 2,",
+                    "\"next\": \"https://hostname/api/V2/spaces?page=2&pageSize=1&sort=name\",",
+                    "\"previous\": null,",
+                    "\"items\": [", space1, "],",
+                    "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=1&sort=name\"}"))
+                .RespondWith(string.Concat("{",
+                    "\"total\": 2,",
+                    "\"next\": null,",
+                    "\"previous\": null,",
+                    "\"items\": [", space2, "],",
+                    "\"self\": \"https://hostname/api/V2/spaces?page=2&pageSize=1&sort=name\"}"));
+
+            var spaces = client.GetSpaces();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+                .WithVerb(HttpMethod.Get)
+                .Times(2);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(space2), null, testCulture);
+            Assert.AreEqual(expected1, spaces.ElementAt(0));
+            Assert.AreEqual(expected2, spaces.ElementAt(1));
+        }
+
+        [Test]
+        public void TestGetSpacesWithType()
+        {
+            string space = string.Concat("{",
+               "\"id\": \"", mockid, "\",",
+               "\"itemReference\": \"fully:qualified/reference\",",
+               "\"name\": \"name\",",
+               "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+               $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 1,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [", space, "],",
+                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+
+            var devices = client.GetSpaces("3");
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
+            Assert.AreEqual(expected, devices.ElementAt(0));
+        }
+
+        [Test]
+        public void TestGetSpacesMissingItems()
+        {
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 0,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [{}],",
+                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+
+            var devices = client.GetSpaces();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            Assert.AreEqual(0, devices.Count());
+        }
+
+        [Test]
+        public void TestGetSpacesMissingValuesThrowsException()
+        {
+            string space = string.Concat("{",
+                "\"id\": \"", mockid, "\",",
+                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\"}");
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 1,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [", space, "],",
+                $"\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}}"));
+
+            var e = Assert.Throws<MetasysObjectException>(() =>
+                client.GetObjects(mockid));
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            PrintMessage($"TestGetSpacesMissingValuesThrowsException: {e.Message}", true);
+        }
+
+        [Test]
+        public void TestGetSpacesUnauthorizedThrowsException()
+        {
+            httpTest.RespondWith("Unauthorized", 401);
+
+            var e = Assert.Throws<MetasysHttpException>(() =>
+                client.GetSpaces());
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            PrintMessage($"TestGetSpacesUnauthorizedThrowsException: {e.Message}", true);
+        }
+
+        #endregion
+
         #region miscellaneous
         [Test]
         public void TestMiscNullTokenValue()

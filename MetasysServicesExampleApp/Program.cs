@@ -253,6 +253,18 @@ namespace MetasysServicesExampleApp
             }
 
             #endregion
+
+            #region GetSpaces
+
+            Console.WriteLine("\n\nGetSpaces...");
+
+            IEnumerable<MetasysObject> spaces = client.GetSpaces();
+            foreach (var space in spaces)
+            {
+                Console.WriteLine($"\nAvailable Space {space.Id}: {space.Name}, {space.ItemReference}");                      
+            }
+
+            #endregion
         }
     }
 }

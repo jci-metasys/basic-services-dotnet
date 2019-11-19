@@ -1181,5 +1181,117 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return null;
         }
+
+        /// <summary>
+        /// Gets all spaces by requesting each available page.
+        /// </summary>
+        /// <param name="type">Optional type number as a string</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        public IEnumerable<MetasysObject> GetSpaces(string type = null)
+        {
+            return GetSpacesAsync(type).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Gets all spaces asynchronously by requesting each available page.
+        /// </summary>
+        /// <param name="type">Optional type number as a string</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        public async Task<IEnumerable<MetasysObject>> GetSpacesAsync(string type = null)
+        {
+            List<MetasysObject> spaces = new List<MetasysObject>() { };
+            bool hasNext = true;
+            int page = 1;
+
+            while (hasNext)
+            {
+                hasNext = false;
+                var response = await GetSpacesRequestAsync(type, page).ConfigureAwait(false);
+                try
+                {
+                    var total = response["total"].Value<int>();
+                    if (total > 0)
+                    {
+                        var list = response["items"] as JArray;
+                        foreach (var item in list)
+                        {
+                            try
+                            {
+                                MetasysObject space = new MetasysObject(item);
+                                spaces.Add(space);
+                            }
+                            catch (MetasysObjectException e)
+                            {
+                                throw e;
+                            }
+                        }
+
+                        if (!(response["next"] == null || response["next"].Type == JTokenType.Null))
+                        {
+                            hasNext = true;
+                            page++;
+                        }
+                    }
+                }
+                catch (System.NullReferenceException e)
+                {
+                    throw new MetasysHttpParsingException(response.ToString(), e);
+                }
+            }
+            return spaces;
+        }
+
+        /// <summary>
+        /// Gets all spaces asynchronously.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="page"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        private async Task<JToken> GetSpacesRequestAsync(string type, int page = 1)
+        {
+            Url url = new Url("spaces");
+            url.SetQueryParam("page", page);
+            if (type != null)
+            {
+                url.SetQueryParam("type", type);
+            }
+
+            try
+            {
+                var response = await Client.Request(url)
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+
+                return response;
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+
+            return null;
+        }
+
+        public IEnumerable<MetasysObjectType> GetSpacesTypes()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<MetasysObjectType>> GetSpacesTypesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<MetasysObject> GetEquipment()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -150,5 +150,36 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Level indicates how deep to retrieve objects.
         /// </summary>
         Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1);
+
+        /// <summary>
+        /// Gets all spaces.
+        /// </summary>
+        IEnumerable<MetasysObject> GetSpaces(string type = null);
+
+        /// <summary>
+        /// Gets all spaces asynchronously.
+        /// </summary>
+        Task<IEnumerable<MetasysObject>> GetSpacesAsync(string type = null);
+
+        /// <summary>
+        /// Gets all available space types.
+        /// </summary>
+        IEnumerable<MetasysObjectType> GetSpacesTypes();
+
+        /// <summary>
+        /// Gets all available space types asynchronously.
+        /// </summary>
+        Task<IEnumerable<MetasysObjectType>> GetSpacesTypesAsync();
+
+        /// <summary>
+        /// Gets all equipment.
+        /// </summary>
+        IEnumerable<MetasysObject> GetEquipment();
+
+        /// <summary>
+        /// Gets all equipment asynchronously.
+        /// </summary>
+        Task<IEnumerable<MetasysObject>> GetEquipmentAsync();               
+
     }
 }

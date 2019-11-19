@@ -18,6 +18,7 @@
 -LegacyMetasysClient for compatibility with COM services.
 -Automatic enumeration translations for supported languages.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
