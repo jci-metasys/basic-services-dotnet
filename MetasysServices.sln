@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetasysServices.Tests", "Me
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetasysServicesCom", "MetasysServicesCom\MetasysServicesCom.csproj", "{1B32BB45-E8DE-47C7-B229-1016F638B1EC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetasysServicesExampleApp", "MetasysServicesExampleApp\MetasysServicesExampleApp.csproj", "{268061B9-1D96-456B-9684-E4267AE7639E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,14 @@ Global
 		{1B32BB45-E8DE-47C7-B229-1016F638B1EC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1B32BB45-E8DE-47C7-B229-1016F638B1EC}.Release|x86.ActiveCfg = Release|Any CPU
 		{1B32BB45-E8DE-47C7-B229-1016F638B1EC}.Release|x86.Build.0 = Release|Any CPU
+		{268061B9-1D96-456B-9684-E4267AE7639E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{268061B9-1D96-456B-9684-E4267AE7639E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{268061B9-1D96-456B-9684-E4267AE7639E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{268061B9-1D96-456B-9684-E4267AE7639E}.Debug|x86.Build.0 = Debug|Any CPU
+		{268061B9-1D96-456B-9684-E4267AE7639E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{268061B9-1D96-456B-9684-E4267AE7639E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{268061B9-1D96-456B-9684-E4267AE7639E}.Release|x86.ActiveCfg = Release|Any CPU
+		{268061B9-1D96-456B-9684-E4267AE7639E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

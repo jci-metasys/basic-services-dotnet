@@ -4,7 +4,7 @@ This project provides a library for accessing the most common services of the Me
 The intent is to provide an API that is very similar to the original MSSDA
 (Metasys System Secure Data Access) library.
 
-For versioning information see the [changelog](CHANGELOG).
+For versioning information see the [changelog](CHANGELOG.md).
 
 ## Contents <!-- omit in toc -->
 
@@ -95,7 +95,7 @@ Finally, from the Developer Tab click the Visual Basic button to open the editor
 ## Usage (.NET)
 
 This section demonstrates how to use the MetasysClient to interact with your Metasys server from a .NET application.
-There is an example on [Github](https://github.com/metasys-server/basic-services-dotnet/MetasysServicesExampleApp) that can be run from the command line.
+There is an example on [Github](https://github.com/metasys-server/basic-services-dotnet/tree/master/MetasysServicesExampleApp) that can be run from the command line.
 
 ### Creating a Client
 
