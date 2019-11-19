@@ -111,7 +111,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Localized string if the resource was found, the default en-US localized string if not found,
         /// or the resource parameter value if neither resource is found.
         /// </returns>
-        public static string StaticLocalize(string resource, CultureInfo cultureInfo)
+        public static string StaticLocalize(string resource, CultureInfo cultureInfo = null)
         {
             try
             {
@@ -465,24 +465,35 @@ namespace JohnsonControls.Metasys.BasicServices
                     .GetJsonAsync<JToken>()
                     .ConfigureAwait(false);
 
-                string str = null;
-                try
-                {
-                    str = response.Value<string>();
-                    var id = new Guid(str);
-                    return id;
-                }
-                catch (Exception e) when (e is System.ArgumentNullException || 
-                    e is System.ArgumentException || e is System.FormatException)
-                {
-                    throw new MetasysGuidException(str, e);
-                }
+                return ParseObjectIdentifier(response);
             }
             catch (FlurlHttpException e)
             {
                 ThrowHttpException(e);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Parses a JToken and creates a Guid.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <exception cref="MetasysGuidException"></exception>
+        /// <returns>A Guid representation of the JToken.</returns>
+        private Guid ParseObjectIdentifier(JToken token)
+        {
+            string str = null;
+            try
+            {
+                str = token.Value<string>();
+                var id = new Guid(str);
+                return id;
+            }
+            catch (Exception e) when (e is System.ArgumentNullException || 
+                e is System.ArgumentException || e is System.FormatException)
+            {
+                throw new MetasysGuidException(str, e);
+            }
         }
 
         /// <summary>
@@ -756,8 +767,15 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     foreach (JObject command in array)
                     {
-                        Command c = new Command(command, Culture);
-                        commands.Add(c);
+                        try
+                        {
+                            Command c = new Command(command, Culture);
+                            commands.Add(c);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new MetasysCommandException(command.ToString(), e);
+                        }
                     }
                 }
 
@@ -833,7 +851,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         public IEnumerable<MetasysObject> GetNetworkDevices(string type = null)
         {
-            return GetNetworkDevicesAsync().GetAwaiter().GetResult();
+            return GetNetworkDevicesAsync(type).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -854,17 +872,28 @@ namespace JohnsonControls.Metasys.BasicServices
                 var response = await GetNetworkDevicesRequestAsync(type, page).ConfigureAwait(false);
                 try
                 {
-                    var list = response["items"] as JArray;
-                    foreach (var item in list)
-                    {                                 
-                        MetasysObject device = new MetasysObject(item);
-                        devices.Add(device);
-                    }
-
-                    if (!(response["next"] == null || response["next"].Type == JTokenType.Null))
+                    var total = response["total"].Value<int>();
+                    if (total > 0)
                     {
-                        hasNext = true;
-                        page++;
+                        var list = response["items"] as JArray;
+                        foreach (var item in list)
+                        {
+                            try
+                            {
+                                MetasysObject device = new MetasysObject(item);
+                                devices.Add(device);
+                            }
+                            catch (MetasysObjectException e)
+                            {
+                                throw e;
+                            }
+                        }
+
+                        if (!(response["next"] == null || response["next"].Type == JTokenType.Null))
+                        {
+                            hasNext = true;
+                            page++;
+                        }
                     }
                 }
                 catch (System.NullReferenceException e)
@@ -882,7 +911,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="type"></param>
         /// <param name="page"></param>
         /// <exception cref="MetasysHttpException"></exception>
-        private async Task<JToken> GetNetworkDevicesRequestAsync(string type = null, int page = 1)
+        private async Task<JToken> GetNetworkDevicesRequestAsync(string type, int page = 1)
         {
             Url url = new Url("networkDevices");
             url.SetQueryParam("page", page);
@@ -987,13 +1016,9 @@ namespace JohnsonControls.Metasys.BasicServices
                 if (translation != key)
                 {
                     // A translation was found
-                    return new MetasysObjectType(id, key, translation);
+                    description = translation;
                 }
-                else
-                {
-                    // A translation could not be found
-                    return new MetasysObjectType(id, key, description);
-                }
+                return new MetasysObjectType(id, key, description);
             }
             catch (Exception e) when (e is System.ArgumentNullException
                 || e is System.NullReferenceException || e is System.FormatException)
@@ -1008,23 +1033,20 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="url"></param>
         /// <exception cref="MetasysHttpException"></exception>
         private async Task<JToken> GetWithFullUrl(string url)
-        {         
-            using (var temporaryClient = new FlurlClient(new Url(url)))
+        {
+            string requestUrl = url.Replace(Client.BaseUrl, "");
+            try
             {
-                temporaryClient.Headers.Add("Authorization", this.AccessToken.Token);
-                try
-                {
-                    var item = await temporaryClient.Request()
-                        .GetJsonAsync<JToken>()
-                        .ConfigureAwait(false);
-                    return item;
-                }
-                catch (FlurlHttpException e)
-                {
-                    ThrowHttpException(e);
-                }
-                return null;
+                var item = await Client.Request(requestUrl)
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+                return item;
             }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return null;
         }
 
         /// <summary>
@@ -1070,6 +1092,10 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 hasNext = false;
                 var response = await GetObjectsRequestAsync(id, page).ConfigureAwait(false);
+                if (response == null || response.Type == JTokenType.Null || !response.HasValues)
+                {
+                    return null;
+                }
 
                 try
                 {
@@ -1079,32 +1105,41 @@ namespace JohnsonControls.Metasys.BasicServices
                         var list = response["items"] as JArray;
 
                         foreach (var item in list)
-                        {                           
-
-                            if (levels - 1 > 0)
+                        {
+                            try
                             {
-                                try
+                                IEnumerable<MetasysObject> children = null;
+                                if (levels - 1 > 0)
                                 {
-                                    var str = item["id"].Value<string>();
-                                    var objId = new Guid(str);
-                                    var children = await GetObjectsAsync(objId, levels - 1).ConfigureAwait(false);
-                                    MetasysObject obj = new MetasysObject(item, children);
-                                    objects.Add(obj);
+                                    var objId = ParseObjectIdentifier(item["id"]);
+                                    if (objId != null)
+                                    {
+                                        try
+                                        {
+                                            children = await GetObjectsAsync(objId, levels - 1).ConfigureAwait(false);
+                                        }
+                                        catch (Exception e) when (e is MetasysObjectException || 
+                                            e is MetasysHttpParsingException)
+                                        {
+                                            throw new MetasysObjectException(e);
+                                        }
+                                    }
                                 }
-                                catch (System.ArgumentNullException)
-                                {
-                                    MetasysObject obj = new MetasysObject(item);
-                                    objects.Add(obj);
-                                }
-                            }
-                            else
-                            {
-                                MetasysObject obj = new MetasysObject(item);
+                                MetasysObject obj = new MetasysObject(item, children);
                                 objects.Add(obj);
+                            }
+                            catch (MetasysGuidException)
+                            {
+                                // Error with this item's id, skip and do not create object
+                            }
+                            catch (MetasysObjectException e)
+                            {
+                                // There was an issue creating the object
+                                throw e;
                             }
                         }
 
-                        if (!(response["next"] == null || response["next"].Type == JTokenType.Null))
+                        if (response["next"] != null && response["next"].Type != JTokenType.Null)
                         {
                             hasNext = true;
                             page++;

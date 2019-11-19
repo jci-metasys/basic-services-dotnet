@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
@@ -47,23 +47,16 @@ namespace JohnsonControls.Metasys.BasicServices
                 ChildrenCount = -1;
             }
 
+            string placeholder = "NULL";
+
             try
             {
                 Id = new Guid(token["id"].Value<string>());
-            }
-            catch
-            {
-                Id = Guid.Empty;
-            }
-
-            string placeholder = "";
-            try
-            {
                 ItemReference = token["itemReference"].Value<string>();
             }
-            catch
+            catch (Exception e)
             {
-                ItemReference = placeholder;
+                throw new MetasysObjectException(token.ToString(), e);
             }
 
             try
@@ -96,6 +89,61 @@ namespace JohnsonControls.Metasys.BasicServices
                 "Name: ", Name, "\n",             
                 "Description: ", Description, "\n",
                 "Number of Children: ", ChildrenCount);
+        }
+
+        /// <summary>
+        /// Returns a value indicating whither this instance has values equal to a specified object.
+        /// </summary>
+        /// <param name="obj"></param>
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj is MetasysObject)
+            {
+                var other = (MetasysObject)obj;
+                bool areEqual = ((this.Id == null && other.Id == null) || (this.Id != null && this.Id.Equals(other.Id))) &&
+                    ((this.ItemReference == null && other.ItemReference == null) || 
+                        (this.ItemReference != null && this.ItemReference.Equals(other.ItemReference))) &&
+                    ((this.Description == null && other.Description == null) || 
+                        (this.Description != null && this.Description.Equals(other.Description))) &&
+                    this.ChildrenCount == other.ChildrenCount;
+                    
+                if (areEqual)
+                {
+                    if (this.Children == null ^ other.Children == null)
+                    {
+                        return false;
+                    } 
+                    else if (this.Children != null && other.Children != null)
+                    {
+                        return Enumerable.SequenceEqual(this.Children, other.Children);
+                    }
+                }
+                return areEqual; 
+            }
+            return false;
+        }
+
+        /// <summary></summary>
+        public override int GetHashCode()
+        {
+            var code = 13;
+            code = (code * 7) + Id.GetHashCode();
+            if (ItemReference != null)
+                code = (code * 7) + ItemReference.GetHashCode();
+            if (Description != null)
+                code = (code * 7) + Description.GetHashCode();
+            code = (code * 7) + ChildrenCount.GetHashCode();
+            if (Children != null)
+            {
+                var arrCode = 0;
+                foreach(var item in Children)
+                {
+                    arrCode += item.GetHashCode();
+                }
+                code = (code * 7) + arrCode;
+            }
+                
+            return code;
         }
     }
 }

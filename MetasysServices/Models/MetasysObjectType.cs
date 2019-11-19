@@ -34,5 +34,32 @@ namespace JohnsonControls.Metasys.BasicServices
             Description = description;
             Id = id;
         }
+
+        /// <summary>
+        /// Returns a value indicating whither this instance has values equal to a specified object.
+        /// </summary>
+        /// <param name="obj"></param>
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj is MetasysObjectType)
+            {
+                var other = (MetasysObjectType)obj;
+                return this.Id.Equals(other.Id) &&
+                    ((this.DescriptionEnumerationKey == null && other.DescriptionEnumerationKey == null) || 
+                        (this.DescriptionEnumerationKey != null && 
+                            this.DescriptionEnumerationKey.Equals(other.DescriptionEnumerationKey)));
+            }
+            return false;
+        }
+
+        /// <summary></summary>
+        public override int GetHashCode()
+        {
+            var code = 13;
+            code = (code * 7) + Id.GetHashCode();
+            if (DescriptionEnumerationKey != null)
+                code = (code * 7) + DescriptionEnumerationKey.GetHashCode();
+            return code;
+        }
     }
 }

@@ -50,7 +50,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Initializes a new instance of the MetasysHttpException class using the Flurl.Http.FlurlHttpException class.
         /// </summary>
         /// <param name="e">The Flurl.Http exception.</param>
-        public MetasysHttpException(FlurlHttpException e) : base(e.Message, e) { 
+        public MetasysHttpException(FlurlHttpException e) : base(e.Message, e.InnerException) { 
             this.Call = e.Call;
             this.ResponseBody = e.GetResponseStringAsync().GetAwaiter().GetResult();
         }
@@ -187,6 +187,21 @@ namespace JohnsonControls.Metasys.BasicServices
     /// An exception that is thrown when a MetasysObject could not be created from a Http response.
     /// </summary>
     [System.Serializable]
+    public class MetasysCommandException : MetasysHttpParsingException
+    {
+        /// <summary>
+        /// Initializes a new instance of the MetasysObjectException.
+        /// </summary>
+        /// <param name="response">The Http response.</param>
+        /// <param name="inner">The inner exception.</param>
+        public MetasysCommandException(string response, Exception inner) :
+            base($"Could not create Command from response.", response, inner) { }
+    }
+
+    /// <summary>
+    /// An exception that is thrown when a MetasysObject could not be created from a Http response.
+    /// </summary>
+    [System.Serializable]
     public class MetasysObjectException : MetasysHttpParsingException
     {
         /// <summary>
@@ -196,6 +211,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="inner">The inner exception.</param>
         public MetasysObjectException(string response, Exception inner) :
             base($"Could not create MetasysObject from response.", response, inner) { }
+
+        /// <summary>
+        /// Initializes a new instance of the MetasysObjectException.
+        /// </summary>
+        /// <param name="inner">The inner exception.</param>
+        public MetasysObjectException(Exception inner) :
+            base($"An error occurred while creating the MetasysObject.", inner) { }
     }
 
     /// <summary>

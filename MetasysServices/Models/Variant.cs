@@ -70,7 +70,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// If the attribute is "presentValue": the reliability enumeration key of the reliability.
         /// Otherwise reliabilityEnumSet.reliable by default.
         /// </value>
-        public string ReliabilityEnumerationKey  { private set; get; }
+        public string ReliabilityEnumerationKey { private set; get; }
 
         /// <summary>The priority of the value.</summary>
         /// <value>
@@ -84,7 +84,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// If the attribute is "presentValue": the priority enumeration key of the priority.
         /// Otherwise null by default.
         /// </value>
-        public string PriorityEnumerationKey  { private set; get; }
+        public string PriorityEnumerationKey { private set; get; }
 
         /// <summary>Boolean representation of the reliability of the value.</summary>
         /// <value>True if the reliability of the value is reliable.</value>
@@ -211,6 +211,79 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 ProcessToken(null);
             }
+        }
+
+        /// <summary>
+        /// Returns a value indicating whither this instance has values equal to a specified object.
+        /// </summary>
+        /// <param name="obj"></param>
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj is Variant)
+            {
+                var other = (Variant)obj;
+                bool areEqual = (((this.Id == null && other.Id == null) ||
+                    (this.Id != null && this.Id.Equals(other.Id))) &&
+                    ((this.Attribute == null && other.Attribute == null) ||
+                        (this.Attribute != null && this.Attribute.Equals(other.Attribute))) &&
+                    (this.NumericValue == other.NumericValue) &&
+                    ((this.StringValueEnumerationKey == null && other.StringValueEnumerationKey == null) ||
+                        (this.StringValueEnumerationKey != null &&
+                            this.StringValueEnumerationKey.Equals(other.StringValueEnumerationKey))) &&
+                    (this.BooleanValue == other.BooleanValue) &&
+                    ((this.PriorityEnumerationKey == null && other.PriorityEnumerationKey == null) ||
+                        (this.PriorityEnumerationKey != null &&
+                            this.PriorityEnumerationKey.Equals(other.PriorityEnumerationKey))) &&
+                    ((this.ReliabilityEnumerationKey == null && other.ReliabilityEnumerationKey == null) ||
+                        (this.ReliabilityEnumerationKey != null &&
+                            this.ReliabilityEnumerationKey.Equals(other.ReliabilityEnumerationKey))));
+                if (areEqual)
+                {
+                    if (this.ArrayValue == null ^ other.ArrayValue == null)
+                    {
+                        return false;
+                    }
+                    else if (this.ArrayValue != null && other.ArrayValue != null)
+                    {
+                        for (int i = 0; i < this.ArrayValue.Length; i++)
+                        {
+                            if (!this.ArrayValue[i].Equals(other.ArrayValue[i]))
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                return areEqual;
+            }
+            return false;
+        }
+
+        /// <summary></summary>
+        public override int GetHashCode()
+        {
+            var code = 13;
+            code = (code * 7) + Id.GetHashCode();
+            if (Attribute != null)
+                code = (code * 7) + Attribute.GetHashCode();
+            code = (code * 7) + NumericValue.GetHashCode();
+            if (StringValueEnumerationKey != null)
+                code = (code * 7) + StringValueEnumerationKey.GetHashCode();
+            code = (code * 7) + BooleanValue.GetHashCode();
+            if (PriorityEnumerationKey != null)
+                code = (code * 7) + PriorityEnumerationKey.GetHashCode();
+            if (ReliabilityEnumerationKey != null)
+                code = (code * 7) + ReliabilityEnumerationKey.GetHashCode();
+            var arrCode = 13;
+            if (ArrayValue != null)
+            {
+                foreach (var item in ArrayValue)
+                {
+                    arrCode = (arrCode * 7) + item.GetHashCode();
+                }
+            }
+            return code + arrCode;
         }
     }
 }

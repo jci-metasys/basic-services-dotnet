@@ -95,7 +95,7 @@ Finally, from the Developer Tab click the Visual Basic button to open the editor
 ## Usage (.NET)
 
 This section demonstrates how to use the MetasysClient to interact with your Metasys server from a .NET application.
-<!-- Download the sample project [here](https://github.com/metasys-server). -->
+There is an example on [Github](https://github.com/metasys-server/basic-services-dotnet/MetasysServicesExampleApp) that can be run from the command line.
 
 ### Creating a Client
 
@@ -136,10 +136,10 @@ At any time you want to manually refresh the access token before it expires use 
 client.Refresh();
 ```
 
-To use the authorization token in an different HttpClient use the AccessToken object returned by these methods. A successful token will be in the form "Bearer ...".
+To use the authorization token in an different HttpClient use the AccessToken object returned by these methods or use the GetAccessToken method. A successful token will be in the form "Bearer ...".
 
 ```csharp
-AccessToken token = client.Refresh();
+AccessToken token = client.GetAccessToken();
 Console.WriteLine($"Token: {token.Token}\nExpires: {dateToDisplay.ToString("g", token.Expires)}");
 
 // Token: Bearer eyJ0eXAi...
@@ -151,7 +151,7 @@ Console.WriteLine($"Token: {token.Token}\nExpires: {dateToDisplay.ToString("g", 
 In order to use most of the methods in MetasysClient the id of the target object must be known. This id is in the form of a Guid and can be requested using the following given you know the item reference of the object:
 
 ```csharp
-Guid id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1");
+Guid id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1").Value;
 ```
 
 ### Get a Property
@@ -159,7 +159,7 @@ Guid id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1");
 In order to get a property you must know the Guid of the target object. An object called "Variant" is returned when getting a property from an object. Variant contains the property received in many different forms. There is a bit of intuition when handling a Variant since it will not explicitly provide the type of object received by the server. If the server cannot find the target object or attribute on the object this method will return a null value.
 
 ```csharp
-Variant result = client.ReadProperty(id, "presentValue");
+Variant result = client.ReadProperty(id, "presentValue").Value;
 string stringValue = result.StringValue;
 double numericValue = result.NumericValue;
 bool booleanValue = result.BooleanValue;
