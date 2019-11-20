@@ -862,58 +862,19 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
-            List<MetasysObject> devices = new List<MetasysObject>() { };
-            bool hasNext = true;
-            int page = 1;
-
-            while (hasNext)
-            {
-                hasNext = false;
-                var response = await GetNetworkDevicesRequestAsync(type, page).ConfigureAwait(false);
-                try
-                {
-                    var total = response["total"].Value<int>();
-                    if (total > 0)
-                    {
-                        var list = response["items"] as JArray;
-                        foreach (var item in list)
-                        {
-                            try
-                            {
-                                MetasysObject device = new MetasysObject(item);
-                                devices.Add(device);
-                            }
-                            catch (MetasysObjectException e)
-                            {
-                                throw e;
-                            }
-                        }
-
-                        if (!(response["next"] == null || response["next"].Type == JTokenType.Null))
-                        {
-                            hasNext = true;
-                            page++;
-                        }
-                    }
-                }
-                catch (System.NullReferenceException e)
-                {
-                    throw new MetasysHttpParsingException(response.ToString(), e);
-                }
-            }
-
-            return devices;
+            return await processPagedRequestAsync("networkDevices", type);
         }
 
         /// <summary>
-        /// Gets all network devices asynchronously.
+        /// Generic paged request for the given resource and optional type
         /// </summary>
+        /// <param name="resource"></param>
         /// <param name="type"></param>
         /// <param name="page"></param>
         /// <exception cref="MetasysHttpException"></exception>
-        private async Task<JToken> GetNetworkDevicesRequestAsync(string type, int page = 1)
+        private async Task<JToken> pagedRequestAsync(string resource, string type=null, int page = 1)
         {
-            Url url = new Url("networkDevices");
+            Url url = new Url(resource);
             url.SetQueryParam("page", page);
             if (type != null)
             {
@@ -1201,14 +1162,26 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         public async Task<IEnumerable<MetasysObject>> GetSpacesAsync(string type = null)
         {
-            List<MetasysObject> spaces = new List<MetasysObject>() { };
+            return await processPagedRequestAsync("spaces", type);      
+        }
+
+        /// <summary>
+        /// Gets all items for the given resource asynchronously by requesting each available page.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="type">Optional type number as a string</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        private async Task<IEnumerable<MetasysObject>> processPagedRequestAsync(string resource, string type = null)
+        {
+            List<MetasysObject> items = new List<MetasysObject>() { };
             bool hasNext = true;
             int page = 1;
 
             while (hasNext)
             {
                 hasNext = false;
-                var response = await GetSpacesRequestAsync(type, page).ConfigureAwait(false);
+                var response = await pagedRequestAsync(resource, type, page).ConfigureAwait(false);
                 try
                 {
                     var total = response["total"].Value<int>();
@@ -1220,7 +1193,7 @@ namespace JohnsonControls.Metasys.BasicServices
                             try
                             {
                                 MetasysObject space = new MetasysObject(item);
-                                spaces.Add(space);
+                                items.Add(space);
                             }
                             catch (MetasysObjectException e)
                             {
@@ -1240,38 +1213,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     throw new MetasysHttpParsingException(response.ToString(), e);
                 }
             }
-            return spaces;
-        }
-
-        /// <summary>
-        /// Gets all spaces asynchronously.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="page"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        private async Task<JToken> GetSpacesRequestAsync(string type, int page = 1)
-        {
-            Url url = new Url("spaces");
-            url.SetQueryParam("page", page);
-            if (type != null)
-            {
-                url.SetQueryParam("type", type);
-            }
-
-            try
-            {
-                var response = await Client.Request(url)
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
-
-                return response;
-            }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-
-            return null;
+            return items;
         }
 
         public IEnumerable<MetasysObjectType> GetSpacesTypes()
@@ -1284,14 +1226,22 @@ namespace JohnsonControls.Metasys.BasicServices
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets all equipment by requesting each available page.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<MetasysObject> GetEquipment()
         {
-            throw new NotImplementedException();
+            return GetEquipmentAsync().GetAwaiter().GetResult();
         }
 
-        public Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
+        /// <summary>
+        ///  Gets all equipment asynchronously by requesting each available page.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
         {
-            throw new NotImplementedException();
+            return await processPagedRequestAsync("equipment");
         }
     }
 }

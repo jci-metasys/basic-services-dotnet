@@ -37,7 +37,7 @@ namespace MetasysServicesExampleApp
             Console.WriteLine($"Access token: {token.Token} expires {token.Expires}.");
 
             #endregion
-
+            /*
             #region Refresh
 
             Console.WriteLine("\nRefreshing Token...");
@@ -253,7 +253,7 @@ namespace MetasysServicesExampleApp
             }
 
             #endregion
-
+    */
             #region GetSpaces
 
             Console.WriteLine("\n\nGetSpaces...");
@@ -261,7 +261,19 @@ namespace MetasysServicesExampleApp
             IEnumerable<MetasysObject> spaces = client.GetSpaces();
             foreach (var space in spaces)
             {
-                Console.WriteLine($"\nAvailable Space {space.Id}: {space.Name}, {space.ItemReference}");                      
+                Console.WriteLine($"\n{space.Id}: {space.Name}, {space.ItemReference}");                      
+            }
+
+            #endregion
+
+            #region GetEquipment
+
+            Console.WriteLine("\n\nGetEquipment...");
+
+            IEnumerable<MetasysObject> equipment = client.GetEquipment();
+            foreach (var equip in equipment)
+            {
+                Console.WriteLine($"\n{equip.Id}: {equip.Name}, {equip.ItemReference}");
             }
 
             #endregion
