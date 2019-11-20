@@ -37,7 +37,7 @@ namespace MetasysServicesExampleApp
             Console.WriteLine($"Access token: {token.Token} expires {token.Expires}.");
 
             #endregion
-            /*
+            
             #region Refresh
 
             Console.WriteLine("\nRefreshing Token...");
@@ -59,10 +59,10 @@ namespace MetasysServicesExampleApp
             Console.WriteLine("\n\nGetObjectIdentifier...");
 
             // These variables are needed to run the other sections
-            Guid id1 = client.GetObjectIdentifier(object1).Value;
+            Guid id1 = client.GetObjectIdentifier(object1);
             Console.WriteLine($"{object1} id: {id1}");
 
-            Guid id2 = client.GetObjectIdentifier(object2).Value;
+            Guid id2 = client.GetObjectIdentifier(object2);
             Console.WriteLine($"{object2} id: {id2}");
 
             List<Guid> ids = new List<Guid>() { id1, id2 };
@@ -253,7 +253,7 @@ namespace MetasysServicesExampleApp
             }
 
             #endregion
-    */
+    
             #region GetSpaces
 
             Console.WriteLine("\n\nGetSpaces...");

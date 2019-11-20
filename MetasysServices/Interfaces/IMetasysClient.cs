@@ -160,17 +160,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Gets all spaces asynchronously.
         /// </summary>
         Task<IEnumerable<MetasysObject>> GetSpacesAsync(string type = null);
-
-        /// <summary>
-        /// Gets all available space types.
-        /// </summary>
-        IEnumerable<MetasysObjectType> GetSpacesTypes();
-
-        /// <summary>
-        /// Gets all available space types asynchronously.
-        /// </summary>
-        Task<IEnumerable<MetasysObjectType>> GetSpacesTypesAsync();
-
+     
         /// <summary>
         /// Gets all equipment.
         /// </summary>

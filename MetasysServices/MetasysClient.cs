@@ -1228,16 +1228,6 @@ namespace JohnsonControls.Metasys.BasicServices
             return items;
         }
 
-        public IEnumerable<MetasysObjectType> GetSpacesTypes()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<MetasysObjectType>> GetSpacesTypesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Gets all equipment by requesting each available page.
         /// </summary>
