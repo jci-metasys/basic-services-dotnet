@@ -285,7 +285,7 @@ namespace Tests
         {
             httpTest.RespondWith($"\"{mockid.ToString()}\"");
 
-            var id = await client.GetObjectIdentifierAsync("fully:qualified/reference").ConfigureAwait(false);
+            var id = await client.GetObjectIdentifierAsync("fully:qualified/reference1").ConfigureAwait(false);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
@@ -299,7 +299,7 @@ namespace Tests
             AsyncContext.Run(() =>
             {
                 httpTest.RespondWith($"\"{mockid.ToString()}\"");
-                var id = client.GetObjectIdentifier("fully:qualified/reference");
+                var id = client.GetObjectIdentifier("fully:qualified/reference2");
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
@@ -313,7 +313,7 @@ namespace Tests
             httpTest.RespondWith("Bad Request", 400);
 
             var e = Assert.Throws<MetasysHttpException>(() =>
-                client.GetObjectIdentifier("fully:qualified/reference"));
+                client.GetObjectIdentifier("fully:qualified/reference3"));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
@@ -327,7 +327,7 @@ namespace Tests
             httpTest.RespondWith($"\"{mockid.ToString()}1\"");
 
             var e = Assert.Throws<MetasysGuidException>(() =>
-                client.GetObjectIdentifier("fully:qualified/reference"));
+                client.GetObjectIdentifier("fully:qualified/reference4"));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
@@ -343,7 +343,7 @@ namespace Tests
             httpTest.RespondWith("null");
 
             var e = Assert.Throws<MetasysGuidException>(() =>
-                client.GetObjectIdentifier("fully:qualified/reference"));
+                client.GetObjectIdentifier("fully:qualified/reference5"));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
@@ -359,7 +359,7 @@ namespace Tests
             httpTest.RespondWith("Unauthorized", 401);
 
             var e = Assert.Throws<MetasysHttpException>(() =>
-                client.GetObjectIdentifier("fully:qualified/reference"));
+                client.GetObjectIdentifier("fully:qualified/reference6"));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
@@ -2211,6 +2211,22 @@ namespace Tests
             PrintMessage($"TestGetEquipmentUnauthorizedThrowsException: {e.Message}", true);
         }
 
+        #endregion
+
+        #region Caching
+
+        [Test]
+        public async Task TestGetObjectIdentifierCaching() {
+            httpTest.RespondWith($"\"{mockid.ToString()}\"");
+            var id = await client.GetObjectIdentifierAsync("fully:qualified/cache-reference").ConfigureAwait(false);                     
+            Assert.AreEqual(mockid, id);
+            // First call is expected to perform an Http Request, second an subsequent calls are expected to retrieve value from dictionary cache
+            id=await client.GetObjectIdentifierAsync("fully:qualified/cache-reference").ConfigureAwait(false);
+            Assert.AreEqual(mockid, id);
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+        }
         #endregion
 
         #region miscellaneous

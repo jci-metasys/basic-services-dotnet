@@ -45,6 +45,11 @@ namespace JohnsonControls.Metasys.BasicServices
         private static CultureInfo CultureEnUS = new CultureInfo(1033);
 
         /// <summary>
+        /// Stores retrieved Ids and serves as an in-memory caching layer
+        /// </summary>
+        protected Dictionary<string, Guid> IdentifiersDictionary = new Dictionary<string, Guid>();
+
+        /// <summary>
         /// Creates a new MetasysClient.
         /// </summary>
         /// <remarks>
@@ -439,7 +444,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="itemReference"></param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysGuidException"></exception>
-        public Guid? GetObjectIdentifier(string itemReference)
+        public Guid GetObjectIdentifier(string itemReference)
         {
             return GetObjectIdentifierAsync(itemReference).GetAwaiter().GetResult();
         }
@@ -448,7 +453,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Given the Item Reference of an object, returns the object identifier asynchronously.
         /// </summary>
         /// <remarks>
-        /// The itemReference will be automatically URL encoded.
+        /// The itemReference will be automatically URL encoded. 
+        /// For repeated requests will be returned the in-line value.
         /// </remarks>
         /// <param name="itemReference"></param>
         /// <returns>
@@ -456,22 +462,28 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </returns>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysGuidException"></exception>
-        public async Task<Guid?> GetObjectIdentifierAsync(string itemReference)
+        public async Task<Guid> GetObjectIdentifierAsync(string itemReference)
         {
-            try
+            // Sanitize given itemReference
+            var normalizedItemReference = itemReference.Trim().ToUpper();
+            // Returns cached value when available, otherwise perform request         
+            if (!IdentifiersDictionary.ContainsKey(normalizedItemReference))
             {
-                var response = await Client.Request("objectIdentifiers")
-                    .SetQueryParam("fqr", itemReference)
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
-
-                return ParseObjectIdentifier(response);
+                try
+                {
+                    var response = await Client.Request("objectIdentifiers")
+                        .SetQueryParam("fqr", itemReference)
+                        .GetJsonAsync<JToken>()
+                        .ConfigureAwait(false);
+                    // Stores value for caching and return
+                    IdentifiersDictionary[normalizedItemReference] = ParseObjectIdentifier(response);
+                }
+                catch (FlurlHttpException e)
+                {
+                    ThrowHttpException(e);
+                }
             }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-            return null;
+            return IdentifiersDictionary[normalizedItemReference];
         }
 
         /// <summary>

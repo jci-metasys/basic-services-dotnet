@@ -46,12 +46,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Given the Item Reference of an object, returns the object identifier.
         /// </summary>
-        Guid? GetObjectIdentifier(string itemReference);
+        Guid GetObjectIdentifier(string itemReference);
 
         /// <summary>
         /// Given the Item Reference of an object, returns the object identifier asynchronously.
         /// </summary>
-        Task<Guid?> GetObjectIdentifierAsync(string itemReference);
+        Task<Guid> GetObjectIdentifierAsync(string itemReference);
 
         /// <summary>
         /// Read one attribute value given the Guid of the object.

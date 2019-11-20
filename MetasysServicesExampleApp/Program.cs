@@ -276,7 +276,7 @@ namespace MetasysServicesExampleApp
                 Console.WriteLine($"\n{equip.Id}: {equip.Name}, {equip.ItemReference}");
             }
 
-            #endregion
+            #endregion          
         }
     }
 }
