@@ -12,11 +12,13 @@ namespace MetasysServicesExampleApp
     {
         static void Main(string[] args)
         {
+            string connectionDetails = null;
             if (args.Length != 3)
             {
-                Console.WriteLine("Please enter in your credentials as arguments: username password hostname." +
-                    "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
-                return;
+                Console.WriteLine("Please enter in your credentials in this format: {username} {password} {hostname}." +
+                    "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");                
+                connectionDetails = Console.ReadLine();
+                args = connectionDetails.Split(' ');
             }
 
             var username = args[0];
