@@ -2072,6 +2072,112 @@ namespace Tests
 
         #endregion
 
+        #region GetSpaceTypes Tests
+
+        [Test]
+        public void TestGetSpaceTypesNone()
+        {
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 0,",
+                "\"items\": [ ],",
+                "\"self\": \"https://hostname/api/V2/enumSets/1766\"}"));
+
+            var types = client.GetSpaceTypes();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            Assert.AreEqual(0, types.Count());
+        }
+
+        [Test]
+        public void TestGetSpaceTypesOne()
+        {
+            var item = string.Concat("{",
+                    "\"id\": 3,",
+                    "\"description\": \"Room\",",
+                    "\"self\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                    "\"setUrl\": \"https://hostname/api/V2/enumSets/1766\"}");
+            httpTest
+                .RespondWith(string.Concat("{",
+                    "\"total\": 1,",
+                    $"\"items\": [{item}],",
+                    "\"self\": \"https://hostname/api/V2/enumSet/1766\"}"));               
+
+            var types = client.GetSpaceTypes();
+
+            MetasysObjectType expected = new MetasysObjectType(3, "Room",
+                "Room", testCulture);
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);         
+            Assert.AreEqual(expected, types.ElementAt(0));
+        }
+
+        [Test]
+        public void TestGetSpaceTypesMany()
+        {
+            var item1 = string.Concat("{",
+                      "\"id\": 3,",
+                      "\"description\": \"Room\",",
+                      "\"self\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                      "\"setUrl\": \"https://hostname/api/V2/enumSets/1766\"}");
+            var item2 = string.Concat("{",
+                      "\"id\": 2,",
+                      "\"description\": \"Floor\",",
+                      "\"self\": \"https://hostname/api/V2/enumSets/1766/members/2\",",
+                      "\"setUrl\": \"https://hostname/api/V2/enumSets/1766\"}");
+            httpTest
+                .RespondWith(string.Concat("{",
+                    "\"total\": 2,",
+                    $"\"items\": [{item1},{item2}],",
+                    "\"self\": \"https://hostname/api/V2/enumSet/1766\"}"));
+
+            var types = client.GetSpaceTypes();
+
+            MetasysObjectType expected1 = new MetasysObjectType(3, "Room",
+               "Room", testCulture);
+            MetasysObjectType expected2 = new MetasysObjectType(2, "Floor",
+                "Floor", testCulture);
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            Assert.AreEqual(expected1, types.ElementAt(0));
+            Assert.AreEqual(expected2, types.ElementAt(1));
+        }
+
+        [Test]
+        public void TestGetSpaceTypesNotFoundThrowsException()
+        {
+            httpTest               
+                .RespondWith("No HTTP resource was found that matches the request URI.", 404);
+
+            var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
+                client.GetSpaceTypes());
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);        
+            PrintMessage($"TestGetSpaceTypesNotFoundThrowsException: {e.Message}", true);
+        }
+
+        [Test]
+        public void TestGetSpaceTypesUnauthorizedThrowsException()
+        {
+            httpTest.RespondWith("Unauthorized", 401);
+
+            var e = Assert.Throws<MetasysHttpException>(() =>
+                client.GetSpaceTypes());
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            
+            PrintMessage($"TestGetSpaceTypesUnauthorizedThrowsException: {e.Message}", true);
+        }
+
+        #endregion
+
         #region GetEquipment Tests
 
         [Test]

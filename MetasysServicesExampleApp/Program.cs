@@ -12,7 +12,7 @@ namespace MetasysServicesExampleApp
     {
         static void Main(string[] args)
         {
-            string connectionDetails = null;
+            string connectionDetails;
             if (args.Length != 3)
             {
                 Console.WriteLine("Please enter in your credentials in this format: {username} {password} {hostname}." +
@@ -47,6 +47,9 @@ namespace MetasysServicesExampleApp
             Console.WriteLine($"Access token: {token.Token} expires {token.Expires}.");
 
             #endregion
+            
+
+            #region GetObjectIdentifier
 
             Console.WriteLine("\nIndicate the object you want to run this example code on.");
             Console.Write("Enter the fully qualified reference of the object (Example: \"site:device/itemReference\"): ");
@@ -55,8 +58,6 @@ namespace MetasysServicesExampleApp
             Console.WriteLine("\nIndicate the second object you want to run this example code on.");
             Console.Write("Enter the fully qualified reference of the object: ");
             string object2 = Console.ReadLine();
-
-            #region GetObjectIdentifier
 
             Console.WriteLine("\n\nGetObjectIdentifier...");
 
@@ -255,15 +256,23 @@ namespace MetasysServicesExampleApp
             }
 
             #endregion
-    
+
             #region GetSpaces
 
             Console.WriteLine("\n\nGetSpaces...");
 
-            IEnumerable<MetasysObject> spaces = client.GetSpaces();
-            foreach (var space in spaces)
+            IEnumerable<MetasysObjectType> spaceTypes = client.GetSpaceTypes();
+            foreach (var type in spaceTypes)
             {
-                Console.WriteLine($"\n{space.Id}: {space.Name}, {space.ItemReference}");                      
+                Console.WriteLine($"\nType {type.Id}: {type.Description}, ");
+                string typeId = type.Id.ToString();
+                IEnumerable<MetasysObject> spaces = client.GetSpaces(typeId);
+                Console.WriteLine($"Spaces found: {spaces.Count()}");
+                foreach (var space in spaces)
+                {
+                    Console.WriteLine($"\n{space.Id}: {space.Name}, {space.ItemReference}");
+                }
+
             }
 
             #endregion

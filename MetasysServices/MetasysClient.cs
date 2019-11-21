@@ -215,7 +215,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 SetEnumerationDictionaries();
             }
 
-            foreach(var dict in ObjectTypeEnumerations)
+            foreach (var dict in ObjectTypeEnumerations)
             {
                 if (dict.TryGetValue(resource, out string value))
                 {
@@ -273,7 +273,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         /// <exception cref="MetasysHttpTimeoutException"></exception>
         /// <exception cref="MetasysHttpException"></exception>
-        private void ThrowHttpException(Flurl.Http.FlurlHttpException e)
+        protected void ThrowHttpException(Flurl.Http.FlurlHttpException e)
         {
             if (e.Call.Response.StatusCode == HttpStatusCode.NotFound)
             {
@@ -473,7 +473,7 @@ namespace JohnsonControls.Metasys.BasicServices
             // Returns cached value when available, otherwise perform request         
             if (!IdentifiersDictionary.ContainsKey(normalizedItemReference))
             {
-                JToken response=null;
+                JToken response = null;
                 try
                 {
                     response = await Client.Request("objectIdentifiers")
@@ -485,8 +485,9 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
                 catch (FlurlHttpException e)
                 {
-                    if (e.Call.HttpStatus== HttpStatusCode.BadRequest && response != null && response["message"] != null 
-                        && response["message"].Value<string>().Contains("not found")) {
+                    if (e.Call.HttpStatus == HttpStatusCode.BadRequest && response != null && response["message"] != null
+                        && response["message"].Value<string>().Contains("not found"))
+                    {
                         // Metasys respond with "Identifier is not found." message, so make exception explicit
                         throw new MetasysHttpNotFoundException(e);
                     }
@@ -502,7 +503,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="token"></param>
         /// <exception cref="MetasysGuidException"></exception>
         /// <returns>A Guid representation of the JToken.</returns>
-        private Guid ParseObjectIdentifier(JToken token)
+        protected Guid ParseObjectIdentifier(JToken token)
         {
             string str = null;
             try
@@ -511,7 +512,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var id = new Guid(str);
                 return id;
             }
-            catch (Exception e) when (e is System.ArgumentNullException || 
+            catch (Exception e) when (e is System.ArgumentNullException ||
                 e is System.ArgumentException || e is System.FormatException)
             {
                 throw new MetasysGuidException(str, e);
@@ -551,7 +552,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysPropertyException"></exception>
         public async Task<Variant> ReadPropertyAsync(Guid id, string attributeName)
         {
-            JToken response = null; Variant result=new Variant();
+            JToken response = null; Variant result = new Variant();
             try
             {
                 response = await Client.Request(new Url("objects")
@@ -559,10 +560,10 @@ namespace JohnsonControls.Metasys.BasicServices
                     .GetJsonAsync<JToken>()
                     .ConfigureAwait(false);
                 var attribute = response["item"][attributeName];
-                result=new Variant(id, attribute, attributeName, Culture);
+                result = new Variant(id, attribute, attributeName, Culture);
             }
             catch (FlurlHttpException e)
-            {               
+            {
                 ThrowHttpException(e);
             }
             catch (System.NullReferenceException e)
@@ -579,30 +580,30 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeName"></param>
         /// <param name="suppressNotFoundException"></param>
         /// <returns></returns>
-        protected async Task<Variant?> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException=true)
+        protected async Task<Variant?> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException = true)
         {
             try
             {
                 return await ReadPropertyAsync(id, attributeName);
             }
-            catch(MetasysHttpNotFoundException) when (suppressNotFoundException)
+            catch (MetasysHttpNotFoundException) when (suppressNotFoundException)
             {
                 return null;
             }
         }
 
-            /// <summary>
-            /// Read many attribute values given the Guids of the objects.
-            /// </summary>
-            /// <returns>
-            /// A list of VariantMultiple with all the specified attributes (if existing).        
-            /// </returns>
-            /// <param name="ids"></param>
-            /// <param name="attributeNames"></param>        
-            /// <exception cref="MetasysHttpException"></exception>
-            /// <exception cref="MetasysPropertyException"></exception>
-            public IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids,
-            IEnumerable<string> attributeNames)
+        /// <summary>
+        /// Read many attribute values given the Guids of the objects.
+        /// </summary>
+        /// <returns>
+        /// A list of VariantMultiple with all the specified attributes (if existing).        
+        /// </returns>
+        /// <param name="ids"></param>
+        /// <param name="attributeNames"></param>        
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysPropertyException"></exception>
+        public IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids,
+        IEnumerable<string> attributeNames)
         {
             return ReadPropertyMultipleAsync(ids, attributeNames).GetAwaiter().GetResult();
         }
@@ -635,7 +636,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 foreach (string attributeName in attributeNames)
                 {
                     // Much faster reading single property than the entire object, even though we have more server calls
-                    taskList.Add(ReadPropertyAsync(id, attributeName,true)); // Using internal signature with exception suppress
+                    taskList.Add(ReadPropertyAsync(id, attributeName, true)); // Using internal signature with exception suppress
                 }
             }
             await Task.WhenAll(taskList).ConfigureAwait(false);
@@ -904,7 +905,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
-            return await processPagedRequestAsync("networkDevices", type);
+            return await ProcessPagedRequestAsync("networkDevices", type);
         }
 
         /// <summary>
@@ -914,7 +915,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="type"></param>
         /// <param name="page"></param>
         /// <exception cref="MetasysHttpException"></exception>
-        private async Task<JToken> pagedRequestAsync(string resource, string type=null, int page = 1)
+        protected async Task<JToken> PagedRequestAsync(string resource, string type = null, int page = 1)
         {
             Url url = new Url(resource);
             url.SetQueryParam("page", page);
@@ -953,19 +954,27 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets all available network device types asynchronously.
         /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync()
+        {
+            return await GetResourceTypesAsync("networkDevices", "availableTypes");
+        }
+
+        /// <summary>
+        /// Gets all resource types asynchronously.
+        /// </summary>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        public async Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync()
+        public async Task<IEnumerable<MetasysObjectType>> GetResourceTypesAsync(string resource, string pathSegment)
         {
             List<MetasysObjectType> types = new List<MetasysObjectType>() { };
 
             try
             {
-                var response = await Client.Request(new Url("networkDevices")
-                    .AppendPathSegment("availableTypes"))
+                var response = await Client.Request(new Url(resource)
+                    .AppendPathSegment(pathSegment))
                     .GetJsonAsync<JToken>()
                     .ConfigureAwait(false);
-
                 try
                 {
                     // The response is a list of typeUrls, not the type data
@@ -974,11 +983,15 @@ namespace JohnsonControls.Metasys.BasicServices
                     {
                         try
                         {
-                            var type = await GetType(item).ConfigureAwait(false);
-                            if (type != null)
+                            JToken typeToken = item;
+                            // Retrieve type token from url (when available) and construct Metasys Object Type
+                            if (item["typeUrl"] != null)
                             {
-                                types.Add(type.Value);
+                                var url = item["typeUrl"].Value<string>();
+                                typeToken = await GetWithFullUrl(url).ConfigureAwait(false);
                             }
+                            var type = GetType(typeToken);
+                            types.Add(type);
                         }
                         catch (System.ArgumentNullException e)
                         {
@@ -995,24 +1008,19 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 ThrowHttpException(e);
             }
-
             return types;
         }
 
         /// <summary>
-        /// Gets the type from a token with a typeUrl by requesting the actual description asynchronously.
+        /// Gets the type from a token retrieved from a typeUrl 
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="typeToken"></param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysObjectTypeException"></exception>
-        private async Task<MetasysObjectType?> GetType(JToken item)
+        protected MetasysObjectType GetType(JToken typeToken)
         {
-            JToken typeToken = null;
             try
             {
-                var url = item["typeUrl"].Value<string>();
-                typeToken = await GetWithFullUrl(url).ConfigureAwait(false);
-
                 string description = typeToken["description"].Value<string>();
                 int id = typeToken["id"].Value<int>();
                 string key = GetObjectTypeEnumeration(description);
@@ -1122,7 +1130,7 @@ namespace JohnsonControls.Metasys.BasicServices
                                         {
                                             children = await GetObjectsAsync(objId, levels - 1).ConfigureAwait(false);
                                         }
-                                        catch (Exception e) when (e is MetasysObjectException || 
+                                        catch (Exception e) when (e is MetasysObjectException ||
                                             e is MetasysHttpParsingException)
                                         {
                                             throw new MetasysObjectException(e);
@@ -1205,7 +1213,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         public async Task<IEnumerable<MetasysObject>> GetSpacesAsync(string type = null)
         {
-            return await processPagedRequestAsync("spaces", type);      
+            return await ProcessPagedRequestAsync("spaces", type);
         }
 
         /// <summary>
@@ -1215,7 +1223,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="type">Optional type number as a string</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        private async Task<IEnumerable<MetasysObject>> processPagedRequestAsync(string resource, string type = null)
+        protected async Task<IEnumerable<MetasysObject>> ProcessPagedRequestAsync(string resource, string type = null)
         {
             List<MetasysObject> items = new List<MetasysObject>() { };
             bool hasNext = true;
@@ -1224,7 +1232,7 @@ namespace JohnsonControls.Metasys.BasicServices
             while (hasNext)
             {
                 hasNext = false;
-                var response = await pagedRequestAsync(resource, type, page).ConfigureAwait(false);
+                var response = await PagedRequestAsync(resource, type, page).ConfigureAwait(false);
                 try
                 {
                     var total = response["total"].Value<int>();
@@ -1274,7 +1282,25 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
         {
-            return await processPagedRequestAsync("equipment");
+            return await ProcessPagedRequestAsync("equipment");
+        }
+
+        /// <summary>
+        /// Gets all space types.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<MetasysObjectType> GetSpaceTypes()
+        {
+            return GetSpaceTypesAsync().GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Gets all space types asynchronously.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<MetasysObjectType>> GetSpaceTypesAsync()
+        {
+            return await GetResourceTypesAsync("enumSets", "1766/members");
         }
     }
 }
