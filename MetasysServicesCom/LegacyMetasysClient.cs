@@ -83,12 +83,15 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="id"></param>
         /// <param name="attributeName"></param>        
         /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpTimeoutException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <exception cref="MetasysHttpNotFoundException"></exception>
         /// <exception cref="MetasysPropertyException"></exception>
         public IComVariant ReadProperty(string id, string attributeName)
         {
             // Parse Id and generate GUID
             Guid guid = new Guid(id);
-            var response = Client.ReadProperty(guid, attributeName).Value;
+            var response = Client.ReadProperty(guid, attributeName);
             return Mapper.Map<IComVariant>(response);
         }
 

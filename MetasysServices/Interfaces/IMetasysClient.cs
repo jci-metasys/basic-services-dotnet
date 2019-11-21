@@ -56,12 +56,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Read one attribute value given the Guid of the object.
         /// </summary>
-        Variant? ReadProperty(Guid id, string attributeName);
+        Variant ReadProperty(Guid id, string attributeName);
 
         /// <summary>
         /// Read one attribute value given the Guid of the object asynchronously.
         /// </summary>
-        Task<Variant?> ReadPropertyAsync(Guid id, string attributeName);
+        Task<Variant> ReadPropertyAsync(Guid id, string attributeName);
 
         /// <summary>
         /// Read many attribute values given the Guids of the objects.

@@ -129,6 +129,21 @@ namespace JohnsonControls.Metasys.BasicServices
     }
 
     /// <summary>
+    /// An exception that is thrown when a resource is not found
+    /// </summary>
+    [System.Serializable]
+    public class MetasysHttpNotFoundException : MetasysHttpException
+    {
+        /// <summary>
+        /// Initializes a new instance of the MetasysNotFoundException
+        /// </summary>         
+        /// <param name="inner"></param>
+        public MetasysHttpNotFoundException(Flurl.Http.FlurlHttpException inner) :
+            base(inner)
+        { }
+    }
+
+    /// <summary>
     /// An exception that is thrown when an AccessToken could not be created from a Http response.
     /// </summary>
     [System.Serializable]

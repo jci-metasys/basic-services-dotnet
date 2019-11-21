@@ -84,8 +84,8 @@ namespace MetasysServicesExampleApp
 
             Console.WriteLine($"Get {attribute1} property...");
 
-            Variant result1Attr1 = client.ReadProperty(id1, attribute1).Value;
-            Variant result2Attr1  = client.ReadProperty(id2, attribute1).Value;
+            Variant result1Attr1 = client.ReadProperty(id1, attribute1);
+            Variant result2Attr1  = client.ReadProperty(id2, attribute1);
 
             Console.WriteLine($"{result1Attr1.Id} {result1Attr1.Attribute} values (string, int, bool, reliability): " +
                 $"\n{result1Attr1.StringValue}, {result1Attr1.NumericValue}, {result1Attr1.BooleanValue}, {result1Attr1.Reliability}");
@@ -124,8 +124,8 @@ namespace MetasysServicesExampleApp
             object change = Console.ReadLine();
 
             // Get original values, this code will throw an exception if the 
-            Variant result1Attr3 = client.ReadProperty(id1, attribute3).Value;
-            Variant result2Attr3 = client.ReadProperty(id2, attribute3).Value;
+            Variant result1Attr3 = client.ReadProperty(id1, attribute3);
+            Variant result2Attr3 = client.ReadProperty(id2, attribute3);
             Console.WriteLine($"{result1Attr3.Id} {result1Attr3.Attribute} original value: {result1Attr3.StringValue}");
             Console.WriteLine($"{result2Attr3.Id} {result2Attr3.Attribute} original value: {result2Attr3.StringValue}");
 
@@ -133,29 +133,29 @@ namespace MetasysServicesExampleApp
 
             // Change value
             client.WriteProperty(id1, attribute3, change);
-            System.Threading.Thread.Sleep(3000);
+            System.Threading.Thread.Sleep(1000);
 
             // View changes
-            Variant result1Attr3Updated = client.ReadProperty(id1, attribute3).Value;
+            Variant result1Attr3Updated = client.ReadProperty(id1, attribute3);
             Console.WriteLine($"{result1Attr3Updated.Id} {result1Attr3Updated.Attribute} updated value: {result1Attr3Updated.StringValue}");
 
             // Reset value
             client.WriteProperty(id1, attribute3, result1Attr3.StringValue);
-            System.Threading.Thread.Sleep(3000);
+            System.Threading.Thread.Sleep(1000);
 
             Console.WriteLine("\nWrite Property Multiple...");
 
             // Change value
             List<(string, object)> attributes2 = new List<(string, object)>() { (attribute3, change) };
             client.WritePropertyMultiple(ids, attributes2);
-            System.Threading.Thread.Sleep(3000);
+            System.Threading.Thread.Sleep(1000);
             
             // View changes
-            Variant result1Attr3UpdatedM = client.ReadProperty(id1, attribute3).Value;
-            Variant result2Attr3UpdatedM = client.ReadProperty(id2, attribute3).Value;
+            Variant result1Attr3UpdatedM = client.ReadProperty(id1, attribute3);
+            Variant result2Attr3UpdatedM = client.ReadProperty(id2, attribute3);
             Console.WriteLine($"{result1Attr3UpdatedM.Id} {result1Attr3UpdatedM.Attribute} updated value: {result1Attr3UpdatedM.StringValue}");
             Console.WriteLine($"{result2Attr3UpdatedM.Id} {result2Attr3UpdatedM.Attribute} updated value: {result2Attr3UpdatedM.StringValue}");
-            System.Threading.Thread.Sleep(3000);
+            System.Threading.Thread.Sleep(1000);
             
             // Reset Values
             client.WriteProperty(id1, attribute3, result1Attr3.StringValue);

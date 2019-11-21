@@ -275,6 +275,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         private void ThrowHttpException(Flurl.Http.FlurlHttpException e)
         {
+            if (e.Call.Response.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new MetasysHttpNotFoundException(e);
+            }
             if (e.GetType() == typeof(Flurl.Http.FlurlParsingException))
             {
                 throw new MetasysHttpParsingException((Flurl.Http.FlurlParsingException)e);
@@ -469,9 +473,10 @@ namespace JohnsonControls.Metasys.BasicServices
             // Returns cached value when available, otherwise perform request         
             if (!IdentifiersDictionary.ContainsKey(normalizedItemReference))
             {
+                JToken response=null;
                 try
                 {
-                    var response = await Client.Request("objectIdentifiers")
+                    response = await Client.Request("objectIdentifiers")
                         .SetQueryParam("fqr", itemReference)
                         .GetJsonAsync<JToken>()
                         .ConfigureAwait(false);
@@ -480,6 +485,11 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
                 catch (FlurlHttpException e)
                 {
+                    if (e.Call.HttpStatus== HttpStatusCode.BadRequest && response != null && response["message"] != null 
+                        && response["message"].Value<string>().Contains("not found")) {
+                        // Metasys respond with "Identifier is not found." message, so make exception explicit
+                        throw new MetasysHttpNotFoundException(e);
+                    }
                     ThrowHttpException(e);
                 }
             }
@@ -517,8 +527,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="attributeName"></param>        
         /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpTimeoutException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <exception cref="MetasysHttpNotFoundException"></exception>
         /// <exception cref="MetasysPropertyException"></exception>
-        public Variant? ReadProperty(Guid id, string attributeName)
+        public Variant ReadProperty(Guid id, string attributeName)
         {
             return ReadPropertyAsync(id, attributeName).GetAwaiter().GetResult();
         }
@@ -532,10 +545,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Asynchronous Task Result as Variant if the attribute exists, null if does not exist.
         /// </returns>
         /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpTimeoutException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <exception cref="MetasysHttpNotFoundException"></exception>
         /// <exception cref="MetasysPropertyException"></exception>
-        public async Task<Variant?> ReadPropertyAsync(Guid id, string attributeName)
+        public async Task<Variant> ReadPropertyAsync(Guid id, string attributeName)
         {
-            JToken response = null;
+            JToken response = null; Variant result=new Variant();
             try
             {
                 response = await Client.Request(new Url("objects")
@@ -543,35 +559,49 @@ namespace JohnsonControls.Metasys.BasicServices
                     .GetJsonAsync<JToken>()
                     .ConfigureAwait(false);
                 var attribute = response["item"][attributeName];
-                return new Variant(id, attribute, attributeName, Culture);
+                result=new Variant(id, attribute, attributeName, Culture);
             }
             catch (FlurlHttpException e)
-            {
-                // Just return null when object is not found, for all other responses an exception is raised
-                if (e.Call.Response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return null;
-                }
+            {               
                 ThrowHttpException(e);
             }
             catch (System.NullReferenceException e)
             {
                 throw new MetasysPropertyException(response.ToString(), e);
             }
-            return null;
+            return result;
         }
 
         /// <summary>
-        /// Read many attribute values given the Guids of the objects.
+        /// Overload of ReadPropertyAsync for internal use where Exception suppress is needed, e.g. ReadPropertyMultiple 
         /// </summary>
-        /// <returns>
-        /// A list of VariantMultiple with all the specified attributes (if existing).        
-        /// </returns>
-        /// <param name="ids"></param>
-        /// <param name="attributeNames"></param>        
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysPropertyException"></exception>
-        public IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids,
+        /// <param name="id"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="suppressNotFoundException"></param>
+        /// <returns></returns>
+        protected async Task<Variant?> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException=true)
+        {
+            try
+            {
+                return await ReadPropertyAsync(id, attributeName);
+            }
+            catch(MetasysHttpNotFoundException) when (suppressNotFoundException)
+            {
+                return null;
+            }
+        }
+
+            /// <summary>
+            /// Read many attribute values given the Guids of the objects.
+            /// </summary>
+            /// <returns>
+            /// A list of VariantMultiple with all the specified attributes (if existing).        
+            /// </returns>
+            /// <param name="ids"></param>
+            /// <param name="attributeNames"></param>        
+            /// <exception cref="MetasysHttpException"></exception>
+            /// <exception cref="MetasysPropertyException"></exception>
+            public IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
             return ReadPropertyMultipleAsync(ids, attributeNames).GetAwaiter().GetResult();
@@ -605,7 +635,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 foreach (string attributeName in attributeNames)
                 {
                     // Much faster reading single property than the entire object, even though we have more server calls
-                    taskList.Add(ReadPropertyAsync(id, attributeName));
+                    taskList.Add(ReadPropertyAsync(id, attributeName,true)); // Using internal signature with exception suppress
                 }
             }
             await Task.WhenAll(taskList).ConfigureAwait(false);
@@ -908,6 +938,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
             return null;
         }
+
 
         /// <summary>
         /// Gets all available network device types.

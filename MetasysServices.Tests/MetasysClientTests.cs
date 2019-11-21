@@ -144,7 +144,7 @@ namespace Tests
             httpTest.RespondWith("Call failed. No such host is known POST https://badhost/api/V2/login", 404);
             MetasysClient clientBad = new MetasysClient("badhost");
 
-            var e = Assert.Throws<MetasysHttpException>(() =>
+            var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
                 clientBad.TryLogin("username", "password"));
 
             httpTest.ShouldHaveCalled($"https://badhost/api/V2/login")
@@ -378,7 +378,7 @@ namespace Tests
             var token = JToken.FromObject(1);
             httpTest.RespondWith(json);
 
-            Variant result = (await client.ReadPropertyAsync(mockid, mockAttributeName).ConfigureAwait(false)).Value;
+            Variant result = (await client.ReadPropertyAsync(mockid, mockAttributeName).ConfigureAwait(false));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -396,7 +396,7 @@ namespace Tests
                 var token = JToken.FromObject(1);
                 httpTest.RespondWith(json);
 
-                Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+                Variant result = client.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -413,7 +413,7 @@ namespace Tests
             var token = JToken.FromObject(1.1);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -429,7 +429,7 @@ namespace Tests
             var token = JToken.FromObject("stringvalue");
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -445,7 +445,7 @@ namespace Tests
             var token = JToken.FromObject(true);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -461,7 +461,7 @@ namespace Tests
             var token = JToken.FromObject(false);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -478,7 +478,7 @@ namespace Tests
             var token = JToken.Parse("{ \"value\": 60 }");
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, "presentValue").Value;
+            Variant result = client.ReadProperty(mockid, "presentValue");
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
@@ -495,7 +495,7 @@ namespace Tests
             var token = JToken.Parse("{ \"value\": \"stringvalue\" }");
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, "presentValue").Value;
+            Variant result = client.ReadProperty(mockid, "presentValue");
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
@@ -515,7 +515,7 @@ namespace Tests
             var token = JToken.Parse(body);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, "presentValue").Value;
+            Variant result = client.ReadProperty(mockid, "presentValue");
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
@@ -535,7 +535,7 @@ namespace Tests
             var token = JToken.Parse(body);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -551,7 +551,7 @@ namespace Tests
             var token = JArray.Parse("[ 0, 1 ]");
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -568,7 +568,7 @@ namespace Tests
             var token = JArray.Parse(body);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -587,7 +587,7 @@ namespace Tests
             var token = JArray.Parse(body);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -603,7 +603,7 @@ namespace Tests
             var token = JToken.Parse("{ }");
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -613,16 +613,17 @@ namespace Tests
         }
 
         [Test]
-        public void TestReadPropertyDoesNotExistDoesNotThrowException()
+        public void TestReadPropertyDoesNotExistThrowsException()
         {
             httpTest.RespondWith("Not Found", 404);
-
-            var result = client.ReadProperty(mockid, mockAttributeName);
+          
+            var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
+              client.ReadProperty(mockid, mockAttributeName));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
-                .Times(1);
-            Assert.AreEqual(null, result);
+                .Times(1);          
+            PrintMessage($"TestReadPropertyDoesNotExistThrowsException: {e.Message}", true);            
         }
 
         [Test]
@@ -1684,7 +1685,7 @@ namespace Tests
                     "\"self\": \"https://hostname/api/V2/networkDevices/availableTypes\"}"))
                 .RespondWith("No HTTP resource was found that matches the request URI.", 404);
 
-            var e = Assert.Throws<MetasysHttpException>(() =>
+            var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
                 client.GetNetworkDeviceTypes());
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices/availableTypes")
