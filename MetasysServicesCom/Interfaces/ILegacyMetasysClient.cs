@@ -10,11 +10,11 @@ namespace JohnsonControls.Metasys.ComServices
     [Guid("B1AF1A67-42A0-4E4A-8A07-97AA53B42D02")]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface ILegacyMetasysClient
-    {
+    {      
         /// <summary>
         /// Attempts to login to the given host.
         /// </summary>
-        void TryLogin(string hostname, string username, string password, bool refresh = true);
+        IComAccessToken TryLogin(string username, string password, bool refresh = true);
         /// <summary>
         /// Read one attribute value given the Guid of the object.
         /// </summary>

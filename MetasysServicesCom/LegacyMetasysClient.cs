@@ -27,8 +27,9 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Creates a new LegacyMetasysClient.
         /// </summary>       
-        public LegacyMetasysClient()
+        internal LegacyMetasysClient(IMetasysClient client)
         {
+            Client = client;
             // Defines a Mapper From Basic Services structure to COM
             Mapper = new MapperConfiguration(cfg =>
             {
@@ -39,23 +40,22 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<VariantMultiple, IComVariantMultiple>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Variants, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.Variants)));
+                cfg.CreateMap<AccessToken, IComAccessToken>();
             }).CreateMapper();
-        }
+        }      
 
         /// <summary>
         /// Attempts to login to the given host.
         /// </summary>
-        /// <returns>Access Token.</returns>
-        /// <param name="hostname"></param>
+        /// <returns>Access Token.</returns>  
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysTokenException"></exception>
-        public void TryLogin(string hostname, string username, string password, bool refresh = true)
-        {
-            Client = new MetasysClient(hostname);
-            Client.TryLogin(username, password,refresh);
+        public IComAccessToken TryLogin(string username, string password, bool refresh = true)
+        {            
+            return Mapper.Map<IComAccessToken>(Client.TryLogin(username, password,refresh));
         }
 
         /// <summary>

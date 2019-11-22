@@ -46,10 +46,10 @@ namespace JohnsonControls.Metasys.ComServices
 
         /// <summary>An array of Variant values.</summary>
         /// <value>Null unless value is an array.</value>
-         IComVariant[] ArrayValue {  set; get; }
+         object ArrayValue {  set; get; } // Note: need a generic object as return type in order to map correctly to VBA type array (can't assign to array error)
 
         /// <summary>The attribute from the Metasys object.</summary>
-         string Attribute {  set; get; }
+        string Attribute {  set; get; }
 
         /// <summary>The id of the Metasys object.</summary>
          string Id {  set; get; }

@@ -31,6 +31,17 @@ namespace JohnsonControls.Metasys.BasicServices
     }
 
     /// <summary>
+    /// An exception that is thrown when the given API version is invalid or not supported
+    /// </summary>
+    [System.Serializable]
+    public class MetasysUnsupportedApiVersion : MetasysException
+    {
+        public MetasysUnsupportedApiVersion(string version):base($"Invalid or not supported Api version ({version})")
+        {
+        }
+    }
+
+    /// <summary>
 	/// An exception that is thrown when a Flurl.Http exception occurs.
 	/// </summary>
     [System.Serializable]
