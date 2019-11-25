@@ -22,6 +22,7 @@ For versioning information see the [changelog](CHANGELOG.md).
   - [Get and Send Commands](#get-and-send-commands)
   - [Get Network Devices and other Objects](#get-network-devices-and-other-objects)
   - [Localization of Metasys Enumerations](#localization-of-metasys-enumerations)
+  - [Spaces and equipment](#spaces-and-equipment)
 - [Usage (COM)](#usage-com)
   - [Creating a Client](#creating-a-client-1)
   - [Login and Access Tokens](#login-and-access-tokens-1)
@@ -295,6 +296,16 @@ Note: If an automatically translated value (such as Variant.StringValue) contain
 
 If the enumeration key is desired over the translated value use the EnumerationKey attribute. For example, the translated Variant.Reliability has the enumeration key under the attribute: Variant.ReliabilityEnumerationKey. See the documentation of each Model for more information.
 
+### Spaces and equipment
+
+To get all available spaces on an object use the GetSpaces method. This method will return a list of MetasysObjects. This accepts an optional type number as a string to filter the response. To get all of the available types on your server use the GetSpaceTypes method which returns a list of MetasysObjectType. To get all of the equipment on your server use the GetEquipment method which returns a list of MetasysObjects.
+```csharp
+List<MetasysObjectType> types = client.GetSpaceTypes().ToList();
+int type1 = types[0].Id;
+List<MetasysObject> spaces = client.GetSpaces(type1.ToString()).ToList();
+List<MetasysObject> equipment = client.GetEquipment().ToList();
+```
+To get the child devices or objects of Spaces and Equipment use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete.
 
 ## Usage (COM)
 

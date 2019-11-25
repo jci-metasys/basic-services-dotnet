@@ -1070,10 +1070,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </remarks>
         /// <param name="id"></param>
         /// <param name="levels">The depth of the children to retrieve.</param>
+        /// <param name="parentResource">The parent resource to retrieve children</param>    
+        /// <param name="childResource">The children resource to get related elements</param>  
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
 
-        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1)
+        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, string parentResource = "objects", string childResource = "objects")
         {
             return GetObjectsAsync(id, levels).GetAwaiter().GetResult();
         }
@@ -1086,10 +1088,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// A level of 1 only retrieves immediate children of the parent object.
         /// </remarks>
         /// <param name="id"></param>
-        /// <param name="levels">The depth of the children to retrieve</param>
+        /// <param name="levels">The depth of the children to retrieve</param>    
+        /// <param name="parentResource">The parent resource to retrieve children</param>    
+        /// <param name="childResource">The children resource to get related elements</param>    
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1)
+        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, string parentResource="objects", string childResource = "objects")
         {
             if (levels < 1)
             {
@@ -1103,12 +1107,7 @@ namespace JohnsonControls.Metasys.BasicServices
             while (hasNext)
             {
                 hasNext = false;
-                var response = await GetObjectsRequestAsync(id, page).ConfigureAwait(false);
-                if (response == null || response.Type == JTokenType.Null || !response.HasValues)
-                {
-                    return null;
-                }
-
+                var response = await GetObjectsRequestAsync(id, page, parentResource, childResource).ConfigureAwait(false);               
                 try
                 {
                     var total = response["total"].Value<int>();
@@ -1163,7 +1162,6 @@ namespace JohnsonControls.Metasys.BasicServices
                     throw new MetasysHttpParsingException(response.ToString(), e);
                 }
             }
-
             return objects;
         }
 
@@ -1173,25 +1171,23 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="page"></param>
         /// <exception cref="MetasysHttpException"></exception>
-        private async Task<JToken> GetObjectsRequestAsync(Guid id, int page = 1)
+        private async Task<JToken> GetObjectsRequestAsync(Guid id, int page = 1, string parentResource = "objects", string childResource="objects" )
         {
-            Url url = new Url("objects")
-                .AppendPathSegments(id, "objects")
+            Url url = new Url(parentResource)
+                .AppendPathSegments(id, childResource)
                 .SetQueryParam("page", page);
-
+            JToken response = null;
             try
             {
-                var response = await Client.Request(url)
+                response = await Client.Request(url)
                 .GetJsonAsync<JToken>()
-                .ConfigureAwait(false);
-
-                return response;
+                .ConfigureAwait(false);                          
             }
             catch (FlurlHttpException e)
             {
                 ThrowHttpException(e);
             }
-            return null;
+            return response;
         }
 
         /// <summary>
@@ -1301,6 +1297,88 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObjectType>> GetSpaceTypesAsync()
         {
             return await GetResourceTypesAsync("enumSets", "1766/members");
+        }
+
+        /// <summary>
+        ///  Gets all Equipment for the given space
+        /// </summary>
+        /// <param name="spaceId"></param>
+        /// <returns></returns>
+        public IEnumerable<MetasysObject> GetSpaceEquipment(Guid spaceId)
+        {
+            return GetSpaceEquipmentAsync(spaceId).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        ///  Gets all Equipment for the given space asynchronously
+        /// </summary>
+        /// <param name="spaceId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
+        {
+            return await GetObjectsAsync(spaceId, parentResource: "spaces", childResource: "equipment");
+        }
+
+        /// <summary>
+        /// Gets all points for the given Equipment
+        /// </summary>
+        /// <param name="equipmentId"></param>
+        /// <returns></returns>
+        public IEnumerable<Point> GetEquipmentPoints(Guid equipmentId)
+        {
+            return GetEquipmentPointsAsync(equipmentId).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Gets all points for the given Equipment asyncronously
+        /// </summary>
+        /// <param name="equipmentId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid equipmentId)
+        {
+            
+            List<Point> points = new List<Point>() { };
+            bool hasNext = true;
+            int page = 1;
+            while (hasNext)
+            {
+                hasNext = false;
+                var response = await GetObjectsRequestAsync(equipmentId, page, "equipment", "points").ConfigureAwait(false);              
+                try
+                {
+                    var total = response["total"].Value<int>();
+                    if (total > 0)
+                    {
+                        var list = response["items"] as JArray;
+
+                        foreach (var item in list)
+                        {                                                                                                                                                  
+                                Point point = new Point(item);
+                                // Retrieve object Id from full URL and attribute to get the value
+                                string objectId = point.ObjectUrl.Split('/').Last();                             
+                                point.ObjectId = ParseObjectIdentifier(objectId);
+                                //var attributeId= point.AttributeUrl.Split('/').Last();
+                                // Retrieve type token from url and construct Point Object Type                                                    
+                                //var attrToken = await GetWithFullUrl(point.AttributeUrl).ConfigureAwait(false);                               
+                                //var attr = GetType(attrToken);
+                                // Try to Read Present Value when available. Note: can't read attribute ID from attribute full URL since we got only the description.
+                                point.PresentValue = await ReadPropertyAsync(point.ObjectId, "presentValue", true);
+                                points.Add(point);                                                                       
+                        }
+
+                        if (response["next"] != null && response["next"].Type != JTokenType.Null)
+                        {
+                            hasNext = true;
+                            page++;
+                        }
+                    }
+                }
+                catch (System.NullReferenceException e)
+                {
+                    throw new MetasysHttpParsingException(response.ToString(), e);
+                }
+            }
+            return points;          
         }
     }
 }

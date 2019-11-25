@@ -143,13 +143,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Gets all child objects given a parent Guid.
         /// Level indicates how deep to retrieve objects.
         /// </summary>
-        IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1);
+        IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, string parentResource = "objects", string childResource = "objects");
 
         /// <summary>
         /// Gets all child objects given a parent Guid asynchronously.
         /// Level indicates how deep to retrieve objects.
         /// </summary>
-        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1);
+        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, string parentResource = "objects", string childResource = "objects");
 
         /// <summary>
         /// Gets all spaces.
@@ -160,6 +160,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Gets all spaces asynchronously.
         /// </summary>
         Task<IEnumerable<MetasysObject>> GetSpacesAsync(string type = null);
+
+        /// <summary>
+        /// Gets all Equipment for the given space
+        /// </summary>
+        IEnumerable<MetasysObject> GetSpaceEquipment(Guid spaceId);
+
+        /// <summary>
+        /// Gets all spaces asynchronously.
+        /// </summary>
+        Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId);    
 
         /// <summary>
         /// Gets all spaces types.
@@ -179,7 +189,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets all equipment asynchronously.
         /// </summary>
-        Task<IEnumerable<MetasysObject>> GetEquipmentAsync();               
+        Task<IEnumerable<MetasysObject>> GetEquipmentAsync();
+
+        /// <summary>
+        /// Gets all points for the given Equipment
+        /// </summary>
+        IEnumerable<Point> GetEquipmentPoints(Guid equipmentId);
+
+        /// <summary>
+        /// Gets all points for the given equipment asynchronously.
+        /// </summary>
+        Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid spaceId);
 
     }
 }
