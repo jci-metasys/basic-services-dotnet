@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.ComServices
 {
     /// <summary>
     /// A specialized DTO for COM that holds information about an attribute/property
     /// value from a single Metasys object.
-    /// </summary>    
+    /// </summary>
     [ComVisible(true)]
     [Guid("dbe02a6d-986b-4ebf-b543-f66c65afdd00")]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]    
@@ -80,6 +76,6 @@ namespace JohnsonControls.Metasys.ComServices
         /// If the attribute is "presentValue": the priority enumeration key of the priority.
         /// Otherwise null by default.
         /// </value>
-         string PriorityEnumerationKey {  set; get; }      
+         string PriorityEnumerationKey {  set; get; }
     }
 }

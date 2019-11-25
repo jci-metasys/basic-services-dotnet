@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.ComServices
 {
     /// <summary>
     /// A specialized COM structure that holds information about an attribute/property
     /// value from a single Metasys object.
-    /// </summary>    
+    /// </summary>
     [Guid("e4df7bb3-3be4-420d-8a73-f93ddad4681f")]
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
     public class ComVariant:IComVariant
-    { // Note: in order to correctly work with VBA registered types, class need to implement a defined interface. Neither inheritance nor encapsulation will work when the defined class is in another assembly
+    { 
+        // Note: in order to correctly work with VBA registered types, class need to implement a defined interface. Neither inheritance nor encapsulation will work when the defined class is in another assembly
   
-
         /// <summary>The string representation of the value.</summary>
         /// <value>
         /// String value as specified in the MSSDA Bulletin stringValue or a translated string if
@@ -83,6 +79,5 @@ namespace JohnsonControls.Metasys.ComServices
         /// Otherwise null by default.
         /// </value>
         public string PriorityEnumerationKey { set; get; }
-     
     }
 }

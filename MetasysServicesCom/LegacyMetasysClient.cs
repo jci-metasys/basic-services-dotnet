@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.ComServices.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +27,8 @@ namespace JohnsonControls.Metasys.ComServices
 
         /// <summary>
         /// Creates a new LegacyMetasysClient.
-        /// </summary>       
-        internal LegacyMetasysClient(IMetasysClient client)
+        /// </summary>
+        public LegacyMetasysClient(IMetasysClient client)
         {
             Client = client;
             // Defines a Mapper From Basic Services structure to COM
@@ -41,8 +42,10 @@ namespace JohnsonControls.Metasys.ComServices
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Variants, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.Variants)));
                 cfg.CreateMap<AccessToken, IComAccessToken>();
+                cfg.CreateMap<Command, IComCommand>();
+                cfg.CreateMap<MetasysObjectType, IComMetasysObjectType>();
             }).CreateMapper();
-        }      
+        }
 
         /// <summary>
         /// Attempts to login to the given host.
@@ -54,7 +57,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysTokenException"></exception>
         public IComAccessToken TryLogin(string username, string password, bool refresh = true)
-        {            
+        {
             return Mapper.Map<IComAccessToken>(Client.TryLogin(username, password,refresh));
         }
 
@@ -81,7 +84,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// Variant if the attribute exists, null if does not exist.
         /// </returns>
         /// <param name="id"></param>
-        /// <param name="attributeName"></param>        
+        /// <param name="attributeName"></param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpTimeoutException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
@@ -99,10 +102,10 @@ namespace JohnsonControls.Metasys.ComServices
         /// Read many attribute values given the Guids of the objects.
         /// </summary>
         /// <returns>
-        /// A list of VariantMultiple with all the specified attributes (if existing).        
+        /// A list of VariantMultiple with all the specified attributes (if existing).
         /// </returns>
         /// <param name="ids"></param>
-        /// <param name="attributeNames"></param>        
+        /// <param name="attributeNames"></param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysPropertyException"></exception>
         public object ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributeNames)
@@ -157,6 +160,18 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <summary>
+        /// Get all available commands given the Guid of the object.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>List of Commands.</returns>
+        public object GetCommands(string id)
+        {
+            Guid guid = new Guid(id);
+            var res = Client.GetCommands(guid);
+            return Mapper.Map<IComCommand[]>(res);
+        }
+
+        /// <summary>
         /// Send a command to an object.
         /// </summary>
         /// <param name="id"></param>
@@ -181,7 +196,6 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="levels">The depth of the children to retrieve.</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-
         public object GetObjects(string id, int levels = 1)
         {
             Guid guid = new Guid(id);
@@ -202,5 +216,52 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
+        /// <summary>
+        /// Gets all available network device types.
+        /// </summary>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        public object GetNetworkDeviceTypes(string type = null)
+        {
+            var res = Client.GetNetworkDeviceTypes();
+            return Mapper.Map<IComMetasysObjectType[]>(res);
+        }
+
+        /// <summary>
+        /// Gets all spaces.
+        /// </summary>
+        /// <param name="type">Optional type number as a string</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        public object GetSpaces(string type = null)
+        {
+            // Note: need a generic object as return type in order to map correctly to VBA type array
+            var res = Client.GetSpaces();
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+
+        /// <summary>
+        /// Gets all space types.
+        /// </summary>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysObjectTypeException"></exception>
+        public object GetSpacesTypes()
+        {
+            // Note: need a generic object as return type in order to map correctly to VBA type array
+            var res = Client.GetSpaceTypes();
+            return Mapper.Map<IComMetasysObjectType[]>(res);
+        }
+
+        /// <summary>
+        /// Gets all equipments by requesting each available page.
+        /// </summary>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        public object GetEquipment()
+        {
+            // Note: need a generic object as return type in order to map correctly to VBA type array
+            var res = Client.GetEquipment();
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
     }
 }
