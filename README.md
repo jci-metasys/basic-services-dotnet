@@ -152,15 +152,15 @@ Console.WriteLine($"Token: {token.Token}\nExpires: {dateToDisplay.ToString("g", 
 In order to use most of the methods in MetasysClient the id of the target object must be known. This id is in the form of a Guid and can be requested using the following given you know the item reference of the object:
 
 ```csharp
-Guid id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1").Value;
+Guid id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1");
 ```
 
 ### Get a Property
 
-In order to get a property you must know the Guid of the target object. An object called "Variant" is returned when getting a property from an object. Variant contains the property received in many different forms. There is a bit of intuition when handling a Variant since it will not explicitly provide the type of object received by the server. If the server cannot find the target object or attribute on the object this method will return a null value.
+In order to get a property you must know the Guid of the target object. An object called "Variant" is returned when getting a property from an object. Variant contains the property received in many different forms. There is a bit of intuition when handling a Variant since it will not explicitly provide the type of object received by the server. If the server cannot find the target object or attribute on the object this method will throw a MetasysHttpNotFoundException.
 
 ```csharp
-Variant result = client.ReadProperty(id, "presentValue").Value;
+Variant result = client.ReadProperty(id, "presentValue");
 string stringValue = result.StringValue;
 double numericValue = result.NumericValue;
 bool booleanValue = result.BooleanValue;
@@ -323,17 +323,32 @@ This section demonstrates how to use the LegacyMetasysClient to interact with yo
 
 ### Creating a Client
 
-To create a new client and connect to a Metasys server with the default settings use:
+To create a new client and connect to a Metasys server with the default settings use the ComMetasysClientFactory:
 
 ```vb
 Dim client As New LegacyMetasysClient
+Dim clientFactory As New ComMetasysClientFactory
+Dim client As LegacyMetasysClient
+Set client = clientFactory.GetLegacyClient("host")
 ```
+There are three optional parameters when creating a new client:
 
+- ignoreCertificateErrors: If your server does not have a valid certificate the MetasysClient will not behave as expected and will likely block the connection. Setting the ignoreCertificateErrors = true will ignore this error and make an insecure connection with the server. To avoid this problem ensure the Metasys server has a valid certificate.
+- apiVersion: If your server is not a current 10.1 Metasys server or later this SDK will not function correctly. The version parameter takes in an ApiVersion string value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is V2.
+- cultureInfo: To set the language for localization specify the target culture with the ISO Language Code string. The default culture is en-US.
+
+To create a client that ignores certificate errors for a 10.1 Metasys server with Italian translations of values:
+
+```vb
+Set client = clientFactory.GetLegacyClient("host", true, "V2", "it-IT")
+```
 ### Login and Access Tokens
 
 After creating the client, to login use the TryLogin method which takes a host, username, password, and an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true.
 
 ```vb
+Dim token As IComAccessToken
+Set token = msCli.TryLogin("metasyssysagent", "B5F4soft!")
 'Automatically refresh token
 client.TryLogin "host", "username", "password"
 'Do not automatically refresh token
