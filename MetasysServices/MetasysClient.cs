@@ -1088,8 +1088,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// A level of 1 only retrieves immediate children of the parent object.
         /// </remarks>
         /// <param name="id"></param>
-        /// <param name="levels">The depth of the children to retrieve</param>    
-        /// <param name="parentResource">The parent resource to retrieve children</param>    
+        /// <param name="levels">The depth of the children to retrieve.</param>    
+        /// <param name="parentResource">The parent resource to retrieve children.</param>    
         /// <param name="childResource">The children resource to get related elements</param>    
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
@@ -1177,6 +1177,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="id"></param>
         /// <param name="page"></param>
+        /// <param name="parentResource">The parent resource to retrieve children.</param>    
+        /// <param name="childResource">The children resource to get related elements.</param>    
         /// <exception cref="MetasysHttpException"></exception>
         private async Task<JToken> GetObjectsRequestAsync(Guid id, int page = 1, string parentResource = "objects", string childResource="objects" )
         {

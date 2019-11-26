@@ -36,6 +36,10 @@ namespace JohnsonControls.Metasys.BasicServices
     [System.Serializable]
     public class MetasysUnsupportedApiVersion : MetasysException
     {
+        /// <summary>
+        /// Initializes a new instance of the MetasysUnsupportedApiVersion with a predefined message given the API Version
+        /// </summary>
+        /// <param name="version"></param>
         public MetasysUnsupportedApiVersion(string version):base($"Invalid or not supported Api version ({version})")
         {
         }
