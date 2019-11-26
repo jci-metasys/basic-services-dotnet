@@ -238,21 +238,28 @@ namespace MetasysServicesExampleApp
 
             int level = Convert.ToInt32(Console.ReadLine());
             IEnumerable<MetasysObject> objects = client.GetObjects(id2, level);
-            MetasysObject obj = objects.ElementAt(0);
-
-            Console.WriteLine($"Parent object: {obj.Id}");
-
-            for (int i = 1; i < level; i++)
+            if (objects.Count() > 0)
             {
-                Console.WriteLine($"Child at level {i}: {obj.Id} - {obj.Name}");
-                if (objects.ElementAt(0).ChildrenCount > 0)
+                MetasysObject obj = objects.ElementAt(0);
+
+                Console.WriteLine($"Parent object: {obj.Id}");
+
+                for (int i = 1; i < level; i++)
                 {
-                    obj = objects.ElementAt(0).Children.ElementAt(0);
+                    Console.WriteLine($"Child at level {i}: {obj.Id} - {obj.Name}");
+                    if (objects.ElementAt(0).ChildrenCount > 0)
+                    {
+                        obj = objects.ElementAt(0).Children.ElementAt(0);
+                    }
+                    else
+                    {
+                        Console.WriteLine("This object has no children.");
+                    }
                 }
-                else
-                {
-                    Console.WriteLine("This object has no children.");
-                }
+            }
+            else
+            {
+                Console.WriteLine("This object has no children.");
             }
 
             #endregion 
