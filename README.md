@@ -344,15 +344,14 @@ Set client = clientFactory.GetLegacyClient("host", true, "V2", "it-IT")
 ```
 ### Login and Access Tokens
 
-After creating the client, to login use the TryLogin method which takes a host, username, password, and an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true.
+After creating the client, to login use the TryLogin method which takes a username, password, and an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true.
 
 ```vb
 Dim token As IComAccessToken
-Set token = msCli.TryLogin("username", "password")
 'Automatically refresh token
-client.TryLogin "host", "username", "password"
+Set token = msCli.TryLogin("username", "password")
 'Do not automatically refresh token
-client.TryLogin "host", "username", "password", false
+Set token = msCli.TryLogin("username", "password", false)
 ```
 
 ### Get an Object Id
