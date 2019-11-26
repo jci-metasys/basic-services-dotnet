@@ -48,7 +48,7 @@ namespace JohnsonControls.Metasys.ComServices
 
         /// <summary>An array of Variant values.</summary>
         /// <value>Null unless value is an array.</value>
-        public IComVariant[] ArrayValue { set; get; }
+        public object ArrayValue { set; get; }
 
         /// <summary>The attribute from the Metasys object.</summary>
         public string Attribute { set; get; }

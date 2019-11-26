@@ -31,6 +31,17 @@ namespace JohnsonControls.Metasys.BasicServices
     }
 
     /// <summary>
+    /// An exception that is thrown when the given API version is invalid or not supported
+    /// </summary>
+    [System.Serializable]
+    public class MetasysUnsupportedApiVersion : MetasysException
+    {
+        public MetasysUnsupportedApiVersion(string version):base($"Invalid or not supported Api version ({version})")
+        {
+        }
+    }
+
+    /// <summary>
 	/// An exception that is thrown when a Flurl.Http exception occurs.
 	/// </summary>
     [System.Serializable]
@@ -126,6 +137,21 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="response">The Http response.</param>
         public MetasysHttpParsingException(string response) : base(
             "Error occurred when parsing the Http response.", response) { }
+    }
+
+    /// <summary>
+    /// An exception that is thrown when a resource is not found
+    /// </summary>
+    [System.Serializable]
+    public class MetasysHttpNotFoundException : MetasysHttpException
+    {
+        /// <summary>
+        /// Initializes a new instance of the MetasysNotFoundException
+        /// </summary>         
+        /// <param name="inner"></param>
+        public MetasysHttpNotFoundException(Flurl.Http.FlurlHttpException inner) :
+            base(inner)
+        { }
     }
 
     /// <summary>

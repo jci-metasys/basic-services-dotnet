@@ -46,22 +46,22 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Given the Item Reference of an object, returns the object identifier.
         /// </summary>
-        Guid? GetObjectIdentifier(string itemReference);
+        Guid GetObjectIdentifier(string itemReference);
 
         /// <summary>
         /// Given the Item Reference of an object, returns the object identifier asynchronously.
         /// </summary>
-        Task<Guid?> GetObjectIdentifierAsync(string itemReference);
+        Task<Guid> GetObjectIdentifierAsync(string itemReference);
 
         /// <summary>
         /// Read one attribute value given the Guid of the object.
         /// </summary>
-        Variant? ReadProperty(Guid id, string attributeName);
+        Variant ReadProperty(Guid id, string attributeName);
 
         /// <summary>
         /// Read one attribute value given the Guid of the object asynchronously.
         /// </summary>
-        Task<Variant?> ReadPropertyAsync(Guid id, string attributeName);
+        Task<Variant> ReadPropertyAsync(Guid id, string attributeName);
 
         /// <summary>
         /// Read many attribute values given the Guids of the objects.
@@ -143,12 +143,63 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Gets all child objects given a parent Guid.
         /// Level indicates how deep to retrieve objects.
         /// </summary>
-        IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1);
+        IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, string parentResource = "objects", string childResource = "objects");
 
         /// <summary>
         /// Gets all child objects given a parent Guid asynchronously.
         /// Level indicates how deep to retrieve objects.
         /// </summary>
-        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1);
+        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, string parentResource = "objects", string childResource = "objects");
+
+        /// <summary>
+        /// Gets all spaces.
+        /// </summary>
+        IEnumerable<MetasysObject> GetSpaces(string type = null);
+
+        /// <summary>
+        /// Gets all spaces asynchronously.
+        /// </summary>
+        Task<IEnumerable<MetasysObject>> GetSpacesAsync(string type = null);
+
+        /// <summary>
+        /// Gets all Equipment for the given space
+        /// </summary>
+        IEnumerable<MetasysObject> GetSpaceEquipment(Guid spaceId);
+
+        /// <summary>
+        /// Gets all spaces asynchronously.
+        /// </summary>
+        Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId);    
+
+        /// <summary>
+        /// Gets all spaces types.
+        /// </summary>
+        IEnumerable<MetasysObjectType> GetSpaceTypes();
+
+        /// <summary>
+        /// Gets all space types asynchronously.
+        /// </summary>
+        Task<IEnumerable<MetasysObjectType>> GetSpaceTypesAsync();
+
+        /// <summary>
+        /// Gets all equipment.
+        /// </summary>
+        IEnumerable<MetasysObject> GetEquipment();
+
+        /// <summary>
+        /// Gets all equipment asynchronously.
+        /// </summary>
+        Task<IEnumerable<MetasysObject>> GetEquipmentAsync();
+
+        /// <summary>
+        /// Gets all points for the given Equipment
+        /// </summary>
+        IEnumerable<Point> GetEquipmentPoints(Guid equipmentId);
+
+        /// <summary>
+        /// Gets all points for the given equipment asynchronously.
+        /// </summary>
+        Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid spaceId);
+
     }
 }

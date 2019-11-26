@@ -144,7 +144,7 @@ namespace Tests
             httpTest.RespondWith("Call failed. No such host is known POST https://badhost/api/V2/login", 404);
             MetasysClient clientBad = new MetasysClient("badhost");
 
-            var e = Assert.Throws<MetasysHttpException>(() =>
+            var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
                 clientBad.TryLogin("username", "password"));
 
             httpTest.ShouldHaveCalled($"https://badhost/api/V2/login")
@@ -285,7 +285,7 @@ namespace Tests
         {
             httpTest.RespondWith($"\"{mockid.ToString()}\"");
 
-            var id = await client.GetObjectIdentifierAsync("fully:qualified/reference").ConfigureAwait(false);
+            var id = await client.GetObjectIdentifierAsync("fully:qualified/reference1").ConfigureAwait(false);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
@@ -299,7 +299,7 @@ namespace Tests
             AsyncContext.Run(() =>
             {
                 httpTest.RespondWith($"\"{mockid.ToString()}\"");
-                var id = client.GetObjectIdentifier("fully:qualified/reference");
+                var id = client.GetObjectIdentifier("fully:qualified/reference2");
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
@@ -313,7 +313,7 @@ namespace Tests
             httpTest.RespondWith("Bad Request", 400);
 
             var e = Assert.Throws<MetasysHttpException>(() =>
-                client.GetObjectIdentifier("fully:qualified/reference"));
+                client.GetObjectIdentifier("fully:qualified/reference3"));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
@@ -327,7 +327,7 @@ namespace Tests
             httpTest.RespondWith($"\"{mockid.ToString()}1\"");
 
             var e = Assert.Throws<MetasysGuidException>(() =>
-                client.GetObjectIdentifier("fully:qualified/reference"));
+                client.GetObjectIdentifier("fully:qualified/reference4"));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
@@ -343,7 +343,7 @@ namespace Tests
             httpTest.RespondWith("null");
 
             var e = Assert.Throws<MetasysGuidException>(() =>
-                client.GetObjectIdentifier("fully:qualified/reference"));
+                client.GetObjectIdentifier("fully:qualified/reference5"));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
@@ -359,7 +359,7 @@ namespace Tests
             httpTest.RespondWith("Unauthorized", 401);
 
             var e = Assert.Throws<MetasysHttpException>(() =>
-                client.GetObjectIdentifier("fully:qualified/reference"));
+                client.GetObjectIdentifier("fully:qualified/reference6"));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
@@ -378,7 +378,7 @@ namespace Tests
             var token = JToken.FromObject(1);
             httpTest.RespondWith(json);
 
-            Variant result = (await client.ReadPropertyAsync(mockid, mockAttributeName).ConfigureAwait(false)).Value;
+            Variant result = (await client.ReadPropertyAsync(mockid, mockAttributeName).ConfigureAwait(false));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -396,7 +396,7 @@ namespace Tests
                 var token = JToken.FromObject(1);
                 httpTest.RespondWith(json);
 
-                Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+                Variant result = client.ReadProperty(mockid, mockAttributeName);
 
                 httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
@@ -413,7 +413,7 @@ namespace Tests
             var token = JToken.FromObject(1.1);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -429,7 +429,7 @@ namespace Tests
             var token = JToken.FromObject("stringvalue");
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -445,7 +445,7 @@ namespace Tests
             var token = JToken.FromObject(true);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -461,7 +461,7 @@ namespace Tests
             var token = JToken.FromObject(false);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -478,7 +478,7 @@ namespace Tests
             var token = JToken.Parse("{ \"value\": 60 }");
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, "presentValue").Value;
+            Variant result = client.ReadProperty(mockid, "presentValue");
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
@@ -495,7 +495,7 @@ namespace Tests
             var token = JToken.Parse("{ \"value\": \"stringvalue\" }");
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, "presentValue").Value;
+            Variant result = client.ReadProperty(mockid, "presentValue");
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
@@ -515,7 +515,7 @@ namespace Tests
             var token = JToken.Parse(body);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, "presentValue").Value;
+            Variant result = client.ReadProperty(mockid, "presentValue");
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
@@ -535,7 +535,7 @@ namespace Tests
             var token = JToken.Parse(body);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -551,7 +551,7 @@ namespace Tests
             var token = JArray.Parse("[ 0, 1 ]");
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -568,7 +568,7 @@ namespace Tests
             var token = JArray.Parse(body);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -587,7 +587,7 @@ namespace Tests
             var token = JArray.Parse(body);
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -603,7 +603,7 @@ namespace Tests
             var token = JToken.Parse("{ }");
             httpTest.RespondWith(json);
 
-            Variant result = client.ReadProperty(mockid, mockAttributeName).Value;
+            Variant result = client.ReadProperty(mockid, mockAttributeName);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
@@ -613,16 +613,17 @@ namespace Tests
         }
 
         [Test]
-        public void TestReadPropertyDoesNotExistDoesNotThrowException()
+        public void TestReadPropertyDoesNotExistThrowsException()
         {
             httpTest.RespondWith("Not Found", 404);
-
-            var result = client.ReadProperty(mockid, mockAttributeName);
+          
+            var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
+              client.ReadProperty(mockid, mockAttributeName));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
-                .Times(1);
-            Assert.AreEqual(null, result);
+                .Times(1);          
+            PrintMessage($"TestReadPropertyDoesNotExistThrowsException: {e.Message}", true);            
         }
 
         [Test]
@@ -1684,7 +1685,7 @@ namespace Tests
                     "\"self\": \"https://hostname/api/V2/networkDevices/availableTypes\"}"))
                 .RespondWith("No HTTP resource was found that matches the request URI.", 404);
 
-            var e = Assert.Throws<MetasysHttpException>(() =>
+            var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
                 client.GetNetworkDeviceTypes());
 
             httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices/availableTypes")
@@ -1903,6 +1904,436 @@ namespace Tests
             PrintMessage($"TestGetObjectsUnauthorizedThrowsException: {e.Message}", true);
         }
 
+        #endregion
+
+        #region GetSpaces Tests
+
+        [Test]
+        public void TestGetSpacesNone()
+        {
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 0,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [ ],",
+                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+
+            var devices = client.GetSpaces();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            Assert.AreEqual(0, devices.Count());
+        }
+
+        [Test]
+        public void TestGetSpacesOnePage()
+        {
+            string space = string.Concat("{",
+                "\"id\": \"", mockid, "\",",
+                "\"itemReference\": \"fully:qualified/reference\",",
+                "\"name\": \"name\",",
+                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 1,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [", space, "],",
+                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+
+            var devices = client.GetSpaces();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
+            Assert.AreEqual(expected, devices.ElementAt(0));
+        }
+
+        [Test]
+        public void TestGetSpacesManyPages()
+        {
+            string space1 = string.Concat("{",
+                 "\"id\": \"", mockid, "\",",
+                 "\"itemReference\": \"fully:qualified/reference1\",",
+                 "\"name\": \"name\",",
+                 "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                 $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+            string space2 = string.Concat("{",
+                "\"id\": \"", mockid, "\",",
+                "\"itemReference\": \"fully:qualified/reference2\",",
+                "\"name\": \"name\",",
+                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+            httpTest
+                .RespondWith(string.Concat("{",
+                    "\"total\": 2,",
+                    "\"next\": \"https://hostname/api/V2/spaces?page=2&pageSize=1&sort=name\",",
+                    "\"previous\": null,",
+                    "\"items\": [", space1, "],",
+                    "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=1&sort=name\"}"))
+                .RespondWith(string.Concat("{",
+                    "\"total\": 2,",
+                    "\"next\": null,",
+                    "\"previous\": null,",
+                    "\"items\": [", space2, "],",
+                    "\"self\": \"https://hostname/api/V2/spaces?page=2&pageSize=1&sort=name\"}"));
+
+            var spaces = client.GetSpaces();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+                .WithVerb(HttpMethod.Get)
+                .Times(2);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(space2), null, testCulture);
+            Assert.AreEqual(expected1, spaces.ElementAt(0));
+            Assert.AreEqual(expected2, spaces.ElementAt(1));
+        }
+
+        [Test]
+        public void TestGetSpacesWithType()
+        {
+            string space = string.Concat("{",
+               "\"id\": \"", mockid, "\",",
+               "\"itemReference\": \"fully:qualified/reference\",",
+               "\"name\": \"name\",",
+               "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+               $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 1,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [", space, "],",
+                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+
+            var devices = client.GetSpaces("3");
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
+            Assert.AreEqual(expected, devices.ElementAt(0));
+        }
+
+        [Test]
+        public void TestGetSpacesMissingItems()
+        {
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 0,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [{}],",
+                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+
+            var devices = client.GetSpaces();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            Assert.AreEqual(0, devices.Count());
+        }
+
+        [Test]
+        public void TestGetSpacesMissingValuesThrowsException()
+        {
+            string space = string.Concat("{",
+                "\"id\": \"", mockid, "\",",
+                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\"}");
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 1,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [", space, "],",
+                $"\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}}"));
+
+            var e = Assert.Throws<MetasysObjectException>(() =>
+                client.GetObjects(mockid));
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            PrintMessage($"TestGetSpacesMissingValuesThrowsException: {e.Message}", true);
+        }
+
+        [Test]
+        public void TestGetSpacesUnauthorizedThrowsException()
+        {
+            httpTest.RespondWith("Unauthorized", 401);
+
+            var e = Assert.Throws<MetasysHttpException>(() =>
+                client.GetSpaces());
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            PrintMessage($"TestGetSpacesUnauthorizedThrowsException: {e.Message}", true);
+        }
+
+        #endregion
+
+        #region GetSpaceTypes Tests
+
+        [Test]
+        public void TestGetSpaceTypesNone()
+        {
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 0,",
+                "\"items\": [ ],",
+                "\"self\": \"https://hostname/api/V2/enumSets/1766\"}"));
+
+            var types = client.GetSpaceTypes();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            Assert.AreEqual(0, types.Count());
+        }
+
+        [Test]
+        public void TestGetSpaceTypesOne()
+        {
+            var item = string.Concat("{",
+                    "\"id\": 3,",
+                    "\"description\": \"Room\",",
+                    "\"self\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                    "\"setUrl\": \"https://hostname/api/V2/enumSets/1766\"}");
+            httpTest
+                .RespondWith(string.Concat("{",
+                    "\"total\": 1,",
+                    $"\"items\": [{item}],",
+                    "\"self\": \"https://hostname/api/V2/enumSet/1766\"}"));               
+
+            var types = client.GetSpaceTypes();
+
+            MetasysObjectType expected = new MetasysObjectType(3, "Room",
+                "Room", testCulture);
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);         
+            Assert.AreEqual(expected, types.ElementAt(0));
+        }
+
+        [Test]
+        public void TestGetSpaceTypesMany()
+        {
+            var item1 = string.Concat("{",
+                      "\"id\": 3,",
+                      "\"description\": \"Room\",",
+                      "\"self\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                      "\"setUrl\": \"https://hostname/api/V2/enumSets/1766\"}");
+            var item2 = string.Concat("{",
+                      "\"id\": 2,",
+                      "\"description\": \"Floor\",",
+                      "\"self\": \"https://hostname/api/V2/enumSets/1766/members/2\",",
+                      "\"setUrl\": \"https://hostname/api/V2/enumSets/1766\"}");
+            httpTest
+                .RespondWith(string.Concat("{",
+                    "\"total\": 2,",
+                    $"\"items\": [{item1},{item2}],",
+                    "\"self\": \"https://hostname/api/V2/enumSet/1766\"}"));
+
+            var types = client.GetSpaceTypes();
+
+            MetasysObjectType expected1 = new MetasysObjectType(3, "Room",
+               "Room", testCulture);
+            MetasysObjectType expected2 = new MetasysObjectType(2, "Floor",
+                "Floor", testCulture);
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            Assert.AreEqual(expected1, types.ElementAt(0));
+            Assert.AreEqual(expected2, types.ElementAt(1));
+        }
+
+        [Test]
+        public void TestGetSpaceTypesNotFoundThrowsException()
+        {
+            httpTest               
+                .RespondWith("No HTTP resource was found that matches the request URI.", 404);
+
+            var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
+                client.GetSpaceTypes());
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);        
+            PrintMessage($"TestGetSpaceTypesNotFoundThrowsException: {e.Message}", true);
+        }
+
+        [Test]
+        public void TestGetSpaceTypesUnauthorizedThrowsException()
+        {
+            httpTest.RespondWith("Unauthorized", 401);
+
+            var e = Assert.Throws<MetasysHttpException>(() =>
+                client.GetSpaceTypes());
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            
+            PrintMessage($"TestGetSpaceTypesUnauthorizedThrowsException: {e.Message}", true);
+        }
+
+        #endregion
+
+        #region GetEquipment Tests
+
+        [Test]
+        public void TestGetEquipmentNone()
+        {
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 0,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [ ],",
+                "\"self\": \"https://hostname/api/V2/equipment?page=1&pageSize=200&sort=name\"}"));
+
+            var devices = client.GetEquipment();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/equipment")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            Assert.AreEqual(0, devices.Count());
+        }
+
+        [Test]
+        public void TestGetEquipmentOnePage()
+        {
+            string space = string.Concat("{",
+                "\"id\": \"", mockid, "\",",
+                "\"itemReference\": \"fully:qualified/reference\",",
+                "\"name\": \"name\",",
+                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/V2/equipment/{mockid}\"}}");
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 1,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [", space, "],",
+                "\"self\": \"https://hostname/api/V2/equipment?page=1&pageSize=200&sort=name\"}"));
+
+            var devices = client.GetEquipment();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/equipment")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
+            Assert.AreEqual(expected, devices.ElementAt(0));
+        }
+
+        [Test]
+        public void TestGetEquipmentManyPages()
+        {
+            string space1 = string.Concat("{",
+                 "\"id\": \"", mockid, "\",",
+                 "\"itemReference\": \"fully:qualified/reference1\",",
+                 "\"name\": \"name\",",
+                 "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                 $"\"self\": \"https://hostname/api/V2/equipment/{mockid}\"}}");
+            string space2 = string.Concat("{",
+                "\"id\": \"", mockid, "\",",
+                "\"itemReference\": \"fully:qualified/reference2\",",
+                "\"name\": \"name\",",
+                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/V2/equipment/{mockid}\"}}");
+            httpTest
+                .RespondWith(string.Concat("{",
+                    "\"total\": 2,",
+                    "\"next\": \"https://hostname/api/V2/equipment?page=2&pageSize=1&sort=name\",",
+                    "\"previous\": null,",
+                    "\"items\": [", space1, "],",
+                    "\"self\": \"https://hostname/api/V2/equipment?page=1&pageSize=1&sort=name\"}"))
+                .RespondWith(string.Concat("{",
+                    "\"total\": 2,",
+                    "\"next\": null,",
+                    "\"previous\": null,",
+                    "\"items\": [", space2, "],",
+                    "\"self\": \"https://hostname/api/V2/equipment?page=2&pageSize=1&sort=name\"}"));
+
+            var Equipment = client.GetEquipment();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/equipment")
+                .WithVerb(HttpMethod.Get)
+                .Times(2);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(space2), null, testCulture);
+            Assert.AreEqual(expected1, Equipment.ElementAt(0));
+            Assert.AreEqual(expected2, Equipment.ElementAt(1));
+        }
+     
+
+        [Test]
+        public void TestGetEquipmentMissingItems()
+        {
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 0,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [{}],",
+                "\"self\": \"https://hostname/api/V2/equipment?page=1&pageSize=200&sort=name\"}"));
+
+            var devices = client.GetEquipment();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/equipment")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            Assert.AreEqual(0, devices.Count());
+        }
+
+        [Test]
+        public void TestGetEquipmentMissingValuesThrowsException()
+        {
+            string space = string.Concat("{",
+                "\"id\": \"", mockid, "\",",
+                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\"}");
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 1,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [", space, "],",
+                $"\"self\": \"https://hostname/api/V2/equipment?page=1&pageSize=200&sort=name\"}}"));
+
+            var e = Assert.Throws<MetasysObjectException>(() =>
+                client.GetObjects(mockid));
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            PrintMessage($"TestGetEquipmentMissingValuesThrowsException: {e.Message}", true);
+        }
+
+        [Test]
+        public void TestGetEquipmentUnauthorizedThrowsException()
+        {
+            httpTest.RespondWith("Unauthorized", 401);
+
+            var e = Assert.Throws<MetasysHttpException>(() =>
+                client.GetEquipment());
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/equipment")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            PrintMessage($"TestGetEquipmentUnauthorizedThrowsException: {e.Message}", true);
+        }
+
+        #endregion
+
+        #region Caching
+
+        [Test]
+        public async Task TestGetObjectIdentifierCaching() {
+            httpTest.RespondWith($"\"{mockid.ToString()}\"");
+            var id = await client.GetObjectIdentifierAsync("fully:qualified/cache-reference").ConfigureAwait(false);                     
+            Assert.AreEqual(mockid, id);
+            // First call is expected to perform an Http Request, second an subsequent calls are expected to retrieve value from dictionary cache
+            id=await client.GetObjectIdentifierAsync("fully:qualified/cache-reference").ConfigureAwait(false);
+            Assert.AreEqual(mockid, id);
+            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+        }
         #endregion
 
         #region miscellaneous
