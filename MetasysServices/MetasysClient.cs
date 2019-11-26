@@ -1107,7 +1107,14 @@ namespace JohnsonControls.Metasys.BasicServices
             while (hasNext)
             {
                 hasNext = false;
-                var response = await GetObjectsRequestAsync(id, page, parentResource, childResource).ConfigureAwait(false);               
+                var response = await GetObjectsRequestAsync(id, page, parentResource, childResource).ConfigureAwait(false);
+                if (response == null || response.Type == JTokenType.Null || !response.HasValues)
+
+                {
+
+                    return null;
+
+                }
                 try
                 {
                     var total = response["total"].Value<int>();
