@@ -28,7 +28,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Creates a new LegacyMetasysClient.
         /// </summary>
-        public LegacyMetasysClient(IMetasysClient client)
+        internal LegacyMetasysClient(IMetasysClient client)
         {
             Client = client;
             // Defines a Mapper From Basic Services structure to COM
