@@ -48,7 +48,7 @@ namespace MetasysServicesExampleApp
 
             #endregion
 
-            /*
+            
                        #region GetObjectIdentifier
 
                        Console.WriteLine("\nIndicate the object you want to run this example code on.");
@@ -255,11 +255,11 @@ namespace MetasysServicesExampleApp
                 }
             }
 
-            #endregion */
+            #endregion 
 
             #region GetSpaces
 
-            Console.WriteLine("\n\nGetSpaces...");
+            Console.WriteLine("\n\nGetSpaceTypes...");
 
             IEnumerable<MetasysObjectType> spaceTypes = client.GetSpaceTypes();
             foreach (var type in spaceTypes)
@@ -275,15 +275,7 @@ namespace MetasysServicesExampleApp
             {
                 Console.WriteLine($"\n{space.Id}: {space.Name}, {space.ItemReference}");
             }
-            // Select a space 
-            //Console.WriteLine("\nPlease enter the Space ID to retrieve all first-level related objects:");
-            //string spaceId = Console.ReadLine();
-            //IEnumerable<MetasysObject> spaceObjects = client.GetObjects(new Guid(spaceId));
-            //Console.WriteLine($"Objects found: {spaceObjects.Count()}");
-            //foreach (var o in spaceObjects)
-            //{
-            //    Console.WriteLine($"\n{o.Id}: {o.Name}, {o.ItemReference}");
-            //}
+            // Select a space            
             Console.WriteLine("\nPlease enter the Space ID to retrieve all related equipment:");
             string spaceID = Console.ReadLine();
             IEnumerable<MetasysObject> spaceEquipment = client.GetSpaceEquipment(new Guid(spaceID));
@@ -301,27 +293,8 @@ namespace MetasysServicesExampleApp
             {
                 Console.WriteLine($"\n{p.ShortName}: {p.Label}, {p.PresentValue?.StringValue}");
             }
-            //Console.WriteLine("\nPlease enter the equipment ID to retrieve all related objects:");
-            //string equipmentID = Console.ReadLine();
-            //IEnumerable<MetasysObject> objects = client.GetObjects(new Guid(equipmentID));
-            //Console.WriteLine($"Object found: {objects.Count()}");
-            //foreach (var p in objects)
-            //{
-            //    Console.WriteLine($"\n{p.Id}: {p.Name}, {p.ItemReference}");
-            //}
-            #endregion
-
-            #region GetEquipment
-
-            //Console.WriteLine("\n\nGetEquipment...");
-
-            //IEnumerable<MetasysObject> equipment = client.GetEquipment();
-            //foreach (var equip in equipment)
-            //{
-            //    Console.WriteLine($"\n{equip.Id}: {equip.Name}, {equip.ItemReference}");
-            //}
-
-            #endregion          
+            
+            #endregion                
         }
     }
 }

@@ -1337,7 +1337,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid equipmentId)
         {
             
-            List<Point> points = new List<Point>() { };
+            List<Point> points = new List<Point>() { }; List<Guid> guids = new List<Guid>();
             bool hasNext = true;
             int page = 1;
             while (hasNext)
@@ -1349,23 +1349,17 @@ namespace JohnsonControls.Metasys.BasicServices
                     var total = response["total"].Value<int>();
                     if (total > 0)
                     {
-                        var list = response["items"] as JArray;
-
+                        var list = response["items"] as JArray;                        
                         foreach (var item in list)
                         {                                                                                                                                                  
                                 Point point = new Point(item);
                                 // Retrieve object Id from full URL and attribute to get the value
                                 string objectId = point.ObjectUrl.Split('/').Last();                             
                                 point.ObjectId = ParseObjectIdentifier(objectId);
-                                //var attributeId= point.AttributeUrl.Split('/').Last();
-                                // Retrieve type token from url and construct Point Object Type                                                    
-                                //var attrToken = await GetWithFullUrl(point.AttributeUrl).ConfigureAwait(false);                               
-                                //var attr = GetType(attrToken);
-                                // Try to Read Present Value when available. Note: can't read attribute ID from attribute full URL since we got only the description.
-                                point.PresentValue = await ReadPropertyAsync(point.ObjectId, "presentValue", true);
+                                // Collect Guids to perform read property multiple in "one call"
+                                guids.Add(point.ObjectId);                                                                
                                 points.Add(point);                                                                       
-                        }
-
+                        }                     
                         if (response["next"] != null && response["next"].Type != JTokenType.Null)
                         {
                             hasNext = true;
@@ -1378,7 +1372,18 @@ namespace JohnsonControls.Metasys.BasicServices
                     throw new MetasysHttpParsingException(response.ToString(), e);
                 }
             }
-            return points;          
+            // Try to Read Present Value when available. Note: can't read attribute ID from attribute full URL of point since we got only the description.
+            var results = await ReadPropertyMultipleAsync(guids, new List<string> { "presentValue" });
+            List<Point> pointsWithValues = new List<Point>() { };
+            foreach (var r in results)
+            {
+                var point=points.SingleOrDefault(s => s.ObjectId == r.Id);
+                // Assign present values back
+                point.PresentValue = r.Variants?.SingleOrDefault(s => s.Attribute == "presentValue");
+                // Need to do a new list since structs will be passed by value
+                pointsWithValues.Add(point);
+            }       
+            return pointsWithValues;          
         }
     }
 }
