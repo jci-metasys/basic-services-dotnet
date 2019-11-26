@@ -1332,6 +1332,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets all points for the given Equipment asyncronously
         /// </summary>
+        /// <remarks> Returned Points List contains PresentValue when available. </remarks>
         /// <param name="equipmentId"></param>
         /// <returns></returns>
         public async Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid equipmentId)
