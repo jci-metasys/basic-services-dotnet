@@ -463,9 +463,9 @@ spaces = client.GetSpaces(spaceType.Id)
 Dim space As IComMetasysObject
 Set space = spaces(0)
 Dim equipment() As Object
-spaces = client.GetSpaces(spaceType.Id)
-Dim space As IComMetasysObject
-Set space = spaces(0)
+equipment = client.GetEquipment()
+Dim e As IComMetasysObject
+Set e = equipment(0)
 ```
 To get the children objects of Spaces and Equipment use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete.
 
