@@ -31,6 +31,7 @@ For versioning information see the [changelog](CHANGELOG.md).
   - [Write a Property](#write-a-property-1)
   - [Send Commands](#send-commands)
   - [Get Network Devices and other Objects](#get-network-devices-and-other-objects-1)
+  - [Spaces and equipment](#spaces-and-equipment-1)
 - [License](#license)
 - [Contributing](#contributing)
 - [Additional Information](#additional-information)
@@ -448,6 +449,26 @@ Set device = devices(0)
 Dim children() As Object
 children=device.children
 ```
+
+### Spaces and equipment
+
+To get all available spaces on an object use the GetSpaces method. This method will return a list of MetasysObjects. This accepts an optional type number as a string to filter the response. To get all of the available types on your server use the GetSpaceTypes method which returns a list of MetasysObjectType. To get all of the equipment on your server use the GetEquipment method which returns a list of MetasysObjects.
+```vb
+Dim spaceTypes() As Object
+spaceTypes = client.GetSpaceTypes()
+Dim spaceType As IComMetasysObjectType
+Set spaceType = spaceTypes(0)
+Dim spaces() As Object
+spaces = client.GetSpaces(spaceType.Id)
+Dim space As IComMetasysObject
+Set space = spaces(0)
+Dim equipment() As Object
+spaces = client.GetSpaces(spaceType.Id)
+Dim space As IComMetasysObject
+Set space = spaces(0)
+```
+To get the children objects of Spaces and Equipment use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete.
+
 
 ## License
 

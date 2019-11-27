@@ -245,7 +245,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysObjectTypeException"></exception>
-        public object GetSpacesTypes()
+        public object GetSpaceTypes()
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
             var res = Client.GetSpaceTypes();

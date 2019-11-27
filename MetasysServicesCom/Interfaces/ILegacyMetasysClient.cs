@@ -75,7 +75,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Gets all space types.
         /// </summary>
-        object GetSpacesTypes();
+        object GetSpaceTypes();
 
         /// <summary>
         /// Gets all network devices.
