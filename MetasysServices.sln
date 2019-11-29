@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetasysServicesCom", "Metas
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetasysServicesExampleApp", "MetasysServicesExampleApp\MetasysServicesExampleApp.csproj", "{268061B9-1D96-456B-9684-E4267AE7639E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetasysServicesCom.Tests", "MetasysServicesCom.Tests\MetasysServicesCom.Tests.csproj", "{5DE138C9-E2E9-4B18-AA9C-544144F5BC04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetasysServicesComExampleApp", "MetasysServicesComExampleApp\MetasysServicesComExampleApp.csproj", "{17E19FA0-D447-431C-A042-D89A1010E460}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,22 @@ Global
 		{268061B9-1D96-456B-9684-E4267AE7639E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{268061B9-1D96-456B-9684-E4267AE7639E}.Release|x86.ActiveCfg = Release|Any CPU
 		{268061B9-1D96-456B-9684-E4267AE7639E}.Release|x86.Build.0 = Release|Any CPU
+		{5DE138C9-E2E9-4B18-AA9C-544144F5BC04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE138C9-E2E9-4B18-AA9C-544144F5BC04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE138C9-E2E9-4B18-AA9C-544144F5BC04}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5DE138C9-E2E9-4B18-AA9C-544144F5BC04}.Debug|x86.Build.0 = Debug|Any CPU
+		{5DE138C9-E2E9-4B18-AA9C-544144F5BC04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE138C9-E2E9-4B18-AA9C-544144F5BC04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DE138C9-E2E9-4B18-AA9C-544144F5BC04}.Release|x86.ActiveCfg = Release|Any CPU
+		{5DE138C9-E2E9-4B18-AA9C-544144F5BC04}.Release|x86.Build.0 = Release|Any CPU
+		{17E19FA0-D447-431C-A042-D89A1010E460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17E19FA0-D447-431C-A042-D89A1010E460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17E19FA0-D447-431C-A042-D89A1010E460}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{17E19FA0-D447-431C-A042-D89A1010E460}.Debug|x86.Build.0 = Debug|Any CPU
+		{17E19FA0-D447-431C-A042-D89A1010E460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17E19FA0-D447-431C-A042-D89A1010E460}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17E19FA0-D447-431C-A042-D89A1010E460}.Release|x86.ActiveCfg = Release|Any CPU
+		{17E19FA0-D447-431C-A042-D89A1010E460}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
