@@ -10,15 +10,15 @@ namespace MetasysServicesCom.Tests
     {
         public ComMetasysClientFactory ComMetasysClientFactory;
         public MetasysClient MClient;
-        public LegacyMetasysClient LClient;
+        public ILegacyMetasysClient LClient;
         public IMapper Mapper;
         public HttpTest httpTest;
 
         public void MethodInitialize()
         {
             MClient = new MetasysClient("hostname");
-            LClient = new LegacyMetasysClient(MClient);
             ComMetasysClientFactory = new ComMetasysClientFactory();
+            LClient = ComMetasysClientFactory.GetLegacyClient("hostname");
             httpTest = new HttpTest();
 
             Mapper = new MapperConfiguration(cfg => 
