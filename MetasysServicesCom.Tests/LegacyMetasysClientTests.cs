@@ -407,7 +407,7 @@ namespace MetasysServicesCom.Tests
                     "\"self\": \"https://hostname/api/V2/enumSet/1766\"}"));
 
             //Act
-            dynamic types = InitMethod.LClient.GetSpacesTypes();
+            dynamic types = InitMethod.LClient.GetSpaceTypes();
 
             //Assert
             Assert.AreEqual(types[0].Description, "Room");

@@ -196,7 +196,7 @@ namespace MetasysServicesComExampleApp
             #region GetSpaces
 
             Console.WriteLine("\n\nGetSpaces...");
-            dynamic spaceTypes = legacyClient.GetSpacesTypes();
+            dynamic spaceTypes = legacyClient.GetSpaceTypes();
             foreach (var type in (dynamic)spaceTypes)
             {
                 Console.WriteLine($"\nType {type.Id}: {type.Description}, ");
