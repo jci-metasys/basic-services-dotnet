@@ -915,10 +915,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="type"></param>
         /// <param name="page"></param>
         /// <exception cref="MetasysHttpException"></exception>
-        protected async Task<JToken> PagedRequestAsync(string resource, string type = null, int page = 1)
+        protected async Task<JToken> PagedRequestAsync(string resource, string type = null, int page = 1, int pageSize=100)
         {
             Url url = new Url(resource);
             url.SetQueryParam("page", page);
+            url.SetQueryParam("pageSize", page);
             if (type != null)
             {
                 url.SetQueryParam("type", type);
@@ -1226,18 +1227,21 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="resource"></param>
         /// <param name="type">Optional type number as a string</param>
+        /// <param name="skip">Optional how many page we skip. 0 by default.</param>
+        /// <param name="take">Optional how many page we take. 0 for all.</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        protected async Task<IEnumerable<MetasysObject>> ProcessPagedRequestAsync(string resource, string type = null)
+        protected async Task<IEnumerable<MetasysObject>> ProcessPagedRequestAsync(string resource, string type = null, PageSettings settings = null)
         {
             List<MetasysObject> items = new List<MetasysObject>() { };
             bool hasNext = true;
-            int page = 1;
-
-            while (hasNext)
+            settings = settings ?? new PageSettings { Skip=0, Take=0, PageSize=100}; // Set default values for paging
+            int page = settings.Skip +1;
+            int i = 0;
+            while (hasNext && (settings.Take==0 || i<settings.Take))
             {
                 hasNext = false;
-                var response = await PagedRequestAsync(resource, type, page).ConfigureAwait(false);
+                var response = await PagedRequestAsync(resource, type, page,settings.PageSize).ConfigureAwait(false);
                 try
                 {
                     var total = response["total"].Value<int>();
@@ -1261,6 +1265,7 @@ namespace JohnsonControls.Metasys.BasicServices
                         {
                             hasNext = true;
                             page++;
+                            i++;
                         }
                     }
                 }
