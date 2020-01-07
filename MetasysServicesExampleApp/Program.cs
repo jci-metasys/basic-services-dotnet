@@ -25,6 +25,8 @@ namespace MetasysServicesExampleApp
             var password = args[1];
             var hostname = args[2];
 
+            IProvideAlarmInfo alarmInfoProvicer = new AlarmInfoProvider();
+
             #region Login
 
             Console.WriteLine("Default culture is en_US. The culture for client translations can be changed in the code.");
@@ -300,8 +302,39 @@ namespace MetasysServicesExampleApp
             {
                 Console.WriteLine($"\n{p.ShortName}: {p.Label}, {p.PresentValue?.StringValue}");
             }
-            
-            #endregion                
+
+            #endregion
+
+            #region Alarms
+
+            Console.WriteLine("Enter alarm id to get alarm details: ");
+            string alarmId = Console.ReadLine();
+
+            AlarmItemProvider alarmItem = client.GetSingleAlarm(alarmId);
+
+            Console.WriteLine(string.Format("\n Alarm details found for {0}", alarmId));
+            Console.WriteLine($"\n Id: {alarmItem.Id}, Name: {alarmItem.Name}, ItemReference: {alarmItem.ItemReference}");
+
+            Console.WriteLine("\n List of alarms with details");
+
+            //TODO: write code to get input from console
+            var alarmFilterModel = new AlarmFilterModel("2019-12-10T13%3A58%3A20.243Z", "2019-12-13T13%3A58%3A20.243Z",
+                null, 100, "0%2C255", null, null, null, null, 1,
+                "creationTime", false, false, false, false);
+
+            var alarmItems = client.GetAlarms(alarmFilterModel);
+
+            Console.WriteLine($"\n Total: {alarmItems.Total}");
+            Console.WriteLine($"\n Next: {alarmItems.Next}");
+            Console.WriteLine($"\n Previous: {alarmItems.Previous}");
+            Console.WriteLine($"\n Self: {alarmItems.Self}");
+
+            foreach (var item in alarmItems.Items)
+            {
+                Console.WriteLine($"\n Id: {item.Id}, Name: {item.Name}, ItemReference: {item.ItemReference}");
+            }
+
+            #endregion
         }
     }
 }

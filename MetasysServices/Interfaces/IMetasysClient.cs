@@ -201,5 +201,18 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid spaceId);
 
+        /// <summary>
+        /// Retrieves the specified alarm.
+        /// </summary>
+        /// <param name="alarmId">The identifier of the alarm.</param>
+        /// <returns>The alarm details</returns>
+        AlarmItemProvider GetSingleAlarm(string alarmId);
+
+        /// <summary>
+        /// Retrieves a collection of alarms.
+        /// </summary>
+        /// <param name="alarmFilterModel">The model to get alarms.</param>
+        /// <returns>The list of alarms.</returns>
+        PagedResult<IEnumerable<AlarmItemProvider>> GetAlarms(AlarmFilterModel alarmFilterModel);
     }
 }
