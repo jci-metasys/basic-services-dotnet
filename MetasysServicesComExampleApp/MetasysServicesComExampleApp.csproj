@@ -54,6 +54,10 @@
       <Project>{1B32BB45-E8DE-47C7-B229-1016F638B1EC}</Project>
       <Name>MetasysServicesCom</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MetasysServices\MetasysServices.csproj">
+      <Project>{695EDF1F-786A-443E-89D6-34FBAEFEA43B}</Project>
+      <Name>MetasysServices</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

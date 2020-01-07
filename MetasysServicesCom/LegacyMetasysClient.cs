@@ -44,6 +44,7 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<AccessToken, IComAccessToken>();
                 cfg.CreateMap<Command, IComCommand>();
                 cfg.CreateMap<MetasysObjectType, IComMetasysObjectType>();
+                cfg.CreateMap<ComAlarmItemProvider, IComProvideAlarmItem>();
             }).CreateMapper();
         }
 
@@ -262,6 +263,20 @@ namespace JohnsonControls.Metasys.ComServices
             // Note: need a generic object as return type in order to map correctly to VBA type array
             var res = Client.GetEquipment();
             return Mapper.Map<IComMetasysObject[]>(res);
+        }
+
+        /// <inheritdoc />
+        public object GetSingleAlarm(string alarmId)
+        {
+            var alarmItem = Client.GetSingleAlarm(alarmId);
+            return Mapper.Map<IComProvideAlarmItem[]>(alarmItem);
+        }
+
+        /// <inheritdoc />
+        public object GetAlarms(AlarmFilterModel alarmFilterModel)
+        {
+            var alarmItems = Client.GetAlarms(alarmFilterModel);
+            return Mapper.Map<IComProvideAlarmItem[]>(alarmItems);
         }
     }
 }
