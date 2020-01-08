@@ -45,6 +45,7 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<Command, IComCommand>();
                 cfg.CreateMap<MetasysObjectType, IComMetasysObjectType>();
                 cfg.CreateMap<ComAlarmItemProvider, IComProvideAlarmItem>();
+                cfg.CreateMap<ComAlarmFilter, IComFilterAlarm>();
             }).CreateMapper();
         }
 
@@ -273,9 +274,9 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc />
-        public object GetAlarms(AlarmFilterModel alarmFilterModel)
+        public object GetAlarms(dynamic alarmFilter)
         {
-            var alarmItems = Client.GetAlarms(alarmFilterModel);
+            var alarmItems = Client.GetAlarms(alarmFilter);
             return Mapper.Map<IComProvideAlarmItem[]>(alarmItems);
         }
     }

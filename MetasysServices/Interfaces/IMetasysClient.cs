@@ -211,8 +211,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Retrieves a collection of alarms.
         /// </summary>
-        /// <param name="alarmFilterModel">The model to get alarms.</param>
+        /// <param name="alarmFilter">The alarm filter to get alarms.</param>
         /// <returns>The list of alarms.</returns>
-        PagedResult<IEnumerable<AlarmItemProvider>> GetAlarms(AlarmFilterModel alarmFilterModel);
+        PagedResult<IEnumerable<AlarmItemProvider>> GetAlarms(AlarmFilter alarmFilter);
     }
 }

@@ -1,7 +1,6 @@
-﻿using JohnsonControls.Metasys.ComServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.ComServices;
 
 namespace MetasysServicesComExampleApp
 {
@@ -227,11 +226,23 @@ namespace MetasysServicesComExampleApp
             Console.WriteLine("\n List of alarms with details");
 
             //TODO: write code to get input from console
-            var alarmFilterModel = new AlarmFilterModel("2019-12-10T13%3A58%3A20.243Z", "2019-12-13T13%3A58%3A20.243Z",
-                null, 100, "0%2C255", null, null, null, null, 1,
-                "creationTime", false, false, false, false);
+            var alarmFilter = new ComAlarmFilter
+            {
+                StartTime = "2019-12-10T13%3A58%3A20.243Z",
+                EndTime = "2019-12-13T13%3A58%3A20.243Z",
+                PriorityRange = "0%2C255",
+                Type = null,
+                ExcludePending = false,
+                ExcludeAcknowledged = false,
+                ExcludeDiscarded = false,
+                Attribute = null,
+                Category = null,
+                Page = 1,
+                PageSize = 100,
+                Sort = "creationTime"
+            };
 
-            dynamic alarmItems = legacyClient.GetAlarms(alarmFilterModel);
+            dynamic alarmItems = legacyClient.GetAlarms(alarmFilter);
 
             if (alarmItems != null)
             {

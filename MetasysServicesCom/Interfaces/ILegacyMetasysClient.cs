@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace JohnsonControls.Metasys.ComServices
 {
@@ -93,8 +92,8 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Retrieves a collection of alarms.
         /// </summary>
-        /// <param name="alarmFilterModel">The alarm model to filter alarms.</param>
+        /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms with details.</returns>
-        object GetAlarms(AlarmFilterModel alarmFilterModel);
+        object GetAlarms(dynamic alarmFilter);
     }
 }

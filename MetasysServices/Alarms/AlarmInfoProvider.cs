@@ -20,14 +20,32 @@ namespace JohnsonControls.Metasys.BasicServices
     public sealed class AlarmInfoProvider : IProvideAlarmInfo
     {
 
+        private const string BaseParam = "alarms";
+        private readonly IFlurlClient client;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="AlarmInfoProvider"/> as default constructor.
+        /// </summary>
+        public AlarmInfoProvider() { }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="AlarmInfoProvider"/> with supplied data.
+        /// </summary>
+        /// <param name="client">The FlurlClient to get response from URL.</param>
+        public AlarmInfoProvider(IFlurlClient client)
+        {
+            this.client = client ?? throw new ArgumentNullException(nameof(client),
+                                               "FlurlClient can not be null.");
+        }
+
         /// <inheritdoc />
-        public async Task<PagedResult<IEnumerable<AlarmItemProvider>>> GetAlarmsAsync(string resource, FlurlClient client, AlarmFilterModel alarmFilterModel)
+        public async Task<PagedResult<IEnumerable<AlarmItemProvider>>> GetAlarmsAsync(AlarmFilter alarmFilterModel)
         {
             var alarmItems = new PagedResult<IEnumerable<AlarmItemProvider>>();
 
             try
             {
-                var response = await client.Request(new Url(resource)
+                var response = await client.Request(new Url(BaseParam)
                     .SetQueryParams(ConvertToUrl(alarmFilterModel)))
                     .GetJsonAsync<JToken>()
                     .ConfigureAwait(false);
@@ -48,13 +66,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc />
-        public async Task<AlarmItemProvider> GetSingleAlarmAsync(string alarmId, FlurlClient client, string resource)
+        public async Task<AlarmItemProvider> GetSingleAlarmAsync(string alarmId)
         {
             AlarmItemProvider alarmItem = new AlarmItemProvider();
 
             try
             {
-                var response = await client.Request(new Url(resource)
+                var response = await client.Request(new Url(BaseParam)
                     .AppendPathSegment(alarmId))
                     .GetJsonAsync<JToken>()
                     .ConfigureAwait(false);
@@ -74,7 +92,7 @@ namespace JohnsonControls.Metasys.BasicServices
             return alarmItem;
         }
 
-        private static string ConvertToUrl(AlarmFilterModel alarmFilterModel)
+        private static string ConvertToUrl(AlarmFilter alarmFilterModel)
         {
             return string.Format("{0}{1}&{2}&{3}&{4}&{5}&{6}&{7}&{8}&{9}&{10}&{11}",
                 '?', alarmFilterModel.StartTime, alarmFilterModel.EndTime, alarmFilterModel.PriorityRange, alarmFilterModel.Type,
