@@ -89,7 +89,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     .AppendPathSegments("api", version));
             }
 
-            alarmInfoProvider = new AlarmInfoProvider();
+            alarmInfoProvider = new AlarmInfoProvider(Client);
         }
 
         /// <summary>
@@ -1383,13 +1383,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc />
         public AlarmItemProvider GetSingleAlarm(string alarmId)
         {
-            return alarmInfoProvider.GetSingleAlarmAsync(alarmId, Client, "alarms").GetAwaiter().GetResult();
+            return alarmInfoProvider.GetSingleAlarmAsync(alarmId).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc />
-        public PagedResult<IEnumerable<AlarmItemProvider>> GetAlarms(AlarmFilterModel alarmFilterModel)
+        public PagedResult<IEnumerable<AlarmItemProvider>> GetAlarms(AlarmFilter alarmFilter)
         {
-            return alarmInfoProvider.GetAlarmsAsync("alarms", Client, alarmFilterModel).GetAwaiter().GetResult();
+            return alarmInfoProvider.GetAlarmsAsync(alarmFilter).GetAwaiter().GetResult();
         }
     }
 }

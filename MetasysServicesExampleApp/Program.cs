@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json.Linq;
 using JohnsonControls.Metasys.BasicServices;
-using Newtonsoft.Json;
-using System.Globalization;
 
 namespace MetasysServicesExampleApp
 {
@@ -318,11 +315,23 @@ namespace MetasysServicesExampleApp
             Console.WriteLine("\n List of alarms with details");
 
             //TODO: write code to get input from console
-            var alarmFilterModel = new AlarmFilterModel("2019-12-10T13%3A58%3A20.243Z", "2019-12-13T13%3A58%3A20.243Z",
-                null, 100, "0%2C255", null, null, null, null, 1,
-                "creationTime", false, false, false, false);
+            var alarmFilter = new AlarmFilter
+            {
+                StartTime = "2019-12-10T13%3A58%3A20.243Z",
+                EndTime = "2019-12-13T13%3A58%3A20.243Z",
+                PriorityRange = "0%2C255",
+                Type = null,
+                ExcludePending = false,
+                ExcludeAcknowledged = false,
+                ExcludeDiscarded = false,
+                Attribute = null,
+                Category = null,
+                Page = 1,
+                PageSize = 100,
+                Sort = "creationTime"
+            };
 
-            var alarmItems = client.GetAlarms(alarmFilterModel);
+            var alarmItems = client.GetAlarms(alarmFilter);
 
             Console.WriteLine($"\n Total: {alarmItems.Total}");
             Console.WriteLine($"\n Next: {alarmItems.Next}");
