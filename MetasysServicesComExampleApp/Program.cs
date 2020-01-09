@@ -1,6 +1,6 @@
-﻿using JohnsonControls.Metasys.ComServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using JohnsonControls.Metasys.ComServices;
 
 namespace MetasysServicesComExampleApp
 {
@@ -209,6 +209,51 @@ namespace MetasysServicesComExampleApp
             foreach (var space in (dynamic)spaces)
             {
                 Console.WriteLine($"\n{space.Id}: {space.Name}, {space.ItemReference}");
+            }
+
+            #endregion
+
+            #region Alarms
+
+            Console.WriteLine("Enter alarm id to get alarm details: ");
+            string alarmId = Console.ReadLine();
+
+            dynamic alarmItem = legacyClient.GetSingleAlarm(alarmId);
+
+            Console.WriteLine(string.Format("\n Alarm details found for {0}", alarmId));
+            Console.WriteLine($"\n Id: {alarmItem.Id}, Name: {alarmItem.Name}, ItemReference: {alarmItem.ItemReference}");
+
+            Console.WriteLine("\n List of alarms with details");
+
+            //TODO: write code to get input from console
+            var alarmFilter = new ComAlarmFilter
+            {
+                StartTime = "2019-12-10T13%3A58%3A20.243Z",
+                EndTime = "2019-12-13T13%3A58%3A20.243Z",
+                PriorityRange = "0%2C255",
+                Type = null,
+                ExcludePending = false,
+                ExcludeAcknowledged = false,
+                ExcludeDiscarded = false,
+                Attribute = null,
+                Category = null,
+                Page = 1,
+                PageSize = 100,
+                Sort = "creationTime"
+            };
+
+            dynamic alarmItems = legacyClient.GetAlarms(alarmFilter);
+
+            if (alarmItems != null)
+            {
+                foreach (var item in alarmItems)
+                {
+                    Console.WriteLine($"\n Id: {item.Id}, Name: {item.Name}, ItemReference: {item.ItemReference}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No alarm found.");
             }
 
             #endregion

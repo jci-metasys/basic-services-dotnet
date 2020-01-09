@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json.Linq;
 using JohnsonControls.Metasys.BasicServices;
-using Newtonsoft.Json;
-using System.Globalization;
 
 namespace MetasysServicesExampleApp
 {
@@ -24,6 +21,8 @@ namespace MetasysServicesExampleApp
             var username = args[0];
             var password = args[1];
             var hostname = args[2];
+
+            IProvideAlarmInfo alarmInfoProvicer = new AlarmInfoProvider();
 
             #region Login
 
@@ -300,8 +299,51 @@ namespace MetasysServicesExampleApp
             {
                 Console.WriteLine($"\n{p.ShortName}: {p.Label}, {p.PresentValue?.StringValue}");
             }
-            
-            #endregion                
+
+            #endregion
+
+            #region Alarms
+
+            Console.WriteLine("Enter alarm id to get alarm details: ");
+            string alarmId = Console.ReadLine();
+
+            AlarmItemProvider alarmItem = client.GetSingleAlarm(alarmId);
+
+            Console.WriteLine(string.Format("\n Alarm details found for {0}", alarmId));
+            Console.WriteLine($"\n Id: {alarmItem.Id}, Name: {alarmItem.Name}, ItemReference: {alarmItem.ItemReference}");
+
+            Console.WriteLine("\n List of alarms with details");
+
+            //TODO: write code to get input from console
+            var alarmFilter = new AlarmFilter
+            {
+                StartTime = "2019-12-10T13%3A58%3A20.243Z",
+                EndTime = "2019-12-13T13%3A58%3A20.243Z",
+                PriorityRange = "0%2C255",
+                Type = null,
+                ExcludePending = false,
+                ExcludeAcknowledged = false,
+                ExcludeDiscarded = false,
+                Attribute = null,
+                Category = null,
+                Page = 1,
+                PageSize = 100,
+                Sort = "creationTime"
+            };
+
+            var alarmItems = client.GetAlarms(alarmFilter);
+
+            Console.WriteLine($"\n Total: {alarmItems.Total}");
+            Console.WriteLine($"\n Next: {alarmItems.Next}");
+            Console.WriteLine($"\n Previous: {alarmItems.Previous}");
+            Console.WriteLine($"\n Self: {alarmItems.Self}");
+
+            foreach (var item in alarmItems.Items)
+            {
+                Console.WriteLine($"\n Id: {item.Id}, Name: {item.Name}, ItemReference: {item.ItemReference}");
+            }
+
+            #endregion
         }
     }
 }
