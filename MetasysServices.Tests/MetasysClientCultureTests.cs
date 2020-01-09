@@ -4,7 +4,7 @@ using JohnsonControls.Metasys.BasicServices;
 using System.Globalization;
 using System.Diagnostics;
 
-namespace Tests
+namespace MetasysServices.Tests
 {
     public class MetasysClientCultureTests
     {
