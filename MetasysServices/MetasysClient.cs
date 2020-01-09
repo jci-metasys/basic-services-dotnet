@@ -1391,5 +1391,17 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             return alarmInfoProvider.GetAlarmsAsync(alarmFilter).GetAwaiter().GetResult();
         }
+
+        /// <inheritdoc />
+        public PagedResult<IEnumerable<AlarmItemProvider>> GetAlarmsForAnObject(string objectId, AlarmFilter alarmFilter)
+        {
+            return alarmInfoProvider.GetAlarmsForAnObjectAsync(objectId, alarmFilter).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public PagedResult<IEnumerable<AlarmItemProvider>> GetAlarmsForNetworkDevice(string networkDeviceId, AlarmFilter alarmFilter)
+        {
+            return alarmInfoProvider.GetAlarmsForNetworkDeviceAsync(networkDeviceId, alarmFilter).GetAwaiter().GetResult();
+        }
     }
 }
