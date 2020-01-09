@@ -10,6 +10,7 @@ using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -43,6 +44,8 @@ namespace JohnsonControls.Metasys.BasicServices
         public CultureInfo Culture { get; set; }
 
         private static CultureInfo CultureEnUS = new CultureInfo(1033);
+
+        private readonly IProvideAlarmInfo alarmInfoProvider;
 
         /// <summary>
         /// Stores retrieved Ids and serves as an in-memory caching layer
@@ -85,6 +88,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 Client = new FlurlClient($"https://{hostname}"
                     .AppendPathSegments("api", version));
             }
+
+            alarmInfoProvider = new AlarmInfoProvider(Client);
         }
 
         /// <summary>
@@ -267,32 +272,6 @@ namespace JohnsonControls.Metasys.BasicServices
             ObjectTypeEnumerations.Add(ObjectTypeEnumerations2);
         }
 
-        /// <summary>
-        /// Throws a Metasys Exception from a Flurl.Http exception.
-        /// </summary>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        /// <exception cref="MetasysHttpTimeoutException"></exception>
-        /// <exception cref="MetasysHttpException"></exception>
-        protected void ThrowHttpException(Flurl.Http.FlurlHttpException e)
-        {
-            if (e.Call.Response.StatusCode == HttpStatusCode.NotFound)
-            {
-                throw new MetasysHttpNotFoundException(e);
-            }
-            if (e.GetType() == typeof(Flurl.Http.FlurlParsingException))
-            {
-                throw new MetasysHttpParsingException((Flurl.Http.FlurlParsingException)e);
-            }
-            else if (e.GetType() == typeof(Flurl.Http.FlurlHttpTimeoutException))
-            {
-                throw new MetasysHttpTimeoutException((Flurl.Http.FlurlHttpTimeoutException)e);
-            }
-            else
-            {
-                throw new MetasysHttpException(e);
-            }
-        }
-
         /// <summary>Use to log an error message from an asynchronous context.</summary>
         private async Task LogErrorAsync(String message)
         {
@@ -337,7 +316,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch (FlurlHttpException e)
             {
-                ThrowHttpException(e);
+                ManageException.ThrowHttpException(e);
             }
             return this.AccessToken;
         }
@@ -371,7 +350,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch (FlurlHttpException e)
             {
-                ThrowHttpException(e);
+                ManageException.ThrowHttpException(e);
             }
             return this.AccessToken;
         }
@@ -491,7 +470,7 @@ namespace JohnsonControls.Metasys.BasicServices
                         // Metasys respond with "Identifier is not found." message, so make exception explicit
                         throw new MetasysHttpNotFoundException(e);
                     }
-                    ThrowHttpException(e);
+                    ManageException.ThrowHttpException(e);
                 }
             }
             return IdentifiersDictionary[normalizedItemReference];
@@ -564,7 +543,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch (FlurlHttpException e)
             {
-                ThrowHttpException(e);
+                ManageException.ThrowHttpException(e);
             }
             catch (System.NullReferenceException e)
             {
@@ -774,7 +753,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch (FlurlHttpException e)
             {
-                ThrowHttpException(e);
+                ManageException.ThrowHttpException(e);
             }
         }
 
@@ -826,7 +805,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch (FlurlHttpException e)
             {
-                ThrowHttpException(e);
+                ManageException.ThrowHttpException(e);
             }
             return null;
         }
@@ -882,7 +861,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch (FlurlHttpException e)
             {
-                ThrowHttpException(e);
+                ManageException.ThrowHttpException(e);
             }
         }
 
@@ -935,7 +914,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch (FlurlHttpException e)
             {
-                ThrowHttpException(e);
+                ManageException.ThrowHttpException(e);
             }
 
             return null;
@@ -1007,7 +986,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch (FlurlHttpException e)
             {
-                ThrowHttpException(e);
+                ManageException.ThrowHttpException(e);
             }
             return types;
         }
@@ -1057,7 +1036,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch (FlurlHttpException e)
             {
-                ThrowHttpException(e);
+                ManageException.ThrowHttpException(e);
             }
             return null;
         }
@@ -1195,7 +1174,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch (FlurlHttpException e)
             {
-                ThrowHttpException(e);
+                ManageException.ThrowHttpException(e);
             }
             return response;
         }
@@ -1399,6 +1378,18 @@ namespace JohnsonControls.Metasys.BasicServices
                 pointsWithValues.Add(point);
             }       
             return pointsWithValues;          
+        }
+
+        /// <inheritdoc />
+        public AlarmItemProvider GetSingleAlarm(string alarmId)
+        {
+            return alarmInfoProvider.GetSingleAlarmAsync(alarmId).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public PagedResult<IEnumerable<AlarmItemProvider>> GetAlarms(AlarmFilter alarmFilter)
+        {
+            return alarmInfoProvider.GetAlarmsAsync(alarmFilter).GetAwaiter().GetResult();
         }
     }
 }
