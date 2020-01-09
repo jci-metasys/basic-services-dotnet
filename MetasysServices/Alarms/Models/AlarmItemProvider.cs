@@ -84,5 +84,34 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Link to annotations
         /// </summary>
         public string AnnotationsUrl { get; set; }
+
+        /// <summary>
+        /// Returns a value indicating whither this instance has values equal to a specified object.
+        /// </summary>
+        /// <param name="obj"></param>
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj is AlarmItemProvider)
+            {
+                var other = (AlarmItemProvider)obj;
+                bool areEqual = ((this.Id == null && other.Id == null) || (this.Id != null && this.Id.Equals(other.Id))) &&
+                    ((this.ItemReference == null && other.ItemReference == null) ||
+                        (this.ItemReference != null && this.ItemReference.Equals(other.ItemReference)));
+                // To do: iterate expression on all the properties
+                return areEqual;
+            }
+            return false;
+        }
+
+        /// <summary></summary>
+        public override int GetHashCode()
+        {
+            var code = 13;
+            code = (code * 7) + Id.GetHashCode();
+            if (ItemReference != null)
+                code = (code * 7) + ItemReference.GetHashCode();
+            // To do: iterate expression on all the properties
+            return code;
+        }
     }
 }
