@@ -92,6 +92,59 @@ namespace JohnsonControls.Metasys.BasicServices
             return alarmItem;
         }
 
+        /// <inheritdoc />
+        public async Task<PagedResult<IEnumerable<AlarmItemProvider>>> GetAlarmsForAnObjectAsync(string objectId, AlarmFilter alarmFilter)
+        {
+            var alarmItems = new PagedResult<IEnumerable<AlarmItemProvider>>();
+            var resource = string.Format("objects/{0}/{1}", objectId, BaseParam);
+            try
+            {
+                var response = await client.Request(new Url(resource)
+                    .SetQueryParams(ConvertToUrl(alarmFilter)))
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+                try
+                {
+                    alarmItems = JsonConvert.DeserializeObject<PagedResult<IEnumerable<AlarmItemProvider>>>(response.ToString(), new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                }
+                catch (NullReferenceException e)
+                {
+                    throw new MetasysHttpParsingException(response.ToString(), e);
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ManageException.ThrowHttpException(e);
+            }
+            return alarmItems;
+        }
+
+        /// <inheritdoc />
+        public async Task<PagedResult<IEnumerable<AlarmItemProvider>>> GetAlarmsForNetworkDeviceAsync(string networkDeviceId, AlarmFilter alarmFilter)
+        {
+            var alarmItems = new PagedResult<IEnumerable<AlarmItemProvider>>();
+            var resource = string.Format("networkDevices/{0}/{1}", networkDeviceId, BaseParam);
+            try
+            {
+                var response = await client.Request(new Url(resource)
+                    .SetQueryParams(ConvertToUrl(alarmFilter)))
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+                try
+                {
+                    alarmItems = JsonConvert.DeserializeObject<PagedResult<IEnumerable<AlarmItemProvider>>>(response.ToString(), new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                }
+                catch (NullReferenceException e)
+                {
+                    throw new MetasysHttpParsingException(response.ToString(), e);
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ManageException.ThrowHttpException(e);
+            }
+            return alarmItems;
+        }
         private static string ConvertToUrl(AlarmFilter alarmFilterModel)
         {
             return string.Format("{0}{1}&{2}&{3}&{4}&{5}&{6}&{7}&{8}&{9}&{10}&{11}",

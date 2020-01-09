@@ -225,24 +225,30 @@ namespace MetasysServicesComExampleApp
 
             Console.WriteLine("\n List of alarms with details");
 
-            //TODO: write code to get input from console
-            var alarmFilter = new ComAlarmFilter
+            string getAlarms;
+            ComAlarmFilter getAlarmsFilter = new ComAlarmFilter();
+            if (args.Length != 12)
             {
-                StartTime = "2019-12-10T13%3A58%3A20.243Z",
-                EndTime = "2019-12-13T13%3A58%3A20.243Z",
-                PriorityRange = "0%2C255",
-                Type = null,
-                ExcludePending = false,
-                ExcludeAcknowledged = false,
-                ExcludeDiscarded = false,
-                Attribute = null,
-                Category = null,
-                Page = 1,
-                PageSize = 100,
-                Sort = "creationTime"
-            };
+                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Priority range, Type, Exclude pending, Exclude acknowledged, Exclude discarded, Attribute, Category, Page, Page Size, Sort" +
+                    "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
+                getAlarms = Console.ReadLine();
+                args = getAlarms.Split(' ');
 
-            dynamic alarmItems = legacyClient.GetAlarms(alarmFilter);
+                getAlarmsFilter.StartTime = args[0];
+                getAlarmsFilter.EndTime = args[1];
+                getAlarmsFilter.PriorityRange = args[2];
+                getAlarmsFilter.Type = Convert.ToInt32(args[3]);
+                getAlarmsFilter.ExcludePending = Convert.ToBoolean(args[4]);
+                getAlarmsFilter.ExcludeAcknowledged = Convert.ToBoolean(args[5]);
+                getAlarmsFilter.ExcludeDiscarded = Convert.ToBoolean(args[6]);
+                getAlarmsFilter.Attribute = Convert.ToInt32(args[7]);
+                getAlarmsFilter.Category = Convert.ToInt32(args[8]);
+                getAlarmsFilter.Page = Convert.ToInt32(args[9]);
+                getAlarmsFilter.PageSize = Convert.ToInt32(args[10]);
+                getAlarmsFilter.Sort = args[12];
+            }
+
+            dynamic alarmItems = legacyClient.GetAlarms(getAlarmsFilter);
 
             if (alarmItems != null)
             {
@@ -255,6 +261,68 @@ namespace MetasysServicesComExampleApp
             {
                 Console.WriteLine("No alarm found.");
             }
+
+            Console.WriteLine("Enter object id to get alarm details: ");
+            string objectId = Console.ReadLine();
+
+            Console.WriteLine(string.Format("\n Alarm details found for this object {0}", objectId));
+
+            string getAlarmsForObject;
+            ComAlarmFilter alarmFilterForObject = new ComAlarmFilter();
+
+            if (args.Length != 12)
+            {
+                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Priority range, Type, Exclude pending, Exclude acknowledged, Exclude discarded, Attribute, Category, Page, Page Size, Sort" +
+                    "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
+                getAlarmsForObject = Console.ReadLine();
+                args = getAlarmsForObject.Split(' ');
+
+                alarmFilterForObject.StartTime = args[0];
+                alarmFilterForObject.EndTime = args[1];
+                alarmFilterForObject.PriorityRange = args[2];
+                alarmFilterForObject.Type = Convert.ToInt32(args[3]);
+                alarmFilterForObject.ExcludePending = Convert.ToBoolean(args[4]);
+                alarmFilterForObject.ExcludeAcknowledged = Convert.ToBoolean(args[5]);
+                alarmFilterForObject.ExcludeDiscarded = Convert.ToBoolean(args[6]);
+                alarmFilterForObject.Attribute = Convert.ToInt32(args[7]);
+                alarmFilterForObject.Category = Convert.ToInt32(args[8]);
+                alarmFilterForObject.Page = Convert.ToInt32(args[9]);
+                alarmFilterForObject.PageSize = Convert.ToInt32(args[10]);
+                alarmFilterForObject.Sort = args[12];
+            }
+
+            dynamic alarmItemsForObject = legacyClient.GetAlarmsForAnObject(objectId, alarmFilterForObject);
+
+            Console.WriteLine("Enter network device id to get alarm details: ");
+            string networkDeviceId = Console.ReadLine();
+
+            Console.WriteLine(string.Format("\n Alarm details found for this network device {0}", networkDeviceId));
+
+            string getAlarmsForNetworkDevice;
+            ComAlarmFilter alarmFilterModelForNetworkDevice = new ComAlarmFilter();
+
+            if (args.Length != 12)
+            {
+                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Priority range, Type, Exclude pending, Exclude acknowledged, Exclude discarded, Attribute, Category, Page, Page Size, Sort" +
+                    "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
+                getAlarmsForNetworkDevice = Console.ReadLine();
+                args = getAlarmsForNetworkDevice.Split(' ');
+
+                alarmFilterForObject.StartTime = args[0];
+                alarmFilterForObject.EndTime = args[1];
+                alarmFilterForObject.PriorityRange = args[2];
+                alarmFilterForObject.Type = Convert.ToInt32(args[3]);
+                alarmFilterForObject.ExcludePending = Convert.ToBoolean(args[4]);
+                alarmFilterForObject.ExcludeAcknowledged = Convert.ToBoolean(args[5]);
+                alarmFilterForObject.ExcludeDiscarded = Convert.ToBoolean(args[6]);
+                alarmFilterForObject.Attribute = Convert.ToInt32(args[7]);
+                alarmFilterForObject.Category = Convert.ToInt32(args[8]);
+                alarmFilterForObject.Page = Convert.ToInt32(args[9]);
+                alarmFilterForObject.PageSize = Convert.ToInt32(args[10]);
+                alarmFilterForObject.Sort = args[12];
+            }
+
+            dynamic alarmItemsForNetworkDevice = legacyClient.GetAlarmsForNetworkDevice(objectId, alarmFilterModelForNetworkDevice);
 
             #endregion
 
