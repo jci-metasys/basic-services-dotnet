@@ -88,9 +88,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Link to network device
         /// </summary>
-        public string networkDeviceUrl { get; set; }
-		
-        /// <summary>
+        public string networkDeviceUrl { get; set; }	
+     
         /// Returns a value indicating whither this instance has values equal to a specified object.
         /// </summary>
         /// <param name="obj"></param>
@@ -98,12 +97,12 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (obj != null && obj is AlarmItemProvider)
             {
-                var other = (AlarmItemProvider)obj;
-                bool areEqual = ((this.Id == null && other.Id == null) || (this.Id != null && this.Id.Equals(other.Id))) &&
-                    ((this.ItemReference == null && other.ItemReference == null) ||
-                        (this.ItemReference != null && this.ItemReference.Equals(other.ItemReference)));
-                // To do: iterate expression on all the properties
-                return areEqual;
+                var o = (AlarmItemProvider)obj;
+                // Compare each properties one by one for better performance
+                return this.Id == o.Id && this.IsAcknowledged == o.IsAcknowledged && this.IsAckRequired == o.IsAckRequired && this.IsDiscarded == o.IsDiscarded
+                       && this.ItemReference == o.ItemReference && this.Message == o.Message && this.Name == o.Name && this.ObjectUrl == o.ObjectUrl &&
+                       this.Priority == o.Priority && this.Self == o.Self && this.TypeUrl == o.TypeUrl
+                       && this.AnnotationsUrl==o.AnnotationsUrl && this.CategoryUrl==o.CategoryUrl && this.CreationTime==o.CreationTime;
             }
             return false;
         }
@@ -112,10 +111,35 @@ namespace JohnsonControls.Metasys.BasicServices
         public override int GetHashCode()
         {
             var code = 13;
+            // Calculate hash on each properties one by one
             code = (code * 7) + Id.GetHashCode();
             if (ItemReference != null)
                 code = (code * 7) + ItemReference.GetHashCode();
-            // To do: iterate expression on all the properties
+            if (this.AnnotationsUrl != null)
+                code = (code * 7) + AnnotationsUrl.GetHashCode();
+            if (this.CategoryUrl != null)
+                code = (code * 7) + CategoryUrl.GetHashCode();
+            if (this.CreationTime != null)
+                code = (code * 7) + CreationTime.GetHashCode();
+            if (this.IsAckRequired != null)
+                code = (code * 7) + IsAckRequired.GetHashCode();
+            if (this.IsAcknowledged != null)
+                code = (code * 7) + IsAcknowledged.GetHashCode();
+            if (this.IsDiscarded != null)
+                code = (code * 7) + IsDiscarded.GetHashCode();
+            if (this.Message != null)
+                code = (code * 7) + Message.GetHashCode();
+            if (this.Name != null)
+                code = (code * 7) + Name.GetHashCode();
+            if (this.ObjectUrl != null)
+                code = (code * 7) + ObjectUrl.GetHashCode();
+            if (this.Priority != null)
+                code = (code * 7) + Priority.GetHashCode();
+            if (this.Self != null)
+                code = (code * 7) + Self.GetHashCode();
+            // to do: add compare on trigger value
+            if (this.TypeUrl != null)
+                code = (code * 7) + TypeUrl.GetHashCode();
             return code;
         }
     }
