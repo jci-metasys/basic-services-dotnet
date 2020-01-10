@@ -279,5 +279,19 @@ namespace JohnsonControls.Metasys.ComServices
             var alarmItems = Client.GetAlarms(alarmFilter);
             return Mapper.Map<IComProvideAlarmItem[]>(alarmItems);
         }
+
+        /// <inheritdoc />
+        public object GetAlarmsForAnObject(string objectId, dynamic alarmFilter)
+        {
+            var alarmItems = Client.GetAlarmsForAnObject(objectId, alarmFilter);
+            return Mapper.Map<IComProvideAlarmItem[]>(alarmItems);
+        }
+
+        /// <inheritdoc />
+        public object GetAlarmsForNetworkDevice(string networkDeviceId, dynamic alarmFilter)
+        {
+            var alarmItems = Client.GetAlarms(alarmFilter);
+            return Mapper.Map<IComProvideAlarmItem[]>(alarmItems);
+        }
     }
 }

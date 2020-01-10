@@ -86,6 +86,10 @@ namespace JohnsonControls.Metasys.BasicServices
         public string AnnotationsUrl { get; set; }
 
         /// <summary>
+        /// Link to network device
+        /// </summary>
+        public string networkDeviceUrl { get; set; }	
+     
         /// Returns a value indicating whither this instance has values equal to a specified object.
         /// </summary>
         /// <param name="obj"></param>
