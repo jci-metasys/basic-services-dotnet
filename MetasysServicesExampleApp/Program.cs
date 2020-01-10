@@ -312,30 +312,20 @@ namespace MetasysServicesExampleApp
             Console.WriteLine(string.Format("\n Alarm details found for {0}", alarmId));
             Console.WriteLine($"\n Id: {alarmItem.Id}, Name: {alarmItem.Name}, ItemReference: {alarmItem.ItemReference}");
 
-            Console.WriteLine("\n List of alarms with details");
-
             string getAlarms;
             AlarmFilter getAlarmsFilter = new AlarmFilter();
-            if (args.Length != 12)
-            {
-                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Priority range, Type, Exclude pending, Exclude acknowledged, Exclude discarded, Attribute, Category, Page, Page Size, Sort" +
-                    "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
-                getAlarms = Console.ReadLine();
-                args = getAlarms.Split(' ');
 
-                getAlarmsFilter.StartTime = args[0];
-                getAlarmsFilter.EndTime = args[1];
-                getAlarmsFilter.PriorityRange = args[2];
-                getAlarmsFilter.Type = Convert.ToInt32(args[3]);
-                getAlarmsFilter.ExcludePending = Convert.ToBoolean(args[4]);
-                getAlarmsFilter.ExcludeAcknowledged = Convert.ToBoolean(args[5]);
-                getAlarmsFilter.ExcludeDiscarded = Convert.ToBoolean(args[6]);
-                getAlarmsFilter.Attribute = Convert.ToInt32(args[7]);
-                getAlarmsFilter.Category = Convert.ToInt32(args[8]);
-                getAlarmsFilter.Page = Convert.ToInt32(args[9]);
-                getAlarmsFilter.PageSize = Convert.ToInt32(args[10]);
-                getAlarmsFilter.Sort = args[12];
+            Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Priority range, Type, Exclude pending, Exclude acknowledged, Exclude discarded, Attribute, Category, Page, Page Size, Sort" +
+                "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
+            getAlarms = Console.ReadLine();
+            args = getAlarms.Split(' ');
+
+            if (args != null)
+            {
+                getAlarmsFilter = ReadUserInput(args);
             }
+
+            Console.WriteLine("\n List of alarms with details");
 
             var alarmItems = client.GetAlarms(getAlarmsFilter);
 
@@ -349,68 +339,73 @@ namespace MetasysServicesExampleApp
                 Console.WriteLine($"\n Id: {item.Id}, Name: {item.Name}, ItemReference: {item.ItemReference}");
             }
 
-            Console.WriteLine("Enter object id to get alarm details: ");
+            Console.WriteLine("\nEnter object id to get alarm details: ");
             string objectId = Console.ReadLine();
-            
-            Console.WriteLine(string.Format("\n Alarm details found for this object {0}", objectId));
 
             string getAlarmsForObject;
             AlarmFilter alarmFilterForObject = new AlarmFilter();
 
-            if (args.Length != 12)
-            {
-                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Priority range, Type, Exclude pending, Exclude acknowledged, Exclude discarded, Attribute, Category, Page, Page Size, Sort" +
+            Console.WriteLine("\n Please enter these parameters separated by space: Start Time, End Time, Priority range, Type, Exclude pending, Exclude acknowledged, Exclude discarded, Attribute, Category, Page, Page Size, Sort" +
                     "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
-                getAlarmsForObject = Console.ReadLine();
-                args = getAlarmsForObject.Split(' ');
 
-                alarmFilterForObject.StartTime = args[0];
-                alarmFilterForObject.EndTime = args[1];
-                alarmFilterForObject.PriorityRange = args[2];
-                alarmFilterForObject.Type = Convert.ToInt32(args[3]);
-                alarmFilterForObject.ExcludePending = Convert.ToBoolean(args[4]);
-                alarmFilterForObject.ExcludeAcknowledged = Convert.ToBoolean(args[5]);
-                alarmFilterForObject.ExcludeDiscarded = Convert.ToBoolean(args[6]);
-                alarmFilterForObject.Attribute = Convert.ToInt32(args[7]);
-                alarmFilterForObject.Category = Convert.ToInt32(args[8]);
-                alarmFilterForObject.Page = Convert.ToInt32(args[9]);
-                alarmFilterForObject.PageSize = Convert.ToInt32(args[10]);
-                alarmFilterForObject.Sort = args[12];
+            getAlarmsForObject = Console.ReadLine();
+            args = getAlarmsForObject.Split(' ');
+
+            if (args != null)
+            {
+                alarmFilterForObject = ReadUserInput(args);
             }
-			
+
+            Console.WriteLine(string.Format("\nAlarm details found for this object {0}", objectId));
+
             var alarmItemsForObject = client.GetAlarmsForAnObject(objectId, alarmFilterForObject);
 
-            Console.WriteLine("Enter network device id to get alarm details: ");
+            Console.WriteLine("\nEnter network device id to get alarm details: ");
             string networkDeviceId = Console.ReadLine();
-
-            Console.WriteLine(string.Format("\n Alarm details found for this network device {0}", networkDeviceId));
 
             string getAlarmsForNetworkDevice;
             AlarmFilter alarmFilterModelForNetworkDevice = new AlarmFilter();
 
-            if (args.Length != 12)
-            {
-                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Priority range, Type, Exclude pending, Exclude acknowledged, Exclude discarded, Attribute, Category, Page, Page Size, Sort" +
-                    "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
-                getAlarmsForNetworkDevice = Console.ReadLine();
-                args = getAlarmsForNetworkDevice.Split(' ');
+            Console.WriteLine("\nPlease enter these parameters separated by space: Start Time, End Time, Priority range, Type, Exclude pending, Exclude acknowledged, Exclude discarded, Attribute, Category, Page, Page Size, Sort" +
+                "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
 
-                alarmFilterForObject.StartTime = args[0];
-                alarmFilterForObject.EndTime = args[1];
-                alarmFilterForObject.PriorityRange = args[2];
-                alarmFilterForObject.Type = Convert.ToInt32(args[3]);
-                alarmFilterForObject.ExcludePending = Convert.ToBoolean(args[4]);
-                alarmFilterForObject.ExcludeAcknowledged = Convert.ToBoolean(args[5]);
-                alarmFilterForObject.ExcludeDiscarded = Convert.ToBoolean(args[6]);
-                alarmFilterForObject.Attribute = Convert.ToInt32(args[7]);
-                alarmFilterForObject.Category = Convert.ToInt32(args[8]);
-                alarmFilterForObject.Page = Convert.ToInt32(args[9]);
-                alarmFilterForObject.PageSize = Convert.ToInt32(args[10]);
-                alarmFilterForObject.Sort = args[12];
+            getAlarmsForNetworkDevice = Console.ReadLine();
+            args = getAlarmsForNetworkDevice.Split(' ');
+
+            if (args == null || args.Length !=12)
+            {
+                alarmFilterModelForNetworkDevice = ReadUserInput(args);
+
+                Console.WriteLine(string.Format("\nAlarm details found for this object {0}", objectId));
+
+                var alarmItemsForNetworkDevice = client.GetAlarmsForNetworkDevice(networkDeviceId, alarmFilterModelForNetworkDevice);
+            }
+            else
+            {
+                Console.WriteLine("\nInvalid Input");
             }
 
-            var alarmItemsForNetworkDevice = client.GetAlarmsForNetworkDevice(networkDeviceId, alarmFilterModelForNetworkDevice);
             #endregion
+        }
+
+        private static AlarmFilter ReadUserInput(string[] args)
+        {
+            AlarmFilter alarmFilter = new AlarmFilter
+            {
+                StartTime = args[0],
+                EndTime = args[1],
+                PriorityRange = args[2],
+                Type = args[3].ToLower() != "null" ? Convert.ToInt32(args[3].ToString()) : 0,
+                ExcludePending = args[4].ToLower() != "null" ? Convert.ToBoolean(args[4]) : false,
+                ExcludeAcknowledged = !string.IsNullOrEmpty(args[5]) ? Convert.ToBoolean(args[5]) : false,
+                ExcludeDiscarded = !string.IsNullOrEmpty(args[6]) ? Convert.ToBoolean(args[6]) : false,
+                Attribute = args[7].ToLower() != "null" ? Convert.ToInt32(args[7]) : 0,
+                Category = args[8].ToLower() != "null" ? Convert.ToInt32(args[8]) : 0,
+                Page = args[9].ToLower() != "null" ? Convert.ToInt32(args[9]) : 0,
+                PageSize = args[10].ToLower() != "null" ? Convert.ToInt32(args[10]) : 0,
+                Sort = args[11]
+            };
+            return alarmFilter;
         }
     }
 }

@@ -79,9 +79,5 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         string AnnotationsUrl { get; set; }
 
-        /// <summary>
-        /// Link to network device
-        /// </summary>
-        string networkDeviceUrl { get; set; }
     }
 }
