@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2020-01-20
+
+### Added
+
+- Get Alarms method with filter object.
+- Get Single Alarm by guid method.
+- Get Alarms for a specific object or network devices methods.
+
 ## [2.0.0] - 2019-11-26
 
 ### Added
