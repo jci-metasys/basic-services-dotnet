@@ -95,5 +95,21 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms with details.</returns>
         object GetAlarms(dynamic alarmFilter);
+
+        /// <summary>
+        /// Retrieves a collection of alarms for the specified object.
+        /// </summary>
+        /// <param name="objectId">The identifier of the object.</param>
+        /// <param name="alarmFilter">The alarm model to filter alarms.</param>
+        /// <returns>The list of alarms for the specified object.</returns>
+        object GetAlarmsForAnObject(string objectId, dynamic alarmFilter);
+
+        /// <summary>
+        /// Retrieves a collection of alarms for the specified object.
+        /// </summary>
+        /// <param name="networkDeviceId">The identifier of the network device.</param>
+        /// <param name="alarmFilter">The alarm model to filter alarms.</param>
+        /// <returns>The list of alarms for the specified object.</returns>
+        object GetAlarmsForNetworkDevice(string networkDeviceId, dynamic alarmFilter);
     }
 }
