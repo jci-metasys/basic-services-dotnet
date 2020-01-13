@@ -72,7 +72,7 @@ namespace JohnsonControls.Metasys.BasicServices
             while (hasNext)
             {
                 hasNext = false;
-                var response = await GetObjectsRequestAsync(id, page, parentResource, childResource).ConfigureAwait(false);
+                var response = await GetObjectsRequestAsync(id, parentResource, childResource, page).ConfigureAwait(false);
                 if (response == null || response.Type == JTokenType.Null || !response.HasValues)
 
                 {
@@ -136,6 +136,28 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
+        /// Gets a resource given the full url asynchronously.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        protected async Task<JToken> GetWithFullUrl(string url)
+        {
+            string requestUrl = url.Replace(Client.BaseUrl, "");
+            try
+            {
+                var item = await Client.Request(requestUrl)
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+                return item;
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Parses a JToken and creates a Guid.
         /// </summary>
         /// <param name="token"></param>
@@ -165,7 +187,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="parentResource">The parent resource to retrieve children.</param>    
         /// <param name="childResource">The children resource to get related elements.</param>    
         /// <exception cref="MetasysHttpException"></exception>
-        protected async Task<JToken> GetObjectsRequestAsync(Guid id, int page = 1, string parentResource = "objects", string childResource = "objects")
+        protected async Task<JToken> GetObjectsRequestAsync(Guid id, string parentResource, string childResource, int page)
         {
             Url url = new Url(parentResource)
                 .AppendPathSegments(id, childResource)

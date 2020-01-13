@@ -70,11 +70,15 @@ namespace MetasysServicesExampleApp
 
                        List<Guid> ids = new List<Guid>() { id1, id2 };
 
-                       #endregion
+            #endregion
+            #region Trends
+                var trendedAttributes=client.Trends.GetTrendedAttributes(id1);
+                Console.WriteLine(trendedAttributes[0]);
+            #endregion
 
-                       #region ReadProperty
+            #region ReadProperty
 
-                       Console.WriteLine("\n\nReadProperty...");
+            Console.WriteLine("\n\nReadProperty...");
 
                        Console.Write("\n!!!Please note ReadProperty will return null if the attribute does not exist, and will cause an exception in this example!!!");
                        Console.Write("\nEnter an attribute of the objects (Examples: name, description, presentValue): ");
