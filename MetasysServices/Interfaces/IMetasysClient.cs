@@ -143,13 +143,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Gets all child objects given a parent Guid.
         /// Level indicates how deep to retrieve objects.
         /// </summary>
-        IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, string parentResource = "objects", string childResource = "objects");
+        IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1);
 
         /// <summary>
         /// Gets all child objects given a parent Guid asynchronously.
         /// Level indicates how deep to retrieve objects.
         /// </summary>
-        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, string parentResource = "objects", string childResource = "objects");
+        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1);
 
         /// <summary>
         /// Gets all spaces.
