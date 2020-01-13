@@ -963,29 +963,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 throw new MetasysObjectTypeException(typeToken.ToString(), e);
             }
-        }
-
-        /// <summary>
-        /// Creates a new Flurl client and gets a resource given the url asynchronously.
-        /// </summary>
-        /// <param name="url"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        private async Task<JToken> GetWithFullUrl(string url)
-        {
-            string requestUrl = url.Replace(Client.BaseUrl, "");
-            try
-            {
-                var item = await Client.Request(requestUrl)
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
-                return item;
-            }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-            return null;
-        }
+        }      
 
         /// <summary>
         /// Gets all child objects given a parent Guid.
@@ -1111,7 +1089,7 @@ namespace JohnsonControls.Metasys.BasicServices
             while (hasNext)
             {
                 hasNext = false;
-                var response = await GetObjectsRequestAsync(equipmentId, page, "equipment", "points").ConfigureAwait(false);              
+                var response = await GetObjectsRequestAsync(equipmentId,  "equipment", "points", page).ConfigureAwait(false);              
                 try
                 {
                     var total = response["total"].Value<int>();
