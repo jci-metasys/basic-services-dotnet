@@ -23,6 +23,7 @@ For versioning information see the [changelog](CHANGELOG.md).
   - [Get Network Devices and other Objects](#get-network-devices-and-other-objects)
   - [Localization of Metasys Enumerations](#localization-of-metasys-enumerations)
   - [Spaces and equipment](#spaces-and-equipment)
+  - [Alarms](#alarms)
 - [Usage (COM)](#usage-com)
   - [Creating a Client](#creating-a-client-1)
   - [Login and Access Tokens](#login-and-access-tokens-1)
@@ -317,6 +318,30 @@ var point=equipmentPoints[0];
 var presentValue=point.PresentValue?.StringValue
 ```
 
+### Alarms
+
+To get all available alarms use the GetAlarms method. This method will return a PagedResult with a list of AlarmItemProvider. This accepts an AlarmFilter object to filter the response. To get all of the available types of alarms use the GetAlarmTypes which returns a list of AlarmType. To get a single alarm use the GetSingleAlarm method which returns an AlarmItemProvider object with all the details given the Guid.
+
+```csharp
+AlarmFilter alarmFilter = new AlarmFilter
+{
+    StartTime = new DateTime(2019, 12, 12).ToString(),
+    EndTime = new DateTime(2020, 1, 12).ToString()
+};
+var alarms = client.GetAlarms(alarmFilter);
+var alarmId = alarms.Items.ElementAt(0).Id;
+var alarm = client.GetSingleAlarm(alarmId);
+var message= alarm.Message;
+```
+To get the alarms of a specific Object or NetworkDevice use the GetAlarmsForAnObject and GetAlarmsForNetworkDevice methods. The Guid of the parent object is required as input.
+
+```csharp
+AlarmFilter alarmFilter = new AlarmFilter{};
+var objectId="f5fe6054-d0b0-55b6-b03f-d4554f80d8e6";
+var objectAlarms = client.GetAlarmsForAnObject(objectId, alarmFilter);
+var networkDeviceId="2aefbd18-9088-54ee-b6ef-6d9312da3c33";
+var networkDevicesAlarms = client.GetAlarmsForNetworkDevice(networkDeviceId, alarmFilter);
+```
 ## Usage (COM)
 
 This section demonstrates how to use the LegacyMetasysClient to interact with your Metasys server from a VBA application.
@@ -467,8 +492,7 @@ equipment = client.GetEquipment()
 Dim e As IComMetasysObject
 Set e = equipment(0)
 ```
-To get the children objects of Spaces and Equipment use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete.
-
+To get the children objects of Spaces and Equipment use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete. 
 
 ## License
 
