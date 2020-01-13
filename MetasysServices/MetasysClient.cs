@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -50,6 +50,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Local instance of Trends service
         /// </summary>
         public ITrendsService Trends;
+		
+		private readonly IProvideAlarmInfo alarmInfoProvider;
 
         /// <summary>
         /// Creates a new MetasysClient.
@@ -88,7 +90,8 @@ namespace JohnsonControls.Metasys.BasicServices
                     .AppendPathSegments("api", version));
             }
             // Init related services
-            Trends = new TrendsServiceProvider(Client);            
+            Trends = new TrendsServiceProvider(Client);   
+			alarmInfoProvider = new AlarmInfoProvider(Client);			
         }
 
         /// <summary>
@@ -1135,6 +1138,30 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels)
         {
             return toMetasysObject(await GetObjectsAsync(id, "objects","objects",levels));
+        }
+		
+        /// <inheritdoc />
+        public AlarmItemProvider GetSingleAlarm(string alarmId)
+        {
+            return alarmInfoProvider.GetSingleAlarmAsync(alarmId).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public PagedResult<IEnumerable<AlarmItemProvider>> GetAlarms(AlarmFilter alarmFilter)
+        {
+            return alarmInfoProvider.GetAlarmsAsync(alarmFilter).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public PagedResult<IEnumerable<AlarmItemProvider>> GetAlarmsForAnObject(string objectId, AlarmFilter alarmFilter)
+        {
+            return alarmInfoProvider.GetAlarmsForAnObjectAsync(objectId, alarmFilter).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public PagedResult<IEnumerable<AlarmItemProvider>> GetAlarmsForNetworkDevice(string networkDeviceId, AlarmFilter alarmFilter)
+        {
+            return alarmInfoProvider.GetAlarmsForNetworkDeviceAsync(networkDeviceId, alarmFilter).GetAwaiter().GetResult();
         }
     }
 }

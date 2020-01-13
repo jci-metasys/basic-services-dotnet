@@ -10,9 +10,9 @@ using Nito.AsyncEx;
 using System.Threading.Tasks;
 using System.Globalization;
 
-namespace Tests
+namespace MetasysServices.Tests
 {
-    public class MetasysClientTests
+    public class MetasysClientTests:MetasysClientTestsBase
     {
         // Update these en-US resources as needed
         private const string ArrayEnum = "dataTypeEnumSet.arrayDataType";
@@ -25,56 +25,13 @@ namespace Tests
         private const string Reliable = "Reliable";
         private const string ReliableHighEnum = "reliabilityEnumSet.unreliableHigh";
         private const string ReliableHigh = "Out of range high";
-        private static readonly Guid mockid = new Guid("11111111-2222-3333-4444-555555555555");
         private static readonly Guid mockid2 = new Guid("11111111-2222-3333-4444-555555555556");
         private static readonly Guid mockid3 = new Guid("11111111-2222-3333-4444-555555555557");
         private const string mockAttributeName = "property";
         private const string mockAttributeName2 = "property2";
         private const string mockAttributeName3 = "property3";
         private const string mockAttributeName4 = "property4";
-        private const string mockAttributeName5 = "property5";
-        private const string date1 = "2030-01-01T00:00:00Z";
-        private static readonly DateTime dateTime1 = DateTime.Parse(date1).ToUniversalTime();
-        private const string date2 = "2030-01-01T00:01:00Z";
-        private static readonly DateTime dateTime2 = DateTime.Parse(date2).ToUniversalTime();
-        private static readonly CultureInfo testCulture = new CultureInfo("en-US");
-        private MetasysClient client;
-        private HttpTest httpTest;
-
-        [OneTimeSetUp]
-        public void Init()
-        {
-            client = new MetasysClient("hostname", false, ApiVersion.V2, testCulture);
-        }
-
-        [SetUp]
-        public void CreateHttpTest()
-        {
-            httpTest = new HttpTest();
-        }
-
-        [TearDown]
-        public void DisposeHttpTest()
-        {
-            httpTest.Dispose();
-        }
-
-        /// <summary>
-        /// Use this method to control the "dotnet test" console message printing.
-        /// </summary>
-        private void PrintMessage(string message, bool isException)
-        {
-            Console.Error.WriteLine(message);
-        }
-
-        /// <summary>
-        /// Use to setup client when the AccessToken is being tested.
-        /// </summary>
-        private void CleanLogin()
-        {
-            httpTest.RespondWithJson(new { accessToken = "cleanfaketoken", expires = date1 });
-            client.TryLogin("cleanusername", "cleanpassword");
-        }
+        private const string mockAttributeName5 = "property5";               
 
         #region Login Tests
 

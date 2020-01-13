@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace Tests
+namespace MetasysServices.Tests
 {
     public class MetasysModelTests
     {
