@@ -352,7 +352,6 @@ This section demonstrates how to use the LegacyMetasysClient to interact with yo
 To create a new client and connect to a Metasys server with the default settings use the ComMetasysClientFactory:
 
 ```vb
-Dim client As New LegacyMetasysClient
 Dim clientFactory As New ComMetasysClientFactory
 Dim client As LegacyMetasysClient
 Set client = clientFactory.GetLegacyClient("host")
@@ -375,9 +374,9 @@ After creating the client, to login use the TryLogin method which takes a userna
 ```vb
 Dim token As IComAccessToken
 'Automatically refresh token
-Set token = msCli.TryLogin("metasyssysagent", "B5F4soft!")
+Set token = client.TryLogin("user", "password")
 'Do not automatically refresh token
-Set token = msCli.TryLogin("metasyssysagent", "B5F4soft!", false)
+Set token = client.TryLogin("user", "password", false)
 ```
 
 ### Get an Object Id
@@ -396,9 +395,12 @@ In order to get a property you must know the Guid of the target object. An objec
 ```vb
 Dim result As ComVariant
 Set result = client.ReadProperty(id, "presentValue")
-string stringValue = result.StringValue;
-double numericValue = result.NumericValue;
-boolean booleanValue = result.BooleanValue;
+Dim stringValue as String
+stringValue = result.StringValue;
+Dim numericValue as Double
+numericValue = result.NumericValue;
+Dim booleanValue as Boolean
+booleanValue = result.BooleanValue;
 ```
 
 There is a method to get multiple properties from multiple objects. This can be very useful if the objects all are of the same type or have the same target properties.
