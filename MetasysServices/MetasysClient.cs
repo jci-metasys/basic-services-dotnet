@@ -1092,7 +1092,7 @@ namespace JohnsonControls.Metasys.BasicServices
             while (hasNext)
             {
                 hasNext = false;
-                var response = await GetObjectsRequestAsync(equipmentId,  "equipment", "points", page).ConfigureAwait(false);              
+                var response = await GetObjectsRequestAsync(equipmentId,  "equipment", "points", new Dictionary<string, string> { {"page", page.ToString() }}).ConfigureAwait(false);              
                 try
                 {
                     var total = response["total"].Value<int>();
@@ -1137,7 +1137,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels)
         {
-            return toMetasysObject(await GetObjectsAsync(id, "objects","objects",levels));
+            return toMetasysObject(await GetObjectsAsync(id, "objects","objects",null,levels));
         }
 		
         /// <inheritdoc />

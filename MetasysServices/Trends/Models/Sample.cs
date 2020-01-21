@@ -10,7 +10,7 @@ namespace JohnsonControls.Metasys.BasicServices
     public class Sample
     {
         public double Value { get; set; }
-        public string UnitsUrl { get; set; }
+        public string Unit { get; set; }
         public DateTime Timestamp { get; set; }
         public bool IsReliable { get; set; }
     }

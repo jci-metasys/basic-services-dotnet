@@ -58,7 +58,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="childResource">The children resource to get related elements</param>    
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        protected  async Task<List<TreeObject>> GetObjectsAsync(Guid id,  string parentResource, string childResource, int levels = 1)
+        protected  async Task<List<TreeObject>> GetObjectsAsync(Guid id,  string parentResource, string childResource, Dictionary<string, string> parameters=null, int levels = 1)
         {
             if (levels < 1)
             {
@@ -72,7 +72,7 @@ namespace JohnsonControls.Metasys.BasicServices
             while (hasNext)
             {
                 hasNext = false;
-                var response = await GetObjectsRequestAsync(id, parentResource, childResource, page).ConfigureAwait(false);
+                var response = await GetObjectsRequestAsync(id, parentResource, childResource, parameters).ConfigureAwait(false);
                 if (response == null || response.Type == JTokenType.Null || !response.HasValues)
 
                 {
@@ -99,7 +99,7 @@ namespace JohnsonControls.Metasys.BasicServices
                                     {
                                         try
                                         {
-                                            children = await GetObjectsAsync(objId, parentResource,childResource, levels - 1).ConfigureAwait(false);
+                                            children = await GetObjectsAsync(objId, parentResource,childResource,null, levels - 1).ConfigureAwait(false);
                                         }
                                         catch (Exception e) when (e is MetasysObjectException ||
                                             e is MetasysHttpParsingException)
@@ -187,11 +187,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="parentResource">The parent resource to retrieve children.</param>    
         /// <param name="childResource">The children resource to get related elements.</param>    
         /// <exception cref="MetasysHttpException"></exception>
-        protected async Task<JToken> GetObjectsRequestAsync(Guid id, string parentResource, string childResource, int page)
+        protected async Task<JToken> GetObjectsRequestAsync(Guid id, string parentResource, string childResource, Dictionary<string,string> parameters)
         {
-            Url url = new Url(parentResource)
-                .AppendPathSegments(id, childResource)
-                .SetQueryParam("page", page);
+            Url url = new Url(parentResource).AppendPathSegments(id, childResource);
+            // Set query parameters according to the input dictionary
+            if (parameters != null)
+            {
+                foreach (var p in parameters)
+                {
+                    url.SetQueryParam(p.Key, p.Value);
+                }
+            }
             JToken response = null;
             try
             {
