@@ -47,10 +47,19 @@ namespace JohnsonControls.Metasys.BasicServices
             foreach (var s in samples)
             {
                 Sample sample = new Sample();
-                sample.Timestamp = s.Item["timestamp"].Value<DateTime>();
-                sample.IsReliable = s.Item["isReliable"].Value<Boolean>();
-                sample.Value = s.Item["value"]["value"].Value<double>();
-                var unitsUrl = s.Item["value"]["units"].Value<string>();
+                string unitsUrl;
+                try
+                {
+                    sample.Timestamp = s.Item["timestamp"].Value<DateTime>();
+                    sample.IsReliable = s.Item["isReliable"].Value<Boolean>();
+                    sample.Value = s.Item["value"]["value"].Value<double>();
+                    unitsUrl = s.Item["value"]["units"].Value<string>();
+                }
+                catch (ArgumentNullException e)
+                {
+                    // SOmething went wrong on object parsing
+                    throw new MetasysObjectException(e);
+                }
                 // Extract ID from units url
                 var unitId=unitsUrl.Split('/').Last();
                 string desc;

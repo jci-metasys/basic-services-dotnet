@@ -21,13 +21,24 @@ namespace MetasysServices.Tests
         protected HttpTest httpTest;
 
         /// <summary>
+        /// Default timeline filter by one day.
+        /// </summary>
+        protected TimeFilter TimeFilter = new TimeFilter
+        {
+            StartTime = new DateTime(2020, 1, 20),
+            EndTime = new DateTime(2020, 1, 21)
+        };
+
+        /// <summary>
         /// Default alarm filter by one month.
         /// </summary>
         protected AlarmFilter AlarmFilter = new AlarmFilter
         {
-            StartTime = new DateTime(2019, 12, 12),
-            EndTime = new DateTime(2020, 1, 12)
+            StartTime = new DateTime(2019, 12, 20),
+            EndTime = new DateTime(2020, 1, 21)
         };
+
+
 
         // Sample alarm response pasted from Postman response
         protected string Alarm = @"{
@@ -51,6 +62,31 @@ namespace MetasysServices.Tests
                 ""annotationsUrl"": ""https://hostname/api/v2/alarms/ddbd866f-687f-41ac-b484-aa52669e7381/annotations""
             }";
 
+        // Sample response pasted from Postman response
+        protected string Sample1 = @"{
+            ""value"": {
+                ""value"": 50.0974426,
+                ""units"": ""https://hostname/api/v2/enumSets/507/members/64""
+            },
+            ""timestamp"": ""2020-01-20T15:40:00Z"",
+            ""isReliable"": true
+        }";
+
+        protected string Sample2 = @"{
+            ""value"": {
+                ""value"": 52.0974426,
+                ""units"": ""https://hostname/api/v2/enumSets/507/members/64""
+            },
+            ""timestamp"": ""2020-01-20T15:45:00Z"",
+            ""isReliable"": true
+        }";
+
+        protected string Unit = @"{
+            ""id"": 64,
+            ""description"": ""deg F"",
+            ""self"": ""https://hostname/api/v2/enumSets/507/members/64"",
+            ""setUrl"": ""https://hostname/api/v2/enumSets/507""
+        }";
 
         [OneTimeSetUp]
         public void Init()
