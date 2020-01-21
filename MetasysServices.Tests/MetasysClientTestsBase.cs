@@ -25,8 +25,8 @@ namespace MetasysServices.Tests
         /// </summary>
         protected AlarmFilter AlarmFilter = new AlarmFilter
         {
-            StartTime = new DateTime(2019, 12, 12).ToString(),
-            EndTime = new DateTime(2020, 1, 12).ToString()
+            StartTime = new DateTime(2019, 12, 12),
+            EndTime = new DateTime(2020, 1, 12)
         };
 
         // Sample alarm response pasted from Postman response

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using JohnsonControls.Metasys.BasicServices;
 
@@ -71,13 +72,18 @@ namespace MetasysServicesExampleApp
 
             #endregion
             #region Trends
-                var trendedAttributes=client.Trends.GetTrendedAttributes(id1);
-                Console.WriteLine(trendedAttributes[0]);
+            var trendedAttributes=client.Trends.GetTrendedAttributes(id1);
+            Console.WriteLine(trendedAttributes[0].Description);
+            var samples = client.Trends.GetSamples(id1, 85, new TimeFilter { StartTime = new DateTime(2020,01,20), EndTime = new DateTime(2020,01,21)});
+            foreach (var s in samples)
+            {
+                Console.WriteLine($"Value: {s.Value} {s.Unit} Timestamp: {s.Timestamp}");
+            }
             #endregion
 
-            #region ReadProperty
+                #region ReadProperty
 
-            Console.WriteLine("\n\nReadProperty...");
+                Console.WriteLine("\n\nReadProperty...");
 
                        Console.Write("\n!!!Please note ReadProperty will return null if the attribute does not exist, and will cause an exception in this example!!!");
                        Console.Write("\nEnter an attribute of the objects (Examples: name, description, presentValue): ");
@@ -396,8 +402,8 @@ namespace MetasysServicesExampleApp
         {
             AlarmFilter alarmFilter = new AlarmFilter
             {
-                StartTime = args[0],
-                EndTime = args[1],
+                StartTime = DateTime.Parse(args[0], null, DateTimeStyles.RoundtripKind),
+                EndTime = DateTime.Parse(args[1], null, DateTimeStyles.RoundtripKind),                
                 PriorityRange = args[2],
                 Type = args[3].ToLower() != "null" ? Convert.ToInt32(args[3].ToString()) : 0,
                 ExcludePending = args[4].ToLower() != "null" ? Convert.ToBoolean(args[4]) : false,

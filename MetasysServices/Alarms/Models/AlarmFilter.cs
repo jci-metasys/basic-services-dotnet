@@ -7,19 +7,8 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Filters to get alarms
     /// </summary>
-    public class AlarmFilter : IFilterAlarm
-    {
-
-        /// <summary>
-        /// Earliest start time ISO8601 string
-        /// </summary>
-        public string StartTime { get; set; }
-
-        /// <summary>
-        /// Latest end time ISO8601 string
-        /// </summary>
-        public string EndTime { get; set; }
-
+    public class AlarmFilter : TimeFilter, IFilterAlarm
+    {       
         /// <summary>
         /// The inclusive priority range, from 0 to 255, of the alarm.
         /// </summary>
@@ -53,23 +42,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The system category of the requested alarms.
         /// </summary>
-        public int? Category { get; set; }
-
-        /// <summary>
-        /// The page number of items to return Default: 1.
-        /// </summary>
-        public int? Page { get; set; }
-
-        /// <summary>
-        /// The maximum number of items to return in the response. 
-        /// Valid range is 1-10,000. Default: 100
-        /// </summary>
-        public int? PageSize { get; set; }
-
-        /// <summary>
-        /// The criteria to use when sorting results
-        /// Accepted Values: itemReference, priority, creationTime
-        /// </summary>
-        public string Sort { get; set; }
+        public int? Category { get; set; }      
     }
 }

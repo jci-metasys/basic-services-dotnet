@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,55 +14,82 @@ namespace JohnsonControls.Metasys.BasicServices
     public class TrendsServiceProvider : BasicServiceProvider, ITrendsService
     {
         /// <summary>
+        /// Caching about read units.
+        /// </summary>
+        protected Dictionary<string, string> Units = new Dictionary<string, string>();
+        /// <summary>
         /// Initialize a new instance given the Flurl client.
         /// </summary>
         /// <param name="client"></param>
-        public TrendsServiceProvider(FlurlClient client):base(client)
-        {            
-        }
-
-        /// <summary>
-        /// Retrieves available samples for the given object attribute, filtered by startTime and endTime.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="startTime"></param>
-        /// <param name="endTime"></param>
-        /// <returns></returns>
-        public List<Sample> GetSamples(Guid objectId, Guid attributeId, DateTime startTime, DateTime endTime)
+        public TrendsServiceProvider(FlurlClient client) : base(client)
         {
-            throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Retrieves the list of trended attributes for the given object. 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public List<string> GetTrendedAttributes(Guid id)
+        /// <inheritdoc/>
+        public List<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter)
+        {
+            return GetSamplesAsync(objectId, attributeId, filter).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter)
+        {
+            List<Sample> objectSamples = new List<Sample>();
+            // Set the timeline parameters first for the query string
+            Dictionary<string, string> parameters = new Dictionary<string, string>()
+                {
+                    {"startTime", filter.StartTime.ToString("o") }, // Convert to UTC DateTime string
+                    {"endTime", filter.EndTime.ToString("o") }
+                };
+            // Perform a generic call using objects resource valid for Network Devices as well
+            var samples = await GetObjectsAsync(objectId, "objects", $"attributes/{attributeId}/samples", parameters);
+            // Read full attribute from url
+            foreach (var s in samples)
+            {
+                Sample sample = new Sample();
+                sample.Timestamp = s.Item["timestamp"].Value<DateTime>();
+                sample.IsReliable = s.Item["isReliable"].Value<Boolean>();
+                sample.Value = s.Item["value"]["value"].Value<double>();
+                var unitsUrl = s.Item["value"]["units"].Value<string>();
+                // Extract ID from units url
+                var unitId=unitsUrl.Split('/').Last();
+                string desc;
+                // Read full url if not cached previously
+                if (!Units.ContainsKey(unitId))
+                {                    
+                    var unit = await GetWithFullUrl(unitsUrl);
+                    Units.Add(unitId, unit["description"].Value<string>());                    
+                }
+                sample.Unit = Units[unitId];
+                objectSamples.Add(sample);
+            }
+            return objectSamples;
+        }      
+
+        /// <inheritdoc/>
+        public List<Attribute> GetTrendedAttributes(Guid id)
         {
             return GetTrendedAttributesAsync(id).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Retrieves the list of trended attributes for the given object asyncronously.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<List<string>> GetTrendedAttributesAsync(Guid id)
+        /// <inheritdoc/>
+        public async Task<List<Attribute>> GetTrendedAttributesAsync(Guid id)
         {
-            List<string> attributesId = new List<string>();
+            List<Attribute> objectAttributes = new List<Attribute>();
             // Perform a generic call using objects resource valid for Network Devices as well
             var attributes = await GetObjectsAsync(id, "objects", "trendedAttributes");
             // Read full attribute from url
             foreach (var a in attributes)
             {
                 var attributeUrl = a.Item["attributeUrl"].Value<string>();
-                var attribute=await GetWithFullUrl(attributeUrl);
-                attributesId.Add(attribute["id"].Value<string>());
+                var attribute = await GetWithFullUrl(attributeUrl);
+                objectAttributes.Add(new Attribute
+                {
+                    Id = attribute["id"].Value<int>(),
+                    Description = attribute["description"].Value<string>()
+                });
             }
-            return attributesId;
+            return objectAttributes;
         }
-
-
     }
 }
