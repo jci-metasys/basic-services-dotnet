@@ -308,7 +308,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         protected void ThrowHttpException(Flurl.Http.FlurlHttpException e)
         {
-            if (e.Call.Response.StatusCode == HttpStatusCode.NotFound)
+            if (e.Call.Response != null && e.Call.Response.StatusCode == HttpStatusCode.NotFound)
             {
                 throw new MetasysHttpNotFoundException(e);
             }

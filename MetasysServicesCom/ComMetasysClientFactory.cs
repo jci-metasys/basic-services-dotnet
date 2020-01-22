@@ -30,7 +30,8 @@ namespace JohnsonControls.Metasys.ComServices
         /// <returns>LegacyMetasysClientInstance</returns>
         public ILegacyMetasysClient GetLegacyClient(string hostname, bool ignoreCertificateErrors = false, string version = "v2", string cultureInfo = null)
         {
-            if (!Enum.TryParse(version, out ApiVersion apiVersion))
+            // Comparison is always made in lower case
+            if (!Enum.TryParse(version.ToLowerInvariant(), out ApiVersion apiVersion))
             {
                 // Something went wrong while parsing API Version
                 throw new MetasysUnsupportedApiVersion(version);
