@@ -44,9 +44,9 @@ namespace MetasysServices.Tests
         protected string Alarm = @"{
                 ""self"": ""https://hostname/api/v2/alarms/ddbd866f-687f-41ac-b484-aa52669e7381"",
                 ""id"": ""ddbd866f-687f-41ac-b484-aa52669e7381"",
-                ""itemReference"": ""Win2016-VM2:vNAE2343947"",
+                ""itemReference"": ""hostname:vNAE2343947"",
                 ""name"": ""vNAE2343947"",
-                ""message"": ""Win2016-VM2:vNAE2343947 is offline"",
+                ""message"": ""hostname:vNAE2343947 is offline"",
                 ""isAckRequired"": true,
                 ""typeUrl"": ""https://hostname/api/v2/enumSets/108/members/71"",
                 ""priority"": 106,
@@ -88,10 +88,23 @@ namespace MetasysServices.Tests
             ""setUrl"": ""https://hostname/api/v2/enumSets/507""
         }";
 
-        [OneTimeSetUp]
+        protected string Attribute = @"{        
+            ""samplesUrl"": ""https://hostname/api/v2/objects/6c999f43-6007-5137-b6d3-c30b93fb70ec/attributes/85/samples?startTime=2019-12-16T15:37:46.413Z&endTime=2019-12-17T15:37:46.413Z&page=1&pageSize=1000&sort=timestamp"",
+            ""attributeUrl"": ""https://hostname/api/v2/enumSets/509/members/85""        
+        }";
+
+        protected string AttributeDetail= @"
+        {
+            ""id"": 85,
+            ""description"": ""Present Value"",
+            ""self"": ""https://hostname/api/v2/enumSets/509/members/85"",
+            ""setUrl"": ""https://hostname/api/v2/enumSets/509""
+        }";
+
+    [OneTimeSetUp]
         public void Init()
         {
-            client = new MetasysClient("hostname", false, ApiVersion.V2, testCulture);
+            client = new MetasysClient("hostname", false, ApiVersion.v2, testCulture);
         }
 
         [SetUp]

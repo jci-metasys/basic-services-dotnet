@@ -27,7 +27,7 @@ namespace MetasysServices.Tests
             }";
             httpTest.RespondWith(response);
             var samples = client.Trends.GetSamples(mockid, 85, TimeFilter); 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/85/samples")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, samples.Count());
@@ -39,7 +39,7 @@ namespace MetasysServices.Tests
             httpTest.RespondWith("Not Found", 404);
             var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
                                                                      client.Trends.GetSamples(mockid, 85, TimeFilter));
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/85/samples")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetSamplesNotFoundThrowsException: {e.Message}", true);
@@ -58,9 +58,13 @@ namespace MetasysServices.Tests
             httpTest.RespondWith(response);
             httpTest.RespondWith(Unit);
             var samples = client.Trends.GetSamples(mockid, 85, TimeFilter);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/85/samples")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                 .WithVerb(HttpMethod.Get)
-                .Times(1);         
+                .Times(1);
+            // Here the unit response is cached by Mane Page Method
+            //httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/507/members/64")
+            // .WithVerb(HttpMethod.Get) 
+            // .Times(1);
             var responseObject = JToken.Parse(Sample1);
             var sample = new Sample
             {
@@ -93,9 +97,12 @@ namespace MetasysServices.Tests
             httpTest.RespondWith(response2);
             httpTest.RespondWith(Unit);
             var samples = client.Trends.GetSamples(mockid, 85, TimeFilter);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/85/samples")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                 .WithVerb(HttpMethod.Get)
-                .Times(2);                   
+                .Times(2);
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/507/members/64")
+              .WithVerb(HttpMethod.Get) // This is expected to be called once due to caching
+              .Times(1);
             // Compare the two responses in multiple pages
             var responseObject1 = JToken.Parse(Sample1);
             var sample1 = new Sample
@@ -129,7 +136,7 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
             var samples = client.Trends.GetSamples(mockid, 85, TimeFilter);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/85/samples")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                  .WithVerb(HttpMethod.Get)
                  .Times(1);
             Assert.AreEqual(0, samples.Count());
@@ -140,7 +147,7 @@ namespace MetasysServices.Tests
         {
             string sample= string.Concat("{",
                 "\"id\": \"", mockid, "\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\"}");
             var response = @"{
             ""total"": 1,
             ""next"": null,
@@ -151,7 +158,7 @@ namespace MetasysServices.Tests
             httpTest.RespondWith(response);           
             var e = Assert.Throws<MetasysObjectException>(() =>
               client.Trends.GetSamples(mockid, 85, TimeFilter));
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/85/samples")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                  .WithVerb(HttpMethod.Get)
                  .Times(1);
             PrintMessage($"TestGetSamplesMissingValuesThrowsException: {e.Message}", true);
@@ -163,7 +170,7 @@ namespace MetasysServices.Tests
             httpTest.RespondWith("Unauthorized", 401);
             var e = Assert.Throws<MetasysHttpException>(() =>
                                                              client.Trends.GetSamples(mockid, 85, TimeFilter));
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/85/samples")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetSamplesUnauthorizedThrowsException: {e.Message}", true);

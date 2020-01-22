@@ -43,7 +43,7 @@ namespace MetasysServices.Tests
 
             await client.TryLoginAsync("username", "password").ConfigureAwait(false);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/login")
                 .WithVerb(HttpMethod.Post)
                 .WithContentType("application/json")
                 .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
@@ -63,7 +63,7 @@ namespace MetasysServices.Tests
 
                 client.TryLogin("username", "password");
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/login")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/json")
                     .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
@@ -84,7 +84,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.TryLogin("username", "badpassword"));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/login")
                 .WithVerb(HttpMethod.Post)
                 .WithContentType("application/json")
                 .WithRequestBody("{\"username\":\"username\",\"password\":\"badpassword\"")
@@ -98,13 +98,13 @@ namespace MetasysServices.Tests
         {
             CleanLogin();
             var original = client.GetAccessToken();
-            httpTest.RespondWith("Call failed. No such host is known POST https://badhost/api/V2/login", 404);
+            httpTest.RespondWith("Call failed. No such host is known POST https://badhost/api/v2/login", 404);
             MetasysClient clientBad = new MetasysClient("badhost");
 
             var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
                 clientBad.TryLogin("username", "password"));
 
-            httpTest.ShouldHaveCalled($"https://badhost/api/V2/login")
+            httpTest.ShouldHaveCalled($"https://badhost/api/v2/login")
                 .WithVerb(HttpMethod.Post)
                 .WithContentType("application/json")
                 .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
@@ -123,7 +123,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysTokenException>(() =>
                 client.TryLogin("username", "password"));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/login")
                 .WithVerb(HttpMethod.Post)
                 .WithContentType("application/json")
                 .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
@@ -142,7 +142,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysTokenException>(() =>
                 client.TryLogin("username", "badpassword"));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/login")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/login")
                 .WithVerb(HttpMethod.Post)
                 .WithContentType("application/json")
                 .WithRequestBody("{\"username\":\"username\",\"password\":\"badpassword\"")
@@ -163,7 +163,7 @@ namespace MetasysServices.Tests
 
             await client.RefreshAsync().ConfigureAwait(false);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/refreshToken")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var token = client.GetAccessToken();
@@ -181,7 +181,7 @@ namespace MetasysServices.Tests
 
                 client.Refresh();
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/refreshToken")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 var token = client.GetAccessToken();
@@ -200,7 +200,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                     client.Refresh());
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/refreshToken")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(original, client.GetAccessToken()); // The access token is not changed on error
@@ -226,7 +226,7 @@ namespace MetasysServices.Tests
             Assert.AreEqual(expected1, token1);
 
             System.Threading.Thread.Sleep(2000);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/refreshToken")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/refreshToken")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var token2 = client.GetAccessToken();
@@ -244,7 +244,7 @@ namespace MetasysServices.Tests
 
             var id = await client.GetObjectIdentifierAsync("fully:qualified/reference1").ConfigureAwait(false);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(mockid, id);
@@ -257,7 +257,7 @@ namespace MetasysServices.Tests
             {
                 httpTest.RespondWith($"\"{mockid.ToString()}\"");
                 var id = client.GetObjectIdentifier("fully:qualified/reference2");
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objectIdentifiers")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(mockid, id);
@@ -272,7 +272,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.GetObjectIdentifier("fully:qualified/reference3"));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetObjectIdentifierBadRequestThrowsException: {e.Message}", true);
@@ -286,7 +286,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysGuidException>(() =>
                 client.GetObjectIdentifier("fully:qualified/reference4"));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new MetasysGuidException($"{mockid.ToString()}1", new NullReferenceException());
@@ -302,7 +302,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysGuidException>(() =>
                 client.GetObjectIdentifier("fully:qualified/reference5"));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new MetasysGuidException(null, new ArgumentNullException());
@@ -318,7 +318,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.GetObjectIdentifier("fully:qualified/reference6"));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetObjectIdentifierUnauthorizedThrowsException: {e.Message}", true);
@@ -337,7 +337,7 @@ namespace MetasysServices.Tests
 
             Variant result = (await client.ReadPropertyAsync(mockid, mockAttributeName).ConfigureAwait(false));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture);
@@ -355,7 +355,7 @@ namespace MetasysServices.Tests
 
                 Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 var expected = new Variant(mockid, token, mockAttributeName, testCulture);
@@ -372,7 +372,7 @@ namespace MetasysServices.Tests
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture);
@@ -388,7 +388,7 @@ namespace MetasysServices.Tests
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture);
@@ -404,7 +404,7 @@ namespace MetasysServices.Tests
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture);
@@ -420,7 +420,7 @@ namespace MetasysServices.Tests
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture);
@@ -437,7 +437,7 @@ namespace MetasysServices.Tests
 
             Variant result = client.ReadProperty(mockid, "presentValue");
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, "presentValue", testCulture);
@@ -454,7 +454,7 @@ namespace MetasysServices.Tests
 
             Variant result = client.ReadProperty(mockid, "presentValue");
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, "presentValue", testCulture);
@@ -474,7 +474,7 @@ namespace MetasysServices.Tests
 
             Variant result = client.ReadProperty(mockid, "presentValue");
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/presentValue")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, "presentValue", testCulture);
@@ -494,7 +494,7 @@ namespace MetasysServices.Tests
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture);
@@ -510,7 +510,7 @@ namespace MetasysServices.Tests
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture);
@@ -527,7 +527,7 @@ namespace MetasysServices.Tests
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture);
@@ -546,7 +546,7 @@ namespace MetasysServices.Tests
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture);
@@ -562,7 +562,7 @@ namespace MetasysServices.Tests
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture);
@@ -577,7 +577,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
               client.ReadProperty(mockid, mockAttributeName));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);          
             PrintMessage($"TestReadPropertyDoesNotExistThrowsException: {e.Message}", true);            
@@ -591,7 +591,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.ReadProperty(mockid, mockAttributeName));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestReadPropertyUnauthorizedThrowsException: {e.Message}", true);
@@ -608,7 +608,7 @@ namespace MetasysServices.Tests
 
             var results = client.ReadPropertyMultiple(null, attributes);
 
-            httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/");
+            httpTest.ShouldNotHaveCalled($"https://hostname/api/v2/objects/");
             Assert.AreEqual(null, results);
         }
 
@@ -619,7 +619,7 @@ namespace MetasysServices.Tests
 
             var results = client.ReadPropertyMultiple(ids, null);
 
-            httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}");
+            httpTest.ShouldNotHaveCalled($"https://hostname/api/v2/objects/{mockid}");
             Assert.AreEqual(null, results);
         }
 
@@ -631,7 +631,7 @@ namespace MetasysServices.Tests
 
             var results = client.ReadPropertyMultiple(ids, attributes);
 
-            httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/");
+            httpTest.ShouldNotHaveCalled($"https://hostname/api/v2/objects/");
             Assert.AreEqual(0, results.Count());
         }
 
@@ -643,7 +643,7 @@ namespace MetasysServices.Tests
 
             var results = client.ReadPropertyMultiple(ids, attributes);
 
-            httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}");
+            httpTest.ShouldNotHaveCalled($"https://hostname/api/v2/objects/{mockid}");
             Assert.AreEqual(1, results.Count());
             Assert.AreEqual(0, results.ElementAt(0).Variants.Count());
         }
@@ -657,7 +657,7 @@ namespace MetasysServices.Tests
             List<string> attributes = new List<string>() { mockAttributeName };
             var results = client.ReadPropertyMultiple(ids, attributes);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Variant expected = new Variant(mockid, token, mockAttributeName, testCulture);
@@ -686,10 +686,10 @@ namespace MetasysServices.Tests
                 mockAttributeName, mockAttributeName2, mockAttributeName3, mockAttributeName4, mockAttributeName5 };
             var results = await client.ReadPropertyMultipleAsync(ids, attributes).ConfigureAwait(false);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes")
                 .WithVerb(HttpMethod.Get)
                 .Times(5);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}/attributes")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid2}/attributes")
                 .WithVerb(HttpMethod.Get)
                 .Times(5);
             Assert.AreEqual(results.Count(), 2);
@@ -718,10 +718,10 @@ namespace MetasysServices.Tests
                 List<string> attributes = new List<string>() { mockAttributeName, mockAttributeName2, mockAttributeName3, mockAttributeName4, mockAttributeName5 };
                 var results = client.ReadPropertyMultiple(ids, attributes);
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes")
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes")
                     .WithVerb(HttpMethod.Get)
                     .Times(5);
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}/attributes")
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid2}/attributes")
                     .WithVerb(HttpMethod.Get)
                     .Times(5);
                 Assert.AreEqual(results.Count(), 2);
@@ -739,7 +739,7 @@ namespace MetasysServices.Tests
 
             var results = client.ReadPropertyMultiple(ids, attributes);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, results.Count());
@@ -754,7 +754,7 @@ namespace MetasysServices.Tests
 
             var results = client.ReadPropertyMultiple(ids, attributes);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, results.Count());
@@ -770,7 +770,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.ReadPropertyMultiple(ids, attributes));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestReadPropertyMultipleUnauthorizedThrowsException: {e.Message}", true);
@@ -787,7 +787,7 @@ namespace MetasysServices.Tests
 
             await client.WritePropertyAsync(mockid, mockAttributeName, "newValue").ConfigureAwait(false);
             
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                 .Times(1);
@@ -802,7 +802,7 @@ namespace MetasysServices.Tests
                 
                 client.WriteProperty(mockid, mockAttributeName, "newValue");
                 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
                     .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                     .Times(1);
@@ -816,7 +816,7 @@ namespace MetasysServices.Tests
             
             client.WriteProperty(mockid, mockAttributeName, "newValue", "writePriorityEnumSet.priorityDefault");
             
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\",\"priority\":\"writePriorityEnumSet.priorityDefault\"}}}}")
                 .Times(1);
@@ -829,7 +829,7 @@ namespace MetasysServices.Tests
             
             client.WriteProperty(mockid, mockAttributeName, 32);
             
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":32}}}}")
                 .Times(1);
@@ -842,7 +842,7 @@ namespace MetasysServices.Tests
             
             client.WriteProperty(mockid, mockAttributeName, 32.5);
             
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":32.5}}}}")
                 .Times(1);
@@ -855,7 +855,7 @@ namespace MetasysServices.Tests
             
             client.WriteProperty(mockid, mockAttributeName, true);
             
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":true}}}}")
                 .Times(1);
@@ -868,7 +868,7 @@ namespace MetasysServices.Tests
             
             client.WriteProperty(mockid, mockAttributeName, new[] { "1", "2", "3" });
             
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":[\"1\",\"2\",\"3\"]}}}}")
                 .Times(1);
@@ -881,7 +881,7 @@ namespace MetasysServices.Tests
             
             client.WriteProperty(mockid, mockAttributeName, new[] { 1, 2, 3 });
             
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":[1,2,3]}}}}")
                 .Times(1);
@@ -895,7 +895,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.WriteProperty(mockid, mockAttributeName, "badType"));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"badType\"}}}}")
                 .Times(1);
@@ -910,7 +910,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.WriteProperty(mockid, mockAttributeName, "newValue"));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                 .Times(1);
@@ -930,7 +930,7 @@ namespace MetasysServices.Tests
 
             client.WritePropertyMultiple(ids, attributes);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                 .Times(1);
@@ -945,11 +945,11 @@ namespace MetasysServices.Tests
 
             client.WritePropertyMultiple(ids, attributes);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                 .Times(1);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid2}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                 .Times(1);
@@ -974,11 +974,11 @@ namespace MetasysServices.Tests
                 "\"" + mockAttributeName3 + "\":23.5,",
                 "\"" + mockAttributeName4 + "\":true,",
                 "\"" + mockAttributeName5 + "\":[1,2,3]}}");
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody(requestBody)
                 .Times(1);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid2}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody(requestBody)
                 .Times(1);
@@ -1005,11 +1005,11 @@ namespace MetasysServices.Tests
                     "\"" + mockAttributeName3 + "\":23.5,",
                     "\"" + mockAttributeName4 + "\":true,",
                     "\"" + mockAttributeName5 + "\":[1,2,3]}}");
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                     .WithVerb(HttpMethod.Patch)
                     .WithRequestBody(requestBody)
                     .Times(1);
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid2}")
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid2}")
                     .WithVerb(HttpMethod.Patch)
                     .WithRequestBody(requestBody)
                     .Times(1);
@@ -1026,7 +1026,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.WritePropertyMultiple(ids, attributes));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody("{\"item\":{\"badAttributeName\":\"newValue\"}}")
                 .Times(1);
@@ -1041,7 +1041,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.WriteProperty(mockid, mockAttributeName, "newValue"));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
                 .WithVerb(HttpMethod.Patch)
                 .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                 .Times(1);
@@ -1052,7 +1052,7 @@ namespace MetasysServices.Tests
         public void TestWritePropertyMultipleNullArguments()
         {
             client.WritePropertyMultiple(null, null);
-            httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}");
+            httpTest.ShouldNotHaveCalled($"https://hostname/api/v2/objects/{mockid}");
         }
 
         #endregion
@@ -1066,7 +1066,7 @@ namespace MetasysServices.Tests
 
             client.SendCommand(mockid, "EnableAlarms");
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/EnableAlarms")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands/EnableAlarms")
                 .WithRequestBody("[]")
                 .WithVerb(HttpMethod.Put)
                 .Times(1);
@@ -1080,7 +1080,7 @@ namespace MetasysServices.Tests
 
             client.SendCommand(mockid, "Adjust", list);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Adjust")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands/Adjust")
                 .WithRequestBody("[70]")
                 .WithVerb(HttpMethod.Put)
                 .Times(1);
@@ -1094,7 +1094,7 @@ namespace MetasysServices.Tests
 
             await client.SendCommandAsync(mockid, "TemporaryOperatorOverride", list).ConfigureAwait(false);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/TemporaryOperatorOverride")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands/TemporaryOperatorOverride")
                 .WithRequestBody("[70.5,1,0]")
                 .WithVerb(HttpMethod.Put)
                 .Times(1);
@@ -1110,7 +1110,7 @@ namespace MetasysServices.Tests
 
                 client.SendCommand(mockid, "TemporaryOperatorOverride", list);
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/TemporaryOperatorOverride")
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands/TemporaryOperatorOverride")
                     .WithRequestBody("[70.5,1,0]")
                     .WithVerb(HttpMethod.Put)
                     .Times(1);
@@ -1125,7 +1125,7 @@ namespace MetasysServices.Tests
 
             client.SendCommand(mockid, "Release", list);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands/Release")
                 .WithRequestBody("[\"attributeEnumSet.presentValue\",\"writePriorityEnumSet.priorityNone\"]")
                 .WithVerb(HttpMethod.Put)
                 .Times(1);
@@ -1140,7 +1140,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.SendCommand(mockid, "Release", list));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands/Release")
                 .WithVerb(HttpMethod.Put)
                 .Times(1);
             PrintMessage($"TestSendCommandBadRequestThrowsException: {e.Message}", true);
@@ -1155,7 +1155,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.SendCommand(mockid, "Release", list));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands/Release")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands/Release")
                 .WithRequestBody("[40,\"data\"]")
                 .WithVerb(HttpMethod.Put)
                 .Times(1);
@@ -1173,7 +1173,7 @@ namespace MetasysServices.Tests
 
             var commands = await client.GetCommandsAsync(mockid).ConfigureAwait(false);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, commands.Count());
@@ -1188,7 +1188,7 @@ namespace MetasysServices.Tests
 
                 var commands = client.GetCommands(mockid);
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 Assert.AreEqual(0, commands.Count());
@@ -1216,7 +1216,7 @@ namespace MetasysServices.Tests
 
             var commands = client.GetCommands(mockid);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Command expected1 = new Command(JToken.Parse(command1), testCulture);
@@ -1243,7 +1243,7 @@ namespace MetasysServices.Tests
 
             var commands = client.GetCommands(mockid);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Command expected = new Command(JToken.Parse(command1), testCulture);
@@ -1269,7 +1269,7 @@ namespace MetasysServices.Tests
                 
             var commands = client.GetCommands(mockid);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Command expected = new Command(JToken.Parse(command1), testCulture);
@@ -1295,7 +1295,7 @@ namespace MetasysServices.Tests
                 
             var commands = client.GetCommands(mockid);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Command expected = new Command(JToken.Parse(command1), testCulture);
@@ -1331,7 +1331,7 @@ namespace MetasysServices.Tests
 
             var commands = client.GetCommands(mockid);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Command expected = new Command(JToken.Parse(command1), testCulture);
@@ -1346,7 +1346,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysCommandException>(() =>
                 client.GetCommands(mockid));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetCommandsBadResponseThrowsException: {e.Message}", true);
@@ -1360,7 +1360,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.GetCommands(mockid));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/commands")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetCommandsUnauthorizedThrowsException: {e.Message}", true);
@@ -1378,11 +1378,11 @@ namespace MetasysServices.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [ ],",
-                "\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=200&sort=name\"}"));
 
             var devices = client.GetNetworkDevices();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, devices.Count());
@@ -1395,7 +1395,7 @@ namespace MetasysServices.Tests
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\",",
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
                 "\"description\": \"none\",",
                 "\"firmwareVersion\": \"4.0.0.1105\",",
                 "\"ipAddress\": \"\"}");
@@ -1404,11 +1404,11 @@ namespace MetasysServices.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", device ,"],",
-                "\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=200&sort=name\"}"));
 
             var devices = client.GetNetworkDevices();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected = new MetasysObject(JToken.Parse(device), null, testCulture);
@@ -1422,7 +1422,7 @@ namespace MetasysServices.Tests
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\",",
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
                 "\"description\": \"none\",",
                 "\"firmwareVersion\": \"4.0.0.1105\",",
                 "\"ipAddress\": \"\"}");
@@ -1430,27 +1430,27 @@ namespace MetasysServices.Tests
                 "\"id\": \"", mockid2, "\",",
                 "\"itemReference\": \"fully:qualified/reference2\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\",",
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
                 "\"description\": \"none\",",
                 "\"firmwareVersion\": \"4.0.0.1105\",",
                 "\"ipAddress\": \"\"}");
             httpTest
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
-                    "\"next\": \"https://hostname/api/V2/networkDevices?page=2&pageSize=1&sort=name\",",
+                    "\"next\": \"https://hostname/api/v2/networkDevices?page=2&pageSize=1&sort=name\",",
                     "\"previous\": null,",
                     "\"items\": [", device1, "],",
-                    "\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=1&sort=name\"}"))
+                    "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=1&sort=name\"}"))
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", device2, "],",
-                    "\"self\": \"https://hostname/api/V2/networkDevices?page=2&pageSize=1&sort=name\"}"));
+                    "\"self\": \"https://hostname/api/v2/networkDevices?page=2&pageSize=1&sort=name\"}"));
 
             var devices = client.GetNetworkDevices();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
             MetasysObject expected1 = new MetasysObject(JToken.Parse(device1), null, testCulture);
@@ -1466,7 +1466,7 @@ namespace MetasysServices.Tests
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\",",
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
                 "\"description\": \"none\",",
                 "\"firmwareVersion\": \"4.0.0.1105\",",
                 "\"ipAddress\": \"\"}");
@@ -1475,11 +1475,11 @@ namespace MetasysServices.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", device, "],",
-                "\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=200&sort=name\"}"));
 
             var devices = client.GetNetworkDevices("197");
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected = new MetasysObject(JToken.Parse(device), null, testCulture);
@@ -1494,11 +1494,11 @@ namespace MetasysServices.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [{}],",
-                "\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=200&sort=name\"}"));
 
             var devices = client.GetNetworkDevices();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, devices.Count());
@@ -1509,18 +1509,18 @@ namespace MetasysServices.Tests
         {
             string device = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", device, "],",
-                $"\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=200&sort=name\"}}"));
+                $"\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=200&sort=name\"}}"));
 
             var e = Assert.Throws<MetasysObjectException>(() =>
                 client.GetObjects(mockid));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetNetworkDevicesMissingValuesThrowsException: {e.Message}", true);
@@ -1534,7 +1534,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.GetNetworkDevices());
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetNetworkDevicesUnauthorizedThrowsException: {e.Message}", true);
@@ -1550,11 +1550,11 @@ namespace MetasysServices.Tests
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 0,",
                 "\"items\": [ ],",
-                "\"self\": \"https://hostname/api/V2/networkDevices/availableTypes\"}"));
+                "\"self\": \"https://hostname/api/v2/networkDevices/availableTypes\"}"));
 
             var types = client.GetNetworkDeviceTypes();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices/availableTypes")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/availableTypes")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, types.Count());
@@ -1567,23 +1567,23 @@ namespace MetasysServices.Tests
                 .RespondWith(string.Concat("{",
                     "\"total\": 1,",
                     "\"items\": [{",
-                        "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/185\"",
+                        "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/185\"",
                     "}],",
-                    "\"self\": \"https://hostname/api/V2/networkDevices/availableTypes\"}"))
+                    "\"self\": \"https://hostname/api/v2/networkDevices/availableTypes\"}"))
                 .RespondWith(string.Concat("{",
                     "\"id\": 185,",
                     "\"description\": \"NAE55-NIE59\",",
-                    "\"self\": \"https://hostname/api/V2/enumSets/508/members/185\",",
-                    "\"setUrl\": \"https://hostname/api/V2/enumSets/508\"}"));
+                    "\"self\": \"https://hostname/api/v2/enumSets/508/members/185\",",
+                    "\"setUrl\": \"https://hostname/api/v2/enumSets/508\"}"));
 
             var types = client.GetNetworkDeviceTypes();
 
             MetasysObjectType expected = new MetasysObjectType(185, "objectTypeEnumSet.n50Class", 
                 "NAE55-NIE59", testCulture);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices/availableTypes")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/availableTypes")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/508/members/185")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/508/members/185")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(expected, types.ElementAt(0));
@@ -1596,20 +1596,20 @@ namespace MetasysServices.Tests
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
                     "\"items\": [{",
-                        "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/185\"},",
-                        "{\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/195\"",
+                        "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/185\"},",
+                        "{\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/195\"",
                     "}],",
-                    "\"self\": \"https://hostname/api/V2/networkDevices/availableTypes\"}"))
+                    "\"self\": \"https://hostname/api/v2/networkDevices/availableTypes\"}"))
                 .RespondWith(string.Concat("{",
                     "\"id\": 185,",
                     "\"description\": \"NAE55-NIE59\",",
-                    "\"self\": \"https://hostname/api/V2/enumSets/508/members/185\",",
-                    "\"setUrl\": \"https://hostname/api/V2/enumSets/508\"}"))
+                    "\"self\": \"https://hostname/api/v2/enumSets/508/members/185\",",
+                    "\"setUrl\": \"https://hostname/api/v2/enumSets/508\"}"))
                 .RespondWith(string.Concat("{",
                     "\"id\": 195,",
                     "\"description\": \"Field Bus MSTP\",",
-                    "\"self\": \"https://hostname/api/V2/enumSets/508/members/195\",",
-                    "\"setUrl\": \"https://hostname/api/V2/enumSets/508\"}"));
+                    "\"self\": \"https://hostname/api/v2/enumSets/508/members/195\",",
+                    "\"setUrl\": \"https://hostname/api/v2/enumSets/508\"}"));
 
             var types = client.GetNetworkDeviceTypes();
 
@@ -1617,13 +1617,13 @@ namespace MetasysServices.Tests
                 "NAE55-NIE59", testCulture);
             MetasysObjectType expected2 = new MetasysObjectType(195, "objectTypeEnumSet.fieldBusClass", 
                 "Field Bus MSTP", testCulture);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices/availableTypes")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/availableTypes")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/508/members/185")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/508/members/185")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/508/members/195")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/508/members/195")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(expected1, types.ElementAt(0));
@@ -1637,18 +1637,18 @@ namespace MetasysServices.Tests
                 .RespondWith(string.Concat("{",
                     "\"total\": 1,",
                     "\"items\": [{",
-                        "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/3000\"",
+                        "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/3000\"",
                     "}],",
-                    "\"self\": \"https://hostname/api/V2/networkDevices/availableTypes\"}"))
+                    "\"self\": \"https://hostname/api/v2/networkDevices/availableTypes\"}"))
                 .RespondWith("No HTTP resource was found that matches the request URI.", 404);
 
             var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
                 client.GetNetworkDeviceTypes());
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices/availableTypes")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/availableTypes")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/508/members/3000")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/508/members/3000")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetNetworkDeviceTypesNotFoundThrowsException: {e.Message}", true);
@@ -1662,10 +1662,10 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.GetNetworkDeviceTypes());
                     
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/networkDevices/availableTypes")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/availableTypes")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/enumSets/*");
+            httpTest.ShouldNotHaveCalled($"https://hostname/api/v2/enumSets/*");
             PrintMessage($"TestGetNetworkDeviceTypesUnauthorizedThrowsException: {e.Message}", true);
         }
 
@@ -1681,11 +1681,11 @@ namespace MetasysServices.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [ ],",
-                $"\"self\": \"https://hostname/api/V2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
+                $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
 
             var objects = client.GetObjects(mockid);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, objects.Count());
@@ -1699,17 +1699,17 @@ namespace MetasysServices.Tests
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", obj, "],",
-                $"\"self\": \"https://hostname/api/V2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
+                $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
 
             var objects = client.GetObjects(mockid);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected = new MetasysObject(JToken.Parse(obj), null, testCulture);
@@ -1724,30 +1724,30 @@ namespace MetasysServices.Tests
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             string obj2 = string.Concat("{",
                 "\"id\": \"", mockid2, "\",",
                 "\"itemReference\": \"fully:qualified/reference2\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             httpTest
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
-                    $"\"next\": \"https://hostname/api/V2/objects/{mockid}/objects?page=2&pageSize=1&sort=name\",",
+                    $"\"next\": \"https://hostname/api/v2/objects/{mockid}/objects?page=2&pageSize=1&sort=name\",",
                     "\"previous\": null,",
                     "\"items\": [", obj1, "],",
-                    $"\"self\": \"https://hostname/api/V2/objects/{mockid}/objects?page=1&pageSize=1&sort=name\"}}"))
+                    $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=1&pageSize=1&sort=name\"}}"))
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", obj2, "],",
-                    $"\"self\": \"https://hostname/api/V2/objects/{mockid}/objects?page=2&pageSize=1&sort=name\"}}"));
+                    $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=2&pageSize=1&sort=name\"}}"));
 
             var objects = client.GetObjects(mockid);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
             MetasysObject expected1 = new MetasysObject(JToken.Parse(obj1), null, testCulture);
@@ -1764,33 +1764,33 @@ namespace MetasysServices.Tests
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             string obj2 = string.Concat("{",
                 "\"id\": \"", mockid2, "\",",
                 "\"itemReference\": \"fully:qualified/reference2\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             httpTest
                 .RespondWith(string.Concat("{",
                     "\"total\": 1,",
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", obj1, "],",
-                    $"\"self\": \"https://hostname/api/V2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"))
+                    $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"))
                 .RespondWith(string.Concat("{",
                     "\"total\": 1,",
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", obj2, "],",
-                    $"\"self\": \"https://hostname/api/V2/objects/{mockid2}/objects?page=1&pageSize=200&sort=name\"}}"));
+                    $"\"self\": \"https://hostname/api/v2/objects/{mockid2}/objects?page=1&pageSize=200&sort=name\"}}"));
 
             var objects = client.GetObjects(mockid3, 3).ToList();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid3}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid3}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected2 = new MetasysObject(JToken.Parse(obj2), null, testCulture);
@@ -1807,10 +1807,10 @@ namespace MetasysServices.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [{}],",
-                $"\"self\": \"https://hostname/api/V2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
+                $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
 
             var objects = client.GetObjects(mockid);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, objects.Count());
@@ -1821,7 +1821,7 @@ namespace MetasysServices.Tests
         {
             var objects = client.GetObjects(mockid, 0);
 
-            httpTest.ShouldNotHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects");
+            httpTest.ShouldNotHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects");
             Assert.IsNull(objects);
         }
 
@@ -1830,18 +1830,18 @@ namespace MetasysServices.Tests
         {
             string obj = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", obj, "],",
-                $"\"self\": \"https://hostname/api/V2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
+                $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
 
             var e = Assert.Throws<MetasysObjectException>(() =>
                 client.GetObjects(mockid));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetObjectsMissingValuesThrowsException: {e.Message}", true);
@@ -1855,7 +1855,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.GetObjects(mockid).ToList());
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetObjectsUnauthorizedThrowsException: {e.Message}", true);
@@ -1873,11 +1873,11 @@ namespace MetasysServices.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [ ],",
-                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/spaces?page=1&pageSize=200&sort=name\"}"));
 
             var devices = client.GetSpaces();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, devices.Count());
@@ -1890,18 +1890,18 @@ namespace MetasysServices.Tests
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
-                $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", space, "],",
-                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/spaces?page=1&pageSize=200&sort=name\"}"));
 
             var devices = client.GetSpaces();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
@@ -1915,31 +1915,31 @@ namespace MetasysServices.Tests
                  "\"id\": \"", mockid, "\",",
                  "\"itemReference\": \"fully:qualified/reference1\",",
                  "\"name\": \"name\",",
-                 "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
-                 $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+                 "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
+                 $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
             string space2 = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference2\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
-                $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
             httpTest
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
-                    "\"next\": \"https://hostname/api/V2/spaces?page=2&pageSize=1&sort=name\",",
+                    "\"next\": \"https://hostname/api/v2/spaces?page=2&pageSize=1&sort=name\",",
                     "\"previous\": null,",
                     "\"items\": [", space1, "],",
-                    "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=1&sort=name\"}"))
+                    "\"self\": \"https://hostname/api/v2/spaces?page=1&pageSize=1&sort=name\"}"))
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", space2, "],",
-                    "\"self\": \"https://hostname/api/V2/spaces?page=2&pageSize=1&sort=name\"}"));
+                    "\"self\": \"https://hostname/api/v2/spaces?page=2&pageSize=1&sort=name\"}"));
 
             var spaces = client.GetSpaces();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
             MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), null, testCulture);
@@ -1955,18 +1955,18 @@ namespace MetasysServices.Tests
                "\"id\": \"", mockid, "\",",
                "\"itemReference\": \"fully:qualified/reference\",",
                "\"name\": \"name\",",
-               "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
-               $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+               "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
+               $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", space, "],",
-                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/spaces?page=1&pageSize=200&sort=name\"}"));
 
             var devices = client.GetSpaces("3");
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
@@ -1981,11 +1981,11 @@ namespace MetasysServices.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [{}],",
-                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/spaces?page=1&pageSize=200&sort=name\"}"));
 
             var devices = client.GetSpaces();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, devices.Count());
@@ -1996,18 +1996,18 @@ namespace MetasysServices.Tests
         {
             string space = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\"}");
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", space, "],",
-                $"\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}}"));
+                $"\"self\": \"https://hostname/api/v2/spaces?page=1&pageSize=200&sort=name\"}}"));
 
             var e = Assert.Throws<MetasysObjectException>(() =>
                 client.GetObjects(mockid));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetSpacesMissingValuesThrowsException: {e.Message}", true);
@@ -2021,7 +2021,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.GetSpaces());
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/spaces")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetSpacesUnauthorizedThrowsException: {e.Message}", true);
@@ -2037,11 +2037,11 @@ namespace MetasysServices.Tests
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 0,",
                 "\"items\": [ ],",
-                "\"self\": \"https://hostname/api/V2/enumSets/1766\"}"));
+                "\"self\": \"https://hostname/api/v2/enumSets/1766\"}"));
 
             var types = client.GetSpaceTypes();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/1766")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, types.Count());
@@ -2053,19 +2053,19 @@ namespace MetasysServices.Tests
             var item = string.Concat("{",
                     "\"id\": 3,",
                     "\"description\": \"Room\",",
-                    "\"self\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
-                    "\"setUrl\": \"https://hostname/api/V2/enumSets/1766\"}");
+                    "\"self\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
+                    "\"setUrl\": \"https://hostname/api/v2/enumSets/1766\"}");
             httpTest
                 .RespondWith(string.Concat("{",
                     "\"total\": 1,",
                     $"\"items\": [{item}],",
-                    "\"self\": \"https://hostname/api/V2/enumSet/1766\"}"));               
+                    "\"self\": \"https://hostname/api/v2/enumSet/1766\"}"));               
 
             var types = client.GetSpaceTypes();
 
             MetasysObjectType expected = new MetasysObjectType(3, "Room",
                 "Room", testCulture);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/1766")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);         
             Assert.AreEqual(expected, types.ElementAt(0));
@@ -2077,18 +2077,18 @@ namespace MetasysServices.Tests
             var item1 = string.Concat("{",
                       "\"id\": 3,",
                       "\"description\": \"Room\",",
-                      "\"self\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
-                      "\"setUrl\": \"https://hostname/api/V2/enumSets/1766\"}");
+                      "\"self\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
+                      "\"setUrl\": \"https://hostname/api/v2/enumSets/1766\"}");
             var item2 = string.Concat("{",
                       "\"id\": 2,",
                       "\"description\": \"Floor\",",
-                      "\"self\": \"https://hostname/api/V2/enumSets/1766/members/2\",",
-                      "\"setUrl\": \"https://hostname/api/V2/enumSets/1766\"}");
+                      "\"self\": \"https://hostname/api/v2/enumSets/1766/members/2\",",
+                      "\"setUrl\": \"https://hostname/api/v2/enumSets/1766\"}");
             httpTest
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
                     $"\"items\": [{item1},{item2}],",
-                    "\"self\": \"https://hostname/api/V2/enumSet/1766\"}"));
+                    "\"self\": \"https://hostname/api/v2/enumSet/1766\"}"));
 
             var types = client.GetSpaceTypes();
 
@@ -2096,7 +2096,7 @@ namespace MetasysServices.Tests
                "Room", testCulture);
             MetasysObjectType expected2 = new MetasysObjectType(2, "Floor",
                 "Floor", testCulture);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/1766")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(expected1, types.ElementAt(0));
@@ -2112,7 +2112,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpNotFoundException>(() =>
                 client.GetSpaceTypes());
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/1766")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);        
             PrintMessage($"TestGetSpaceTypesNotFoundThrowsException: {e.Message}", true);
@@ -2126,7 +2126,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.GetSpaceTypes());
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/enumSets/1766")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/1766")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             
@@ -2145,11 +2145,11 @@ namespace MetasysServices.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [ ],",
-                "\"self\": \"https://hostname/api/V2/equipment?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/equipment?page=1&pageSize=200&sort=name\"}"));
 
             var devices = client.GetEquipment();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/equipment")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/equipment")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, devices.Count());
@@ -2162,18 +2162,18 @@ namespace MetasysServices.Tests
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
-                $"\"self\": \"https://hostname/api/V2/equipment/{mockid}\"}}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/v2/equipment/{mockid}\"}}");
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", space, "],",
-                "\"self\": \"https://hostname/api/V2/equipment?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/equipment?page=1&pageSize=200&sort=name\"}"));
 
             var devices = client.GetEquipment();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/equipment")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/equipment")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
@@ -2187,31 +2187,31 @@ namespace MetasysServices.Tests
                  "\"id\": \"", mockid, "\",",
                  "\"itemReference\": \"fully:qualified/reference1\",",
                  "\"name\": \"name\",",
-                 "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
-                 $"\"self\": \"https://hostname/api/V2/equipment/{mockid}\"}}");
+                 "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
+                 $"\"self\": \"https://hostname/api/v2/equipment/{mockid}\"}}");
             string space2 = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference2\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
-                $"\"self\": \"https://hostname/api/V2/equipment/{mockid}\"}}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/v2/equipment/{mockid}\"}}");
             httpTest
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
-                    "\"next\": \"https://hostname/api/V2/equipment?page=2&pageSize=1&sort=name\",",
+                    "\"next\": \"https://hostname/api/v2/equipment?page=2&pageSize=1&sort=name\",",
                     "\"previous\": null,",
                     "\"items\": [", space1, "],",
-                    "\"self\": \"https://hostname/api/V2/equipment?page=1&pageSize=1&sort=name\"}"))
+                    "\"self\": \"https://hostname/api/v2/equipment?page=1&pageSize=1&sort=name\"}"))
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", space2, "],",
-                    "\"self\": \"https://hostname/api/V2/equipment?page=2&pageSize=1&sort=name\"}"));
+                    "\"self\": \"https://hostname/api/v2/equipment?page=2&pageSize=1&sort=name\"}"));
 
             var Equipment = client.GetEquipment();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/equipment")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/equipment")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
             MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), null, testCulture);
@@ -2229,11 +2229,11 @@ namespace MetasysServices.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [{}],",
-                "\"self\": \"https://hostname/api/V2/equipment?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/equipment?page=1&pageSize=200&sort=name\"}"));
 
             var devices = client.GetEquipment();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/equipment")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/equipment")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, devices.Count());
@@ -2244,18 +2244,18 @@ namespace MetasysServices.Tests
         {
             string space = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\"}");
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", space, "],",
-                $"\"self\": \"https://hostname/api/V2/equipment?page=1&pageSize=200&sort=name\"}}"));
+                $"\"self\": \"https://hostname/api/v2/equipment?page=1&pageSize=200&sort=name\"}}"));
 
             var e = Assert.Throws<MetasysObjectException>(() =>
                 client.GetObjects(mockid));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetEquipmentMissingValuesThrowsException: {e.Message}", true);
@@ -2269,7 +2269,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.GetEquipment());
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/equipment")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/equipment")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetEquipmentUnauthorizedThrowsException: {e.Message}", true);
@@ -2287,7 +2287,7 @@ namespace MetasysServices.Tests
             // First call is expected to perform an Http Request, second an subsequent calls are expected to retrieve value from dictionary cache
             id=await client.GetObjectIdentifierAsync("fully:qualified/cache-reference").ConfigureAwait(false);
             Assert.AreEqual(mockid, id);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/objectIdentifiers")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objectIdentifiers")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
         }

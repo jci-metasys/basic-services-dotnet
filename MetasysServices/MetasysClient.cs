@@ -68,7 +68,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="ignoreCertificateErrors">Use to bypass server certificate verification.</param>
         /// <param name="version">The server's Api version.</param>
         /// <param name="cultureInfo">Localization culture for Metasys enumeration translations.</param>
-        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.V2, CultureInfo cultureInfo = null)
+        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v2, CultureInfo cultureInfo = null)
         {
             // Set Metasys culture if specified, otherwise use current machine Culture.
             Culture = cultureInfo ?? CultureInfo.CurrentCulture;

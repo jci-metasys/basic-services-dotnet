@@ -28,7 +28,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="version"></param>
         /// <param name="cultureInfo"></param>
         /// <returns>LegacyMetasysClientInstance</returns>
-        public ILegacyMetasysClient GetLegacyClient(string hostname, bool ignoreCertificateErrors = false, string version = "V2", string cultureInfo = null)
+        public ILegacyMetasysClient GetLegacyClient(string hostname, bool ignoreCertificateErrors = false, string version = "v2", string cultureInfo = null)
         {
             if (!Enum.TryParse(version, out ApiVersion apiVersion))
             {

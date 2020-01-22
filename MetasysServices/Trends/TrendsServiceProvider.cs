@@ -57,7 +57,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
                 catch (ArgumentNullException e)
                 {
-                    // SOmething went wrong on object parsing
+                    // Something went wrong on object parsing
                     throw new MetasysObjectException(e);
                 }
                 // Extract ID from units url
@@ -90,13 +90,21 @@ namespace JohnsonControls.Metasys.BasicServices
             // Read full attribute from url
             foreach (var a in attributes)
             {
-                var attributeUrl = a.Item["attributeUrl"].Value<string>();
-                var attribute = await GetWithFullUrl(attributeUrl);
-                objectAttributes.Add(new Attribute
+                try
                 {
-                    Id = attribute["id"].Value<int>(),
-                    Description = attribute["description"].Value<string>()
-                });
+                    var attributeUrl = a.Item["attributeUrl"].Value<string>();
+                    var attribute = await GetWithFullUrl(attributeUrl);               
+                    objectAttributes.Add(new Attribute
+                    {
+                        Id = attribute["id"].Value<int>(),
+                        Description = attribute["description"].Value<string>()
+                    });
+                }
+                catch (ArgumentNullException e)
+                {
+                    // Something went wrong on object parsing
+                    throw new MetasysObjectException(e);
+                }
             }
             return objectAttributes;
         }

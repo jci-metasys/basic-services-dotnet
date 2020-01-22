@@ -28,7 +28,7 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
             var alarms = client.GetAlarms(new AlarmFilter { }); // No filter
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/alarms")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, alarms.Items.Count());
@@ -47,7 +47,7 @@ namespace MetasysServices.Tests
             httpTest.RespondWith(response);
 
             var alarms = client.GetAlarms(AlarmFilter);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/alarms")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = JsonConvert.DeserializeObject<AlarmItemProvider>(Alarm);
@@ -67,7 +67,7 @@ namespace MetasysServices.Tests
             httpTest
              .RespondWith(response);           
             var alarms = client.GetAlarms(AlarmFilter);
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/alarms")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = JsonConvert.DeserializeObject<AlarmItemProvider>(Alarm);
@@ -89,7 +89,7 @@ namespace MetasysServices.Tests
 
             var alarms = client.GetAlarms(new AlarmFilter { Type=71});
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/alarms")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = JsonConvert.DeserializeObject<AlarmItemProvider>(Alarm);
@@ -110,7 +110,7 @@ namespace MetasysServices.Tests
 
             var devices = client.GetAlarms(new AlarmFilter { });
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/alarms")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, devices.Items.Count());
@@ -121,7 +121,7 @@ namespace MetasysServices.Tests
         {
             string Alarm= string.Concat("{",
                 "\"id\": \"", mockid, "\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\"}");
             var response = @"{
             ""total"": 1,
             ""next"": null,
@@ -134,7 +134,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysObjectException>(() => // To do: Use Specific Exception for Alarm Item Provider
                 client.GetAlarms(new AlarmFilter { }));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/alarms/alarms")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetSpacesMissingValuesThrowsException: {e.Message}", true);
@@ -148,7 +148,7 @@ namespace MetasysServices.Tests
             var e = Assert.Throws<MetasysHttpException>(() =>
                 client.GetAlarms(new AlarmFilter { }));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/V2/alarms")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetAlarmsUnauthorizedThrowsException: {e.Message}", true);    
