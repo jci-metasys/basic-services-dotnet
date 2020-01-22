@@ -19,6 +19,6 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="version"></param>
         /// <param name="cultureInfo"></param>
         /// <returns></returns>
-        ILegacyMetasysClient GetLegacyClient(string hostname, bool ignoreCertificateErrors = false, string version = "V2", string cultureInfo = null);
+        ILegacyMetasysClient GetLegacyClient(string hostname, bool ignoreCertificateErrors = false, string version = "v2", string cultureInfo = null);
     }
 }

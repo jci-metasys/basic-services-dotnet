@@ -67,7 +67,7 @@ namespace MetasysServicesCom.Tests
         public void TryLogin_ReturnsBadHost()
         {
             //Arrange
-            InitMethod.httpTest.RespondWith("Call failed. No such host is known POST https://badhost/api/V2/login", 404);
+            InitMethod.httpTest.RespondWith("Call failed. No such host is known POST https://badhost/api/v2/login", 404);
 
             //Act
             void Act()
@@ -284,7 +284,7 @@ namespace MetasysServicesCom.Tests
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\",",
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
                 "\"description\": \"none\",",
                 "\"firmwareVersion\": \"4.0.0.1105\",",
                 "\"ipAddress\": \"\"}");
@@ -294,7 +294,7 @@ namespace MetasysServicesCom.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", device, "],",
-                "\"self\": \"https://hostname/api/V2/networkDevices?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=200&sort=name\"}"));
 
             //Act
             dynamic devices = InitMethod.LClient.GetNetworkDevices();
@@ -315,14 +315,14 @@ namespace MetasysServicesCom.Tests
                .RespondWith(string.Concat("{",
                    "\"total\": 1,",
                    "\"items\": [{",
-                       "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/185\"",
+                       "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/185\"",
                    "}],",
-                   "\"self\": \"https://hostname/api/V2/networkDevices/availableTypes\"}"))
+                   "\"self\": \"https://hostname/api/v2/networkDevices/availableTypes\"}"))
                .RespondWith(string.Concat("{",
                    "\"id\": 185,",
                    "\"description\": \"NAE55-NIE59\",",
-                   "\"self\": \"https://hostname/api/V2/enumSets/508/members/185\",",
-                   "\"setUrl\": \"https://hostname/api/V2/enumSets/508\"}"));
+                   "\"self\": \"https://hostname/api/v2/enumSets/508/members/185\",",
+                   "\"setUrl\": \"https://hostname/api/v2/enumSets/508\"}"));
 
             //Act
             dynamic types = InitMethod.LClient.GetNetworkDeviceTypes();
@@ -344,13 +344,13 @@ namespace MetasysServicesCom.Tests
                "\"itemReference\": \"fully:qualified/reference\",",
                "\"name\": \"name\",",
                "\"description\": \"description\",",
-               "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+               "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             InitMethod.httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", obj, "],",
-                $"\"self\": \"https://hostname/api/V2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
+                $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
 
             //Act
             dynamic objects = InitMethod.LClient.GetObjects(mockid.ToString());
@@ -371,14 +371,14 @@ namespace MetasysServicesCom.Tests
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
-                $"\"self\": \"https://hostname/api/V2/spaces/{mockid}\"}}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
             InitMethod.httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", space, "],",
-                "\"self\": \"https://hostname/api/V2/spaces?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/spaces?page=1&pageSize=200&sort=name\"}"));
 
             //Act
             dynamic spaces = InitMethod.LClient.GetSpaces();
@@ -398,13 +398,13 @@ namespace MetasysServicesCom.Tests
             var item = string.Concat("{",
                     "\"id\": 3,",
                     "\"description\": \"Room\",",
-                    "\"self\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
-                    "\"setUrl\": \"https://hostname/api/V2/enumSets/1766\"}");
+                    "\"self\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
+                    "\"setUrl\": \"https://hostname/api/v2/enumSets/1766\"}");
             InitMethod.httpTest
                 .RespondWith(string.Concat("{",
                     "\"total\": 1,",
                     $"\"items\": [{item}],",
-                    "\"self\": \"https://hostname/api/V2/enumSet/1766\"}"));
+                    "\"self\": \"https://hostname/api/v2/enumSet/1766\"}"));
 
             //Act
             dynamic types = InitMethod.LClient.GetSpaceTypes();
@@ -425,14 +425,14 @@ namespace MetasysServicesCom.Tests
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/1766/members/3\",",
-                $"\"self\": \"https://hostname/api/V2/equipment/{mockid}\"}}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/v2/equipment/{mockid}\"}}");
             InitMethod.httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", space, "],",
-                "\"self\": \"https://hostname/api/V2/equipment?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/v2/equipment?page=1&pageSize=200&sort=name\"}"));
 
             //Act
             dynamic equipments = InitMethod.LClient.GetEquipment();

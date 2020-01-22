@@ -86,13 +86,13 @@ namespace MetasysServices.Tests
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             string obj2 = string.Concat("{",
                 "\"id\": \"11111111-2222-3333-4444-555555555556\",",
                 "\"itemReference\": \"fully:qualified/reference2\",",
                 "\"name\": \"name2\",",
                 "\"description\": \"description2\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             string objCopy = String.Copy(obj);
             MetasysObject child = new MetasysObject(JToken.Parse(obj2), null, testCulture);
             MetasysObject childCopy = new MetasysObject(JToken.Parse(obj2), null, testCulture);
@@ -234,19 +234,19 @@ namespace MetasysServices.Tests
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             string obj2 = string.Concat("{",
                 "\"id\": \"11111111-2222-3333-4444-555555555556\",",
                 "\"itemReference\": \"fully:qualified/reference2\",",
                 "\"name\": \"name2\",",
                 "\"description\": \"description2\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             string obj3 = string.Concat("{",
                 "\"id\": \"11111111-2222-3333-4444-555555555557\",",
                 "\"itemReference\": \"fully:qualified/reference3\",",
                 "\"name\": \"name3\",",
                 "\"description\": \"description3\",",
-                "\"typeUrl\": \"https://hostname/api/V2/enumSets/508/members/197\"}");
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
 
             MetasysObject child = new MetasysObject(JToken.Parse(obj3), null, testCulture);
             MetasysObject child2 = new MetasysObject(JToken.Parse(obj3), null, testCulture);

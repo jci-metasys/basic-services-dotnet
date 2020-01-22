@@ -24,7 +24,7 @@ namespace MetasysServicesCom.Tests
             //Arrange
             var legacyClientMock = new Mock<ILegacyMetasysClient>();
             var comMetasysClientFactoryMock = new Mock<IComMetasysClientFactory>();
-            comMetasysClientFactoryMock.Setup(m => m.GetLegacyClient("hostname", false, "V2", null)).Returns(legacyClientMock.Object);
+            comMetasysClientFactoryMock.Setup(m => m.GetLegacyClient("hostname", false, "v2", null)).Returns(legacyClientMock.Object);
 
             //Act
             var response = InitMethod.ComMetasysClientFactory.GetLegacyClient("hostname");
