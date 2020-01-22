@@ -230,5 +230,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name=""alarmFilter">TThe alarm filter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
         PagedResult<IEnumerable<AlarmItemProvider>> GetAlarmsForNetworkDevice(string networkDeviceId, AlarmFilter alarmFilter);
+        /// <summary>
+        /// Local instance of Trends service
+        /// </summary>
+        ITrendsService Trends { get; set; }
     }
 }

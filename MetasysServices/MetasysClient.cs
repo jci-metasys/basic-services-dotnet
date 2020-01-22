@@ -49,7 +49,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Local instance of Trends service
         /// </summary>
-        public ITrendsService Trends;
+        public ITrendsService Trends { get; set; }
 		
 		private readonly IProvideAlarmInfo alarmInfoProvider;
 
