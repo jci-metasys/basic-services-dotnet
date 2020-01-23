@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using JohnsonControls.Metasys.BasicServices;
 
 namespace JohnsonControls.Metasys.ComServices
 {
@@ -111,5 +112,21 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
         object GetAlarmsForNetworkDevice(string networkDeviceId, dynamic alarmFilter);
+
+        /// <summary>
+        /// Retrieves a collection of attributes under the specified object for which samples are available.
+        /// </summary>
+        /// <param name="id">The identifier of the object</param>
+        /// <returns>The list of attributes for the specified object for which samples are available.</returns>
+        object GetTrendedAttributes(Guid id);
+
+        /// <summary>
+        /// Retrieves a collection of samples for the specified object attribute during a particular date and time range.
+        /// </summary>
+        /// <param name="objectId">The identifier of the object</param>
+        /// <param name="attributeId">The identifier of the attribute for which to retrieve sample information</param>
+        /// <param name="filter">Filter for a timeline based request</param>
+        /// <returns>The list of samples for the specified objectduring a particular date and time range.</returns>
+        object GetSamples(Guid objectId, int attributeId, dynamic filter);
     }
 }
