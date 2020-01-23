@@ -245,5 +245,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="filter">Filter for a timeline based request</param>
         /// <returns>The list of samples for the specified object</returns>
         List<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter);
+        
+        /// <inheritdoc cref="IMetasysClient.GetTrendedAttributes(Guid)"/>
+        Task<List<Attribute>> GetTrendedAttributesAsync(Guid id);
+
+        /// <inheritdoc cref="IMetasysClient.GetSamples(Guid, int, TimeFilter)"/>
+        Task<List<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter);
     }
 }

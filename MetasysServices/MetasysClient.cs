@@ -1167,13 +1167,25 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc />
         public List<Attribute> GetTrendedAttributes(Guid id)
         {
-            return Trends.GetTrendedAttributesAsync(id).GetAwaiter().GetResult();
+            return Trends.GetTrendedAttributes(id);
+        }
+
+        /// <inheritdoc />
+        public async Task<List<Attribute>> GetTrendedAttributesAsync(Guid id)
+        {
+            return await Trends.GetTrendedAttributesAsync(id);
         }
 
         /// <inheritdoc />
         public List<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter)
         {
-            return Trends.GetSamplesAsync(objectId, attributeId, filter).GetAwaiter().GetResult();
+            return Trends.GetSamples(objectId, attributeId, filter);
+        }
+
+        /// <inheritdoc />
+        public async Task<List<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter)
+        {
+            return await Trends.GetSamplesAsync(objectId, attributeId, filter);
         }
 
     }
