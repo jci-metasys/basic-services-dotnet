@@ -230,5 +230,20 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name=""alarmFilter">TThe alarm filter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
         PagedResult<IEnumerable<AlarmItemProvider>> GetAlarmsForNetworkDevice(string networkDeviceId, AlarmFilter alarmFilter);
+
+        /// <summary>
+        /// Retrieves a collection of attributes under the specified object for which samples are available.
+        /// </summary>
+        /// <param name="id">The identifier of the object</param>
+        List<Attribute> GetTrendedAttributes(Guid id);
+
+        /// <summary>
+        /// Retrieves a collection of samples for the specified object attribute during a particular date and time range.
+        /// </summary>
+        /// <param name="objectId">The identifier of the object</param>
+        /// <param name="attributeId">The identifier of the attribute for which to retrieve sample information</param>
+        /// <param name="filter">Filter for a timeline based request</param>
+        /// <returns>The list of samples for the specified object</returns>
+        List<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter);
     }
 }

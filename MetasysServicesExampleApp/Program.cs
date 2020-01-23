@@ -71,19 +71,33 @@ namespace MetasysServicesExampleApp
                        List<Guid> ids = new List<Guid>() { id1, id2 };
 
             #endregion
-            #region Trends
-            var trendedAttributes=client.Trends.GetTrendedAttributes(id1);
+
+            #region Trend
+            TimeFilter getDateTimeForTrend = new TimeFilter();
+            Guid objId = id1;
+            var trendedAttributes = client.GetTrendedAttributes(objId);
             Console.WriteLine(trendedAttributes[0].Description);
-            var samples = client.Trends.GetSamples(id1, 85, new TimeFilter { StartTime = new DateTime(2020,01,20), EndTime = new DateTime(2020,01,21)});
+
+            Console.WriteLine("Please enter Start Date and End Date separated by space: ");
+            string getDateTime = Console.ReadLine();
+            args = getDateTime.Split(' ');
+
+            if (args != null)
+            {
+                getDateTimeForTrend = ReadUserInputForTrends(args);
+            }
+
+            var samples = client.GetSamples(objId, 85, getDateTimeForTrend);
             foreach (var s in samples)
             {
-                Console.WriteLine($"Value: {s.Value} {s.Unit} Timestamp: {s.Timestamp}");
+                Console.WriteLine($"Value: {s.Value} Unit: {s.Unit} Timestamp: {s.Timestamp}");
             }
+
             #endregion
 
-                #region ReadProperty
+            #region ReadProperty
 
-                Console.WriteLine("\n\nReadProperty...");
+            Console.WriteLine("\n\nReadProperty...");
 
                        Console.Write("\n!!!Please note ReadProperty will return null if the attribute does not exist, and will cause an exception in this example!!!");
                        Console.Write("\nEnter an attribute of the objects (Examples: name, description, presentValue): ");
@@ -416,6 +430,16 @@ namespace MetasysServicesExampleApp
                 Sort = args[11]
             };
             return alarmFilter;
+        }
+
+        private static TimeFilter ReadUserInputForTrends(string[] args)
+        {
+            TimeFilter timeFilter = new TimeFilter
+            {
+                StartTime = DateTime.Parse(args[0]),
+                EndTime = DateTime.Parse(args[1]),
+            };
+            return timeFilter;
         }
     }
 }

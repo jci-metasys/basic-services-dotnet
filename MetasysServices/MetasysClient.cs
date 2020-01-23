@@ -1163,5 +1163,18 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             return alarmInfoProvider.GetAlarmsForNetworkDeviceAsync(networkDeviceId, alarmFilter).GetAwaiter().GetResult();
         }
+
+        /// <inheritdoc />
+        public List<Attribute> GetTrendedAttributes(Guid id)
+        {
+            return Trends.GetTrendedAttributesAsync(id).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public List<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter)
+        {
+            return Trends.GetSamplesAsync(objectId, attributeId, filter).GetAwaiter().GetResult();
+        }
+
     }
 }
