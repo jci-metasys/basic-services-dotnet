@@ -52,6 +52,29 @@ namespace MetasysServicesComExampleApp
 
             #endregion
 
+            #region Trends
+            ComTimeFilter getDateTimeForTrend = new ComTimeFilter();
+            Guid objId = new Guid(object1Id);
+            dynamic trendedAttributes = legacyClient.GetTrendedAttributes(objId);
+            Console.WriteLine(trendedAttributes[0].Description);
+
+            Console.WriteLine("Please enter Start Date and End Date separated by space: ");
+            string getDateTime = Console.ReadLine();
+            args = getDateTime.Split(' ');
+
+            if (args != null)
+            {
+                getDateTimeForTrend = ReadUserInputForTrends(args);
+            }
+
+            dynamic samples = legacyClient.GetSamples(objId, 85, getDateTimeForTrend);
+            foreach (var s in samples)
+            {
+                Console.WriteLine($"Value: {s.Value} Unit: {s.Unit} Timestamp: {s.Timestamp}");
+            }
+
+            #endregion
+
             #region Read Property
 
             Console.Write("\n!!!Please note ReadProperty will return null if the attribute does not exist, and will cause an exception in this example!!!");
@@ -317,6 +340,16 @@ namespace MetasysServicesComExampleApp
                 Sort = args[11]
             };
             return alarmFilter;
+        }
+
+        private static ComTimeFilter ReadUserInputForTrends(string[] args)
+        {
+            ComTimeFilter timeFilter = new ComTimeFilter
+            {
+                StartTime = DateTime.Parse(args[0]),
+                EndTime = DateTime.Parse(args[1]),
+            };
+            return timeFilter;
         }
     }
 }
