@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,16 +19,20 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm Unique Identifier (GUID)
         /// </summary>
+        /// 
+        [JsonProperty(Required = Required.Always)]
         public string Id { get; set; }
 
         /// <summary>
         /// Item fully qualified reference
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public string ItemReference { get; set; }
 
         /// <summary>
         /// Item name
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public string Name { get; set; }
 
         /// <summary>

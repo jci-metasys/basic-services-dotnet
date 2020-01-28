@@ -36,9 +36,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         /// <exception cref="MetasysHttpNotFoundException"></exception>
         /// <exception cref="MetasysObjectException"></exception>
-        List<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter);
+        PagedResult<List<Sample>> GetSamples(Guid objectId, int attributeId, TimeFilter filter);
 
         /// <inheritdoc cref="ITrendsService.GetSamples(Guid, Guid, TimeFilter)"/>
-        Task<List<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter);
+        Task<PagedResult<List<Sample>>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter);
     }
 }

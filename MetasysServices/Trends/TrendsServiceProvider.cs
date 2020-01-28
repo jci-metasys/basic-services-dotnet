@@ -21,39 +21,41 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Initialize a new instance given the Flurl client.
         /// </summary>
         /// <param name="client"></param>
-        public TrendsServiceProvider(FlurlClient client) : base(client)
+        public TrendsServiceProvider(IFlurlClient client) : base(client)
         {
         }
 
         /// <inheritdoc/>
-        public List<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter)
+        public PagedResult<List<Sample>> GetSamples(Guid objectId, int attributeId, TimeFilter filter)
         {
             return GetSamplesAsync(objectId, attributeId, filter).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task<List<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter)
+        public async Task<PagedResult<List<Sample>>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter)
         {
             List<Sample> objectSamples = new List<Sample>();
             // Set the timeline parameters first for the query string
             Dictionary<string, string> parameters = new Dictionary<string, string>()
                 {
                     {"startTime", filter.StartTime.ToString("o") }, // Convert to UTC DateTime string
-                    {"endTime", filter.EndTime.ToString("o") }
+                    {"endTime", filter.EndTime.ToString("o") },
+                    {"page", filter.Page.ToString() },
+                    {"pageSize", filter.PageSize.ToString() }
                 };
             // Perform a generic call using objects resource valid for Network Devices as well
-            var samples = await GetObjectsAsync(objectId, "objects", $"attributes/{attributeId}/samples", parameters);
+            var response = await GetPagedResultsAsync<JArray>("objects", parameters, objectId.ToString(), "attributes", attributeId.ToString(),"samples");
             // Read full attribute from url
-            foreach (var s in samples)
+            foreach (JToken s in response.Items)
             {
                 Sample sample = new Sample();
                 string unitsUrl;
                 try
                 {
-                    sample.Timestamp = s.Item["timestamp"].Value<DateTime>();
-                    sample.IsReliable = s.Item["isReliable"].Value<Boolean>();
-                    sample.Value = s.Item["value"]["value"].Value<double>();
-                    unitsUrl = s.Item["value"]["units"].Value<string>();
+                    sample.Timestamp = s["timestamp"].Value<DateTime>();
+                    sample.IsReliable = s["isReliable"].Value<Boolean>();
+                    sample.Value = s["value"]["value"].Value<double>();
+                    unitsUrl = s["value"]["units"].Value<string>();
                 }
                 catch (ArgumentNullException e)
                 {
@@ -61,19 +63,27 @@ namespace JohnsonControls.Metasys.BasicServices
                     throw new MetasysObjectException(e);
                 }
                 // Extract ID from units url
-                var unitId=unitsUrl.Split('/').Last();
+                var unitId = unitsUrl.Split('/').Last();
                 string desc;
                 // Read full url if not cached previously
                 if (!Units.ContainsKey(unitId))
-                {                    
+                {
                     var unit = await GetWithFullUrl(unitsUrl);
-                    Units.Add(unitId, unit["description"].Value<string>());                    
+                    Units.Add(unitId, unit["description"].Value<string>());
                 }
                 sample.Unit = Units[unitId];
                 objectSamples.Add(sample);
             }
-            return objectSamples;
-        }      
+            // Type the response as Sample List
+            return new PagedResult<List<Sample>>
+            {
+                Items = objectSamples,
+                CurrentPage = response.CurrentPage,
+                PageCount = response.PageCount,
+                PageSize = response.PageSize,
+                Total = response.Total
+            };
+        }
 
         /// <inheritdoc/>
         public List<Attribute> GetTrendedAttributes(Guid id)
@@ -86,14 +96,14 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             List<Attribute> objectAttributes = new List<Attribute>();
             // Perform a generic call using objects resource valid for Network Devices as well
-            var attributes = await GetObjectsAsync(id, "objects", "trendedAttributes");
+            JToken attributes = (await GetRequestAsync("objects", null, id, "trendedAttributes"));
             // Read full attribute from url
-            foreach (var a in attributes)
+            foreach (var a in attributes["items"])
             {
                 try
                 {
-                    var attributeUrl = a.Item["attributeUrl"].Value<string>();
-                    var attribute = await GetWithFullUrl(attributeUrl);               
+                    var attributeUrl = a["attributeUrl"].Value<string>();
+                    var attribute = await GetWithFullUrl(attributeUrl);
                     objectAttributes.Add(new Attribute
                     {
                         Id = attribute["id"].Value<int>(),
@@ -107,6 +117,6 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
             }
             return objectAttributes;
-        }
+        }     
     }
 }

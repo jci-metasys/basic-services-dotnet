@@ -30,7 +30,8 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            Assert.AreEqual(0, samples.Count());
+            Assert.AreEqual(0, samples.Items.Count());
+            Assert.AreEqual(0, samples.Total);
         }
 
         [Test]
@@ -73,7 +74,7 @@ namespace MetasysServices.Tests
                 IsReliable = responseObject["isReliable"].Value<bool>(),
                 Timestamp = responseObject["timestamp"].Value<DateTime>()
             };
-            Assert.AreEqual(sample, samples.ElementAt(0));
+            Assert.AreEqual(sample, samples.Items.ElementAt(0));
         }
 
         [Test]
@@ -93,16 +94,13 @@ namespace MetasysServices.Tests
             ""items"": [" + Sample2 + @"],
             ""self"": ""https://hostname/api/v2/objects/" + mockid + @"/attributes/85/samples?startTime=2020-01-20T15:37:46.413Z&endTime=2020-01-21T15:37:46.413Z&pageSize=1&page=2""
             ";     
-            httpTest.RespondWith(response1);           
-            httpTest.RespondWith(response2);
+            httpTest.RespondWith(response1);
             httpTest.RespondWith(Unit);
-            var samples = client.Trends.GetSamples(mockid, 85, TimeFilter);
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
-                .WithVerb(HttpMethod.Get)
-                .Times(2);
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/507/members/64")
-              .WithVerb(HttpMethod.Get) // This is expected to be called once due to caching
-              .Times(1);
+            httpTest.RespondWith(response2);           
+            var samplesPage1 = client.Trends.GetSamples(mockid, 85, TimeFilter);                      
+            TimeFilter.Page = 2;
+            var samplesPage2 = client.Trends.GetSamples(mockid, 85, TimeFilter);           
+            TimeFilter.Page = 1;
             // Compare the two responses in multiple pages
             var responseObject1 = JToken.Parse(Sample1);
             var sample1 = new Sample
@@ -119,9 +117,15 @@ namespace MetasysServices.Tests
                 Unit = "deg F",
                 IsReliable = responseObject2["isReliable"].Value<bool>(),
                 Timestamp = responseObject2["timestamp"].Value<DateTime>()
-            };          
-            Assert.AreEqual(sample1, samples.ElementAt(0));
-            Assert.AreEqual(sample2, samples.ElementAt(1));
+            };
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
+               .WithVerb(HttpMethod.Get)
+               .Times(2);
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/enumSets/507/members/64")
+            .WithVerb(HttpMethod.Get) // This is expected to be called once due to caching
+            .Times(1);
+            Assert.AreEqual(sample1, samplesPage1.Items.ElementAt(0));
+            Assert.AreEqual(sample2, samplesPage2.Items.ElementAt(0));
         }
         
         [Test]
@@ -134,12 +138,13 @@ namespace MetasysServices.Tests
             ""items"": [{}],
             ""self"": ""https://hostname/api/v2/objects/" + mockid + @"/attributes/85/samples?startTime=2020-01-20T15:37:46.413Z&endTime=2020-01-21T15:37:46.413Z&pageSize=1&page=1""
             ";
-            httpTest.RespondWith(response);
-            var samples = client.Trends.GetSamples(mockid, 85, TimeFilter);
+            httpTest.RespondWith(response);         
+            var e = Assert.Throws<MetasysObjectException>(() =>
+            client.Trends.GetSamples(mockid, 85, TimeFilter));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                  .WithVerb(HttpMethod.Get)
                  .Times(1);
-            Assert.AreEqual(0, samples.Count());
+            PrintMessage($"TestGetSamplesMissingItemsThrowsException: {e.Message}", true);
         }
 
         [Test]

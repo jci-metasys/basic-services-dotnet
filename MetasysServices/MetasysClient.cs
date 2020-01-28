@@ -866,7 +866,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
-            return await ProcessPagedRequestAsync("networkDevices", type);
+            var response=await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string>{ { "type", type }});
+            return toMetasysObject(response);
         }      
 
 
@@ -1007,7 +1008,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         public async Task<IEnumerable<MetasysObject>> GetSpacesAsync(string type = null)
         {
-            return await ProcessPagedRequestAsync("spaces", type);
+            var response=await GetAllAvailablePagesAsync("spaces", new Dictionary<string, string>() { {"type", type } });
+            return toMetasysObject(response);
         }
 
       
@@ -1026,7 +1028,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
         {
-            return await ProcessPagedRequestAsync("equipment");
+            var response = await GetAllAvailablePagesAsync("equipment");
+            return toMetasysObject(response);
         }
 
         /// <summary>
@@ -1064,7 +1067,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
         {
-            return toMetasysObject(await GetObjectsAsync(spaceId, parentResource: "spaces", childResource: "equipment"));
+            var response = await GetAllAvailablePagesAsync("spaces", null, "equipment");
+            return toMetasysObject(response);
         }
 
         /// <summary>
@@ -1084,43 +1088,26 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="equipmentId"></param>
         /// <returns></returns>
         public async Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid equipmentId)
-        {
-            
-            List<Point> points = new List<Point>() { }; List<Guid> guids = new List<Guid>();
-            bool hasNext = true;
-            int page = 1;
-            while (hasNext)
-            {
-                hasNext = false;
-                var response = await GetObjectsRequestAsync(equipmentId,  "equipment", "points", new Dictionary<string, string> { {"page", page.ToString() }}).ConfigureAwait(false);              
-                try
-                {
-                    var total = response["total"].Value<int>();
-                    if (total > 0)
-                    {
-                        var list = response["items"] as JArray;                        
-                        foreach (var item in list)
-                        {                                                                                                                                                  
-                                Point point = new Point(item);
-                                // Retrieve object Id from full URL and attribute to get the value
-                                string objectId = point.ObjectUrl.Split('/').Last();                             
-                                point.ObjectId = ParseObjectIdentifier(objectId);
-                                // Collect Guids to perform read property multiple in "one call"
-                                guids.Add(point.ObjectId);                                                                
-                                points.Add(point);                                                                       
-                        }                     
-                        if (response["next"] != null && response["next"].Type != JTokenType.Null)
-                        {
-                            hasNext = true;
-                            page++;
-                        }
-                    }
-                }
-                catch (System.NullReferenceException e)
-                {
-                    throw new MetasysHttpParsingException(response.ToString(), e);
-                }
+        {            
+            List<Point> points = new List<Point>() { }; List<Guid> guids = new List<Guid>();                   
+            var response = await GetAllAvailablePagesAsync("equipment",  null, equipmentId.ToString(), "points").ConfigureAwait(false);              
+            try
+            {                                                                            
+                    foreach (var item in response)
+                    {                                                                                                                                                  
+                            Point point = new Point(item);
+                            // Retrieve object Id from full URL and attribute to get the value
+                            string objectId = point.ObjectUrl.Split('/').Last();                             
+                            point.ObjectId = ParseObjectIdentifier(objectId);
+                            // Collect Guids to perform read property multiple in "one call"
+                            guids.Add(point.ObjectId);                                                                
+                            points.Add(point);                                                                       
+                    }                                                              
             }
+            catch (System.NullReferenceException e)
+            {
+                throw new MetasysHttpParsingException(response.ToString(), e);
+            }            
             // Try to Read Present Value when available. Note: can't read attribute ID from attribute full URL of point since we got only the description.
             var results = await ReadPropertyMultipleAsync(guids, new List<string> { "presentValue" });
             List<Point> pointsWithValues = new List<Point>() { };
@@ -1137,7 +1124,8 @@ namespace JohnsonControls.Metasys.BasicServices
 
         public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels)
         {
-            return toMetasysObject(await GetObjectsAsync(id, "objects","objects",null,levels));
+            var objects=await GetObjectChildrenAsync(id, null, levels);
+            return toMetasysObject(objects);
         }
 		
         /// <inheritdoc />
@@ -1147,19 +1135,19 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc />
-        public PagedResult<IEnumerable<AlarmItemProvider>> GetAlarms(AlarmFilter alarmFilter)
+        public PagedResult<List<AlarmItemProvider>> GetAlarms(AlarmFilter alarmFilter)
         {
             return alarmInfoProvider.GetAlarmsAsync(alarmFilter).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc />
-        public PagedResult<IEnumerable<AlarmItemProvider>> GetAlarmsForAnObject(string objectId, AlarmFilter alarmFilter)
+        public PagedResult<List<AlarmItemProvider>> GetAlarmsForAnObject(string objectId, AlarmFilter alarmFilter)
         {
             return alarmInfoProvider.GetAlarmsForAnObjectAsync(objectId, alarmFilter).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc />
-        public PagedResult<IEnumerable<AlarmItemProvider>> GetAlarmsForNetworkDevice(string networkDeviceId, AlarmFilter alarmFilter)
+        public PagedResult<List<AlarmItemProvider>> GetAlarmsForNetworkDevice(string networkDeviceId, AlarmFilter alarmFilter)
         {
             return alarmInfoProvider.GetAlarmsForNetworkDeviceAsync(networkDeviceId, alarmFilter).GetAwaiter().GetResult();
         }
@@ -1177,13 +1165,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc />
-        public List<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter)
+        public PagedResult<List<Sample>> GetSamples(Guid objectId, int attributeId, TimeFilter filter)
         {
             return Trends.GetSamples(objectId, attributeId, filter);
         }
 
         /// <inheritdoc />
-        public async Task<List<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter)
+        public async Task<PagedResult<List<Sample>>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter)
         {
             return await Trends.GetSamplesAsync(objectId, attributeId, filter);
         }

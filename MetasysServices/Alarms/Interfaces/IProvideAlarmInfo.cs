@@ -23,20 +23,20 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms with details.</returns>
-        Task<PagedResult<IEnumerable<AlarmItemProvider>>> GetAlarmsAsync(AlarmFilter alarmFilter);
+        Task<PagedResult<List<AlarmItemProvider>>> GetAlarmsAsync(AlarmFilter alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
         /// </summary>
         /// <param name="objectId">The identifier of the object.</param>
         /// <returns>The list of alarms with details.</returns>
-        Task<PagedResult<IEnumerable<AlarmItemProvider>>> GetAlarmsForAnObjectAsync(string objectId, AlarmFilter alarmFilter);
+        Task<PagedResult<List<AlarmItemProvider>>> GetAlarmsForAnObjectAsync(string objectId, AlarmFilter alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
         /// </summary>
         /// <param name="networkDeviceId">The identifier of the network device.</param>
         /// <returns>The list of alarms with details.</returns>
-        Task<PagedResult<IEnumerable<AlarmItemProvider>>> GetAlarmsForNetworkDeviceAsync(string networkDeviceId, AlarmFilter alarmFilter);
+        Task<PagedResult<List<AlarmItemProvider>>> GetAlarmsForNetworkDeviceAsync(string networkDeviceId, AlarmFilter alarmFilter);
     }
 }

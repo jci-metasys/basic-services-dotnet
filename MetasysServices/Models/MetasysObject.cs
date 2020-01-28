@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -14,12 +15,15 @@ namespace JohnsonControls.Metasys.BasicServices
         private CultureInfo _CultureInfo;
 
         /// <summary>The item reference of the Metasys object.</summary>
+        [JsonProperty(Required = Required.Always)]
         public string ItemReference { private set; get; }
 
         /// <summary>The id of the Metasys object.</summary>
+        [JsonProperty(Required = Required.Always)]
         public Guid Id { private set; get; }
 
         /// <summary>The name of the Metasys object.</summary>
+        [JsonProperty(Required = Required.Always)]
         public string Name { private set; get; }   
 
         /// <summary>The description of the Metasys object.</summary>

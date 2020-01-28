@@ -35,7 +35,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 getDateTimeForTrend = ReadUserInputForTrends(args);
             }
 
-            var samples = client.GetSamples(objId, 85, getDateTimeForTrend);
+            var samples = client.GetSamples(objId, 85, getDateTimeForTrend).Items;
             foreach (var s in samples)
             {
                 Console.WriteLine($"Value: {s.Value} Unit: {s.Unit} Timestamp: {s.Timestamp}");
