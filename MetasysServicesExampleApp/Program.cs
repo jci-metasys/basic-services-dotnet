@@ -22,9 +22,7 @@ namespace MetasysServicesExampleApp
 
             var username = args[0];
             var password = args[1];
-            var hostname = args[2];
-
-            IProvideAlarmInfo alarmInfoProvicer = new AlarmInfoProvider();
+            var hostname = args[2];      
 
             #region Login
             Console.WriteLine("Default culture is en_US. The culture for client translations can be changed in the code.");

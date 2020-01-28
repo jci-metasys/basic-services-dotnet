@@ -1,5 +1,6 @@
 ﻿using Flurl;
 using Flurl.Http;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -15,19 +16,21 @@ namespace JohnsonControls.Metasys.BasicServices
     public abstract class BasicServiceProvider
     {
         /// <summary>The http client.</summary>
-        protected FlurlClient Client;
+        protected IFlurlClient Client;
+        
+        /// <summary>
+        /// Empty constructor.
+        /// </summary>
+        /// <remarks> Assume Client is initialized by extended class.</remarks>
+        public BasicServiceProvider() { }
 
-        public BasicServiceProvider()
-        {
-        }
-
-        public BasicServiceProvider(FlurlClient client)
+        public BasicServiceProvider(IFlurlClient client)
         {
             Client = client;
         }
 
         /// <summary>
-        /// Return Metasys Object representation from a generic JSON object.
+        /// Return Metasys Object representation from a generic JSON object tree.
         /// </summary>
         /// <returns></returns>
         protected List<MetasysObject> toMetasysObject(IEnumerable<TreeObject> objects)
@@ -37,12 +40,36 @@ namespace JohnsonControls.Metasys.BasicServices
                 // Exit condition for recursion
                 return null;
             }
-            List<MetasysObject> metasysObjects= new List<MetasysObject>();
+            List<MetasysObject> metasysObjects = new List<MetasysObject>();
             foreach (var o in objects)
             {
-                metasysObjects.Add(new MetasysObject(o.Item,toMetasysObject(o.Children)));
+                metasysObjects.Add(new MetasysObject(o.Item, toMetasysObject(o.Children)));
             }
             return metasysObjects;
+        }
+
+        /// <summary>
+        /// Return Metasys Object representation from a generic JSON object.
+        /// </summary>
+        /// <returns></returns>
+        protected MetasysObject toMetasysObject(JToken item)
+        {           
+            return new MetasysObject(item, null);                        
+        }
+
+
+        /// <summary>
+        /// Return Metasys Object representation from a generic JSON object List.
+        /// </summary>
+        /// <returns></returns>
+        protected List<MetasysObject> toMetasysObject(List<JToken> items)
+        {
+            List<MetasysObject> objects= new List<MetasysObject>();
+            foreach (var i in items)
+            {
+                objects.Add(toMetasysObject(i));
+            }
+            return objects;
         }
 
         /// <summary>
@@ -52,13 +79,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <remarks>
         /// A level of 1 only retrieves immediate children of the parent object.
         /// </remarks>
-        /// <param name="id"></param>
-        /// <param name="levels">The depth of the children to retrieve.</param>    
-        /// <param name="parentResource">The parent resource to retrieve children.</param>    
-        /// <param name="childResource">The children resource to get related elements</param>    
+        /// <param name="id">The id of the object.</param>
+        /// <param name="parameters">Query string parameters in Key/Value format.</param>    
+        /// <param name="levels">The number of levels to retrieve children.</param>         
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        protected  async Task<List<TreeObject>> GetObjectsAsync(Guid id,  string parentResource, string childResource, Dictionary<string, string> parameters=null, int levels = 1)
+        protected async Task<List<TreeObject>> GetObjectChildrenAsync(Guid id, Dictionary<string, string> parameters = null, int levels = 1)
         {
             if (levels < 1)
             {
@@ -72,22 +98,13 @@ namespace JohnsonControls.Metasys.BasicServices
             while (hasNext)
             {
                 hasNext = false;
-                var response = await GetObjectsRequestAsync(id, parentResource, childResource, parameters).ConfigureAwait(false);
-                if (response == null || response.Type == JTokenType.Null || !response.HasValues)
-
-                {
-
-                    return null;
-
-                }
+                var response = await GetPagedResultsAsync<JToken>("objects", new Dictionary<string, string>() { { "page", page.ToString() } }, id, "objects").ConfigureAwait(false);
                 try
                 {
-                    var total = response["total"].Value<int>();
+                    var total = response.Total;
                     if (total > 0)
                     {
-                        var list = response["items"] as JArray;
-
-                        foreach (var item in list)
+                        foreach (var item in response.Items)
                         {
                             try
                             {
@@ -99,7 +116,7 @@ namespace JohnsonControls.Metasys.BasicServices
                                     {
                                         try
                                         {
-                                            children = await GetObjectsAsync(objId, parentResource,childResource,null, levels - 1).ConfigureAwait(false);
+                                            children = await GetObjectChildrenAsync(objId, null, levels - 1).ConfigureAwait(false);
                                         }
                                         catch (Exception e) when (e is MetasysObjectException ||
                                             e is MetasysHttpParsingException)
@@ -107,8 +124,8 @@ namespace JohnsonControls.Metasys.BasicServices
                                             throw new MetasysObjectException(e);
                                         }
                                     }
-                                }                        
-                                objects.Add(new TreeObject { Item=item, Children=children});
+                                }
+                                objects.Add(new TreeObject { Item = item, Children = children });
                             }
                             catch (MetasysGuidException)
                             {
@@ -120,18 +137,22 @@ namespace JohnsonControls.Metasys.BasicServices
                                 throw e;
                             }
                         }
-                        if (response["next"] != null && response["next"].Type != JTokenType.Null)
+                        if (response.CurrentPage < response.PageCount)
                         {
                             hasNext = true;
                             page++;
                         }
-                    }                 
+                    }
+                    else
+                    {
+                        return null; // no children
+                    }
                 }
                 catch (System.NullReferenceException e)
                 {
                     throw new MetasysHttpParsingException(response.ToString(), e);
                 }
-            }         
+            }
             return objects;
         }
 
@@ -180,16 +201,22 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Gets all child objects given a parent Guid asynchronously with the given page number.
+        /// Generic request for the given resource asynchronously. 
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="page"></param>
-        /// <param name="parentResource">The parent resource to retrieve children.</param>    
-        /// <param name="childResource">The children resource to get related elements.</param>    
+        /// <param name="resource">The main resource to read.</param>
+        /// <param name="parameters">Query string parameters in Key/Value format.</param>
+        /// <param name="pathSegments">Path segments to be used in combination with the main resource.</param>
+        /// <returns></returns>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <exception cref="MetasysHttpTimeoutException"></exception>
         /// <exception cref="MetasysHttpException"></exception>
-        protected async Task<JToken> GetObjectsRequestAsync(Guid id, string parentResource, string childResource, Dictionary<string,string> parameters)
+        /// <exception cref="MetasysHttpNotFoundException"></exception>
+        protected async Task<JToken> GetRequestAsync(string resource, Dictionary<string, string> parameters = null, params object[] pathSegments)
         {
-            Url url = new Url(parentResource).AppendPathSegments(id, childResource);
+            // Create URL with base resource
+            Url url = new Url(resource);
+            // Concatenate segments with base resource url 
+            url.AppendPathSegments(pathSegments);
             // Set query parameters according to the input dictionary
             if (parameters != null)
             {
@@ -213,91 +240,51 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Generic paged request for the given resource and optional type
+        /// Get typed items for the given resource asynchronously. 
         /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="type"></param>
-        /// <param name="page"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        protected async Task<JToken> PagedRequestAsync(string resource, string type = null, int page = 1, int pageSize = 100)
+        /// <remarks>Optionally accepts query string parameters and additional path segments.</remarks>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="resource">The main resource to read.</param>
+        /// <param name="parameters">Query string parameters in Key/Value format.</param>
+        /// <param name="pathSegments">Path segments to be used in combination with the main resource.</param>
+        /// <returns></returns>
+        protected async Task<PagedResult<T>> GetPagedResultsAsync<T>(string resource, Dictionary<string, string> parameters, params object[] pathSegments)
         {
-            Url url = new Url(resource);
-            url.SetQueryParam("page", page);
-            url.SetQueryParam("pageSize", page);
-            if (type != null)
-            {
-                url.SetQueryParam("type", type);
-            }
-
-            try
-            {
-                var response = await Client.Request(url)
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
-
-                return response;
-            }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-
-            return null;
+            var response = await GetRequestAsync(resource, parameters, pathSegments);
+            return new PagedResult<T>(response);
         }
 
+
         /// <summary>
-        /// Gets all items for the given resource asynchronously by requesting each available page.
+        /// Gets all items for the given resource asynchronously by requesting each available page.      
         /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="type">Optional type number as a string</param>
-        /// <param name="skip">Optional how many page we skip. 0 by default.</param>
-        /// <param name="take">Optional how many page we take. 0 for all.</param>
-        /// <exception cref="MetasysHttpException"></exception>
+        /// <param name="resource">The main resource to read.</param>
+        /// <param name="parameters">Query string parameters in Key Value format.</param>
+        /// <param name="pathSegments">Path segments to be used in combination with the main resource.</param>
+        /// <returns></returns>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        protected async Task<IEnumerable<MetasysObject>> ProcessPagedRequestAsync(string resource, string type = null, PageSettings settings = null)
+        /// <exception cref="MetasysHttpTimeoutException"></exception>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpNotFoundException"></exception>
+        protected async Task<List<JToken>> GetAllAvailablePagesAsync(string resource, Dictionary<string, string> parameters = null, params string[] pathSegments)
         {
-            List<MetasysObject> items = new List<MetasysObject>() { };
             bool hasNext = true;
-            settings = settings ?? new PageSettings { Skip = 0, Take = 0, PageSize = 100 }; // Set default values for paging
-            int page = settings.Skip + 1;
-            int i = 0;
-            while (hasNext && (settings.Take == 0 || i < settings.Take))
+            List<JToken> aggregatedResponse = new List<JToken>();
+            while (hasNext)
             {
                 hasNext = false;
-                var response = await PagedRequestAsync(resource, type, page, settings.PageSize).ConfigureAwait(false);
-                try
+                var response = await GetPagedResultsAsync<JArray>(resource, parameters, pathSegments).ConfigureAwait(false);
+                var total = response.Total;
+                if (total > 0)
                 {
-                    var total = response["total"].Value<int>();
-                    if (total > 0)
+                    aggregatedResponse.AddRange(response.Items);
+                    if (response.CurrentPage < response.PageCount)
                     {
-                        var list = response["items"] as JArray;
-                        foreach (var item in list)
-                        {
-                            try
-                            {
-                                MetasysObject space = new MetasysObject(item);
-                                items.Add(space);
-                            }
-                            catch (MetasysObjectException e)
-                            {
-                                throw e;
-                            }
-                        }
-
-                        if (!(response["next"] == null || response["next"].Type == JTokenType.Null))
-                        {
-                            hasNext = true;
-                            page++;
-                            i++;
-                        }
+                        hasNext = true;
                     }
                 }
-                catch (System.NullReferenceException e)
-                {
-                    throw new MetasysHttpParsingException(response.ToString(), e);
-                }
             }
-            return items;
+            return aggregatedResponse;
         }
 
         /// <summary>
@@ -306,6 +293,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         /// <exception cref="MetasysHttpTimeoutException"></exception>
         /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpNotFoundException"></exception>
         protected void ThrowHttpException(Flurl.Http.FlurlHttpException e)
         {
             if (e.Call.Response != null && e.Call.Response.StatusCode == HttpStatusCode.NotFound)
@@ -324,6 +312,19 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 throw new MetasysHttpException(e);
             }
+        }
+
+        /// <summary>
+        /// Convert a generic object to a dictionary
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string> ToDictionary(object obj)
+        {
+            var json = JsonConvert.SerializeObject(obj);
+            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            return dictionary;
         }
 
     }

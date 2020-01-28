@@ -1,4 +1,5 @@
-﻿using JohnsonControls.Metasys.BasicServices;
+﻿
+using JohnsonControls.Metasys.BasicServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -80,11 +81,10 @@ namespace MetasysServices.Tests
             ""self"": ""https://hostname/api/v2/objects/" + mockid + @"/trendedAttributes""
             ";
             httpTest.RespondWith(response);
-            var trendedAttributes = client.Trends.GetTrendedAttributes(mockid);
+            Assert.Throws<MetasysObjectException>(()=>client.Trends.GetTrendedAttributes(mockid));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/trendedAttributes")
                  .WithVerb(HttpMethod.Get)
-                 .Times(1);
-            Assert.AreEqual(0, trendedAttributes.Count());
+                 .Times(1);        
         }
 
         [Test]

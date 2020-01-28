@@ -44,9 +44,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             var alarmItems = client.GetAlarms(getAlarmsFilter);
 
             Console.WriteLine($"\n Total: {alarmItems.Total}");
-            Console.WriteLine($"\n Next: {alarmItems.Next}");
-            Console.WriteLine($"\n Previous: {alarmItems.Previous}");
-            Console.WriteLine($"\n Self: {alarmItems.Self}");
+            Console.WriteLine($"\n Page Count: {alarmItems.PageCount}");
+            Console.WriteLine($"\n Page Size: {alarmItems.PageSize}");
+            Console.WriteLine($"\n Current Page: {alarmItems.CurrentPage}");
 
             foreach (var item in alarmItems.Items)
             {

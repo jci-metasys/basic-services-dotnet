@@ -109,12 +109,10 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            var devices = client.GetAlarmsForNetworkDevice(mockid.ToString(), new AlarmFilter { });
-
+            Assert.Throws<MetasysObjectException>(()=>client.GetAlarmsForNetworkDevice(mockid.ToString(), new AlarmFilter { }));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
-                .Times(1);
-            Assert.AreEqual(0, devices.Items.Count());
+                .Times(1);          
         }
 
         [Test]

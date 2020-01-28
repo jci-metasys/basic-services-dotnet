@@ -213,7 +213,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="alarmFilter">The alarm filter to get alarms.</param>
         /// <returns>The list of alarms.</returns>
-        PagedResult<IEnumerable<AlarmItemProvider>> GetAlarms(AlarmFilter alarmFilter);
+        PagedResult<List<AlarmItemProvider>> GetAlarms(AlarmFilter alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
@@ -221,7 +221,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="objectId">The identifier of the object.</param>
         /// <param name="alarmFilter">TThe alarm filter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
-        PagedResult<IEnumerable<AlarmItemProvider>> GetAlarmsForAnObject(string objectId, AlarmFilter alarmFilter);
+        PagedResult<List<AlarmItemProvider>> GetAlarmsForAnObject(string objectId, AlarmFilter alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified network device.
@@ -229,7 +229,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="networkDeviceId">The identifier of the network device.</param>
         /// <param name=""alarmFilter">TThe alarm filter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
-        PagedResult<IEnumerable<AlarmItemProvider>> GetAlarmsForNetworkDevice(string networkDeviceId, AlarmFilter alarmFilter);
+        PagedResult<List<AlarmItemProvider>> GetAlarmsForNetworkDevice(string networkDeviceId, AlarmFilter alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of attributes under the specified object for which samples are available.
@@ -244,12 +244,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeId">The identifier of the attribute for which to retrieve sample information</param>
         /// <param name="filter">Filter for a timeline based request</param>
         /// <returns>The list of samples for the specified object</returns>
-        List<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter);
+        PagedResult<List<Sample>> GetSamples(Guid objectId, int attributeId, TimeFilter filter);
         
         /// <inheritdoc cref="IMetasysClient.GetTrendedAttributes(Guid)"/>
         Task<List<Attribute>> GetTrendedAttributesAsync(Guid id);
 
         /// <inheritdoc cref="IMetasysClient.GetSamples(Guid, int, TimeFilter)"/>
-        Task<List<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter);
+        Task<PagedResult<List<Sample>>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter);
     }
 }

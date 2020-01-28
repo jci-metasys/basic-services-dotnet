@@ -1783,8 +1783,14 @@ namespace MetasysServices.Tests
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", obj2, "],",
+                    $"\"self\": \"https://hostname/api/v2/objects/{mockid2}/objects?page=1&pageSize=200&sort=name\"}}"))
+                // Third level will be empty
+                .RespondWith(string.Concat("{",
+                    "\"total\": 0,",
+                    "\"next\": null,",
+                    "\"previous\": null,",
+                    "\"items\": [],",
                     $"\"self\": \"https://hostname/api/v2/objects/{mockid2}/objects?page=1&pageSize=200&sort=name\"}}"));
-
             var objects = client.GetObjects(mockid3, 3).ToList();
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid3}/objects")
@@ -1793,6 +1799,9 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
+              .WithVerb(HttpMethod.Get)
+              .Times(1);
             MetasysObject expected2 = new MetasysObject(JToken.Parse(obj2), null, testCulture);
             List<MetasysObject> child = new List<MetasysObject>() { expected2 };
             MetasysObject expected1 = new MetasysObject(JToken.Parse(obj1), child.AsEnumerable(), testCulture);
@@ -1809,11 +1818,10 @@ namespace MetasysServices.Tests
                 "\"items\": [{}],",
                 $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
 
-            var objects = client.GetObjects(mockid);
+            Assert.Throws<MetasysObjectException>(()=>client.GetObjects(mockid));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
-                .Times(1);
-            Assert.AreEqual(0, objects.Count());
+                .Times(1);           
         }
 
         [Test]
