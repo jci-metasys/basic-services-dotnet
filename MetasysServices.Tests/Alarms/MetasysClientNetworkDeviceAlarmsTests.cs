@@ -129,10 +129,8 @@ namespace MetasysServices.Tests
             ""self"": ""https://win2016-vm2/api/v2/alarms?pageSize=100&excludePending=false&excludeAcknowledged=false&excludeDiscarded=false&page=1&sort=creationTime""
             ";
             httpTest.RespondWith(response);
-
             var e = Assert.Throws<MetasysObjectException>(() => // To do: Use Specific Exception for Alarm Item Provider
-                client.GetAlarms(new AlarmFilter { }));
-
+                client.GetAlarmsForNetworkDevice(mockid.ToString(), new AlarmFilter()));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);

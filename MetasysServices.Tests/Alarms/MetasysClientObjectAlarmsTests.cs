@@ -108,13 +108,10 @@ namespace MetasysServices.Tests
             ""self"": ""https://win2016-vm2/api/v2/alarms?pageSize=1&excludePending=false&excludeAcknowledged=false&excludeDiscarded=false&page=1&sort=creationTime""
             ";
             httpTest.RespondWith(response);
-
-            var devices = client.GetAlarmsForAnObject(mockid.ToString(), new AlarmFilter { });
-
+            Assert.Throws<MetasysObjectException>(()=>client.GetAlarmsForAnObject(mockid.ToString(), new AlarmFilter { }));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
-                .Times(1);
-            Assert.AreEqual(0, devices.Items.Count());
+                .Times(1);          
         }
 
         [Test]

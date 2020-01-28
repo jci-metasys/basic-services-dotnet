@@ -17,7 +17,7 @@ namespace JohnsonControls.Metasys.BasicServices
     {
         /// <summary>The http client.</summary>
         protected IFlurlClient Client;
-        
+
         /// <summary>
         /// Empty constructor.
         /// </summary>
@@ -53,8 +53,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <returns></returns>
         protected MetasysObject toMetasysObject(JToken item)
-        {           
-            return new MetasysObject(item, null);                        
+        {
+            return new MetasysObject(item, null);
         }
 
 
@@ -64,7 +64,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         protected List<MetasysObject> toMetasysObject(List<JToken> items)
         {
-            List<MetasysObject> objects= new List<MetasysObject>();
+            List<MetasysObject> objects = new List<MetasysObject>();
             foreach (var i in items)
             {
                 objects.Add(toMetasysObject(i));
@@ -90,67 +90,31 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 return null;
             }
-
             List<TreeObject> objects = new List<TreeObject>() { }; // Contains the couple of parent/children JToken
             bool hasNext = true;
             int page = 1;
-
             while (hasNext)
             {
                 hasNext = false;
                 var response = await GetPagedResultsAsync<JToken>("objects", new Dictionary<string, string>() { { "page", page.ToString() } }, id, "objects").ConfigureAwait(false);
-                try
+                foreach (var item in response.Items)
                 {
-                    var total = response.Total;
-                    if (total > 0)
+                    List<TreeObject> children = null;
+                    if (levels - 1 > 0)
                     {
-                        foreach (var item in response.Items)
+                        if (item["id"] == null)
                         {
-                            try
-                            {
-                                List<TreeObject> children = null;
-                                if (levels - 1 > 0)
-                                {
-                                    var objId = ParseObjectIdentifier(item["id"]);
-                                    if (objId != null)
-                                    {
-                                        try
-                                        {
-                                            children = await GetObjectChildrenAsync(objId, null, levels - 1).ConfigureAwait(false);
-                                        }
-                                        catch (Exception e) when (e is MetasysObjectException ||
-                                            e is MetasysHttpParsingException)
-                                        {
-                                            throw new MetasysObjectException(e);
-                                        }
-                                    }
-                                }
-                                objects.Add(new TreeObject { Item = item, Children = children });
-                            }
-                            catch (MetasysGuidException)
-                            {
-                                // Error with this item's id, skip and do not create object
-                            }
-                            catch (MetasysObjectException e)
-                            {
-                                // There was an issue creating the object
-                                throw e;
-                            }
+                            throw new MetasysObjectException(response.ToString(), null);
                         }
-                        if (response.CurrentPage < response.PageCount)
-                        {
-                            hasNext = true;
-                            page++;
-                        }
+                        var objId = ParseObjectIdentifier(item["id"]);                      
+                        children = await GetObjectChildrenAsync(objId, null, levels - 1).ConfigureAwait(false);
                     }
-                    else
-                    {
-                        return null; // no children
-                    }
+                    objects.Add(new TreeObject { Item = item, Children = children });
                 }
-                catch (System.NullReferenceException e)
+                if (response.CurrentPage < response.PageCount)
                 {
-                    throw new MetasysHttpParsingException(response.ToString(), e);
+                    hasNext = true;
+                    page++;
                 }
             }
             return objects;

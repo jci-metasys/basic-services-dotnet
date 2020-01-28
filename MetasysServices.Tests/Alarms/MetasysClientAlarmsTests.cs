@@ -107,13 +107,10 @@ namespace MetasysServices.Tests
             ""self"": ""https://win2016-vm2/api/v2/alarms?pageSize=1&excludePending=false&excludeAcknowledged=false&excludeDiscarded=false&page=1&sort=creationTime""
             ";
             httpTest.RespondWith(response);
-
-            var devices = client.GetAlarms(new AlarmFilter { });
-
+            Assert.Throws<MetasysObjectException>(()=>client.GetAlarms(new AlarmFilter { }));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")
                 .WithVerb(HttpMethod.Get)
-                .Times(1);
-            Assert.AreEqual(0, devices.Items.Count());
+                .Times(1);           
         }
 
         [Test]
@@ -131,10 +128,10 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            var e = Assert.Throws<MetasysObjectException>(() => // To do: Use Specific Exception for Alarm Item Provider
+            var e = Assert.Throws<MetasysObjectException>(() => 
                 client.GetAlarms(new AlarmFilter { }));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms/alarms")
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             PrintMessage($"TestGetSpacesMissingValuesThrowsException: {e.Message}", true);

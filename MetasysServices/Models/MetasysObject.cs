@@ -41,16 +41,8 @@ namespace JohnsonControls.Metasys.BasicServices
         internal MetasysObject(JToken token, IEnumerable<MetasysObject> children = null, CultureInfo cultureInfo = null)
         {
             _CultureInfo = cultureInfo;           
-            Children = children;
-            if (Children != null)
-            {
-                ChildrenCount = Children.ToList().Count;
-            }
-            else
-            {
-                ChildrenCount = -1;
-            }
-
+            Children = children??new List<MetasysObject>(); // Return empty list by convention for null         
+            ChildrenCount = Children?.Count()??0; // Children count is 0 when children is null                       
             string placeholder = "NULL";
 
             try
