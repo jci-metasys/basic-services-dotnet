@@ -44,7 +44,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     {"pageSize", filter.PageSize.ToString() }
                 };
             // Perform a generic call using objects resource valid for Network Devices as well
-            var response = await GetPagedResultsAsync<JArray>("objects", parameters, objectId.ToString(), "attributes", attributeId.ToString(),"samples");
+            var response = await GetPagedResultsAsync<JToken>("objects", parameters, objectId, "attributes", attributeId,"samples");
             // Read full attribute from url
             foreach (JToken s in response.Items)
             {
