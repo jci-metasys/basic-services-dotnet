@@ -54,9 +54,14 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<IComFilterAlarm, AlarmFilter>();
                 cfg.CreateMap<AlarmItemProvider, IComProvideAlarmItem>();
                 cfg.CreateMap<Sample, IComSample>();
-                cfg.CreateMap<ComTimeFilter, TimeFilter>();
+                cfg.CreateMap<IComTimeFilter, TimeFilter>();           
                 cfg.CreateMap<Attribute, IComAttribute>();
-                cfg.CreateMap<PagedResult<AlarmItemProvider>, IComPagedResult>();
+                cfg.CreateMap<PagedResult<AlarmItemProvider>, IComPagedResult>()
+                    // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
+                    .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComProvideAlarmItem[]>(src.Items)));
+                cfg.CreateMap<PagedResult<Sample>, IComPagedResult>()
+                    // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
+                    .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComSample[]>(src.Items)));
             }).CreateMapper();
         }
 
@@ -285,7 +290,7 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc />
-        public object GetAlarms(dynamic alarmFilter)
+        public IComPagedResult GetAlarms(IComFilterAlarm alarmFilter)
         {
             var mapAlarmFilter = Mapper.Map<AlarmFilter>(alarmFilter);
             PagedResult<AlarmItemProvider> alarmItems = Client.Alarms.GetAlarms(mapAlarmFilter);
@@ -293,7 +298,7 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc />
-        public object GetAlarmsForAnObject(string objectId, dynamic alarmFilter)
+        public IComPagedResult GetAlarmsForAnObject(string objectId, IComFilterAlarm alarmFilter)
         {
             var mapAlarmFilterForAnObject = Mapper.Map<AlarmFilter>(alarmFilter);
             var alarmItems = Client.Alarms.GetAlarmsForAnObject(objectId, mapAlarmFilterForAnObject);
@@ -301,26 +306,27 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc />
-        public object GetAlarmsForNetworkDevice(string networkDeviceId, dynamic alarmFilter)
+        public IComPagedResult GetAlarmsForNetworkDevice(string networkDeviceId, IComFilterAlarm alarmFilter)
         {
             var mapAlarmFilterForObject = Mapper.Map<AlarmFilter>(alarmFilter);
-            var alarmItems = Client.Alarms.GetAlarms(mapAlarmFilterForObject);
+            var alarmItems = Client.Alarms.GetAlarmsForNetworkDevice(networkDeviceId, mapAlarmFilterForObject);
             return Mapper.Map<IComPagedResult>(alarmItems);
         }
 
         /// <inheritdoc />
-        public object GetTrendedAttributes(Guid id)
+        public object GetTrendedAttributes(string id)
         { 
-            var res = Client.Trends.GetTrendedAttributes(id);
+            var res = Client.Trends.GetTrendedAttributes(new Guid(id));
             return Mapper.Map<IComAttribute[]>(res);
         }
 
         /// <inheritdoc />
-        public object GetSamples(string objectId, int attributeId, dynamic filter)
+        public IComPagedResult GetSamples(string objectId, int attributeId, IComTimeFilter filter)
         {
             var mapTrendedAttributes = Mapper.Map<TimeFilter>(filter);
-            var res = Client.Trends.GetSamples(new Guid(objectId), attributeId, mapTrendedAttributes);
-            return Mapper.Map<IComPagedResult>(res);
+            PagedResult<Sample> samples = Client.Trends.GetSamples(new Guid(objectId), attributeId, mapTrendedAttributes);
+            var map= Mapper.Map<IComPagedResult>(samples);
+            return map;
         }
     }
 }

@@ -55,7 +55,7 @@ namespace MetasysServicesComExampleApp
             #region Trends
             ComTimeFilter getDateTimeForTrend = new ComTimeFilter();
             Guid objId = new Guid(object1Id);
-            dynamic trendedAttributes = legacyClient.GetTrendedAttributes(objId);
+            dynamic trendedAttributes = legacyClient.GetTrendedAttributes(object1Id);
             Console.WriteLine(trendedAttributes[0].Description);
 
             Console.WriteLine("Please enter Start Date and End Date separated by space: ");
@@ -346,8 +346,8 @@ namespace MetasysServicesComExampleApp
         {
             ComTimeFilter timeFilter = new ComTimeFilter
             {
-                StartTime = DateTime.Parse(args[0]),
-                EndTime = DateTime.Parse(args[1]),
+                StartTime = args[0],
+                EndTime = args[1],
             };
             return timeFilter;
         }
