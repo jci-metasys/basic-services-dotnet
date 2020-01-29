@@ -43,6 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FeaturesDemo\IComAlarmsDemo.cs" />
+    <Compile Include="FeaturesDemo\IComGeneralDemo.cs" />
+    <Compile Include="FeaturesDemo\IComGetObjectIdentifierDemo.cs" />
+    <Compile Include="FeaturesDemo\IComRefreshTokenDemo.cs" />
+    <Compile Include="FeaturesDemo\IComSpacesDemo.cs" />
+    <Compile Include="FeaturesDemo\IComTrendsDemo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -55,5 +61,6 @@
       <Name>MetasysServicesCom</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
