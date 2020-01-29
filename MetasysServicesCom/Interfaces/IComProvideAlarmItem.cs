@@ -6,7 +6,7 @@ namespace JohnsonControls.Metasys.ComServices
     /// A specialized DTO for COM that holds attribute for alarms type object.
     /// </summary>
     [ComVisible(true)]
-    [Guid("6766FB30-77B3-46CA-853C-EEA3563FD5F6")]
+    [Guid("1ffd9abc-dfa3-4cb9-9872-8ae38de24ce1")]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface IComProvideAlarmItem
     {
@@ -63,7 +63,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Alarm trigger value details
         /// </summary>
-        dynamic TriggerValue { get; set; }
+        object TriggerValue { get; set; }
 
         /// <summary>
         /// Alarm Category route
