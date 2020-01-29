@@ -237,7 +237,7 @@ namespace JohnsonControls.Metasys.BasicServices
             while (hasNext)
             {
                 hasNext = false;
-                var response = await GetPagedResultsAsync<JArray>(resource, parameters, pathSegments).ConfigureAwait(false);
+                var response = await GetPagedResultsAsync<JToken>(resource, parameters, pathSegments).ConfigureAwait(false);
                 var total = response.Total;
                 if (total > 0)
                 {

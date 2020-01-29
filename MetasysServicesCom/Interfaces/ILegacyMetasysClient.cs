@@ -127,6 +127,6 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="attributeId">The identifier of the attribute for which to retrieve sample information</param>
         /// <param name="filter">Filter for a timeline based request</param>
         /// <returns>The list of samples for the specified objectduring a particular date and time range.</returns>
-        object GetSamples(Guid objectId, int attributeId, dynamic filter);
+        object GetSamples(string objectId, int attributeId, dynamic filter);
     }
 }

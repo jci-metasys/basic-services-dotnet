@@ -26,13 +26,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public PagedResult<List<Sample>> GetSamples(Guid objectId, int attributeId, TimeFilter filter)
+        public PagedResult<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter)
         {
             return GetSamplesAsync(objectId, attributeId, filter).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task<PagedResult<List<Sample>>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter)
+        public async Task<PagedResult<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter)
         {
             List<Sample> objectSamples = new List<Sample>();
             // Set the timeline parameters first for the query string
@@ -75,7 +75,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 objectSamples.Add(sample);
             }
             // Type the response as Sample List
-            return new PagedResult<List<Sample>>
+            return new PagedResult<Sample>
             {
                 Items = objectSamples,
                 CurrentPage = response.CurrentPage,

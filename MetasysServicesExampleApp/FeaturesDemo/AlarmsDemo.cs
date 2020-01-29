@@ -20,7 +20,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("Enter alarm id to get alarm details: ");
             string alarmId = Console.ReadLine();
 
-            AlarmItemProvider alarmItem = client.GetSingleAlarm(alarmId);
+            AlarmItemProvider alarmItem = client.Alarms.GetSingleAlarm(alarmId);
 
             Console.WriteLine(string.Format("\n Alarm details found for {0}", alarmId));
             Console.WriteLine($"\n Id: {alarmItem.Id}, Name: {alarmItem.Name}, ItemReference: {alarmItem.ItemReference}");
@@ -41,7 +41,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
             Console.WriteLine("\n List of alarms with details");
 
-            var alarmItems = client.GetAlarms(getAlarmsFilter);
+            var alarmItems = client.Alarms.GetAlarms(getAlarmsFilter);
 
             Console.WriteLine($"\n Total: {alarmItems.Total}");
             Console.WriteLine($"\n Page Count: {alarmItems.PageCount}");
@@ -72,7 +72,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
             Console.WriteLine(string.Format("\nAlarm details found for this object {0}", objectId));
 
-            var alarmItemsForObject = client.GetAlarmsForAnObject(objectId, alarmFilterForObject);
+            var alarmItemsForObject = client.Alarms.GetAlarmsForAnObject(objectId, alarmFilterForObject);
 
             Console.WriteLine("\nEnter network device id to get alarm details: ");
             string networkDeviceId = Console.ReadLine();
@@ -92,7 +92,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
                 Console.WriteLine(string.Format("\nAlarm details found for this object {0}", objectId));
 
-                var alarmItemsForNetworkDevice = client.GetAlarmsForNetworkDevice(networkDeviceId, alarmFilterModelForNetworkDevice);
+                var alarmItemsForNetworkDevice = client.Alarms.GetAlarmsForNetworkDevice(networkDeviceId, alarmFilterModelForNetworkDevice);
             }
             else
             {

@@ -16,7 +16,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The items of the current page.
         /// </summary>
-        public T Items { get; set; }
+        public List<T> Items { get; set; }
         /// <summary>
         /// The actual page.
         /// </summary>
@@ -57,10 +57,8 @@ namespace JohnsonControls.Metasys.BasicServices
                     CurrentPage = Int32.Parse(page);
                 }
                 PageSize = Int32.Parse(pageSize);
-                PageCount = Total / PageSize;
-                // Prepare settings to Alert if something goes wrong during deserialization  
-                T items = JsonConvert.DeserializeObject<T>(response["items"].ToString());
-                Items = items;
+                PageCount = Total / PageSize;                       
+                Items = JsonConvert.DeserializeObject<List<T>>(response["items"].ToString());
             }
             catch (Exception e)
             {
