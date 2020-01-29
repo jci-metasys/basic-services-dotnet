@@ -49,9 +49,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Local instance of Trends service
         /// </summary>
-        public ITrendsService Trends { get; set; }
+        public  ITrendsService Trends { get; set; }
 		
-		private readonly IProvideAlarmInfo alarmInfoProvider;
+		public  IProvideAlarmInfo Alarms { get; set; }
 
         /// <summary>
         /// Creates a new MetasysClient.
@@ -91,7 +91,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             // Init related services
             Trends = new TrendsServiceProvider(Client);   
-			alarmInfoProvider = new AlarmInfoProvider(Client);			
+			Alarms = new AlarmInfoProvider(Client);			
         }
 
         /// <summary>
@@ -1126,55 +1126,8 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var objects=await GetObjectChildrenAsync(id, null, levels);
             return toMetasysObject(objects);
-        }
-		
-        /// <inheritdoc />
-        public AlarmItemProvider GetSingleAlarm(string alarmId)
-        {
-            return alarmInfoProvider.GetSingleAlarmAsync(alarmId).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc />
-        public PagedResult<List<AlarmItemProvider>> GetAlarms(AlarmFilter alarmFilter)
-        {
-            return alarmInfoProvider.GetAlarmsAsync(alarmFilter).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc />
-        public PagedResult<List<AlarmItemProvider>> GetAlarmsForAnObject(string objectId, AlarmFilter alarmFilter)
-        {
-            return alarmInfoProvider.GetAlarmsForAnObjectAsync(objectId, alarmFilter).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc />
-        public PagedResult<List<AlarmItemProvider>> GetAlarmsForNetworkDevice(string networkDeviceId, AlarmFilter alarmFilter)
-        {
-            return alarmInfoProvider.GetAlarmsForNetworkDeviceAsync(networkDeviceId, alarmFilter).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc />
-        public List<Attribute> GetTrendedAttributes(Guid id)
-        {
-            return Trends.GetTrendedAttributes(id);
-        }
-
-        /// <inheritdoc />
-        public async Task<List<Attribute>> GetTrendedAttributesAsync(Guid id)
-        {
-            return await Trends.GetTrendedAttributesAsync(id);
-        }
-
-        /// <inheritdoc />
-        public PagedResult<List<Sample>> GetSamples(Guid objectId, int attributeId, TimeFilter filter)
-        {
-            return Trends.GetSamples(objectId, attributeId, filter);
-        }
-
-        /// <inheritdoc />
-        public async Task<PagedResult<List<Sample>>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter)
-        {
-            return await Trends.GetSamplesAsync(objectId, attributeId, filter);
-        }
+        }		                
+      
 
     }
 }

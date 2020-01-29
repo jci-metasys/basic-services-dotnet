@@ -22,7 +22,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Guid id1 = client.GetObjectIdentifier(object1);
             Console.WriteLine($"{object1} id: {id1}");
             Guid objId = id1;
-            var trendedAttributes = client.GetTrendedAttributes(objId);
+            var trendedAttributes = client.Trends.GetTrendedAttributes(objId);
             Console.WriteLine(trendedAttributes[0].Description);
 
             Console.WriteLine("Please enter Start Date and End Date separated by space: ");
@@ -35,7 +35,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 getDateTimeForTrend = ReadUserInputForTrends(args);
             }
 
-            var samples = client.GetSamples(objId, 85, getDateTimeForTrend).Items;
+            var samples = client.Trends.GetSamples(objId, 85, getDateTimeForTrend).Items;
             foreach (var s in samples)
             {
                 Console.WriteLine($"Value: {s.Value} Unit: {s.Unit} Timestamp: {s.Timestamp}");

@@ -199,57 +199,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets all points for the given equipment asynchronously.
         /// </summary>
-        Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid spaceId);
+        Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid spaceId);   
 
         /// <summary>
-        /// Retrieves the specified alarm.
+        /// Services for Trends and Samples.
         /// </summary>
-        /// <param name="alarmId">The identifier of the alarm.</param>
-        /// <returns>The alarm details</returns>
-        AlarmItemProvider GetSingleAlarm(string alarmId);
+        ITrendsService Trends { get; set; }
 
         /// <summary>
-        /// Retrieves a collection of alarms.
+        /// Services for Alarms.
         /// </summary>
-        /// <param name="alarmFilter">The alarm filter to get alarms.</param>
-        /// <returns>The list of alarms.</returns>
-        PagedResult<List<AlarmItemProvider>> GetAlarms(AlarmFilter alarmFilter);
-
-        /// <summary>
-        /// Retrieves a collection of alarms for the specified object.
-        /// </summary>
-        /// <param name="objectId">The identifier of the object.</param>
-        /// <param name="alarmFilter">TThe alarm filter to get alarms.</param>
-        /// <returns>The list of alarms for the specified object.</returns>
-        PagedResult<List<AlarmItemProvider>> GetAlarmsForAnObject(string objectId, AlarmFilter alarmFilter);
-
-        /// <summary>
-        /// Retrieves a collection of alarms for the specified network device.
-        /// </summary>
-        /// <param name="networkDeviceId">The identifier of the network device.</param>
-        /// <param name=""alarmFilter">TThe alarm filter to get alarms.</param>
-        /// <returns>The list of alarms for the specified object.</returns>
-        PagedResult<List<AlarmItemProvider>> GetAlarmsForNetworkDevice(string networkDeviceId, AlarmFilter alarmFilter);
-
-        /// <summary>
-        /// Retrieves a collection of attributes under the specified object for which samples are available.
-        /// </summary>
-        /// <param name="id">The identifier of the object</param>
-        List<Attribute> GetTrendedAttributes(Guid id);
-
-        /// <summary>
-        /// Retrieves a collection of samples for the specified object attribute during a particular date and time range.
-        /// </summary>
-        /// <param name="objectId">The identifier of the object</param>
-        /// <param name="attributeId">The identifier of the attribute for which to retrieve sample information</param>
-        /// <param name="filter">Filter for a timeline based request</param>
-        /// <returns>The list of samples for the specified object</returns>
-        PagedResult<List<Sample>> GetSamples(Guid objectId, int attributeId, TimeFilter filter);
-        
-        /// <inheritdoc cref="IMetasysClient.GetTrendedAttributes(Guid)"/>
-        Task<List<Attribute>> GetTrendedAttributesAsync(Guid id);
-
-        /// <inheritdoc cref="IMetasysClient.GetSamples(Guid, int, TimeFilter)"/>
-        Task<PagedResult<List<Sample>>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter);
+        IProvideAlarmInfo Alarms { get; set; }
     }
 }

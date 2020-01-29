@@ -67,7 +67,7 @@ namespace MetasysServicesComExampleApp
                 getDateTimeForTrend = ReadUserInputForTrends(args);
             }
 
-            dynamic samples = legacyClient.GetSamples(objId, 85, getDateTimeForTrend);
+            dynamic samples = legacyClient.GetSamples(objId.ToString(), 85, getDateTimeForTrend);
             foreach (var s in samples)
             {
                 Console.WriteLine($"Value: {s.Value} Unit: {s.Unit} Timestamp: {s.Timestamp}");

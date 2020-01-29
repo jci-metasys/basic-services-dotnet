@@ -9,32 +9,28 @@ namespace JohnsonControls.Metasys.ComServices
     [Guid("44E4F2A0-0962-4D4A-9A09-29C0A8E56FDC")]
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
-    public class ComPagedResult : IComPagedResult<object>
+    public class ComPagedResult : IComPagedResult
     {
         /// <summary>
-        /// Total alarms count
+        /// The total number of elements. 
         /// </summary>
         public int Total { get; set; }
-
         /// <summary>
-        /// Next page link
-        /// </summary>
-        public string Next { get; set; }
-
-        /// <summary>
-        /// previous page link
-        /// </summary>
-        public string Previous { get; set; }
-
-        /// <summary>
-        /// Pages result of alarm items
+        /// The items of the current page.
         /// </summary>
         public object Items { get; set; }
-
         /// <summary>
-        /// Route information for self
+        /// The actual page.
         /// </summary>
-        public string Self { get; set; }
+        public int CurrentPage { get; set; }
+        /// <summary>
+        /// Total number of pages.
+        /// </summary>
+        public int PageCount { get; set; }
+        /// <summary>
+        /// Maximum number of elements on a page.
+        /// </summary>
+        public int PageSize { get; set; }
 
     }
 }

@@ -35,9 +35,9 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc />
-        public async Task<PagedResult<List<AlarmItemProvider>>> GetAlarmsAsync(AlarmFilter filter)
+        public async Task<PagedResult<AlarmItemProvider>> GetAlarmsAsync(AlarmFilter filter)
         {                
-            return await GetPagedResultsAsync<List<AlarmItemProvider>>("alarms", ToDictionary(filter));            
+            return await GetPagedResultsAsync<AlarmItemProvider>("alarms", ToDictionary(filter));            
         }
 
         /// <inheritdoc />
@@ -48,16 +48,39 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc />
-        public async Task<PagedResult<List<AlarmItemProvider>>> GetAlarmsForAnObjectAsync(string objectId, AlarmFilter filter)
+        public async Task<PagedResult<AlarmItemProvider>> GetAlarmsForAnObjectAsync(string objectId, AlarmFilter filter)
         {
-            return await GetPagedResultsAsync<List<AlarmItemProvider>>("objects", ToDictionary(filter), objectId, "alarms");
+            return await GetPagedResultsAsync<AlarmItemProvider>("objects", ToDictionary(filter), objectId, "alarms");
         }
 
         /// <inheritdoc />
-        public async Task<PagedResult<List<AlarmItemProvider>>> GetAlarmsForNetworkDeviceAsync(string networkDeviceId, AlarmFilter filter)
+        public async Task<PagedResult<AlarmItemProvider>> GetAlarmsForNetworkDeviceAsync(string networkDeviceId, AlarmFilter filter)
         {
-            return await GetPagedResultsAsync<List<AlarmItemProvider>>("networkDevices", ToDictionary(filter), networkDeviceId, "alarms");
+            return await GetPagedResultsAsync<AlarmItemProvider>("networkDevices", ToDictionary(filter), networkDeviceId, "alarms");
         }
 
+        /// <inheritdoc />
+        public AlarmItemProvider GetSingleAlarm(string alarmId)
+        {
+            return GetSingleAlarmAsync(alarmId).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public PagedResult<AlarmItemProvider> GetAlarms(AlarmFilter alarmFilter)
+        {
+            return GetAlarmsAsync(alarmFilter).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public PagedResult<AlarmItemProvider> GetAlarmsForAnObject(string objectId, AlarmFilter alarmFilter)
+        {
+            return GetAlarmsForAnObjectAsync(objectId, alarmFilter).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public PagedResult<AlarmItemProvider> GetAlarmsForNetworkDevice(string networkDeviceId, AlarmFilter alarmFilter)
+        {
+            return GetAlarmsForNetworkDeviceAsync(networkDeviceId, alarmFilter).GetAwaiter().GetResult();
+        }
     }
 }
