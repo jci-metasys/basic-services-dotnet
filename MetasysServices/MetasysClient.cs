@@ -1128,28 +1128,86 @@ namespace JohnsonControls.Metasys.BasicServices
             return toMetasysObject(objects);
         }
 		
-        /// <inheritdoc />
-        public AlarmItemProvider GetSingleAlarm(string alarmId)
+        /// <summary>
+        /// Retrieves the specified alarm.
+        /// </summary>
+        /// <param name="alarmId">The identifier of the alarm.</param>
+        /// <returns>The alarm details</returns>
+        public AlarmItemProvider GetSingleAlarm(Guid alarmId)
         {
             return alarmInfoProvider.GetSingleAlarmAsync(alarmId).GetAwaiter().GetResult();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Retrieves the specified alarm asynchronously.
+        /// </summary>
+        /// <param name="alarmId">The identifier of the alarm.</param>
+        /// <returns>The specified alarm details.</returns>
+        public async Task<AlarmItemProvider> GetSingleAlarmAsync(Guid alarmId)
+        {
+            return await alarmInfoProvider.GetSingleAlarmAsync(alarmId);
+        }
+
+        /// <summary>
+        /// Retrieves a collection of alarms.
+        /// </summary>
+        /// <param name="alarmFilter">The alarm filter to get alarms.</param>
+        /// <returns>The list of alarms.</returns>
         public PagedResult<List<AlarmItemProvider>> GetAlarms(AlarmFilter alarmFilter)
         {
             return alarmInfoProvider.GetAlarmsAsync(alarmFilter).GetAwaiter().GetResult();
         }
 
-        /// <inheritdoc />
-        public PagedResult<List<AlarmItemProvider>> GetAlarmsForAnObject(string objectId, AlarmFilter alarmFilter)
+        /// <summary>
+        /// Retrieves a collection of alarms asynchronously.
+        /// </summary>
+        /// <param name="alarmFilter">The alarm model to filter alarms.</param>
+        /// <returns>The list of alarms with details.</returns>
+        public async Task<PagedResult<List<AlarmItemProvider>>> GetAlarmsAsync(AlarmFilter alarmFilter)
+        {
+            return await alarmInfoProvider.GetAlarmsAsync(alarmFilter);
+        }
+
+        /// <summary>
+        /// Retrieves a collection of alarms for the specified object.
+        /// </summary>
+        /// <param name="objectId">The identifier of the object.</param>
+        /// <param name="alarmFilter">TThe alarm filter to get alarms.</param>
+        /// <returns>The list of alarms for the specified object.</returns>
+        public PagedResult<List<AlarmItemProvider>> GetAlarmsForAnObject(Guid objectId, AlarmFilter alarmFilter)
         {
             return alarmInfoProvider.GetAlarmsForAnObjectAsync(objectId, alarmFilter).GetAwaiter().GetResult();
         }
 
-        /// <inheritdoc />
-        public PagedResult<List<AlarmItemProvider>> GetAlarmsForNetworkDevice(string networkDeviceId, AlarmFilter alarmFilter)
+        /// <summary>
+        /// Retrieves a collection of alarms for the specified object asynchronously.
+        /// </summary>
+        /// <param name="objectId">The identifier of the object.</param>
+        /// <returns>The list of alarms with details.</returns>
+        public async Task<PagedResult<List<AlarmItemProvider>>> GetAlarmsForAnObjectAsync(Guid objectId, AlarmFilter alarmFilter)
+        {
+            return await alarmInfoProvider.GetAlarmsForAnObjectAsync(objectId, alarmFilter);
+        }
+
+        /// <summary>
+        /// Retrieves a collection of alarms for the specified network device.
+        /// </summary>
+        /// <param name="networkDeviceId">The identifier of the network device.</param>
+        /// <param name="alarmFilter">TThe alarm filter to get alarms.</param>
+        /// <returns>The list of alarms for the specified object.</returns>
+        public PagedResult<List<AlarmItemProvider>> GetAlarmsForNetworkDevice(Guid networkDeviceId, AlarmFilter alarmFilter)
         {
             return alarmInfoProvider.GetAlarmsForNetworkDeviceAsync(networkDeviceId, alarmFilter).GetAwaiter().GetResult();
+        }
+
+	    /// <summary>
+        /// Retrieves a collection of alarms for the specified object asynchronously.
+        /// </summary>
+        /// <param name="networkDeviceId">The identifier of the network device.</param>
+        /// <returns>The list of alarms with details.</returns>
+        public async Task<PagedResult<List<AlarmItemProvider>>> GetAlarmsForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter alarmFilter)
+        {
+            return await alarmInfoProvider.GetAlarmsForNetworkDeviceAsync(networkDeviceId, alarmFilter);
         }
 
         /// <inheritdoc />

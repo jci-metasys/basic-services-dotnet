@@ -277,14 +277,22 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
-        /// <inheritdoc />
-        public object GetSingleAlarm(string alarmId)
+        /// <summary>
+        /// Retrieves the specified alarm.
+        /// </summary>
+        /// <param name="alarmId">The identifier of the alarm.</param>
+        /// <returns>The alarm details</returns>
+        public object GetSingleAlarm(Guid alarmId)
         {
             var alarmItem = Client.GetSingleAlarm(alarmId);
             return Mapper.Map<IComProvideAlarmItem>(alarmItem);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Retrieves a collection of alarms.
+        /// </summary>
+        /// <param name="alarmFilter">The alarm filter to get alarms.</param>
+        /// <returns>The list of alarms.</returns>
         public object GetAlarms(dynamic alarmFilter)
         {
             var mapAlarmFilter = Mapper.Map<AlarmFilter>(alarmFilter);
@@ -292,16 +300,26 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComPagedResult<IComProvideAlarmItem>>(alarmItems);
         }
 
-        /// <inheritdoc />
-        public object GetAlarmsForAnObject(string objectId, dynamic alarmFilter)
+        /// <summary>
+        /// Retrieves a collection of alarms for the specified object.
+        /// </summary>
+        /// <param name="objectId">The identifier of the object.</param>
+        /// <param name="alarmFilter">TThe alarm filter to get alarms.</param>
+        /// <returns>The list of alarms for the specified object.</returns>
+        public object GetAlarmsForAnObject(Guid objectId, dynamic alarmFilter)
         {
             var mapAlarmFilterForAnObject = Mapper.Map<AlarmFilter>(alarmFilter);
             var alarmItems = Client.GetAlarmsForAnObject(objectId, mapAlarmFilterForAnObject);
             return Mapper.Map<IComProvideAlarmItem[]>(alarmItems);
         }
 
-        /// <inheritdoc />
-        public object GetAlarmsForNetworkDevice(string networkDeviceId, dynamic alarmFilter)
+        /// <summary>
+        /// Retrieves a collection of alarms for the specified network device.
+        /// </summary>
+        /// <param name="networkDeviceId">The identifier of the network device.</param>
+        /// <param name="alarmFilter">TThe alarm filter to get alarms.</param>
+        /// <returns>The list of alarms for the specified object.</returns>
+        public object GetAlarmsForNetworkDevice(Guid networkDeviceId, dynamic alarmFilter)
         {
             var mapAlarmFilterForObject = Mapper.Map<AlarmFilter>(alarmFilter);
             var alarmItems = Client.GetAlarms(mapAlarmFilterForObject);

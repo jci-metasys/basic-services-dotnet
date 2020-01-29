@@ -88,7 +88,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="alarmId">The identifier of the alarm.</param>
         /// <returns>The specified alarm details.</returns>
-        object GetSingleAlarm(string alarmId);
+        object GetSingleAlarm(Guid alarmId);
 
         /// <summary>
         /// Retrieves a collection of alarms.
@@ -103,7 +103,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="objectId">The identifier of the object.</param>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
-        object GetAlarmsForAnObject(string objectId, dynamic alarmFilter);
+        object GetAlarmsForAnObject(Guid objectId, dynamic alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
@@ -111,7 +111,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="networkDeviceId">The identifier of the network device.</param>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
-        object GetAlarmsForNetworkDevice(string networkDeviceId, dynamic alarmFilter);
+        object GetAlarmsForNetworkDevice(Guid networkDeviceId, dynamic alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of attributes under the specified object for which samples are available.

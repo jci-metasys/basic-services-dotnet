@@ -27,7 +27,7 @@ namespace MetasysServices.Tests
             ""self"": ""https://win2016-vm2/api/v2/alarms?pageSize=100&excludePending=false&excludeAcknowledged=false&excludeDiscarded=false&page=1&sort=creationTime""
             ";
             httpTest.RespondWith(response);
-            var alarms = client.GetAlarmsForNetworkDevice(mockid.ToString(),new AlarmFilter { }); // No filter
+            var alarms = client.GetAlarmsForNetworkDevice(mockid,new AlarmFilter { }); // No filter
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -46,7 +46,7 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            var alarms = client.GetAlarmsForNetworkDevice(mockid.ToString(), AlarmFilter);
+            var alarms = client.GetAlarmsForNetworkDevice(mockid, AlarmFilter);
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -66,7 +66,7 @@ namespace MetasysServices.Tests
             ";
             httpTest
              .RespondWith(response);
-            var alarms = client.GetAlarmsForNetworkDevice(mockid.ToString(), AlarmFilter);
+            var alarms = client.GetAlarmsForNetworkDevice(mockid, AlarmFilter);
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -87,7 +87,7 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            var alarms = client.GetAlarmsForNetworkDevice(mockid.ToString(), new AlarmFilter { Type = 71 });
+            var alarms = client.GetAlarmsForNetworkDevice(mockid, new AlarmFilter { Type = 71 });
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
@@ -109,7 +109,7 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            Assert.Throws<MetasysObjectException>(()=>client.GetAlarmsForNetworkDevice(mockid.ToString(), new AlarmFilter { }));
+            Assert.Throws<MetasysObjectException>(()=>client.GetAlarmsForNetworkDevice(mockid, new AlarmFilter { }));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);          
@@ -130,7 +130,7 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
             var e = Assert.Throws<MetasysObjectException>(() => // To do: Use Specific Exception for Alarm Item Provider
-                client.GetAlarmsForNetworkDevice(mockid.ToString(), new AlarmFilter()));
+                client.GetAlarmsForNetworkDevice(mockid, new AlarmFilter()));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -143,7 +143,7 @@ namespace MetasysServices.Tests
             httpTest.RespondWith("Unauthorized", 401);
 
             var e = Assert.Throws<MetasysHttpException>(() =>
-                client.GetAlarmsForNetworkDevice(mockid.ToString(), new AlarmFilter { }));
+                client.GetAlarmsForNetworkDevice(mockid, new AlarmFilter { }));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
