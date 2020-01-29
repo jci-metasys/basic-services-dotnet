@@ -67,7 +67,7 @@ namespace MetasysServicesComExampleApp
                 getDateTimeForTrend = ReadUserInputForTrends(args);
             }
 
-            dynamic samples = legacyClient.GetSamples(objId.ToString(), 85, getDateTimeForTrend);
+            dynamic samples = legacyClient.GetSamples(objId, 85, getDateTimeForTrend);
             foreach (var s in samples)
             {
                 Console.WriteLine($"Value: {s.Value} Unit: {s.Unit} Timestamp: {s.Timestamp}");
@@ -239,7 +239,7 @@ namespace MetasysServicesComExampleApp
             #region Alarms
 
             Console.WriteLine("Enter alarm id to get alarm details: ");
-            string alarmId = Console.ReadLine();
+            Guid alarmId = Guid.Parse(Console.ReadLine());
 
             dynamic alarmItem = legacyClient.GetSingleAlarm(alarmId);
 
@@ -294,7 +294,7 @@ namespace MetasysServicesComExampleApp
 
             Console.WriteLine(string.Format("\nAlarm details found for this object {0}", objectId));
 
-            dynamic alarmItemsForObject = legacyClient.GetAlarmsForAnObject(objectId, alarmFilterForObject);
+            dynamic alarmItemsForObject = legacyClient.GetAlarmsForAnObject(Guid.Parse(objectId), alarmFilterForObject);
 
             Console.WriteLine("\nEnter network device id to get alarm details: ");
             string networkDeviceId = Console.ReadLine();
@@ -315,7 +315,7 @@ namespace MetasysServicesComExampleApp
 
             Console.WriteLine(string.Format("\nAlarm details found for the network device {0}", networkDeviceId));
 
-            dynamic alarmItemsForNetworkDevice = legacyClient.GetAlarmsForNetworkDevice(objectId, alarmFilterModelForNetworkDevice);
+            dynamic alarmItemsForNetworkDevice = legacyClient.GetAlarmsForNetworkDevice(Guid.Parse(objectId), alarmFilterModelForNetworkDevice);
 
             #endregion
 

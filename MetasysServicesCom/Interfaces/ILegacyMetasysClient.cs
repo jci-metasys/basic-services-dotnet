@@ -88,7 +88,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="alarmId">The identifier of the alarm.</param>
         /// <returns>The specified alarm details.</returns>
-        object GetSingleAlarm(string alarmId);
+        object GetSingleAlarm(Guid alarmId);
 
         /// <summary>
         /// Retrieves a collection of alarms.

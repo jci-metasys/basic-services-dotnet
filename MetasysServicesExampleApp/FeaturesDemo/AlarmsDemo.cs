@@ -18,7 +18,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             #region Alarms
 
             Console.WriteLine("Enter alarm id to get alarm details: ");
-            string alarmId = Console.ReadLine();
+            Guid alarmId = Guid.Parse(Console.ReadLine());
 
             AlarmItemProvider alarmItem = client.Alarms.GetSingleAlarm(alarmId);
 
@@ -72,7 +72,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
             Console.WriteLine(string.Format("\nAlarm details found for this object {0}", objectId));
 
-            var alarmItemsForObject = client.Alarms.GetAlarmsForAnObject(objectId, alarmFilterForObject);
+            var alarmItemsForObject = client.Alarms.GetAlarmsForAnObject(Guid.Parse(objectId), alarmFilterForObject);
 
             Console.WriteLine("\nEnter network device id to get alarm details: ");
             string networkDeviceId = Console.ReadLine();
@@ -92,7 +92,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
                 Console.WriteLine(string.Format("\nAlarm details found for this object {0}", objectId));
 
-                var alarmItemsForNetworkDevice = client.Alarms.GetAlarmsForNetworkDevice(networkDeviceId, alarmFilterModelForNetworkDevice);
+                var alarmItemsForNetworkDevice = client.Alarms.GetAlarmsForNetworkDevice(Guid.Parse(networkDeviceId), alarmFilterModelForNetworkDevice);
             }
             else
             {
