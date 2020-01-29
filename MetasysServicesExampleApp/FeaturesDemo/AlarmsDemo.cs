@@ -18,7 +18,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             #region Alarms
 
             Console.WriteLine("Enter alarm id to get alarm details: ");
-            Guid alarmId = Guid.Parse(Console.ReadLine());
+            string stringAlarmId = Console.ReadLine();
+            Guid alarmId = Guid.Parse(stringAlarmId);
 
             AlarmItemProvider alarmItem = client.Alarms.GetSingleAlarm(alarmId);
 
