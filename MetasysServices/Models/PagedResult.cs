@@ -70,7 +70,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     PageSize = 100; // Default value
                 }
-                PageCount = Total / PageSize;                       
+                PageCount =(int) Math.Ceiling((decimal)Total / PageSize);                       
                 Items = JsonConvert.DeserializeObject<List<T>>(response["items"].ToString());
             }
             catch (Exception e)
