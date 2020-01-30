@@ -54,7 +54,6 @@ namespace MetasysServicesComExampleApp
 
             #region Trends
             ComTimeFilter getDateTimeForTrend = new ComTimeFilter();
-            Guid objId = new Guid(object1Id);
             dynamic trendedAttributes = legacyClient.GetTrendedAttributes(object1Id);
             Console.WriteLine(trendedAttributes[0].Description);
 
@@ -67,7 +66,7 @@ namespace MetasysServicesComExampleApp
                 getDateTimeForTrend = ReadUserInputForTrends(args);
             }
 
-            dynamic samples = legacyClient.GetSamples(objId.ToString(), 85, getDateTimeForTrend);
+            dynamic samples = legacyClient.GetSamples(object1Id, 85, getDateTimeForTrend);
             foreach (var s in samples)
             {
                 Console.WriteLine($"Value: {s.Value} Unit: {s.Unit} Timestamp: {s.Timestamp}");
@@ -235,15 +234,15 @@ namespace MetasysServicesComExampleApp
             }
 
             #endregion
-
+    */
             #region Alarms
 
             Console.WriteLine("Enter alarm id to get alarm details: ");
-            string alarmId = Console.ReadLine();
+            string stringAlarmId = Console.ReadLine();
 
-            dynamic alarmItem = legacyClient.GetSingleAlarm(alarmId);
+            dynamic alarmItem = legacyClient.GetSingleAlarm(stringAlarmId);
 
-            Console.WriteLine(string.Format("\n Alarm details found for {0}", alarmId));
+            Console.WriteLine(string.Format("\n Alarm details found for {0}", stringAlarmId));
             Console.WriteLine($"\n Id: {alarmItem.Id}, Name: {alarmItem.Name}, ItemReference: {alarmItem.ItemReference}");
 
             string getAlarms;
@@ -261,7 +260,13 @@ namespace MetasysServicesComExampleApp
 
             Console.WriteLine("\n List of alarms with details");
 
-            dynamic alarmItems = legacyClient.GetAlarms(getAlarmsFilter);
+            var PagedResult = legacyClient.GetAlarms(getAlarmsFilter);
+            var alarmItems = (IComProvideAlarmItem[])PagedResult.Items;
+
+            Console.WriteLine($"\n Total: {PagedResult.Total}");
+            Console.WriteLine($"\n Page Count: {PagedResult.PageCount}");
+            Console.WriteLine($"\n Page Size: {PagedResult.PageSize}");
+            Console.WriteLine($"\n Current Page: {PagedResult.CurrentPage}");
 
             if (alarmItems != null)
             {
