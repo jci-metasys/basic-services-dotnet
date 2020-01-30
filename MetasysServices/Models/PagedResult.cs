@@ -56,9 +56,10 @@ namespace JohnsonControls.Metasys.BasicServices
                 string page = HttpUtility.ParseQueryString(selfUri.Query).Get("page");
                 string pageSize = HttpUtility.ParseQueryString(selfUri.Query).Get("pageSize");
                 // Try to get from next url if it is not specified in the self url
-                if (pageSize == null)
+                var nextUrl = response["next"].Value<string>();
+                if (pageSize == null && nextUrl != null)
                 {
-                    Uri nextUri = new Uri(response["next"].Value<string>());
+                    Uri nextUri = new Uri(nextUrl);
                     pageSize = HttpUtility.ParseQueryString(nextUri.Query).Get("pageSize");
                 }
                 if (page == null)

@@ -20,7 +20,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
             Console.WriteLine("\nIndicate the object you want to run this example code on.");
             Console.Write("Enter the fully qualified reference of the object (Example: \"site:device/itemReference\"): ");
             string object1 = Console.ReadLine();
-            Guid id1 = Guid.Parse(legacyClient.GetObjectIdentifier(object1));
+            string id1 = legacyClient.GetObjectIdentifier(object1);
             Console.WriteLine($"{object1} id: {id1}");
             ComAttribute[] trendedAttributes = (ComAttribute[])legacyClient.GetTrendedAttributes(id1);
             foreach (ComAttribute trendedAttribute in trendedAttributes) 
@@ -38,7 +38,8 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 getDateTimeForTrend = ReadUserInputForTrends(args);
             }
             string objId1 = id1.ToString();
-            ComSample[] samples = (ComSample[])legacyClient.GetSamples(objId1, 85, getDateTimeForTrend);
+            var samplesPager = (ComPagedResult)legacyClient.GetSamples(objId1, 85, getDateTimeForTrend);
+            var samples = (ComSample[])(samplesPager.Items);
             foreach (ComSample s in samples)
             {
                 Console.WriteLine($"Value: {s.Value} Unit: {s.Unit} Timestamp: {s.Timestamp}");
@@ -51,8 +52,8 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
         {
             ComTimeFilter timeFilter = new ComTimeFilter
             {
-                StartTime = DateTime.Parse(args[0]),
-                EndTime = DateTime.Parse(args[1]),
+                StartTime = args[0],
+                EndTime = args[1],
             };
             return timeFilter;
         }

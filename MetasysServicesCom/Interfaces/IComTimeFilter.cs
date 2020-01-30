@@ -23,13 +23,13 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// The page number of items to return Default: 1.
         /// </summary>
-        int? Page { get; set; }
+        string Page { get; set; }
 
         /// <summary>
         /// The maximum number of items to return in the response. 
         /// Valid range is 1-10,000. Default: 100
         /// </summary>
-        int? PageSize { get; set; }
+        string PageSize { get; set; }
 
         /// <summary>
         /// The criteria to use when sorting results

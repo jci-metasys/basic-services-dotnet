@@ -284,8 +284,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <summary>
         /// Convert a generic object to a dictionary
-        /// </summary>
-        /// <typeparam name="TValue"></typeparam>
+        /// </summary>        
         /// <param name="obj"></param>
         /// <returns></returns>
         public static Dictionary<string, string> ToDictionary(object obj)

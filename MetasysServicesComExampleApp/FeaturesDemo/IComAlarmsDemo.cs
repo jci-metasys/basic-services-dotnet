@@ -120,14 +120,14 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 StartTime = st.ToString(),
                 EndTime = et.ToString(),
                 PriorityRange = args[2],
-                Type = args[3].ToLower() != "null" ? Convert.ToInt32(args[3].ToString()) : 0,
+                Type = args[3].ToLower() != "null" ? args[3].ToString() : null,
                 ExcludePending = args[4].ToLower() != "null" ? Convert.ToBoolean(args[4]) : false,
                 ExcludeAcknowledged = !string.IsNullOrEmpty(args[5]) ? Convert.ToBoolean(args[5]) : false,
                 ExcludeDiscarded = !string.IsNullOrEmpty(args[6]) ? Convert.ToBoolean(args[6]) : false,
-                Attribute = args[7].ToLower() != "null" ? Convert.ToInt32(args[7]) : 0,
-                Category = args[8].ToLower() != "null" ? Convert.ToInt32(args[8]) : 0,
-                Page = args[9].ToLower() != "null" ? Convert.ToInt32(args[9]) : 0,
-                PageSize = args[10].ToLower() != "null" ? Convert.ToInt32(args[10]) : 0,
+                Attribute = args[7].ToLower() != "null" ? args[7] : null,
+                Category = args[8].ToLower() != "null" ? args[8] : null,
+                Page = args[9].ToLower() != "null" ? args[9] : null,
+                PageSize = args[10].ToLower() != "null" ? args[10] : null,
                 Sort = args[11]
             };
             return alarmFilter;
