@@ -6,7 +6,7 @@ namespace JohnsonControls.Metasys.ComServices
     /// Provides attribute to filter alarm.
     /// </summary>
     [ComVisible(true)]
-    [Guid("129059db-8a39-4c94-bc8a-86c0975e72c9")]
+    [Guid("2e911905-b0bc-4f88-8365-95be3add9dc8")]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface IComFilterAlarm
     {

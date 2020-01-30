@@ -24,6 +24,7 @@ For versioning information see the [changelog](CHANGELOG.md).
   - [Localization of Metasys Enumerations](#localization-of-metasys-enumerations)
   - [Spaces and equipment](#spaces-and-equipment)
   - [Alarms](#alarms)
+  - [Trends](#trends)
 - [Usage (COM)](#usage-com)
   - [Creating a Client](#creating-a-client-1)
   - [Login and Access Tokens](#login-and-access-tokens-1)
@@ -33,6 +34,8 @@ For versioning information see the [changelog](CHANGELOG.md).
   - [Send Commands](#send-commands)
   - [Get Network Devices and other Objects](#get-network-devices-and-other-objects-1)
   - [Spaces and equipment](#spaces-and-equipment-1)
+  - [Alarms](#alarms-1)
+  - [Trends](#trends-1)
 - [License](#license)
 - [Contributing](#contributing)
 - [Additional Information](#additional-information)
@@ -320,13 +323,15 @@ var presentValue=point.PresentValue?.StringValue
 
 ### Alarms
 
-To get all available alarms use the GetAlarms method. This method will return a PagedResult with a list of AlarmItemProvider. This accepts an AlarmFilter object to filter the response. To get all of the available types of alarms use the GetAlarmTypes which returns a list of AlarmType. To get a single alarm use the GetSingleAlarm method which returns an AlarmItemProvider object with all the details given the Guid.
+All services about alarms are provided by Alarms local instance of MetasysClient.
+To get all available alarms use the GetAlarms method. This method will return a PagedResult with a list of AlarmItemProvider. This accepts an AlarmFilter object to filter the response. To get a single alarm use the GetSingleAlarm method which returns an AlarmItemProvider object with all the details given the Guid.
 
 ```csharp
 AlarmFilter alarmFilter = new AlarmFilter
 {
     StartTime = new DateTime(2019, 12, 12).ToString(),
-    EndTime = new DateTime(2020, 1, 12).ToString()
+    EndTime = new DateTime(2020, 1, 12).ToString(),
+    ExcludeAcknowledged=true
 };
 var alarms = client.GetAlarms(alarmFilter);
 var alarmId = alarms.Items.ElementAt(0).Id;
@@ -338,10 +343,31 @@ To get the alarms of a specific Object or NetworkDevice use the GetAlarmsForAnOb
 ```csharp
 AlarmFilter alarmFilter = new AlarmFilter{};
 var objectId="f5fe6054-d0b0-55b6-b03f-d4554f80d8e6";
-var objectAlarms = client.GetAlarmsForAnObject(objectId, alarmFilter);
+var objectAlarms = client.Alarms.GetAlarmsForAnObject(objectId, alarmFilter);
 var networkDeviceId="2aefbd18-9088-54ee-b6ef-6d9312da3c33";
-var networkDevicesAlarms = client.GetAlarmsForNetworkDevice(networkDeviceId, alarmFilter);
+var networkDevicesAlarms = client.Alarms.GetAlarmsForNetworkDevice(networkDeviceId, alarmFilter);
 ```
+
+### Trends
+
+All services about trends are provided by Trends local instance of MetasysClient. To get all available samples given a time filter use the GetSamples method. This method will return a PagedResult with a list of Sample. This accepts the Guid of the object, the attribute ID and a TimeFilter object to filter the response. To get all of the available trended attributes of an object given the ID use the GetTrendedAttributes method. 
+
+```csharp
+List<Attribute> trendedAttributes=client.Trends.GetTrendedAttributes(objectId);
+int attributeId=trendedAttributes[0].Id;
+TimeFilter timeFilter = new TimeFilter
+{
+    StartTime = new DateTime(2020, 1, 20).ToString(),
+    EndTime = new DateTime(2020, 1, 21).ToString()
+};
+PagedResult<Sample> samples = client.Trends.GetSamples(objectId, attributeId, timeFilter);
+int pages= samples.PageCount;
+int samplesCount= sample.Total;
+Sample firstSample = samples.Items.First();
+double value= firstSample.Value;
+```
+Keep in mind that the object must be properly configured with trended attributes and samples are sent to the ADS/ADX. If you try to retrieve values from an object that has no valid trended attributes a MetasysHttpNotFoundException is raised.
+
 ## Usage (COM)
 
 This section demonstrates how to use the LegacyMetasysClient to interact with your Metasys server from a VBA application.
@@ -396,11 +422,11 @@ In order to get a property you must know the Guid of the target object. An objec
 Dim result As ComVariant
 Set result = client.ReadProperty(id, "presentValue")
 Dim stringValue as String
-stringValue = result.StringValue;
+stringValue = result.StringValue
 Dim numericValue as Double
-numericValue = result.NumericValue;
+numericValue = result.NumericValue
 Dim booleanValue as Boolean
-booleanValue = result.BooleanValue;
+booleanValue = result.BooleanValue
 ```
 
 There is a method to get multiple properties from multiple objects. This can be very useful if the objects all are of the same type or have the same target properties.
@@ -496,6 +522,80 @@ Set e = equipment(0)
 ```
 To get the children objects of Spaces and Equipment use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete. 
 
+### Alarms
+
+To get all available alarms use the GetAlarms method. This method will return a PagedResult with a list of AlarmItemProvider. This accepts an AlarmFilter object to filter the response. To get a single alarm use the GetSingleAlarm method which returns an AlarmItemProvider object with all the details given the Guid.
+
+```vb
+'Prepare Alarm filter
+Dim filter As New ComAlarmFilter
+filter.StartTime = "2020-01-10T08:10:20.243Z"
+filter.EndTime = "2020-01-10T09:10:20.243Z"
+filter.ExcludeAcknowledged=true
+Dim alarmsPager As ComPagedResult
+Set alarmsPager = client.GetAlarms(objId, filter)
+'Iterate paged results
+Dim rows As Long
+rows = UBound(alarmsPager.Items)  
+Dim i As Integer
+Dim alarm As ComProvideAlarmItem
+Dim alarms() As Object
+ReDim alarms(rows)
+alarms = alarmsPager.Items
+Set alarm = alarms(0)
+Dim message as String
+message = alarm.message
+'Read paging properties
+Dim pages as integer
+pages=alarmsPager.PageCount
+```
+To get the alarms of a specific Object or NetworkDevice use the GetAlarmsForAnObject and GetAlarmsForNetworkDevice methods. The Guid of the parent object is required as input.
+
+```vb
+Set objectAlarmsPager = client.GetAlarmsForAnObject(objId, filter)
+Dim objectAlarms() As Object
+ReDim objectAlarms(objectAlarmsPager.Items)
+objectAlarms = objectAlarmsPager.Items
+Set deviceAlarmsPager = client.GetAlarmsForNetworkDevice(networkDeviceId, filter)
+Dim deviceAlarms() As Object
+ReDim deviceAlarms(deviceAlarmsPager.Items)
+deviceAlarms = deviceAlarmsPager.Items
+```
+### Trends
+
+ To get all available samples given a time filter use the GetSamples method. This method will return a PagedResult with a list of Sample. This accepts the Guid of the object, the attribute ID and a TimeFilter object to filter the response. To get all of the available trended attributes of an object given the ID use the GetTrendedAttributes method. 
+
+```vb
+'Get Trended attributes
+Dim attrs() As ComAttribute
+attrs = client.GetTrendedAttributes(objId)
+Dim attr As ComAttribute
+Set attr = attrs(0)
+Dim attrId As Integer
+attrId = attr.id
+'Prepare Time filter
+Dim filter As New ComTimeFilter
+filter.StartTime = "2020-01-10T08:10:20.243Z"
+filter.EndTime = "2020-01-10T09:10:20.243Z"
+Dim samplesPager As ComPagedResult
+Set samplesPager = client.GetSamples(objId, attrId, filter)
+'Iterate paged results
+Dim rows As Long
+rows = UBound(samplesPager.Items)  
+Dim i As Integer
+Dim sample As ComSample
+Dim samples() As Object
+ReDim samples(rows)
+samples = samplesPager.Items
+Set sample = samples(0)
+Dim value as String
+value = sample.Value
+'Read paging properties
+Dim pages as integer
+pages=samplesPager.PageCount
+Dim SamplesCount as integer
+samplesCount=samplesPager.Total
+```
 ## License
 
 See [LICENSE](LICENSE).

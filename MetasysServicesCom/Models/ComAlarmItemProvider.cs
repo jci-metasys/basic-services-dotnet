@@ -54,7 +54,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Alarm trigger value details
         /// </summary>
-        public dynamic TriggerValue { get; set; }
+        public object TriggerValue { get; set; }
 
         /// <summary>
         /// Alarm creation time

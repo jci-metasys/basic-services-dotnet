@@ -42,15 +42,18 @@ namespace JohnsonControls.Metasys.BasicServices
         private static CultureInfo CultureEnUS = new CultureInfo(1033);
 
         /// <summary>
-        /// Stores retrieved Ids and serves as an in-memory caching layer
+        /// Stores retrieved Ids and serves as an in-memory caching layer.
         /// </summary>
         protected Dictionary<string, Guid> IdentifiersDictionary = new Dictionary<string, Guid>();
 
         /// <summary>
-        /// Local instance of Trends service
+        /// Local instance of Trends service.
         /// </summary>
         public  ITrendsService Trends { get; set; }
 		
+        /// <summary>
+        /// Local instance of Alarms service.
+        /// </summary>
 		public  IProvideAlarmInfo Alarms { get; set; }
 
         /// <summary>
@@ -977,12 +980,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// A level of 1 only retrieves immediate children of the parent object.
         /// </remarks>
         /// <param name="id"></param>
-        /// <param name="levels">The depth of the children to retrieve.</param>
-        /// <param name="parentResource">The parent resource to retrieve children</param>    
-        /// <param name="childResource">The children resource to get related elements</param>  
+        /// <param name="levels">The depth of the children to retrieve.</param>      
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-
         public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1)
         {
             return GetObjectsAsync(id, levels).GetAwaiter().GetResult();
@@ -1122,6 +1122,7 @@ namespace JohnsonControls.Metasys.BasicServices
             return pointsWithValues;          
         }
 
+        /// <inheritdoc cref="GetObjects(Guid, int)"/>
         public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels)
         {
             var objects=await GetObjectChildrenAsync(id, null, levels);

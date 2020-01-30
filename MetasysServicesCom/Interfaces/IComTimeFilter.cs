@@ -1,24 +1,40 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace JohnsonControls.Metasys.ComServices.Interfaces
+namespace JohnsonControls.Metasys.ComServices
 {
     /// <summary>
     /// Temporal filter for a timeline based request.
     /// </summary>
-    [Guid("6389A85D-0390-44C3-A612-0FB45B3276FB")]
+    [Guid("400c17ea-a9e8-47be-bd65-ee31a512db9b")]
     [ComVisible(true)]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface IComTimeFilter
     {
         /// <summary>
-        /// Earliest start time.
+        /// Earliest start time ISO8601 string
         /// </summary>
-        DateTime StartTime { get; set; }
+        string StartTime { get; set; }
 
         /// <summary>
-        /// Latest end time.
+        /// Latest end time ISO8601 string
         /// </summary>
-        DateTime EndTime { get; set; }
+        string EndTime { get; set; }
+        /// <summary>
+        /// The page number of items to return Default: 1.
+        /// </summary>
+        int? Page { get; set; }
+
+        /// <summary>
+        /// The maximum number of items to return in the response. 
+        /// Valid range is 1-10,000. Default: 100
+        /// </summary>
+        int? PageSize { get; set; }
+
+        /// <summary>
+        /// The criteria to use when sorting results
+        /// Accepted Values: itemReference, priority, creationTime
+        /// </summary>
+        string Sort { get; set; }
     }
 }

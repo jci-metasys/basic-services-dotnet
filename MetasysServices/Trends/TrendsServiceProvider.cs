@@ -34,17 +34,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<PagedResult<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter)
         {
-            List<Sample> objectSamples = new List<Sample>();
-            // Set the timeline parameters first for the query string
-            Dictionary<string, string> parameters = new Dictionary<string, string>()
-                {
-                    {"startTime", filter.StartTime.ToString("o") }, // Convert to UTC DateTime string
-                    {"endTime", filter.EndTime.ToString("o") },
-                    {"page", filter.Page.ToString() },
-                    {"pageSize", filter.PageSize.ToString() }
-                };
+            List<Sample> objectSamples = new List<Sample>();                   
             // Perform a generic call using objects resource valid for Network Devices as well
-            var response = await GetPagedResultsAsync<JToken>("objects", parameters, objectId, "attributes", attributeId,"samples");
+            var response = await GetPagedResultsAsync<JToken>("objects", ToDictionary(filter), objectId, "attributes", attributeId,"samples");
             // Read full attribute from url
             foreach (JToken s in response.Items)
             {
@@ -63,8 +55,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     throw new MetasysObjectException(e);
                 }
                 // Extract ID from units url
-                var unitId = unitsUrl.Split('/').Last();
-                string desc;
+                var unitId = unitsUrl.Split('/').Last();               
                 // Read full url if not cached previously
                 if (!Units.ContainsKey(unitId))
                 {

@@ -9,14 +9,28 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public class Sample
     {
+        /// <summary>
+        /// Value of the Sample.
+        /// </summary>
         public double Value { get; set; }
+        /// <summary>
+        /// Unit of measurement of the Sample.
+        /// </summary>
         public string Unit { get; set; }
+        /// <summary>
+        /// Timestamp of when the sample was recorded.
+        /// </summary>
         public DateTime Timestamp { get; set; }
+        /// <summary>
+        /// The sample is reliable if true.
+        /// </summary>
         public bool IsReliable { get; set; }
 
+        /// <summary>
         /// Returns a value indicating whither this instance has values equal to a specified object.
         /// </summary>
         /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj != null && obj is Sample)
@@ -34,15 +48,13 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var code = 13;
             // Calculate hash on each properties one by one
-            code = (code * 7) + this.Value.GetHashCode();
-            if (IsReliable != null)
-                code = (code * 7) + IsReliable.GetHashCode();
+            code = (code * 7) + this.Value.GetHashCode();          
+            code = (code * 7) + IsReliable.GetHashCode();
             if (this.Unit != null)
                 code = (code * 7) + Unit.GetHashCode();
             if (this.Timestamp != null)
-                code = (code * 7) + Timestamp.GetHashCode();
-            if (this.Value != null)
-                code = (code * 7) + Value.GetHashCode();           
+                code = (code * 7) + Timestamp.GetHashCode();            
+            code = (code * 7) + Value.GetHashCode();           
             return code;
         }
     }
