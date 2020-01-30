@@ -20,7 +20,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
             Console.WriteLine("Enter alarm id to get alarm details: ");
             string alarmId = Console.ReadLine();
 
-            object alarmItem = legacyClient.GetSingleAlarm(alarmId);
+            IComProvideAlarmItem alarmItem = (IComProvideAlarmItem)legacyClient.GetSingleAlarm(alarmId);
             
             Console.WriteLine(string.Format("\n Alarm details found for {0}", alarmId));
             Console.WriteLine($"\n Id: {alarmItem.Id}, Name: {alarmItem.Name}, ItemReference: {alarmItem.ItemReference}");
@@ -41,16 +41,24 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
 
             Console.WriteLine("\n List of alarms with details");
 
-            var alarmItems = legacyClient.GetAlarms(getAlarmsFilter);
+            IComPagedResult PagedResult = (IComPagedResult)legacyClient.GetAlarms(getAlarmsFilter);
+            IComProvideAlarmItem[] alarmItems = (IComProvideAlarmItem[])PagedResult.Items;
 
-            Console.WriteLine($"\n Total: {alarmItemsTotal}");
-            Console.WriteLine($"\n Page Count: {alarmItems.PageCount}");
-            Console.WriteLine($"\n Page Size: {alarmItems.PageSize}");
-            Console.WriteLine($"\n Current Page: {alarmItems.CurrentPage}");
+            Console.WriteLine($"\n Total: {PagedResult.Total}");
+            Console.WriteLine($"\n Page Count: {PagedResult.PageCount}");
+            Console.WriteLine($"\n Page Size: {PagedResult.PageSize}");
+            Console.WriteLine($"\n Current Page: {PagedResult.CurrentPage}");
 
-            foreach (var item in alarmItems.Items)
+            if (alarmItems != null)
             {
-                Console.WriteLine($"\n Id: {item.Id}, Name: {item.Name}, ItemReference: {item.ItemReference}");
+                foreach (var item in alarmItems)
+                {
+                    Console.WriteLine($"\n Id: {item.Id}, Name: {item.Name}, ItemReference: {item.ItemReference}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No alarm found.");
             }
 
             Console.WriteLine("\nEnter object id to get alarm details: ");

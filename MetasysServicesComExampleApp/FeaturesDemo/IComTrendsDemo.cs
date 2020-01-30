@@ -20,10 +20,13 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
             Console.WriteLine("\nIndicate the object you want to run this example code on.");
             Console.Write("Enter the fully qualified reference of the object (Example: \"site:device/itemReference\"): ");
             string object1 = Console.ReadLine();
-            Guid id1 = Guid.Parse(legacyClient.GetObjectIdentifier(object1));            
+            Guid id1 = Guid.Parse(legacyClient.GetObjectIdentifier(object1));
             Console.WriteLine($"{object1} id: {id1}");
-            object trendedAttributes = legacyClient.GetTrendedAttributes(id1);            
-            Console.WriteLine(trendedAttributes.Description);
+            ComAttribute[] trendedAttributes = (ComAttribute[])legacyClient.GetTrendedAttributes(id1);
+            foreach (ComAttribute trendedAttribute in trendedAttributes) 
+            {
+                Console.WriteLine($"ID: {trendedAttribute.Id} \nDescription: {trendedAttribute.Description}");
+            }
 
             Console.WriteLine("Please enter Start Date and End Date separated by space: ");
             string getDateTime = Console.ReadLine();
@@ -35,8 +38,8 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 getDateTimeForTrend = ReadUserInputForTrends(args);
             }
             string objId1 = id1.ToString();
-            var samples = legacyClient.GetSamples(objId1, 85, getDateTimeForTrend).Items;
-            foreach (var s in samples)
+            ComSample[] samples = (ComSample[])legacyClient.GetSamples(objId1, 85, getDateTimeForTrend);
+            foreach (ComSample s in samples)
             {
                 Console.WriteLine($"Value: {s.Value} Unit: {s.Unit} Timestamp: {s.Timestamp}");
             }

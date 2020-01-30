@@ -189,19 +189,19 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
             Console.Write("(1 = only this object, 2 = immediate children only): ");
 
             int level = Convert.ToInt32(Console.ReadLine());
-            object objects = legacyClient.GetObjects(object2Id, level);
+            IComMetasysObject[] objects = (IComMetasysObject[])legacyClient.GetObjects(object2Id, level);
             if (objects.Count() > 0)
             {
-                ComMetasysObject obj = objects.ElementAt(0);
+                IComMetasysObject obj = objects.ElementAt(0);
 
                 Console.WriteLine($"Parent object: {obj.Id}");
-
+                IComMetasysObject[] objchild = (IComMetasysObject[])obj.Children;
                 for (int i = 1; i < level; i++)
                 {
                     Console.WriteLine($"Child at level {i}: {obj.Id} - {obj.Name}");
                     if (objects.ElementAt(0).ChildrenCount > 0)
                     {
-                        obj = objects.ElementAt(0).Children.ElementAt(0);
+                        obj = objchild.ElementAt(0);
                     }
                     else
                     {
