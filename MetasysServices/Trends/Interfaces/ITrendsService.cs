@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface ITrendsService
     {
         /// <summary>
@@ -38,7 +41,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysObjectException"></exception>
         PagedResult<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter);
 
-        /// <inheritdoc cref="ITrendsService.GetSamples(Guid, Guid, TimeFilter)"/>
+        /// <inheritdoc cref="ITrendsService.GetSamples(Guid, int, TimeFilter)"/>
         Task<PagedResult<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter);
     }
 }
