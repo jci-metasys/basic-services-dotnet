@@ -27,7 +27,7 @@ namespace MetasysServices.Tests
             ""self"": ""https://hostname/api/v2/alarms?pageSize=100&excludePending=false&excludeAcknowledged=false&excludeDiscarded=false&page=1&sort=creationTime""
             ";
             httpTest.RespondWith(response);
-            var alarms = client.Alarms.GetAlarmsForNetworkDevice(mockid,new AlarmFilter { }); // No filter
+            var alarms = client.Alarms.GetAlarmsForNetworkDevice(mockid, new AlarmFilter { }); // No filter
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
