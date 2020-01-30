@@ -112,8 +112,8 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
 
         private static ComAlarmFilter ReadUserInput(string[] args)
         {
-            DateTime st = DateTime.Parse(args[0], null, DateTimeStyles.RoundtripKind);
-            DateTime et = DateTime.Parse(args[1], null, DateTimeStyles.RoundtripKind);
+            DateTime st = DateTime.Parse(args[0], null, DateTimeStyles.AssumeUniversal);
+            DateTime et = DateTime.Parse(args[1], null, DateTimeStyles.AssumeUniversal);
 
             ComAlarmFilter alarmFilter = new ComAlarmFilter
             {
