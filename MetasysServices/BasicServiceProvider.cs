@@ -238,9 +238,16 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             bool hasNext = true;
             List<JToken> aggregatedResponse = new List<JToken>();
+            int page = 1;
+            if (!parameters.ContainsKey("page"))
+            {
+                parameters.Add("page", page.ToString());
+            }
             while (hasNext)
             {
                 hasNext = false;
+                // Just overwrite page parameter                 
+                parameters["page"]=page.ToString();
                 var response = await GetPagedResultsAsync<JToken>(resource, parameters, pathSegments).ConfigureAwait(false);
                 var total = response.Total;
                 if (total > 0)
@@ -249,6 +256,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     if (response.CurrentPage < response.PageCount)
                     {
                         hasNext = true;
+                        page++;
                     }
                 }
             }
