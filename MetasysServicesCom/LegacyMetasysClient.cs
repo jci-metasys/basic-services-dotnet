@@ -80,6 +80,17 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <summary>
+        /// Requests a new access token from the server before the current token expires.
+        /// </summary>
+        /// <returns>Access Token.</returns>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysTokenException"></exception>
+        public IComAccessToken Refresh()
+        {
+            return Mapper.Map<IComAccessToken>(Client.Refresh());
+        }
+
+        /// <summary>
         /// Given the Item Reference of an object, returns the object identifier.
         /// </summary>
         /// <remarks>
@@ -271,6 +282,18 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <summary>
+        ///  Gets all Equipment for the given space
+        /// </summary>
+        /// <param name="spaceId"></param>
+        /// <returns></returns>
+        public object GetSpaceEquipment(string spaceId)
+        {
+            Guid guid = new Guid(spaceId);
+            var res = Client.GetSpaceEquipment(guid).ToList();
+            return Mapper.Map<IComMetasysObjectType[]>(res);
+        }
+
+        /// <summary>
         /// Gets all equipments by requesting each available page.
         /// </summary>
         /// <exception cref="MetasysHttpException"></exception>
@@ -279,6 +302,18 @@ namespace JohnsonControls.Metasys.ComServices
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
             var res = Client.GetEquipment();
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+
+        /// <summary>
+        /// Gets all points for the given Equipment
+        /// </summary>
+        /// <param name="equipmentId"></param>
+        /// <returns></returns>
+        public object GetEquipmentPoints(string equipmentId)
+        {
+            Guid guid = new Guid(equipmentId);
+            var res = Client.GetSpaceEquipment(guid).ToList();
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
