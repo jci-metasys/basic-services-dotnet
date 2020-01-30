@@ -22,8 +22,8 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
             string object1 = Console.ReadLine();
             string id1 = legacyClient.GetObjectIdentifier(object1);
             Console.WriteLine($"{object1} id: {id1}");
-            ComAttribute[] trendedAttributes = (ComAttribute[])legacyClient.GetTrendedAttributes(id1);
-            foreach (ComAttribute trendedAttribute in trendedAttributes) 
+            IComAttribute[] trendedAttributes = (IComAttribute[])legacyClient.GetTrendedAttributes(id1);
+            foreach (IComAttribute trendedAttribute in trendedAttributes) 
             {
                 Console.WriteLine($"ID: {trendedAttribute.Id} \nDescription: {trendedAttribute.Description}");
             }
@@ -38,9 +38,9 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 getDateTimeForTrend = ReadUserInputForTrends(args);
             }
             string objId1 = id1.ToString();
-            var samplesPager = (ComPagedResult)legacyClient.GetSamples(objId1, 85, getDateTimeForTrend);
-            var samples = (ComSample[])(samplesPager.Items);
-            foreach (ComSample s in samples)
+            var samplesPager = legacyClient.GetSamples(objId1, 85, getDateTimeForTrend);
+            var samples = (IComSample[])samplesPager.Items;
+            foreach (IComSample s in samples)
             {
                 Console.WriteLine($"Value: {s.Value} Unit: {s.Unit} Timestamp: {s.Timestamp}");
             }

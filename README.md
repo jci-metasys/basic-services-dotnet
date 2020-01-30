@@ -535,12 +535,8 @@ filter.ExcludeAcknowledged=true
 Dim alarmsPager As ComPagedResult
 Set alarmsPager = client.GetAlarms(objId, filter)
 'Iterate paged results
-Dim rows As Long
-rows = UBound(alarmsPager.Items)  
-Dim i As Integer
 Dim alarm As ComProvideAlarmItem
 Dim alarms() As Object
-ReDim alarms(rows)
 alarms = alarmsPager.Items
 Set alarm = alarms(0)
 Dim message as String
@@ -580,12 +576,8 @@ filter.EndTime = "2020-01-10T09:10:20.243Z"
 Dim samplesPager As ComPagedResult
 Set samplesPager = client.GetSamples(objId, attrId, filter)
 'Iterate paged results
-Dim rows As Long
-rows = UBound(samplesPager.Items)  
-Dim i As Integer
 Dim sample As ComSample
 Dim samples() As Object
-ReDim samples(rows)
 samples = samplesPager.Items
 Set sample = samples(0)
 Dim value as String
