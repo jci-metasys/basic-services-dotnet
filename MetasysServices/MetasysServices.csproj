@@ -14,11 +14,11 @@
     <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
-    <PackageReleaseNotes>-Get Alarms
--Get Single Alarm
--Get Alarms for a specific object or network devices</PackageReleaseNotes>
+    <PackageReleaseNotes>-Dedicated Service Provider for Trends
+-Get Trended Attributes method for a specific object
+-Get Samples for a specific object given the attribute ID and the Time filter</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>2.3.0</Version>
+    <Version>3.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

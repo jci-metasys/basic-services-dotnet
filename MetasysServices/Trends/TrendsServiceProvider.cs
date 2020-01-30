@@ -55,8 +55,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     throw new MetasysObjectException(e);
                 }
                 // Extract ID from units url
-                var unitId = unitsUrl.Split('/').Last();
-                string desc;
+                var unitId = unitsUrl.Split('/').Last();               
                 // Read full url if not cached previously
                 if (!Units.ContainsKey(unitId))
                 {
