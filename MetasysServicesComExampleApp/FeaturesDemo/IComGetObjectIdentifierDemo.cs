@@ -7,9 +7,9 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
 {
     public class IComGetObjectIdentifierDemo
     {
-        private LegacyMetasysClient legacyClient;
+        private ILegacyMetasysClient legacyClient;
 
-        public IComGetObjectIdentifierDemo(LegacyMetasysClient legacyClient)
+        public IComGetObjectIdentifierDemo(ILegacyMetasysClient legacyClient)
         {
             this.legacyClient = legacyClient;
         }
