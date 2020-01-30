@@ -6,7 +6,7 @@ namespace JohnsonControls.Metasys.ComServices
     /// <summary>
     /// A specialized DTO for COM that gives trend information of an object.
     /// </summary>
-    [Guid("E57764D9-B4B9-4499-AC6D-DEAFD7D98DCE")]
+    [Guid("51935095-ae9e-4293-a19f-d715a03e745a")]
     [ComVisible(true)]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface IComSample

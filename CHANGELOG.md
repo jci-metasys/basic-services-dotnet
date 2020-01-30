@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2020-01-30
+
+### Added
+
+- Dedicated Service Provider for Trends
+- Get Trended Attributes method for a specific object.
+- Get Samples for a specific object given the attribute ID and the Time filter.
+
+### Changed
+
+- Alarms services are now exposed by a dedicated Alarms provider of MetasysClient class.
+- GetAlarms methods now returns a PagedResult of type AlarmItemProvider.
+- GetSingleAlarm, GetAlarmsForAnObject, GetAlarmsForNetworkDevice methods now accept Guid object as input in Metasys Services.
+
+### Fixed
+
+- COM methods for Alarms accept input filter object and return results using proper mapping.
+
 ## [2.3.0] - 2020-01-20
 
 ### Added

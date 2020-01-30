@@ -90,9 +90,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public string AnnotationsUrl { get; set; }
 
-        /// Returns a value indicating whither this instance has values equal to a specified object.
+        /// <summary>
+        /// Returns a value indicating whether this instance has values equal to a specified object.
         /// </summary>
         /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj != null && obj is AlarmItemProvider)
@@ -120,21 +122,17 @@ namespace JohnsonControls.Metasys.BasicServices
             if (this.CategoryUrl != null)
                 code = (code * 7) + CategoryUrl.GetHashCode();
             if (this.CreationTime != null)
-                code = (code * 7) + CreationTime.GetHashCode();
-            if (this.IsAckRequired != null)
-                code = (code * 7) + IsAckRequired.GetHashCode();
-            if (this.IsAcknowledged != null)
-                code = (code * 7) + IsAcknowledged.GetHashCode();
-            if (this.IsDiscarded != null)
-                code = (code * 7) + IsDiscarded.GetHashCode();
+                code = (code * 7) + CreationTime.GetHashCode();          
+            code = (code * 7) + IsAckRequired.GetHashCode();          
+            code = (code * 7) + IsAcknowledged.GetHashCode();           
+            code = (code * 7) + IsDiscarded.GetHashCode();
             if (this.Message != null)
                 code = (code * 7) + Message.GetHashCode();
             if (this.Name != null)
                 code = (code * 7) + Name.GetHashCode();
             if (this.ObjectUrl != null)
-                code = (code * 7) + ObjectUrl.GetHashCode();
-            if (this.Priority != null)
-                code = (code * 7) + Priority.GetHashCode();
+                code = (code * 7) + ObjectUrl.GetHashCode();           
+            code = (code * 7) + Priority.GetHashCode();
             if (this.Self != null)
                 code = (code * 7) + Self.GetHashCode();
             // to do: add compare on trigger value

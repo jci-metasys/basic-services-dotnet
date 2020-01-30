@@ -11,7 +11,7 @@ namespace JohnsonControls.Metasys.ComServices
     [Guid("B1AF1A67-42A0-4E4A-8A07-97AA53B42D02")]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface ILegacyMetasysClient
-    {      
+    {
         /// <summary>
         /// Attempts to login to the given host.
         /// </summary>
@@ -34,7 +34,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// Read many attribute values given the Guids of the objects.
         /// </summary>
         object ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeNames);
- 
+
         /// <summary>
         /// Write a single attribute given the Guid of the object. 
         /// </summary>
@@ -44,7 +44,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// Write to many attribute values given the Guids of the objects.
         /// </summary>
         void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeValues, string priority = null);
-        
+
         /// <summary>
         /// Get all available commands given the Guid of the object.
         /// </summary>
@@ -58,12 +58,12 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Gets all network devices.
         /// </summary>
-        object GetNetworkDevices(string type=null);
+        object GetNetworkDevices(string type = null);
 
         /// <summary>
         /// Gets all available network device types.
         /// </summary>
-        object GetNetworkDeviceTypes(string type=null);
+        object GetNetworkDeviceTypes(string type = null);
 
         /// <summary>
         /// Gets all child objects given a parent Guid.
@@ -118,7 +118,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms with details.</returns>
-        object GetAlarms(dynamic alarmFilter);
+        IComPagedResult GetAlarms(IComFilterAlarm alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
@@ -126,7 +126,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="objectId">The identifier of the object.</param>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
-        object GetAlarmsForAnObject(string objectId, dynamic alarmFilter);
+        IComPagedResult GetAlarmsForAnObject(string objectId, IComFilterAlarm alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
@@ -134,14 +134,14 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="networkDeviceId">The identifier of the network device.</param>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
-        object GetAlarmsForNetworkDevice(string networkDeviceId, dynamic alarmFilter);
+        IComPagedResult GetAlarmsForNetworkDevice(string networkDeviceId, IComFilterAlarm alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of attributes under the specified object for which samples are available.
         /// </summary>
         /// <param name="id">The identifier of the object</param>
         /// <returns>The list of attributes for the specified object for which samples are available.</returns>
-        object GetTrendedAttributes(Guid id);
+        object GetTrendedAttributes(string id);
 
         /// <summary>
         /// Retrieves a collection of samples for the specified object attribute during a particular date and time range.
@@ -150,6 +150,6 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="attributeId">The identifier of the attribute for which to retrieve sample information</param>
         /// <param name="filter">Filter for a timeline based request</param>
         /// <returns>The list of samples for the specified objectduring a particular date and time range.</returns>
-        object GetSamples(string objectId, int attributeId, dynamic filter);
+        IComPagedResult GetSamples(string objectId, int attributeId, IComTimeFilter filter);
     }
 }

@@ -24,6 +24,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <remarks> Assume Client is initialized by extended class.</remarks>
         public BasicServiceProvider() { }
 
+        /// <summary>
+        /// Constructor for dedicated services with Flurl client initialization already performed.
+        /// </summary>
+        /// <param name="client"></param>
         public BasicServiceProvider(IFlurlClient client)
         {
             Client = client;

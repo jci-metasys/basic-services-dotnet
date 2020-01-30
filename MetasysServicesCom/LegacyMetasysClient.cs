@@ -54,9 +54,14 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<IComFilterAlarm, AlarmFilter>();
                 cfg.CreateMap<AlarmItemProvider, IComProvideAlarmItem>();
                 cfg.CreateMap<Sample, IComSample>();
-                cfg.CreateMap<ComTimeFilter, TimeFilter>();
+                cfg.CreateMap<IComTimeFilter, TimeFilter>();
                 cfg.CreateMap<Attribute, IComAttribute>();
-                cfg.CreateMap<PagedResult<AlarmItemProvider>, IComPagedResult>();
+                cfg.CreateMap<PagedResult<AlarmItemProvider>, IComPagedResult>()
+                    // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
+                    .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComProvideAlarmItem[]>(src.Items)));
+                cfg.CreateMap<PagedResult<Sample>, IComPagedResult>()
+                    // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
+                    .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComSample[]>(src.Items)));
             }).CreateMapper();
         }
 
@@ -71,7 +76,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <exception cref="MetasysTokenException"></exception>
         public IComAccessToken TryLogin(string username, string password, bool refresh = true)
         {
-            return Mapper.Map<IComAccessToken>(Client.TryLogin(username, password,refresh));
+            return Mapper.Map<IComAccessToken>(Client.TryLogin(username, password, refresh));
         }
 
         /// <summary>
@@ -233,7 +238,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="type">Optional type number as a string</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        public object GetNetworkDevices(string type=null)
+        public object GetNetworkDevices(string type = null)
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
             var res = Client.GetNetworkDevices(type).ToList();
@@ -315,12 +320,13 @@ namespace JohnsonControls.Metasys.ComServices
         /// <inheritdoc />
         public object GetSingleAlarm(string alarmId)
         {
-            var alarmItem = Client.Alarms.GetSingleAlarm(alarmId);
+            Guid guidAlarmId = Guid.Parse(alarmId);
+            var alarmItem = Client.Alarms.GetSingleAlarm(guidAlarmId);
             return Mapper.Map<IComProvideAlarmItem>(alarmItem);
         }
 
         /// <inheritdoc />
-        public object GetAlarms(dynamic alarmFilter)
+        public IComPagedResult GetAlarms(IComFilterAlarm alarmFilter)
         {
             var mapAlarmFilter = Mapper.Map<AlarmFilter>(alarmFilter);
             PagedResult<AlarmItemProvider> alarmItems = Client.Alarms.GetAlarms(mapAlarmFilter);
@@ -328,34 +334,37 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc />
-        public object GetAlarmsForAnObject(string objectId, dynamic alarmFilter)
+        public IComPagedResult GetAlarmsForAnObject(string objectId, IComFilterAlarm alarmFilter)
         {
+            Guid guidObjectId = Guid.Parse(objectId);
             var mapAlarmFilterForAnObject = Mapper.Map<AlarmFilter>(alarmFilter);
-            var alarmItems = Client.Alarms.GetAlarmsForAnObject(objectId, mapAlarmFilterForAnObject);
+            var alarmItems = Client.Alarms.GetAlarmsForAnObject(guidObjectId, mapAlarmFilterForAnObject);
             return Mapper.Map<IComPagedResult>(alarmItems);
         }
 
         /// <inheritdoc />
-        public object GetAlarmsForNetworkDevice(string networkDeviceId, dynamic alarmFilter)
+        public IComPagedResult GetAlarmsForNetworkDevice(string networkDeviceId, IComFilterAlarm alarmFilter)
         {
+            Guid guidNetworkDeviceId = Guid.Parse(networkDeviceId);
             var mapAlarmFilterForObject = Mapper.Map<AlarmFilter>(alarmFilter);
-            var alarmItems = Client.Alarms.GetAlarms(mapAlarmFilterForObject);
+            var alarmItems = Client.Alarms.GetAlarmsForNetworkDevice(guidNetworkDeviceId, mapAlarmFilterForObject);
             return Mapper.Map<IComPagedResult>(alarmItems);
         }
 
         /// <inheritdoc />
-        public object GetTrendedAttributes(Guid id)
-        { 
-            var res = Client.Trends.GetTrendedAttributes(id);
+        public object GetTrendedAttributes(string id)
+        {
+            var res = Client.Trends.GetTrendedAttributes(new Guid(id));
             return Mapper.Map<IComAttribute[]>(res);
         }
 
         /// <inheritdoc />
-        public object GetSamples(string objectId, int attributeId, dynamic filter)
+        public IComPagedResult GetSamples(string objectId, int attributeId, IComTimeFilter filter)
         {
             var mapTrendedAttributes = Mapper.Map<TimeFilter>(filter);
-            var res = Client.Trends.GetSamples(new Guid(objectId), attributeId, mapTrendedAttributes);
-            return Mapper.Map<IComPagedResult>(res);
+            PagedResult<Sample> samples = Client.Trends.GetSamples(new Guid(objectId), attributeId, mapTrendedAttributes);
+            var map = Mapper.Map<IComPagedResult>(samples);
+            return map;
         }
     }
 }

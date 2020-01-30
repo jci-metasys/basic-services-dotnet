@@ -7,6 +7,10 @@ using System.Web;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
+    /// <summary>
+    /// Generic Paged Result Object containing Items along with paging information.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class PagedResult<T>
     {
         /// <summary>
@@ -30,6 +34,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public int PageSize { get; set; }
 
+        /// <summary>
+        /// Initialize an empty instance of PagedResult.
+        /// </summary>
         public PagedResult()
         {
 
@@ -48,6 +55,12 @@ namespace JohnsonControls.Metasys.BasicServices
                 Uri selfUri = new Uri(response["self"].Value<string>());
                 string page = HttpUtility.ParseQueryString(selfUri.Query).Get("page");
                 string pageSize = HttpUtility.ParseQueryString(selfUri.Query).Get("pageSize");
+                // Try to get from next url if it is not specified in the self url
+                if (pageSize == null)
+                {
+                    Uri nextUri = new Uri(response["next"].Value<string>());
+                    pageSize = HttpUtility.ParseQueryString(nextUri.Query).Get("pageSize");
+                }
                 if (page == null)
                 {
                     CurrentPage = 1;
@@ -56,8 +69,15 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     CurrentPage = Int32.Parse(page);
                 }
-                PageSize = Int32.Parse(pageSize);
-                PageCount = Total / PageSize;                       
+                if (pageSize != null)
+                {
+                    PageSize = Int32.Parse(pageSize);
+                }
+                else
+                {
+                    PageSize = 100; // Default value
+                }
+                PageCount =(int) Math.Ceiling((decimal)Total / PageSize);                       
                 Items = JsonConvert.DeserializeObject<List<T>>(response["items"].ToString());
             }
             catch (Exception e)
