@@ -239,6 +239,11 @@ namespace JohnsonControls.Metasys.BasicServices
             bool hasNext = true;
             List<JToken> aggregatedResponse = new List<JToken>();
             int page = 1;
+            // Init our dictionary for paging
+            if (parameters == null)
+            {
+                parameters = new Dictionary<string, string>();
+            }
             if (!parameters.ContainsKey("page"))
             {
                 parameters.Add("page", page.ToString());
