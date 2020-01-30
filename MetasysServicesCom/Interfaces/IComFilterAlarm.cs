@@ -28,43 +28,43 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// The type of the requested alarms.
         /// </summary>
-        int? Type { get; set; }
+        string Type { get; set; }
 
         /// <summary>
         /// The flag to exclude pending alarms Default: false.
         /// </summary>
-        bool? ExcludePending { get; set; }
+        bool ExcludePending { get; set; }
 
         /// <summary>
         /// The flag to exclude acknowledged alarms Default: false.
         /// </summary>
-        bool? ExcludeAcknowledged { get; set; }
+        bool ExcludeAcknowledged { get; set; }
 
         /// <summary>
         /// The flag to exclude discarded alarms Default: false.
         /// </summary>
-        bool? ExcludeDiscarded { get; set; }
+        bool ExcludeDiscarded { get; set; }
 
         /// <summary>
         /// The attribute of the requested alarms.
         /// </summary>
-        int? Attribute { get; set; }
+        string Attribute { get; set; }
 
         /// <summary>
         /// The system category of the requested alarms.
         /// </summary>
-        int? Category { get; set; }
+        string Category { get; set; }
 
         /// <summary>
         /// The page number of items to return Default: 1.
         /// </summary>
-        int? Page { get; set; }
+        string Page { get; set; }
 
         /// <summary>
         /// The maximum number of items to return in the response. 
         /// Valid range is 1-10,000. Default: 100
         /// </summary>
-        int? PageSize { get; set; }
+        string PageSize { get; set; }
 
         /// <summary>
         /// The criteria to use when sorting results

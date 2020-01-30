@@ -37,11 +37,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Retrieves a collection of alarms asynchronously.
         /// </summary>
-        /// <param name="alarmFilter">The alarm filter to get alarms.</param>
+        /// <param name="alarmFilter">The alarmFilter to be applied to alarms list.</param>
         /// <returns>The list of alarms.</returns>
-        public async Task<PagedResult<AlarmItemProvider>> GetAlarmsAsync(AlarmFilter filter)
+        public async Task<PagedResult<AlarmItemProvider>> GetAlarmsAsync(AlarmFilter alarmFilter)
         {                
-            return await GetPagedResultsAsync<AlarmItemProvider>("alarms", ToDictionary(filter));            
+            return await GetPagedResultsAsync<AlarmItemProvider>("alarms", ToDictionary(alarmFilter));            
         }
 
         /// <summary>
@@ -59,23 +59,23 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Retrieves a collection of alarms for the specified object asynchronously.
         /// </summary>
         /// <param name="objectId">The identifier of the object.</param>
-        /// <param name="alarmFilter">TThe alarm filter to get alarms.</param>
+        /// <param name="alarmFilter">TThe alarm alarmFilter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
 
-        public async Task<PagedResult<AlarmItemProvider>> GetAlarmsForAnObjectAsync(Guid objectId, AlarmFilter filter)
+        public async Task<PagedResult<AlarmItemProvider>> GetAlarmsForAnObjectAsync(Guid objectId, AlarmFilter alarmFilter)
         {
-            return await GetPagedResultsAsync<AlarmItemProvider>("objects", ToDictionary(filter), objectId, "alarms");
+            return await GetPagedResultsAsync<AlarmItemProvider>("objects", ToDictionary(alarmFilter), objectId, "alarms");
         }
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified network device asynchronously.
         /// </summary>
         /// <param name="networkDeviceId">The identifier of the network device.</param>
-        /// <param name=""alarmFilter">TThe alarm filter to get alarms.</param>
+        /// <param name="alarmFilter">The alarm alarmFilter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
-        public async Task<PagedResult<AlarmItemProvider>> GetAlarmsForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter filter)
+        public async Task<PagedResult<AlarmItemProvider>> GetAlarmsForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter alarmFilter)
         {
-            return await GetPagedResultsAsync<AlarmItemProvider>("networkDevices", ToDictionary(filter), networkDeviceId, "alarms");
+            return await GetPagedResultsAsync<AlarmItemProvider>("networkDevices", ToDictionary(alarmFilter), networkDeviceId, "alarms");
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Retrieves a collection of alarms.
         /// </summary>
-        /// <param name="alarmFilter">The alarm filter to get alarms.</param>
+        /// <param name="alarmFilter">The alarm alarmFilter to get alarms.</param>
         /// <returns>The list of alarms.</returns>
         public PagedResult<AlarmItemProvider> GetAlarms(AlarmFilter alarmFilter)
         {
@@ -102,7 +102,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Retrieves a collection of alarms for the specified object.
         /// </summary>
         /// <param name="objectId">The identifier of the object.</param>
-        /// <param name="alarmFilter">TThe alarm filter to get alarms.</param>
+        /// <param name="alarmFilter">TThe alarm alarmFilter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
         public PagedResult<AlarmItemProvider> GetAlarmsForAnObject(Guid objectId, AlarmFilter alarmFilter)
         {
@@ -113,7 +113,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Retrieves a collection of alarms for the specified network device.
         /// </summary>
         /// <param name="networkDeviceId">The identifier of the network device.</param>
-        /// <param name=""alarmFilter">TThe alarm filter to get alarms.</param>
+        /// <param name="alarmFilter">TThe alarm alarmFilter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
         public PagedResult<AlarmItemProvider> GetAlarmsForNetworkDevice(Guid networkDeviceId, AlarmFilter alarmFilter)
         {

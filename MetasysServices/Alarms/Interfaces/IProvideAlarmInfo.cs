@@ -46,21 +46,24 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Retrieves a collection of alarms for the specified object.
         /// </summary>
         /// <param name="objectId">The identifier of the object.</param>
+        /// <param name="alarmFilter">The filter to be applied to alarms list.</param>
         /// <returns>The list of alarms with details.</returns>
-        PagedResult<AlarmItemProvider> GetAlarmsForAnObject(Guid objectId, AlarmFilter alarmFilter);             
+        PagedResult<AlarmItemProvider> GetAlarmsForAnObject(Guid objectId, AlarmFilter alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
         /// </summary>
         /// <param name="objectId">The identifier of the object.</param>
+        /// <param name="alarmFilter">The filter to be applied to alarms list.</param>
         /// <returns>The list of alarms with details.</returns>
         /// <inheritdoc cref="AlarmInfoProvider.GetAlarmsForAnObject(Guid, AlarmFilter)"/> 
-		Task<PagedResult<AlarmItemProvider>> GetAlarmsForAnObjectAsync(Guid objectId, AlarmFilter alarmFilter);
+        Task<PagedResult<AlarmItemProvider>> GetAlarmsForAnObjectAsync(Guid objectId, AlarmFilter alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
         /// </summary>
         /// <param name="networkDeviceId">The identifier of the network device.</param>
+        /// <param name="alarmFilter">The filter to be applied to alarms list.</param>
         /// <returns>The list of alarms with details.</returns>
         PagedResult<AlarmItemProvider> GetAlarmsForNetworkDevice(Guid networkDeviceId, AlarmFilter alarmFilter);
 
@@ -68,6 +71,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Retrieves a collection of alarms for the specified object.
         /// </summary>
         /// <param name="networkDeviceId">The identifier of the network device.</param>
+        /// <param name="alarmFilter">The filter to be applied to alarms list.</param>
         /// <returns>The list of alarms with details.</returns>
         /// <inheritdoc cref="AlarmInfoProvider.GetAlarmsForNetworkDevice(Guid, AlarmFilter)"/>
 		Task<PagedResult<AlarmItemProvider>> GetAlarmsForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter alarmFilter);
