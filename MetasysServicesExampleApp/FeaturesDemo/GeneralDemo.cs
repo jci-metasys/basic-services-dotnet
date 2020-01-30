@@ -35,6 +35,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
             List<Guid> ids = new List<Guid>() { id1, id2 };
             #endregion
+
             #region ReadProperty
 
             Console.WriteLine("\n\nReadProperty...");
@@ -178,6 +179,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("Sent successfully.");
 
             #endregion
+
             #region GetNetworkDevices
 
             Console.WriteLine("\n\nGetNetworkDevices...");

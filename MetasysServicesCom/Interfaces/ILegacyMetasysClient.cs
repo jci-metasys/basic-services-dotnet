@@ -18,6 +18,14 @@ namespace JohnsonControls.Metasys.ComServices
         IComAccessToken TryLogin(string username, string password, bool refresh = true);
 
         /// <summary>
+        /// Requests a new access token from the server before the current token expires.
+        /// </summary>
+        /// <returns>Access Token.</returns>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysTokenException"></exception>
+        IComAccessToken Refresh();
+
+        /// <summary>
         /// Read one attribute value given the Guid of the object.
         /// </summary>
         IComVariant ReadProperty(string id, string attributeName);
@@ -79,9 +87,24 @@ namespace JohnsonControls.Metasys.ComServices
         object GetSpaceTypes();
 
         /// <summary>
+        ///  Gets all Equipment for the given space
+        /// </summary>
+        /// <param name="spaceId"></param>
+        /// <returns></returns>
+        object GetSpaceEquipment(string spaceId);
+
+        /// <summary>
         /// Gets all network devices.
         /// </summary>
         object GetEquipment();
+
+        /// <summary>
+        /// Gets all points for the given Equipment
+        /// </summary>
+        /// <param name="equipmentId"></param>
+        /// <returns></returns>
+        object GetEquipmentPoints(string equipmentId);
+
 
         /// <summary>
         /// Retrieves the specified alarm.

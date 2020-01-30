@@ -83,9 +83,5 @@ namespace MetasysServicesExampleApp
                     return true;
             }
         }
-
-       
-
-        
     }
 }
