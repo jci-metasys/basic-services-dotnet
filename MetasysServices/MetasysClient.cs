@@ -57,6 +57,11 @@ namespace JohnsonControls.Metasys.BasicServices
 		public  IProvideAlarmInfo Alarms { get; set; }
 
         /// <summary>
+        /// Local instance of Audits service.
+        /// </summary>
+        public IProvideAuditInfo Audits { get; set; }
+
+        /// <summary>
         /// Creates a new MetasysClient.
         /// </summary>
         /// <remarks>
@@ -93,8 +98,9 @@ namespace JohnsonControls.Metasys.BasicServices
                     .AppendPathSegments("api", version));
             }
             // Init related services
-            Trends = new TrendsServiceProvider(Client);   
-			Alarms = new AlarmInfoProvider(Client);			
+            Trends = new TrendsServiceProvider(Client);
+            Alarms = new AlarmInfoProvider(Client);
+            Audits = new AuditInfoProvider(Client);
         }
 
         /// <summary>
