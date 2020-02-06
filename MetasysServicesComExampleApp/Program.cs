@@ -70,6 +70,9 @@ namespace MetasysServicesComExampleApp
                     new IComTrendsDemo(legacyClient).Run();
                     return true;
                 case "7":
+                    new IComAuditsDemo(legacyClient).Run();
+                    return true;
+                case "8":
                     return false;
                 default:
                     return true;
