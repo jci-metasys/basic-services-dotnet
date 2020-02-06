@@ -100,10 +100,10 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 OriginApplications = args[2],
                 ClassLevels = args[3],
                 ActionTypes = args[4],
-                ExcludeDiscarded = !string.IsNullOrEmpty(args[6]) ? Convert.ToBoolean(args[6]) : false,
-                Page = args[9].ToLower() != "null" ? Convert.ToInt32(args[9]) : 0,
-                PageSize = args[10].ToLower() != "null" ? Convert.ToInt32(args[10]) : 0,
-                Sort = args[11]
+                ExcludeDiscarded = !string.IsNullOrEmpty(args[5]) ? Convert.ToBoolean(args[5]) : false,
+                Page = args[6].ToLower() != "null" ? Convert.ToInt32(args[6]) : 0,
+                PageSize = args[7].ToLower() != "null" ? Convert.ToInt32(args[7]) : 0,
+                Sort = args[8]
             };
             return auditFilter;
         }
