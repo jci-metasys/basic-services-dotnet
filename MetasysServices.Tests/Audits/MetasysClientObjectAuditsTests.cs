@@ -114,7 +114,9 @@ namespace MetasysServices.Tests
         [Test]
         public void TestObjectAuditMissingValuesThrowsException()
         {
-            string audit = string.Concat("{", "\"id\": \"", mockid, "\",");
+            string audit = string.Concat("{",
+               "\"id\": \"", mockid, "\",",
+               "\"typeUrl\": \"https://hostname/api/v2/enumsets/501/members/7\"}");
             var response = @"{
             ""total"": 1,
             ""next"": null,
