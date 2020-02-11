@@ -101,19 +101,19 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
 
         private static ComAuditFilter ReadUserInput(string[] args)
         {
-            DateTime st = DateTime.Parse(args[0], null, DateTimeStyles.AssumeUniversal);
-            DateTime et = DateTime.Parse(args[1], null, DateTimeStyles.AssumeUniversal);
+            DateTime startTime = DateTime.Parse(args[0], null, DateTimeStyles.AssumeUniversal);
+            DateTime endTime = DateTime.Parse(args[1], null, DateTimeStyles.AssumeUniversal);
 
             ComAuditFilter auditFilter = new ComAuditFilter
             {
-                StartTime = st.ToString(),
-                EndTime = et.ToString(),
+                StartTime = startTime.ToString(),
+                EndTime = endTime.ToString(),
                 OriginApplications = args[2],
                 ClassLevels = args[3],
                 ActionTypes = args[4],
                 ExcludeDiscarded = !string.IsNullOrEmpty(args[5]) ? Convert.ToBoolean(args[5]) : false,
-                Page = args[6].ToLower() != "null" ? Convert.ToInt32(args[6]) : 0,
-                PageSize = args[7].ToLower() != "null" ? Convert.ToInt32(args[7]) : 0,
+                Page = args[6],
+                PageSize = args[7],
                 Sort = args[8]
             };
             return auditFilter;

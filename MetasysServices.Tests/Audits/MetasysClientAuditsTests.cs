@@ -91,7 +91,9 @@ namespace MetasysServices.Tests
         [Test]
         public void TestAuditMissingValuesThrowsException()
         {
-            string Audit = string.Concat("{", "\"id\": \"", mockid, "\",");
+            string Audit = string.Concat("{",
+               "\"id\": \"", mockid, "\",",
+               "\"typeUrl\": \"https://hostname/api/v2/enumsets/501/members/7\"}");
             var response = @"{
             ""total"": 1,
             ""next"": null,
@@ -101,8 +103,7 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            var e = Assert.Throws<MetasysObjectException>(() =>
-                client.Audits.GetAudits(new AuditFilter { }));
+            var e = Assert.Throws<MetasysObjectException>(() => client.Audits.GetAudits(new AuditFilter { }));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits")
                 .WithVerb(HttpMethod.Get)
@@ -115,8 +116,7 @@ namespace MetasysServices.Tests
         {
             httpTest.RespondWith("Unauthorized", 401);
 
-            var e = Assert.Throws<MetasysHttpException>(() =>
-                client.Audits.GetAudits(new AuditFilter { }));
+            var e = Assert.Throws<MetasysHttpException>(() => client.Audits.GetAudits(new AuditFilter { }));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits")
                 .WithVerb(HttpMethod.Get)
