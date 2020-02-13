@@ -17,8 +17,6 @@ namespace JohnsonControls.Metasys.BasicServices
     {
         /// <summary>The http client.</summary>
         protected IFlurlClient Client;
-        private readonly ILog logger;
-        private ILogFactory logFactory;
 
         /// <summary>
         /// Empty constructor.
@@ -33,7 +31,6 @@ namespace JohnsonControls.Metasys.BasicServices
         public BasicServiceProvider(IFlurlClient client)
         {
             Client = client;
-            //logger = logFactory.CreateLogger("MetasysService.Logging");
         }
 
         /// <summary>
@@ -113,7 +110,7 @@ namespace JohnsonControls.Metasys.BasicServices
                         {
                             throw new MetasysObjectException(response.ToString(), null);
                         }
-                        var objId = ParseObjectIdentifier(item["id"]);                      
+                        var objId = ParseObjectIdentifier(item["id"]);
                         children = await GetObjectChildrenAsync(objId, null, levels - 1).ConfigureAwait(false);
                     }
                     objects.Add(new TreeObject { Item = item, Children = children });
@@ -184,40 +181,30 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpNotFoundException"></exception>
         protected async Task<JToken> GetRequestAsync(string resource, Dictionary<string, string> parameters = null, params object[] pathSegments)
         {
-           //logger.Info("Get request async for " + resource);
 
             JToken response = null;
+            // Create URL with base resource
+            Url url = new Url(resource);
+            // Concatenate segments with base resource url 
+            url.AppendPathSegments(pathSegments);
+            // Set query parameters according to the input dictionary
+            if (parameters != null)
+            {
+                foreach (var p in parameters)
+                {
+                    url.SetQueryParam(p.Key, p.Value);
+                }
+            }
 
             try
             {
-                // Create URL with base resource
-                Url url = new Url(resource);
-                // Concatenate segments with base resource url 
-                url.AppendPathSegments(pathSegments);
-                // Set query parameters according to the input dictionary
-                if (parameters != null)
-                {
-                    foreach (var p in parameters)
-                    {
-                        url.SetQueryParam(p.Key, p.Value);
-                    }
-                }
-
-                try
-                {
-                    response = await Client.Request(url)
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
-                }
-                catch (FlurlHttpException e)
-                {
-                    ThrowHttpException(e);
-                }
+                response = await Client.Request(url)
+                .GetJsonAsync<JToken>()
+                .ConfigureAwait(false);
             }
-            catch (Exception exception)
+            catch (FlurlHttpException e)
             {
-              //logger.Error("Error while fetching request " + resource, exception);
-                throw;
+                ThrowHttpException(e);
             }
             return response;
         }
@@ -267,7 +254,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 hasNext = false;
                 // Just overwrite page parameter                 
-                parameters["page"]=page.ToString();
+                parameters["page"] = page.ToString();
                 var response = await GetPagedResultsAsync<JToken>(resource, parameters, pathSegments).ConfigureAwait(false);
                 var total = response.Total;
                 if (total > 0)

@@ -4,7 +4,7 @@
 
 #define MyAppName "Metasys Services COM"
 #define MyAppShortName "MetasysServicesCOM"
-#define MyAppVersion "3.0.0"
+#define MyAppVersion "3.1.0"
 #define MyAppPublisher "Johnson Controls"
 
 [Setup]
