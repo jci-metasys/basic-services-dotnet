@@ -15,7 +15,6 @@ For versioning information see the [changelog](CHANGELOG.md).
   - [Excel and Visual Basic for Applications (VBA)](#excel-and-visual-basic-for-applications-vba)
 - [Usage (.NET)](#usage-net)
   - [Creating a Client](#creating-a-client)
-      - [WARNING: You should not ignore certificate errors on a production site. Doing so puts your server at risk of a man-in-the-middle attack.](#warning-you-should-not-ignore-certificate-errors-on-a-production-site-doing-so-puts-your-server-at-risk-of-a-man-in-the-middle-attack)
   - [Login and Access Tokens](#login-and-access-tokens)
   - [Get an Object Id](#get-an-object-id)
   - [Get a Property](#get-a-property)
@@ -29,7 +28,6 @@ For versioning information see the [changelog](CHANGELOG.md).
   - [Audits](#audits)
 - [Usage (COM)](#usage-com)
   - [Creating a Client](#creating-a-client-1)
-      - [WARNING: You should not ignore certificate errors on a production site. Doing so puts your server at risk of a man-in-the-middle attack.](#warning-you-should-not-ignore-certificate-errors-on-a-production-site-doing-so-puts-your-server-at-risk-of-a-man-in-the-middle-attack-1)
   - [Login and Access Tokens](#login-and-access-tokens-1)
   - [Get an Object Id](#get-an-object-id-1)
   - [Get a Property](#get-a-property-1)
@@ -117,8 +115,10 @@ var client = new MetasysClient("hostname");
 
 There are three optional parameters when creating a new client:
 
-- ignoreCertificateErrors: If your server does not have a valid certificate the MetasysClient will not behave as expected and will likely block the connection. Setting the ignoreCertificateErrors = true will ignore this error and make an insecure connection with the server. To avoid this problem ensure the Metasys server has a valid certificate.
-  ##### WARNING: You should not ignore certificate errors on a production site. Doing so puts your server at risk of a man-in-the-middle attack.
+- ignoreCertificateErrors: If your server does not have a valid certificate the MetasysClient will not behave as expected and will likely block the connection. Setting the ignoreCertificateErrors = true will ignore this error and make an insecure connection with the server. To avoid this problem ensure the Metasys server has a valid certificate.  
+  
+  **WARNING: You should not ignore certificate errors on a production site. Doing so puts your server at risk of a man-in-the-middle attack.**  
+
 - apiVersion: If your server is not a current 10.1 Metasys server or later this SDK will not function correctly. The version parameter takes in an ApiVersion enumeration value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is V2.
 - cultureInfo: To set the language for localization specify the target culture with a CultureInfo object. The default culture is en-US.
 
@@ -415,8 +415,10 @@ Set client = clientFactory.GetLegacyClient("host")
 ```
 There are three optional parameters when creating a new client:
 
-- ignoreCertificateErrors: If your server does not have a valid certificate the MetasysClient will not behave as expected and will likely block the connection. Setting the ignoreCertificateErrors = true will ignore this error and make an insecure connection with the server. To avoid this problem ensure the Metasys server has a valid certificate.
-  ##### WARNING: You should not ignore certificate errors on a production site. Doing so puts your server at risk of a man-in-the-middle attack.
+- ignoreCertificateErrors: If your server does not have a valid certificate the MetasysClient will not behave as expected and will likely block the connection. Setting the ignoreCertificateErrors = true will ignore this error and make an insecure connection with the server. To avoid this problem ensure the Metasys server has a valid certificate.  
+  
+  **WARNING: You should not ignore certificate errors on a production site. Doing so puts your server at risk of a man-in-the-middle attack.**
+  
 - apiVersion: If your server is not a current 10.1 Metasys server or later this SDK will not function correctly. The version parameter takes in an ApiVersion string value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is V2.
 - cultureInfo: To set the language for localization specify the target culture with the ISO Language Code string. The default culture is en-US.
 
