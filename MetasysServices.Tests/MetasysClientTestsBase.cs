@@ -125,12 +125,12 @@ namespace MetasysServices.Tests
                 },
                 ""parameters"": [],
                 ""errorString"": null,
-                ""user"": ""MetasysSysAgent"",
+                ""user"": ""username"",
                 ""signature"": null,
                 ""annotationsUrl"": ""https://hostname/api/v2/audits/1082c7f8-7e98-441d-8965-c5737e7cc752/annotations"",
                 ""legacy"": {
-                    ""fullyQualifiedItemReference"": ""Win2016-VM2:Win2016-VM2"",
-                    ""itemName"": ""Win2016-VM2"",
+                    ""fullyQualifiedItemReference"": ""hostname:hostname"",
+                    ""itemName"": ""hostname"",
                     ""classLevelUrl"": ""https://hostname/api/v2/enumsets/568/members/1"",
                     ""originApplicationUrl"": ""https://hostname/api/v2/enumsets/578/members/6"",
                     ""descriptionUrl"": ""https://hostname/api/v2/enumsets/580/members/41""
