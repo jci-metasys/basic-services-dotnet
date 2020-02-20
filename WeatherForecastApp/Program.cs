@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.BasicServices.Utils;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
 
@@ -14,24 +15,33 @@ namespace WeatherForecastApp
             // Add support for JSON Config File
             IConfiguration config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("AppSettings.json")
+            .AddJsonFile("AppSettings.json", optional: false, reloadOnChange:true)
             .Build();
-            // Read parameters from Metasys
-            var hostname = config.GetSection("Metasys:hostname").Value;
-            var username = config.GetSection("Metasys:username").Value;            
-            var password = config.GetSection("Metasys:password").Value;            
-            MetasysClient metasysClient = new MetasysClient(hostname);
-            metasysClient.TryLogin(username, password);
-            // Get parent object of Weather Forecast to retrieve related children
-            Guid parentObjectId = metasysClient.GetObjectIdentifier(config.GetSection("Metasys:WeatherForecast:ParentFqr").Value);
+            // Read hostname from credential manager first
+            var hostnameTarget = config.GetSection("CredentialManager:Targets:MetasysServer").Value;
+            // Hostname is stored in the Credential Manager using password field
+            var secureHostname = CredentialUtil.GetCredential(hostnameTarget);
+            MetasysClient metasysClient = new MetasysClient(CredentialUtil.convertToUnSecureString(secureHostname.Password));
+            // Retrieve Metasys Credentials to login
+            var credTarget = config.GetSection("CredentialManager:Targets:MetasysCredentials").Value;
+            // Use TryLogin overload that accepts Credential Manager Target
+            metasysClient.TryLogin(credTarget);
+            // Forecast container target is securely stored in Credential manager
+            var containerTarget = config.GetSection("CredentialManager:Targets:ForecastContainer").Value;
+            var secureContainer = CredentialUtil.GetCredential(containerTarget);
+            // Get parent object of Weather Forecast to retrieve related children (securely stored in Credential Manager)
+            Guid parentObjectId = metasysClient.GetObjectIdentifier(CredentialUtil.convertToUnSecureString(secureContainer.Password));
             IEnumerable<MetasysObject> weatherForecast = metasysClient.GetObjects(parentObjectId, 1);
             // Retrieve latitude and longitude to get weather forecast
             MetasysObject latitudePoint = weatherForecast.Where(w => w.Name == "Latitude").FirstOrDefault();
             MetasysObject longitudePoint = weatherForecast.Where(w => w.Name == "Longitude").FirstOrDefault();
             double latitude = metasysClient.ReadProperty(latitudePoint.Id, "presentValue").NumericValue;
             double longitude = metasysClient.ReadProperty(longitudePoint.Id, "presentValue").NumericValue;
-            // Get Next Five Days forecast every 3 hours
-            OpenWeatherMapClient weatherMapclient = new OpenWeatherMapClient(config.GetSection("OpenWeatherMap:ApiKey").Value);
+            // Forecast API key is securely stored in Credential manager
+            var apiKeyTarget = config.GetSection("CredentialManager:Targets:OpenWeather").Value;
+            var secureApiKey = CredentialUtil.GetCredential(apiKeyTarget);
+            // Get Next Five Days forecast every 3 hours           
+            OpenWeatherMapClient weatherMapclient = new OpenWeatherMapClient(CredentialUtil.convertToUnSecureString(secureApiKey.Password));
             ForecastResult forecastResult = weatherMapclient.GetForecast(latitude, longitude).GetAwaiter().GetResult();
             // Get the closest forecast to be written
             Forecast forecast = forecastResult.list.First();

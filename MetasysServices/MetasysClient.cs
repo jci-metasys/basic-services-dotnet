@@ -10,6 +10,7 @@ using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using JohnsonControls.Metasys.BasicServices.Utils;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -1138,6 +1139,27 @@ namespace JohnsonControls.Metasys.BasicServices
             return toMetasysObject(objects);
         }
 
+        /// <summary>
+        /// Attempts to login to the given host using Credential Manager and retrieve an access token.
+        /// </summary>
+        /// <param name="credManagerTarget">The Credential Manager target where to pick the credentials.</param>
+        /// <remarks> This method can be overridden by extended class with other Credential Manager implementations. </remarks>
+        public virtual AccessToken TryLogin(string credManagerTarget, bool refresh = true)
+        {
+            return TryLoginAsync(credManagerTarget, refresh).GetAwaiter().GetResult();
+        }
 
+        /// <summary>
+        /// Attempts to login to the given host using Credential Manager and retrieve an access token asynchronously.
+        /// </summary>
+        /// <param name="credManagerTarget">The Credential Manager target where to pick the credentials.</param>
+        /// <remarks> This method can be overridden by extended class with other Credential Manager implementations. </remarks>
+        public virtual async Task<AccessToken> TryLoginAsync(string credManagerTarget, bool refresh = true)
+        {
+            // Retrieve credentials first
+            var credentials = CredentialUtil.GetCredential(credManagerTarget);
+            // Get the control back to TryLogin method
+            return await TryLoginAsync(CredentialUtil.convertToUnSecureString(credentials.Username), CredentialUtil.convertToUnSecureString(credentials.Password), refresh);
+        }
     }
 }
