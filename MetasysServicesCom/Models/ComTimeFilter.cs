@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using JohnsonControls.Metasys.ComServices.Interfaces;
 
 namespace JohnsonControls.Metasys.ComServices
 {

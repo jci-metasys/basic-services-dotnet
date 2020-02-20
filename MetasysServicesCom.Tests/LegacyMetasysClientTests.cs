@@ -1,6 +1,5 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
 using JohnsonControls.Metasys.ComServices;
-using JohnsonControls.Metasys.ComServices.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 

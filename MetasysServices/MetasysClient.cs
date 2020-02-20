@@ -1144,9 +1144,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="credManagerTarget">The Credential Manager target where to pick the credentials.</param>
         /// <remarks> This method can be overridden by extended class with other Credential Manager implementations. </remarks>
-        public virtual AccessToken TryLogin(string credManagerTarget, bool refresh = true)
+        public virtual AccessToken TryLogin(string credManTarget, bool refresh = true)
         {
-            return TryLoginAsync(credManagerTarget, refresh).GetAwaiter().GetResult();
+            return TryLoginAsync(credManTarget, refresh).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -1154,10 +1154,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="credManagerTarget">The Credential Manager target where to pick the credentials.</param>
         /// <remarks> This method can be overridden by extended class with other Credential Manager implementations. </remarks>
-        public virtual async Task<AccessToken> TryLoginAsync(string credManagerTarget, bool refresh = true)
+        public virtual async Task<AccessToken> TryLoginAsync(string credManTarget, bool refresh = true)
         {
             // Retrieve credentials first
-            var credentials = CredentialUtil.GetCredential(credManagerTarget);
+            var credentials = CredentialUtil.GetCredential(credManTarget);
             // Get the control back to TryLogin method
             return await TryLoginAsync(CredentialUtil.convertToUnSecureString(credentials.Username), CredentialUtil.convertToUnSecureString(credentials.Password), refresh);
         }

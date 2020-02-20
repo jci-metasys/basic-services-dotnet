@@ -1,5 +1,4 @@
-﻿using JohnsonControls.Metasys.ComServices.Interfaces;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace JohnsonControls.Metasys.ComServices.Models
 {

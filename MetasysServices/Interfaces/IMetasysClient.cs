@@ -220,11 +220,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Attempts to login to the given host using Credential Manager and retrieve an access token.
         /// </summary>
-        AccessToken TryLogin(string credManagerTarget, bool refresh = true);
+        AccessToken TryLogin(string credManTarget, bool refresh = true);
 
         /// <summary>
         /// Attempts to login to the given host using Credential Manager and retrieve an access token asynchronously.
         /// </summary>
-        Task<AccessToken> TryLoginAsync(string credManagerTarget, bool refresh = true);
+        Task<AccessToken> TryLoginAsync(string credManTarget, bool refresh = true);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using JohnsonControls.Metasys.BasicServices;
-using JohnsonControls.Metasys.ComServices;
-using JohnsonControls.Metasys.ComServices.Interfaces;
+using JohnsonControls.Metasys.BasicServices.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -409,5 +408,12 @@ namespace JohnsonControls.Metasys.ComServices
             var auditItems = Client.Audits.GetAuditsForAnObject(guidObjectId, mapAuditFilterForAnObject);
             return Mapper.Map<IComPagedResult>(auditItems);
         }
+
+        /// <inheritdoc/>
+        public IComAccessToken TryLoginWithCredMan(string target, bool refresh = true)
+        {
+            return Mapper.Map<IComAccessToken>(Client.TryLogin(target, refresh));
+        }
+       
     }
 }

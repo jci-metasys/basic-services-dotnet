@@ -14,11 +14,20 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Create an instance of Legacy Client according to the provided parameters.
         /// </summary>
+        /// <remarks>
+        /// Ensure compatibility with languages that don't support constructors with parameters, e.g. VBA.
+        /// </remarks>
         /// <param name="hostname"></param>
         /// <param name="ignoreCertificateErrors"></param>
         /// <param name="version"></param>
         /// <param name="cultureInfo"></param>
-        /// <returns></returns>
+        /// <returns>LegacyMetasysClient Instance</returns>
         ILegacyMetasysClient GetLegacyClient(string hostname, bool ignoreCertificateErrors = false, string version = "v2", string cultureInfo = null);
+        /// <summary>
+        /// Retrieve a Credential Manager object for the given target.
+        /// </summary>
+        /// <param name="credManagerTarget">Target to read from the Credential Manager.</param>
+        /// <returns></returns>
+        IComUserPass GetCredentials(string credManagerTarget);
     }
 }

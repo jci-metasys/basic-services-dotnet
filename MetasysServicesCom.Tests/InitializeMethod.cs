@@ -2,7 +2,6 @@
 using Flurl.Http.Testing;
 using JohnsonControls.Metasys.BasicServices;
 using JohnsonControls.Metasys.ComServices;
-using JohnsonControls.Metasys.ComServices.Interfaces;
 
 namespace MetasysServicesCom.Tests
 {

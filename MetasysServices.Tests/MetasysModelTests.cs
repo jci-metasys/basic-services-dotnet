@@ -69,7 +69,7 @@ namespace MetasysServices.Tests
                     "}],",
                 "\"minItems\": 6,",
                 "\"maxItems\": 6 }");
-            string commandCopy = String.Copy(command);
+            string commandCopy = command.Clone().ToString();
             Command cmd = new Command(JToken.Parse(command), testCulture);
             Command cmdCopy = new Command(JToken.Parse(commandCopy), testCulture);
             
@@ -93,7 +93,7 @@ namespace MetasysServices.Tests
                 "\"name\": \"name2\",",
                 "\"description\": \"description2\",",
                 "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
-            string objCopy = String.Copy(obj);
+            string objCopy = obj.Clone().ToString();
             MetasysObject child = new MetasysObject(JToken.Parse(obj2), null, testCulture);
             MetasysObject childCopy = new MetasysObject(JToken.Parse(obj2), null, testCulture);
             List<MetasysObject> childlist = new List<MetasysObject>() { child };
@@ -139,7 +139,7 @@ namespace MetasysServices.Tests
                 "\"value\": 23,",
                 "\"reliability\": \"", Reliable, "\",",
                 "\"priority\": \"", PriorityNone, "\"}");
-            string dataCopy = String.Copy(data);
+            string dataCopy = data.Clone().ToString();
 
             Variant v = new Variant(id, JToken.Parse(data), "presentValue", testCulture);
             Variant vCopy = new Variant(idCopy, JToken.Parse(dataCopy), "presentValue", testCulture);

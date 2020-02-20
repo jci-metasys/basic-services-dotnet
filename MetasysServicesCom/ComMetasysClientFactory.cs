@@ -1,4 +1,5 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.BasicServices.Utils;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,19 +16,9 @@ namespace JohnsonControls.Metasys.ComServices
     [ComVisible(true)]
     [Guid("47a9cdca-afa0-4513-b116-0482e939a7c3")]
     [ClassInterface(ClassInterfaceType.None)]
-    public class ComMetasysClientFactory:IComMetasysClientFactory
+    public class ComMetasysClientFactory : IComMetasysClientFactory
     {
-        /// <summary>
-        /// Create an instance of Legacy Client according to the provided parameters.
-        /// </summary>
-        /// <remarks>
-        /// Ensure compatibility with languages that don't support constructors with parameters, e.g. VBA.
-        /// </remarks>
-        /// <param name="hostname"></param>
-        /// <param name="ignoreCertificateErrors"></param>
-        /// <param name="version"></param>
-        /// <param name="cultureInfo"></param>
-        /// <returns>LegacyMetasysClientInstance</returns>
+        ///<inheritdoc/>
         public ILegacyMetasysClient GetLegacyClient(string hostname, bool ignoreCertificateErrors = false, string version = "v2", string cultureInfo = null)
         {
             // Comparison is always made in lower case
@@ -36,7 +27,7 @@ namespace JohnsonControls.Metasys.ComServices
                 // Something went wrong while parsing API Version
                 throw new MetasysUnsupportedApiVersion(version);
             }
-            CultureInfo culture=null;
+            CultureInfo culture = null;
             // Init culture parsing string parameters
             if (cultureInfo != null)
             {
@@ -44,6 +35,17 @@ namespace JohnsonControls.Metasys.ComServices
             }
             // Create instance with the given parameters
             return new LegacyMetasysClient(new MetasysClient(hostname, ignoreCertificateErrors, apiVersion, culture));
+        }
+
+        /// <inheritdoc/>
+        public IComUserPass GetCredentials(string credManagerTarget)
+        {
+            var cred = CredentialUtil.GetCredential(credManagerTarget);
+            return new ComUserPass
+            {
+                Username = CredentialUtil.convertToUnSecureString(cred.Username),
+                Password = CredentialUtil.convertToUnSecureString(cred.Password)
+            };
         }
     }
 }

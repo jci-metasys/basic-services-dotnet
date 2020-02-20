@@ -18,6 +18,14 @@ namespace JohnsonControls.Metasys.ComServices
         IComAccessToken TryLogin(string username, string password, bool refresh = true);
 
         /// <summary>
+        /// Attempts to login to the given host, using Credential Manager target.
+        /// </summary>
+        /// <param name="target"></param>       
+        /// <param name="refresh"></param>       
+        /// <returns></returns>
+        IComAccessToken TryLoginWithCredMan(string target, bool refresh = true);              
+
+        /// <summary>
         /// Requests a new access token from the server before the current token expires.
         /// </summary>
         /// <returns>Access Token.</returns>
