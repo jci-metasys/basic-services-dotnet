@@ -131,13 +131,23 @@ var client = new MetasysClient(hostname, true, ApiVersion.V2, culture);
 
 ### Login and Access Tokens
 
-After creating the client, to login use the TryLogin method which takes a username, password, and an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true.
+After creating the client, to login use the TryLogin method.
+The signature has two overloads: the first uses the Credential Manager target to read the credentials, whilst the second takes a username and password.
+Both signatures take an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true. See more information [here](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager) on how to use Credential Manager.
+
+ **Notice: when developing an application that uses a system account always logged without user input, the preferred way to login is to store the username and password in the Credential Manager vault.**
 
 ```csharp
-// Automatically refresh token
+// Read username/password from Credential Manager vault and automatically refresh token
+client.TryLogin("vault-target");
+
+// Read username/password from Credential Manager vault and do not automatically refresh token
+client.TryLogin("vault-target", false);
+
+// Automatically refresh token using plain credentials
 client.TryLogin("username", "password");
 
-// Do not automatically refresh token
+// Do not automatically refresh token using plain credentials
 client.TryLogin("username", "password", false);
 ```
 
@@ -402,7 +412,7 @@ var objectAudits = client.Audits.GetAuditsForAnObject(objectId, auditFilter);
 ## Usage (COM)
 
 This section demonstrates how to use the LegacyMetasysClient to interact with your Metasys server from a VBA application.
-<!-- Download the sample project [here](https://github.com/metasys-server). -->
+Download the sample project [here](https://github.com/metasys-server).
 
 ### Creating a Client
 
@@ -429,13 +439,21 @@ Set client = clientFactory.GetLegacyClient("host", true, "V2", "it-IT")
 ```
 ### Login and Access Tokens
 
-After creating the client, to login use the TryLogin method which takes a username, password, and an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true.
+After creating the client, to login use the TryLogin method.
+The signature has two variants: the first (TryLoginWithCredMan) uses the Credential Manager target to read the credentials, whilst the second (TryLogin) takes a username and password.
+Both signatures take an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true. See more information [here](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager) on how to use Credential Manager.
+
+ **Notice: when developing an application that uses a system account always logged without user input, the preferred way to login is to store the username and password in the Credential Manager vault.**
 
 ```vb
 Dim token As IComAccessToken
-'Automatically refresh token
+'Read username/password from Credential Manager vault and automatically refresh token
+Set token = client.TryLogin("vault-target")
+'Read username/password from Credential Manager vault and do not automatically refresh token
+Set token = client.TryLogin("vault-target", false)
+'Automatically refresh token using plain credentials
 Set token = client.TryLogin("user", "password")
-'Do not automatically refresh token
+'Do not automatically refresh token using plain credentials
 Set token = client.TryLogin("user", "password", false)
 ```
 
