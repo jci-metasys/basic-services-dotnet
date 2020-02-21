@@ -412,7 +412,7 @@ var objectAudits = client.Audits.GetAuditsForAnObject(objectId, auditFilter);
 ## Usage (COM)
 
 This section demonstrates how to use the LegacyMetasysClient to interact with your Metasys server from a VBA application.
-Download the sample project [here](https://github.com/metasys-server).
+Download the Command Line sample project [here](https://github.com/metasys-server/basic-services-dotnet/tree/master/MetasysServicesComExampleApp) and finally the Excel App is available at this [link](https://github.com/metasys-server/basic-services-dotnet/blob/master/MetasysServicesComExampleApp/MetasysApiTest.xlsm).
 
 ### Creating a Client
 
