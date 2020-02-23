@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Reflection;
 using JohnsonControls.Metasys.ComServices;
 
 namespace MetasysServicesComExampleApp.FeaturesDemo
@@ -7,16 +8,18 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
     public class IComAuditsDemo
     {
         private ILegacyMetasysClient legacyClient;
+        private ComLogInitializer log;
 
         public IComAuditsDemo(ILegacyMetasysClient legacyClient)
         {
             this.legacyClient = legacyClient;
+            Type declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+            log = new ComLogInitializer(declaringType);
         }
         public void Run()
         {
-            try {
-                #region Audits
-
+            try
+            {
                 Console.WriteLine("Enter audit id to get audit details: ");
                 string inputAuditId = Console.ReadLine();
 
@@ -96,12 +99,13 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                     Console.WriteLine($"\n Id: {item.Id}, User: {item.User}, PreData: {item.PreData}, PostDate: {item.PostData}");
                 }
             }
-            catch (Exception) {
+            catch (Exception exception)
+            {
+                log.logger.Error(string.Format("An error occured while getting audit information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
 
             Console.ReadLine();
-            #endregion
         }
 
         private static ComAuditFilter ReadUserInput(string[] args)

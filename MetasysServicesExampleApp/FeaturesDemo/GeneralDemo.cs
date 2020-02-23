@@ -1,21 +1,25 @@
-﻿using JohnsonControls.Metasys.BasicServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using JohnsonControls.Metasys.BasicServices;
+using Microsoft.Extensions.Logging;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
     public class GeneralDemo
     {
         private MetasysClient client;
+        private LogInitializer<GeneralDemo> log;
+
         public GeneralDemo(MetasysClient client)
         {
             this.client = client;
+            log = new LogInitializer<GeneralDemo>();
         }
         public void Run()
         {
-            try {
+            try
+            {
                 #region GetObjectIdentifier
                 Console.WriteLine("\nIndicate the object you want to run this example code on.");
                 Console.Write("Enter the fully qualified reference of the object (Example: \"site:device/itemReference\"): ");
@@ -230,12 +234,13 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     Console.WriteLine("This object has no children.");
                 }
             }
-            catch (Exception) {
+            #endregion
+            catch (Exception exception)
+            {
+                log.logger.LogError(string.Format("An error occured while getting general information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
             Console.ReadLine();
-            #endregion 
-
         }
     }
 }

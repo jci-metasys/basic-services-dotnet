@@ -1,4 +1,5 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,13 +10,15 @@ namespace MetasysServicesExampleApp.FeaturesDemo
     public class AlarmsDemo
     {
         private MetasysClient client;
+        private LogInitializer<AlarmsDemo> log;
+        
         public AlarmsDemo(MetasysClient client)
         {
             this.client = client;
+            log = new LogInitializer<AlarmsDemo>();
         }
         public void Run()
         {
-            #region Alarms
             try {
                 Console.WriteLine("Enter alarm id to get alarm details: ");
                 string stringAlarmId = Console.ReadLine();
@@ -100,11 +103,11 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     Console.WriteLine("\nInvalid Input");
                 }
             }
-            catch (Exception) {
+            catch (Exception exception) {
+                log.logger.LogError(string.Format("An error occured while getting alarm information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
             Console.ReadLine();
-            #endregion
         }
 
         private static AlarmFilter ReadUserInput(string[] args)

@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComLogInitializer.cs" />
     <Compile Include="FeaturesDemo\IComAlarmsDemo.cs" />
     <Compile Include="FeaturesDemo\IComAuditsDemo.cs" />
     <Compile Include="FeaturesDemo\IComGeneralDemo.cs" />
