@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Reflection;
 using JohnsonControls.Metasys.ComServices;
 
 namespace MetasysServicesComExampleApp.FeaturesDemo
@@ -7,16 +7,19 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
     public class IComTrendsDemo
     {
         private ILegacyMetasysClient legacyClient;
+        private ComLogInitializer log;
 
         public IComTrendsDemo(ILegacyMetasysClient legacyClient)
         {
             this.legacyClient = legacyClient;
+            Type declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+            log = new ComLogInitializer(declaringType);
         }
 
         public void Run()
         {
-            #region Trend
-            try {
+            try
+            {
                 ComTimeFilter getDateTimeForTrend = new ComTimeFilter();
                 Console.WriteLine("\nIndicate the object you want to run this example code on.");
                 Console.Write("Enter the fully qualified reference of the object (Example: \"site:device/itemReference\"): ");
@@ -46,12 +49,13 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                     Console.WriteLine($"Value: {s.Value} Unit: {s.Unit} Timestamp: {s.Timestamp}");
                 }
             }
-            catch (Exception) {
+            catch (Exception exception)
+            {
+                log.logger.Error(string.Format("An error occured while getting trend information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
 
             Console.ReadLine();
-            #endregion
         }
 
         private ComTimeFilter ReadUserInputForTrends(string[] args)

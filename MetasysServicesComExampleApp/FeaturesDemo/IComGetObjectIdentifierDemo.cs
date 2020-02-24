@@ -1,6 +1,7 @@
 ﻿using JohnsonControls.Metasys.ComServices;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace MetasysServicesComExampleApp.FeaturesDemo
@@ -8,15 +9,19 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
     public class IComGetObjectIdentifierDemo
     {
         private ILegacyMetasysClient legacyClient;
+        private ComLogInitializer log;
 
         public IComGetObjectIdentifierDemo(ILegacyMetasysClient legacyClient)
         {
             this.legacyClient = legacyClient;
+            Type declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+            log = new ComLogInitializer(declaringType);
         }
 
         public void Run()
         {
-            try {
+            try
+            {
                 Console.WriteLine("\nIndicate the object you want to run this example code on.");
                 Console.Write("Enter the fully qualified reference of the object (Example: \"site:device/itemReference\"): ");
                 string object1 = Console.ReadLine();
@@ -35,7 +40,9 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 ids[0] = object1Id;
                 ids[1] = object2Id;
             }
-            catch (Exception) {
+            catch (Exception exception)
+            {
+                log.logger.Error(string.Format("An error occured while getting object identifier information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using JohnsonControls.Metasys.ComServices;
 
 namespace MetasysServicesComExampleApp.FeaturesDemo
@@ -8,16 +9,21 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
     public class IComGeneralDemo
     {
         private ILegacyMetasysClient legacyClient;
+        private ComLogInitializer log;
 
         public IComGeneralDemo(ILegacyMetasysClient legacyClient)
         {
             this.legacyClient = legacyClient;
+            Type declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+            log = new ComLogInitializer(declaringType);
         }
 
         public void Run()
         {
-            #region GetObjectIdentifier
-            try {
+            try
+            {
+                #region GetObjectIdentifier
+
                 Console.WriteLine("\n\nGetObjectIdentifier...");
 
                 Console.WriteLine("\nIndicate the object you want to run this example code on.");
@@ -214,12 +220,14 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                     Console.WriteLine("This object has no children.");
                 }
             }
-            catch (Exception) {
+            #endregion
+            catch (Exception exception)
+            {
+                log.logger.Error(string.Format("An error occured while getting general information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
 
             Console.ReadLine();
-            #endregion 
         }
     }
 }

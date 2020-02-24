@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using JohnsonControls.Metasys.BasicServices;
 using MetasysServicesExampleApp.FeaturesDemo;
+using Microsoft.Extensions.Logging;
 
 namespace MetasysServicesExampleApp
 {
@@ -11,37 +9,45 @@ namespace MetasysServicesExampleApp
     {
         static void Main(string[] args)
         {
+            var log = new LogInitializer<Program>();
             string connectionDetails;
-            if (args.Length != 3)
+            try
             {
-                Console.WriteLine("Please enter in your credentials in this format: {username} {password} {hostname}." +
-                    "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");                
-                connectionDetails = Console.ReadLine();
-                args = connectionDetails.Split(' ');
+                if (args.Length != 3)
+                {
+                    Console.WriteLine("Please enter in your credentials in this format: {username} {password} {hostname}." +
+                        "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
+                    connectionDetails = Console.ReadLine();
+                    args = connectionDetails.Split(' ');
+                }
+
+                var username = args[0];
+                var password = args[1];
+                var hostname = args[2];
+
+                #region Login
+                Console.WriteLine("Default culture is en_US. The culture for client translations can be changed in the code.");
+                // CultureInfo culture = new CultureInfo("en-US");
+
+                Console.WriteLine("\nLogging in...");
+                var client = new MetasysClient(hostname);
+                // var client = new MetasysClient(hostname, true); // Ignore Certificate Errors
+                // var client = new MetasysClient(hostname, false, ApiVersion.V2, culture);
+
+                var token = client.TryLogin(username, password);
+                Console.WriteLine($"Access token: {token.Token} expires {token.Expires}.");
+                #endregion
+
+                bool showMenu = true;
+                while (showMenu)
+                {
+                    showMenu = MainMenu(client);
+                }
             }
-
-            var username = args[0];
-            var password = args[1];
-            var hostname = args[2];      
-
-            #region Login
-            Console.WriteLine("Default culture is en_US. The culture for client translations can be changed in the code.");
-            // CultureInfo culture = new CultureInfo("en-US");
-
-            Console.WriteLine("\nLogging in...");
-            var client = new MetasysClient(hostname);
-            // var client = new MetasysClient(hostname, true); // Ignore Certificate Errors
-            // var client = new MetasysClient(hostname, false, ApiVersion.V2, culture);
-
-            var token = client.TryLogin(username, password);
-            Console.WriteLine($"Access token: {token.Token} expires {token.Expires}.");
-            #endregion
-
-            bool showMenu = true;
-            while (showMenu)
+            catch(Exception exception)
             {
-                showMenu = MainMenu(client);
-            }                                                                                                   
+                log.logger.LogError(string.Format("An error occured while login - {0}", exception.Message));
+            }
         }
 
         private static bool MainMenu(MetasysClient client)

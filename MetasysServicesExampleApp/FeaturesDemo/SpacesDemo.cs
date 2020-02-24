@@ -1,21 +1,23 @@
-﻿using JohnsonControls.Metasys.BasicServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using JohnsonControls.Metasys.BasicServices;
+using Microsoft.Extensions.Logging;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
     public class SpacesDemo
     {
         private MetasysClient client;
+        private LogInitializer<SpacesDemo> log;
+
         public SpacesDemo(MetasysClient client)
         {
             this.client = client;
+            log = new LogInitializer<SpacesDemo>();
         }
         public void Run()
         {
-            #region GetSpaces
             try {
                 Console.WriteLine("\n\nGetSpaceTypes...");
 
@@ -52,11 +54,11 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     Console.WriteLine($"\n{p.ShortName}: {p.Label}, {p.PresentValue?.StringValue}");
                 }
             }
-            catch (Exception) {
+            catch (Exception exception) {
+                log.logger.LogError(string.Format("An error occured while getting space information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
             Console.ReadLine();
-            #endregion
         }
     }
 }

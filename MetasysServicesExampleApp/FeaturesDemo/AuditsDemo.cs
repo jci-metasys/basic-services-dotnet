@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Globalization;
 using JohnsonControls.Metasys.BasicServices;
+using Microsoft.Extensions.Logging;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
     public class AuditsDemo
     {
         private MetasysClient client;
+        private LogInitializer<AuditsDemo> log;
+
         public AuditsDemo(MetasysClient client)
         {
             this.client = client;
+            log = new LogInitializer<AuditsDemo>();
         }
         public void Run()
         {
-            try {
-                #region Audits
-
+            try
+            {
                 Console.WriteLine("Enter audit id to get audit details: ");
                 string inputAuditId = Console.ReadLine();
 
@@ -88,13 +91,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     Console.WriteLine($"\n Id: {item.Id}, User: {item.User}, PreData: {item.PreData}, PostDate: {item.PostData}");
                 }
             }
-
-            catch (Exception) {
+            catch (Exception exception)
+            {
+                log.logger.LogError(string.Format("An error occured while getting audit information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
-                Console.ReadLine();
-           
-            #endregion
+            Console.ReadLine();
         }
 
         private static AuditFilter ReadUserInput(string[] args)

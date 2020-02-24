@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Reflection;
 using JohnsonControls.Metasys.ComServices;
 
 namespace MetasysServicesComExampleApp.FeaturesDemo
@@ -7,15 +8,17 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
     public class IComAlarmsDemo
     {
         private ILegacyMetasysClient legacyClient;
+        private ComLogInitializer log;
 
         public IComAlarmsDemo(ILegacyMetasysClient legacyClient)
         {
             this.legacyClient = legacyClient;
+            Type declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+            log = new ComLogInitializer(declaringType);
         }
 
         public void Run()
         {
-            #region Alarms
             try {
                 Console.WriteLine("Enter alarm id to get alarm details: ");
                 string alarmId = Console.ReadLine();
@@ -107,12 +110,12 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                     Console.WriteLine("\nInvalid Input");
                 }
             }
-            catch (Exception) {
+            catch (Exception exception) {
+                log.logger.Error(string.Format("An error occured while getting alarm information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
 
             Console.ReadLine();
-            #endregion
         }
 
         private static ComAlarmFilter ReadUserInput(string[] args)

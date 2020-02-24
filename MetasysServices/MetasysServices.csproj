@@ -33,6 +33,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="log4Net.config" />
     <None Remove="Resources\MetasysResources.en-US.resources" />
     <None Remove="Resources\MetasysResources.it-IT.resources" />
     <None Remove="Resources\MetasysResources.zh-CN.resources" />
@@ -49,6 +50,8 @@
 
   <ItemGroup>
     <PackageReference Include="CredentialManagement.Standard" Version="1.0.4" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Flurl" Version="2.8.2" />
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
@@ -57,6 +60,9 @@
   <ItemGroup>
     <Content Include="..\README.md">
       <Link>README.md</Link>
+    </Content>
+    <Content Include="log4Net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
