@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace JohnsonControls.Metasys.ComServices.Models
+namespace JohnsonControls.Metasys.ComServices
 {
     /// <summary>
     /// COM Command is a specialized structure that holds information about a Command.

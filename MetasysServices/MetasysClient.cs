@@ -1074,7 +1074,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
         {
-            var response = await GetAllAvailablePagesAsync("spaces", null, "equipment");
+            var response = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment");
             return toMetasysObject(response);
         }
 

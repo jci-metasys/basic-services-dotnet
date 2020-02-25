@@ -43,7 +43,9 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<MetasysObject, IComMetasysObject>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Children, opt => opt.MapFrom(src => Mapper.Map<IComMetasysObject[]>(src.Children)));
-                cfg.CreateMap<Variant, IComVariant>();
+                cfg.CreateMap<Variant, IComVariant>()
+                    // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
+                    .ForMember(dest => dest.ArrayValue, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.ArrayValue)));
                 cfg.CreateMap<VariantMultiple, IComVariantMultiple>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Variants, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.Variants)));
@@ -66,6 +68,7 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<PagedResult<AuditItemProvider>, IComPagedResult>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComProvideAuditItem[]>(src.Items)));
+                cfg.CreateMap<Point, IComPoint>();                  
             }).CreateMapper();
         }
 
@@ -293,8 +296,8 @@ namespace JohnsonControls.Metasys.ComServices
         public object GetSpaceEquipment(string spaceId)
         {
             Guid guid = new Guid(spaceId);
-            var res = Client.GetSpaceEquipment(guid).ToList();
-            return Mapper.Map<IComMetasysObjectType[]>(res);
+            var res = Client.GetSpaceEquipment(guid);
+            return Mapper.Map<IComMetasysObject[]>(res);
         }
 
         /// <summary>
@@ -317,8 +320,8 @@ namespace JohnsonControls.Metasys.ComServices
         public object GetEquipmentPoints(string equipmentId)
         {
             Guid guid = new Guid(equipmentId);
-            var res = Client.GetSpaceEquipment(guid).ToList();
-            return Mapper.Map<IComMetasysObject[]>(res);
+            var res = Client.GetEquipmentPoints(guid);
+            return Mapper.Map<IComPoint[]>(res);
         }
 
         /// <inheritdoc />

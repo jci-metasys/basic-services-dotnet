@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.0] - 2020-02-28
+
+### Added
+
+-Added support to Credential Manager for TryLogin method of MetasysClient 
+-Added support to Credential Manager for TryLoginWithCredMan method of LegacyMetasysClient.
+-Added CredentialUtil to retrieve/set user and passwords from the secure vault.
+-Added Log4Net support in MetasysClient and LegacyMetasysClient.
+-Runtime errors are now automatically written to a dedicated text file.
+
+### Fixed
+
+- Mapping with ComPoint in LegacyClient and SpaceEquipment method.
+
 ## [3.1.0] - 2020-02-13
 
 ### Added
