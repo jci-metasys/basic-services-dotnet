@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -17,12 +18,16 @@ namespace JohnsonControls.Metasys.BasicServices
     {
         /// <summary>The http client.</summary>
         protected IFlurlClient Client;
+        private LogInitializer<BasicServiceProvider> log;
 
         /// <summary>
         /// Empty constructor.
         /// </summary>
         /// <remarks> Assume Client is initialized by extended class.</remarks>
-        public BasicServiceProvider() { }
+        public BasicServiceProvider()
+        {
+            log = new LogInitializer<BasicServiceProvider>();
+        }
 
         /// <summary>
         /// Constructor for dedicated services with Flurl client initialization already performed.
@@ -281,18 +286,22 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (e.Call.Response != null && e.Call.Response.StatusCode == HttpStatusCode.NotFound)
             {
+                log.logger.LogError(string.Format("An error occured while getting Http Status Code- {0}", e.Message));
                 throw new MetasysHttpNotFoundException(e);
             }
             if (e.GetType() == typeof(Flurl.Http.FlurlParsingException))
             {
+                log.logger.LogError(string.Format("An error occured while parsing Flurl exception- {0}", e.Message));
                 throw new MetasysHttpParsingException((Flurl.Http.FlurlParsingException)e);
             }
             else if (e.GetType() == typeof(Flurl.Http.FlurlHttpTimeoutException))
             {
+                log.logger.LogError(string.Format("An error occured while getting timeout Exception in FlurlHttp- {0}", e.Message));
                 throw new MetasysHttpTimeoutException((Flurl.Http.FlurlHttpTimeoutException)e);
             }
             else
             {
+                log.logger.LogError(e.Message);
                 throw new MetasysHttpException(e);
             }
         }
