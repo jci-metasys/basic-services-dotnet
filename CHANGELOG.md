@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -Added CredentialUtil to retrieve/set user and passwords from the secure vault.
 -Added Log4Net support in MetasysClient and LegacyMetasysClient.
 -Runtime errors are now automatically written to a dedicated text file.
+-Added Log4Net support in Basic Services as a facility for the host application (see example apps for usage).
 
 ### Fixed
 

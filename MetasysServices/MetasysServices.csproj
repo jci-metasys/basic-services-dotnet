@@ -14,10 +14,12 @@
     <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
-    <PackageReleaseNotes>- Dedicated Service Provider for Audits.
-- Get Audits method with filter object.
-- Get Single Audit by guid method.
-- Get Audits for a specific object method.</PackageReleaseNotes>
+    <PackageReleaseNotes>This release adds enhanced security to the build and facility to troubleshoot issues:
+
+-Added support to Credential Manager for TryLogin method of MetasysClient 
+-Added support to Credential Manager for TryLoginWithCredMan method of LegacyMetasysClient.
+-Added CredentialUtil to retrieve/set user and passwords from the secure vault.
+-Added Log4Net support in Basic Services as a facility for the host application.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Version>3.2.0</Version>
     <UserSecretsId>9ce3a40a-a513-4155-b381-e66883c5bdf6</UserSecretsId>
