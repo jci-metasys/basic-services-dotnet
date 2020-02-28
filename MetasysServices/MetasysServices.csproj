@@ -19,7 +19,7 @@
 - Get Single Audit by guid method.
 - Get Audits for a specific object method.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>3.1.0</Version>
+    <Version>3.2.0</Version>
     <UserSecretsId>9ce3a40a-a513-4155-b381-e66883c5bdf6</UserSecretsId>
   </PropertyGroup>
 

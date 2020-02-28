@@ -15,15 +15,23 @@ namespace MetasysServicesExampleApp
             {
                 if (args.Length != 3)
                 {
-                    Console.WriteLine("Please enter in your credentials in this format: {username} {password} {hostname}." +
+                    Console.WriteLine("Please enter in your credentials in this format: {username} {password} {hostname} or as an alternative you can specify just the Credential Manager target and the hostname in this way {credmantarget} {hostname}." +
                         "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
                     connectionDetails = Console.ReadLine();
                     args = connectionDetails.Split(' ');
                 }
-
-                var username = args[0];
-                var password = args[1];
-                var hostname = args[2];
+                string username=null, password=null, hostname, credManTarget=null;
+                if (args.Length > 2)
+                {
+                    username = args[0];
+                    password = args[1];
+                    hostname = args[2];
+                }
+                else
+                {                
+                     credManTarget= args[0];
+                     hostname= args[1];
+                }
 
                 #region Login
                 Console.WriteLine("Default culture is en_US. The culture for client translations can be changed in the code.");
@@ -34,7 +42,16 @@ namespace MetasysServicesExampleApp
                 // var client = new MetasysClient(hostname, true); // Ignore Certificate Errors
                 // var client = new MetasysClient(hostname, false, ApiVersion.V2, culture);
 
-                var token = client.TryLogin(username, password);
+                AccessToken token;
+                if (string.IsNullOrWhiteSpace(credManTarget))
+                {
+                    token = client.TryLogin(username, password);
+                }
+                else
+                {
+                    // Read and login using cred managerfrom Credential manager
+                    token = client.TryLogin(credManTarget);
+                }
                 Console.WriteLine($"Access token: {token.Token} expires {token.Expires}.");
                 #endregion
 
