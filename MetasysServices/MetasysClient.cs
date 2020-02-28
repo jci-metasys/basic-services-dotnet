@@ -1142,7 +1142,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Attempts to login to the given host using Credential Manager and retrieve an access token.
         /// </summary>
-        /// <param name="credManagerTarget">The Credential Manager target where to pick the credentials.</param>
+        /// <param name="credManTarget">The Credential Manager target where to pick the credentials.</param>
+        /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
         /// <remarks> This method can be overridden by extended class with other Credential Manager implementations. </remarks>
         public virtual AccessToken TryLogin(string credManTarget, bool refresh = true)
         {
@@ -1152,7 +1153,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Attempts to login to the given host using Credential Manager and retrieve an access token asynchronously.
         /// </summary>
-        /// <param name="credManagerTarget">The Credential Manager target where to pick the credentials.</param>
+        /// <param name="credManTarget">The Credential Manager target where to pick the credentials.</param>
+        /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
         /// <remarks> This method can be overridden by extended class with other Credential Manager implementations. </remarks>
         public virtual async Task<AccessToken> TryLoginAsync(string credManTarget, bool refresh = true)
         {
