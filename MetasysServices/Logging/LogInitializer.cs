@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace MetasysServicesExampleApp
+namespace JohnsonControls.Metasys.BasicServices
 {
     public class LogInitializer<T>
     {
