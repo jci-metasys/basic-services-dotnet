@@ -21,7 +21,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Initialize a new instance given the Flurl client.
         /// </summary>
         /// <param name="client"></param>
-        public TrendsServiceProvider(IFlurlClient client) : base(client)
+        /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
+        public TrendsServiceProvider(IFlurlClient client, bool logClientErrors=true) : base(client, logClientErrors)
         {
         }
 

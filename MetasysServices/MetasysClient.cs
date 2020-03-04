@@ -72,12 +72,14 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Takes an optional flag for the api version of your Metasys server.
         /// Takes an optional CultureInfo which is useful for formatting numbers and localization of strings. If not specified,
         /// the machine's current culture is used.
+        /// Takes an optional flag for logging client errors. If not specified, it is enabled by default according to log4Net.config file.
         /// </remarks>
         /// <param name="hostname">The hostname of the Metasys server.</param>
         /// <param name="ignoreCertificateErrors">Use to bypass server certificate verification.</param>
         /// <param name="version">The server's Api version.</param>
         /// <param name="cultureInfo">Localization culture for Metasys enumeration translations.</param>
-        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v2, CultureInfo cultureInfo = null)
+        /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
+        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v2, CultureInfo cultureInfo = null, bool logClientErrors=true)
         {
             // Set Metasys culture if specified, otherwise use current machine Culture.
             Culture = cultureInfo ?? CultureInfo.CurrentCulture;
@@ -98,10 +100,12 @@ namespace JohnsonControls.Metasys.BasicServices
                 Client = new FlurlClient($"https://{hostname}"
                     .AppendPathSegments("api", version));
             }
+            // Set preferences about logging
+            LogClientErrors = logClientErrors;
             // Init related services
-            Trends = new TrendsServiceProvider(Client);
-            Alarms = new AlarmInfoProvider(Client);
-            Audits = new AuditInfoProvider(Client);
+            Trends = new TrendsServiceProvider(Client, logClientErrors);
+            Alarms = new AlarmInfoProvider(Client, logClientErrors);
+            Audits = new AuditInfoProvider(Client, logClientErrors);
         }
 
         /// <summary>

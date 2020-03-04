@@ -18,25 +18,36 @@ namespace JohnsonControls.Metasys.BasicServices
     {
         /// <summary>The http client.</summary>
         protected IFlurlClient Client;
-        public LogInitializer<BasicServiceProvider> log;
+        /// <summary>
+        /// The log initiliazer.
+        /// </summary>
+        public LogInitializer<BasicServiceProvider> Log;
+        /// <summary>
+        /// Set this flag to false to disable logging of client errors.
+        /// </summary>
+        public bool LogClientErrors { get; set; }
 
         /// <summary>
         /// Empty constructor.
         /// </summary>
+        /// <param name="logErrors">Set this flag to false to disable logging of client errors.</param>
         /// <remarks> Assume Client is initialized by extended class.</remarks>
-        public BasicServiceProvider()
+        public BasicServiceProvider(bool logErrors=true)
         {
-            log = new LogInitializer<BasicServiceProvider>();
+            Log = new LogInitializer<BasicServiceProvider>();
+            LogClientErrors = logErrors;
         }
 
         /// <summary>
         /// Constructor for dedicated services with Flurl client initialization already performed.
         /// </summary>
-        /// <param name="client"></param>
-        public BasicServiceProvider(IFlurlClient client)
+        /// <param name="client">The Flurl client.</param>
+        /// <param name="logErrors">Set this flag to false to disable logging of client errors.</param>
+        public BasicServiceProvider(IFlurlClient client, bool logErrors=true)
         {
             Client = client;
-            log = new LogInitializer<BasicServiceProvider>();
+            Log = new LogInitializer<BasicServiceProvider>();
+            LogClientErrors = logErrors;
         }
 
         /// <summary>
@@ -283,26 +294,27 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpTimeoutException"></exception>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpNotFoundException"></exception>
-        protected void ThrowHttpException(Flurl.Http.FlurlHttpException e)
+        protected void ThrowHttpException(FlurlHttpException e)
         {
-            if (e.Call.Response != null && e.Call.Response.StatusCode == HttpStatusCode.NotFound)
+            if (LogClientErrors)
             {
-                log.logger.LogError(string.Format("An error occured while getting Http Status Code- {0}", e.Message));
+                // Perform logging only when enabled by BasicServiceProvider Settings.
+                Log.Logger.LogError(e.Message);
+            }
+            if (e.Call.Response != null && e.Call.Response.StatusCode == HttpStatusCode.NotFound)
+            {             
                 throw new MetasysHttpNotFoundException(e);
             }
-            if (e.GetType() == typeof(Flurl.Http.FlurlParsingException))
-            {
-                log.logger.LogError(string.Format("An error occured while parsing Flurl exception- {0}", e.Message));
-                throw new MetasysHttpParsingException((Flurl.Http.FlurlParsingException)e);
+            if (e.GetType() == typeof(FlurlParsingException))
+            {             
+                throw new MetasysHttpParsingException((FlurlParsingException)e);
             }
-            else if (e.GetType() == typeof(Flurl.Http.FlurlHttpTimeoutException))
-            {
-                log.logger.LogError(string.Format("An error occured while getting timeout Exception in FlurlHttp- {0}", e.Message));
-                throw new MetasysHttpTimeoutException((Flurl.Http.FlurlHttpTimeoutException)e);
+            else if (e.GetType() == typeof(FlurlHttpTimeoutException))
+            {                
+                throw new MetasysHttpTimeoutException((FlurlHttpTimeoutException)e);
             }
             else
-            {
-                log.logger.LogError(e.Message);
+            {               
                 throw new MetasysHttpException(e);
             }
         }

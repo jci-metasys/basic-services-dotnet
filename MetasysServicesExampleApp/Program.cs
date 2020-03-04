@@ -38,7 +38,7 @@ namespace MetasysServicesExampleApp
                 // CultureInfo culture = new CultureInfo("en-US");
 
                 Console.WriteLine("\nLogging in...");
-                var client = new MetasysClient(hostname);
+                var client = new MetasysClient(hostname,logClientErrors:false); // Disable default logging since it is handled in this app.
                 // var client = new MetasysClient(hostname, true); // Ignore Certificate Errors
                 // var client = new MetasysClient(hostname, false, ApiVersion.V2, culture);
 
@@ -63,7 +63,7 @@ namespace MetasysServicesExampleApp
             }
             catch(Exception exception)
             {
-                log.logger.LogError(string.Format("An error occured while login - {0}", exception.Message));
+                log.Logger.LogError(string.Format("An error occured while login - {0}", exception.Message));
             }
         }
 

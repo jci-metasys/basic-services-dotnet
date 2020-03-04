@@ -22,13 +22,14 @@ namespace JohnsonControls.Metasys.BasicServices
 
         private const string BaseParam = "alarms";
         private readonly IFlurlClient client;
-     
+
 
         /// <summary>
         /// Initializes a new instance of <see cref="AlarmInfoProvider"/> with supplied data.
         /// </summary>
         /// <param name="client">The FlurlClient to get response from URL.</param>
-        public AlarmInfoProvider(IFlurlClient client):base(client)
+        /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
+        public AlarmInfoProvider(IFlurlClient client, bool logClientErrors=true):base(client, logClientErrors)
         {
             this.client = client ?? throw new ArgumentNullException(nameof(client),
                                                "FlurlClient can not be null.");

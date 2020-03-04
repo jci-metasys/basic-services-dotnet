@@ -4,10 +4,20 @@ using Microsoft.Extensions.Logging;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
+   /// <summary>
+   /// Responsible for the Log initialization.
+   /// </summary>
+   /// <typeparam name="T"></typeparam>
     public class LogInitializer<T>
     {
-        public readonly ILogger<T> logger;
+        /// <summary>
+        /// Instance implementing ILogger.
+        /// </summary>
+        public readonly ILogger<T> Logger;
 
+        /// <summary>
+        /// Initialize Log4Net Logger using DI.
+        /// </summary>
         public LogInitializer()
         {
             var services = new ServiceCollection()
@@ -15,7 +25,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 .BuildServiceProvider();
 
 
-            logger = services.GetService<ILoggerFactory>()
+            Logger = services.GetService<ILoggerFactory>()
                 .AddLog4Net("log4Net.config")
                 .CreateLogger<T>();
         }
