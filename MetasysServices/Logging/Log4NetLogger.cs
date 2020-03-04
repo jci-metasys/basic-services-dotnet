@@ -1,8 +1,8 @@
-﻿using log4net;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Xml;
+using log4net;
+using Microsoft.Extensions.Logging;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -20,7 +20,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="xmlElement">XML element from log4net config file</param>
         public Log4NetLogger(string name, XmlElement xmlElement)
         {
-            var loggerRepository = LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
+            var loggerRepository = LogManager.CreateRepository(Assembly.GetExecutingAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
             log = LogManager.GetLogger(loggerRepository.Name, name);
             log4net.Config.XmlConfigurator.Configure(loggerRepository, xmlElement);
         }
