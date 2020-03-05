@@ -22,9 +22,8 @@ namespace JohnsonControls.Metasys.BasicServices.Utils
             var cm = new Credential { Target = target };
             if (!cm.Load())
             {
-                return null;
+                throw new CredManException(target);
             }
-
             // UserPass is just a class with two string properties for user and pass
             return new UserPass(cm.Username, cm.Password);
         }
