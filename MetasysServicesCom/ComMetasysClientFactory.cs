@@ -19,7 +19,7 @@ namespace JohnsonControls.Metasys.ComServices
     public class ComMetasysClientFactory : IComMetasysClientFactory
     {
         ///<inheritdoc/>
-        public ILegacyMetasysClient GetLegacyClient(string hostname, bool ignoreCertificateErrors = false, string version = "v2", string cultureInfo = null)
+        public ILegacyMetasysClient GetLegacyClient(string hostname, bool ignoreCertificateErrors = false, string version = "v2", string cultureInfo = null, bool logClientErrors = true)
         {
             // Comparison is always made in lower case
             if (!Enum.TryParse(version.ToLowerInvariant(), out ApiVersion apiVersion))
@@ -34,7 +34,7 @@ namespace JohnsonControls.Metasys.ComServices
                 culture = new CultureInfo(cultureInfo);
             }
             // Create instance with the given parameters
-            return new LegacyMetasysClient(new MetasysClient(hostname, ignoreCertificateErrors, apiVersion, culture));
+            return new LegacyMetasysClient(new MetasysClient(hostname, ignoreCertificateErrors, apiVersion, culture, logClientErrors));
         }
 
         /// <inheritdoc/>

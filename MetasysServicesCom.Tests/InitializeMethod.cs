@@ -7,15 +7,14 @@ namespace MetasysServicesCom.Tests
 {
     public class InitializeMethod
     {
-        public ComMetasysClientFactory ComMetasysClientFactory;
-        public MetasysClient MClient;
+        public ComMetasysClientFactory ComMetasysClientFactory;       
         public ILegacyMetasysClient LClient;
         public IMapper Mapper;
         public HttpTest httpTest;
 
         public void MethodInitialize()
         {
-            MClient = new MetasysClient("hostname");
+        
             ComMetasysClientFactory = new ComMetasysClientFactory();
             LClient = ComMetasysClientFactory.GetLegacyClient("hostname");
             httpTest = new HttpTest();

@@ -226,7 +226,6 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 log.logger.Error(string.Format("An error occured while getting general information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
-
             Console.ReadLine();
         }
     }
