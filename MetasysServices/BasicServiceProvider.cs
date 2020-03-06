@@ -21,7 +21,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The log initiliazer.
         /// </summary>
-        public LogInitializer<BasicServiceProvider> Log;
+        protected LogInitializer<BasicServiceProvider> Log;
         /// <summary>
         /// Set this flag to false to disable logging of client errors.
         /// </summary>
