@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JohnsonControls.Metasys.BasicServices;
 using JohnsonControls.Metasys.ComServices;
 using MetasysServicesComExampleApp.FeaturesDemo;
 
@@ -7,33 +8,42 @@ namespace MetasysServicesComExampleApp
 {
     class Program
     {
+
         static void Main(string[] args)
         {
-            var comMetasysClientFactory = new ComMetasysClientFactory();
-            Console.WriteLine("Please enter your credentials." +
-                   "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
-            Console.Write("Enter the Hostname:");
-            var hostName = Console.ReadLine();
-            Console.Write("Enter the Username:");
-            var userName = Console.ReadLine();
-            Console.Write("Enter the Password:");
-            var password = Console.ReadLine();
-
-            var legacyClient = comMetasysClientFactory.GetLegacyClient(hostName,logClientErrors:false); // Disable internal logging since its managed here
-
-            #region Login
-
-            legacyClient.TryLogin(userName, password);
-            Console.WriteLine("Logging In.....");
-            Console.WriteLine("Login Successfull...");
-
-            #endregion
-
-            bool showMenu = true;
-            while (showMenu)
+            var log = new LogInitializer(typeof(Program));
+            try
             {
-                showMenu = MainMenu(legacyClient);
+                var comMetasysClientFactory = new ComMetasysClientFactory();
+                Console.WriteLine("Please enter your credentials." +
+                       "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
+                Console.Write("Enter the Hostname:");
+                var hostName = Console.ReadLine();
+                Console.Write("Enter the Username:");
+                var userName = Console.ReadLine();
+                Console.Write("Enter the Password:");
+                var password = Console.ReadLine();
+
+                var legacyClient = comMetasysClientFactory.GetLegacyClient(hostName, logClientErrors: false); // Disable internal logging since its managed here
+
+                #region Login            
+                legacyClient.TryLogin(userName, password);
+                Console.WriteLine("Logging In.....");
+                Console.WriteLine("Login Successfull...");
+                #endregion
+
+                bool showMenu = true;
+                while (showMenu)
+                {
+                    showMenu = MainMenu(legacyClient);
+                }
             }
+            catch (Exception exception)
+            {
+                log.Logger.Error(string.Format("An error occured while login - {0}", exception.Message));
+                Console.WriteLine("\n \nAn Error occurred. Press Enter to return to exit");
+            }
+            Console.ReadLine();
         }
 
         private static bool MainMenu(ILegacyMetasysClient legacyClient)

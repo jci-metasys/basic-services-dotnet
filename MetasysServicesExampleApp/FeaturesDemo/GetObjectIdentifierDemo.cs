@@ -1,18 +1,17 @@
 ﻿using System;
 using JohnsonControls.Metasys.BasicServices;
-using Microsoft.Extensions.Logging;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
     public class GetObjectIdentifierDemo
     {
         private MetasysClient client;
-        private LogInitializer<GetObjectIdentifierDemo> log;
+        private LogInitializer log;
 
         public GetObjectIdentifierDemo(MetasysClient client)
         {
             this.client = client;
-            log = new LogInitializer<GetObjectIdentifierDemo>();
+            log = new LogInitializer(typeof(GetObjectIdentifierDemo));
         }
         public void Run()
         {
@@ -28,7 +27,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             }
             catch (Exception exception)
             {
-                log.Logger.LogError(string.Format("An error occured while getting object identifier information - {0}", exception.Message));
+                log.Logger.Error(string.Format("An error occured while getting object identifier information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
             Console.ReadLine();

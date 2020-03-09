@@ -1,7 +1,7 @@
 ﻿using System;
 using JohnsonControls.Metasys.BasicServices;
 using MetasysServicesExampleApp.FeaturesDemo;
-using Microsoft.Extensions.Logging;
+
 
 namespace MetasysServicesExampleApp
 {
@@ -9,7 +9,7 @@ namespace MetasysServicesExampleApp
     {
         static void Main(string[] args)
         {
-            var log = new LogInitializer<Program>();
+            var log = new LogInitializer(typeof(Program));
             string connectionDetails;
             try
             {
@@ -63,8 +63,10 @@ namespace MetasysServicesExampleApp
             }
             catch(Exception exception)
             {
-                log.Logger.LogError(string.Format("An error occured while login - {0}", exception.Message));
+                log.Logger.Error(string.Format("An error occured while login - {0}", exception.Message));
+                Console.WriteLine("\n \nAn Error occurred. Press Enter to exit");
             }
+            Console.ReadLine();
         }
 
         private static bool MainMenu(MetasysClient client)

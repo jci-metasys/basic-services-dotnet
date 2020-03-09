@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Globalization;
 using JohnsonControls.Metasys.BasicServices;
-using Microsoft.Extensions.Logging;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
     public class AuditsDemo
     {
         private MetasysClient client;
-        private LogInitializer<AuditsDemo> log;
+        private LogInitializer log;
 
         public AuditsDemo(MetasysClient client)
         {
             this.client = client;
-            log = new LogInitializer<AuditsDemo>();
+            log = new LogInitializer(typeof(AuditsDemo));
         }
         public void Run()
         {
@@ -93,7 +92,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             }
             catch (Exception exception)
             {
-                log.Logger.LogError(string.Format("An error occured while getting audit information - {0}", exception.Message));
+                log.Logger.Error(string.Format("An error occured while getting audit information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
             Console.ReadLine();

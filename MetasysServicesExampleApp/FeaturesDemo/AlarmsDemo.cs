@@ -1,5 +1,4 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,12 +9,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
     public class AlarmsDemo
     {
         private MetasysClient client;
-        private LogInitializer<AlarmsDemo> log;
+        private LogInitializer log;
         
         public AlarmsDemo(MetasysClient client)
         {
             this.client = client;
-            log = new LogInitializer<AlarmsDemo>();
+            log = new LogInitializer(typeof(AlarmsDemo));
         }
         public void Run()
         {
@@ -104,7 +103,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 }
             }
             catch (Exception exception) {
-                log.Logger.LogError(string.Format("An error occured while getting alarm information - {0}", exception.Message));
+                log.Logger.Error(string.Format("An error occured while getting alarm information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
             Console.ReadLine();

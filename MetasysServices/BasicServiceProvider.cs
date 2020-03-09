@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -21,7 +21,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The log initiliazer.
         /// </summary>
-        protected LogInitializer<BasicServiceProvider> Log;
+        protected LogInitializer Log = new LogInitializer(typeof(BasicServiceProvider));
         /// <summary>
         /// Set this flag to false to disable logging of client errors.
         /// </summary>
@@ -33,8 +33,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="logErrors">Set this flag to false to disable logging of client errors.</param>
         /// <remarks> Assume Client is initialized by extended class.</remarks>
         public BasicServiceProvider(bool logErrors=true)
-        {
-            Log = new LogInitializer<BasicServiceProvider>();
+        {                    
             LogClientErrors = logErrors;
         }
 
@@ -45,8 +44,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="logErrors">Set this flag to false to disable logging of client errors.</param>
         public BasicServiceProvider(IFlurlClient client, bool logErrors=true)
         {
-            Client = client;
-            Log = new LogInitializer<BasicServiceProvider>();
+            Client = client; 
             LogClientErrors = logErrors;
         }
 
@@ -299,7 +297,7 @@ namespace JohnsonControls.Metasys.BasicServices
             if (LogClientErrors)
             {
                 // Perform logging only when enabled by BasicServiceProvider Settings.
-                Log.Logger.LogError(e.Message);
+                Log.Logger.Error(e.Message);
             }
             if (e.Call.Response != null && e.Call.Response.StatusCode == HttpStatusCode.NotFound)
             {             

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JohnsonControls.Metasys.BasicServices;
 using JohnsonControls.Metasys.ComServices;
 
 namespace MetasysServicesComExampleApp.FeaturesDemo
@@ -9,13 +10,13 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
     public class IComGeneralDemo
     {
         private ILegacyMetasysClient legacyClient;
-        private ComLogInitializer log;
+        private LogInitializer log;
 
         public IComGeneralDemo(ILegacyMetasysClient legacyClient)
         {
             this.legacyClient = legacyClient;
             Type declaringType = MethodBase.GetCurrentMethod().DeclaringType;
-            log = new ComLogInitializer(declaringType);
+            log = new LogInitializer(declaringType);
         }
 
         public void Run()
@@ -223,7 +224,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
             #endregion
             catch (Exception exception)
             {
-                log.logger.Error(string.Format("An error occured while getting general information - {0}", exception.Message));
+                log.Logger.Error(string.Format("An error occured while getting general information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
             Console.ReadLine();

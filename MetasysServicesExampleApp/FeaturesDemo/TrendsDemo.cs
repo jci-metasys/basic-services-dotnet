@@ -1,5 +1,4 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,12 +8,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
     public class TrendsDemo
     {
         private MetasysClient client;
-        private LogInitializer<TrendsDemo> log;
+        private LogInitializer log;
 
         public TrendsDemo(MetasysClient client)
         {
             this.client = client;
-            log = new LogInitializer<TrendsDemo>();
+            log = new LogInitializer(typeof(TrendsDemo));
         }
         public void Run()
         {
@@ -46,7 +45,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 }
             }
             catch (Exception exception) {
-                log.Logger.LogError(string.Format("An error occured while getting trend information - {0}", exception.Message));
+                log.Logger.Error(string.Format("An error occured while getting trend information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }
 

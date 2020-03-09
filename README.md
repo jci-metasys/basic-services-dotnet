@@ -113,7 +113,7 @@ To create a new client and connect to a Metasys server with the default settings
 var client = new MetasysClient("hostname");
 ```
 
-There are three optional parameters when creating a new client:
+There are four optional parameters when creating a new client:
 
 - ignoreCertificateErrors: If your server does not have a valid certificate the MetasysClient will not behave as expected and will likely block the connection. Setting the ignoreCertificateErrors = true will ignore this error and make an insecure connection with the server. To avoid this problem ensure the Metasys server has a valid certificate.  
   
@@ -121,14 +121,29 @@ There are three optional parameters when creating a new client:
 
 - apiVersion: If your server is not a current 10.1 Metasys server or later this SDK will not function correctly. The version parameter takes in an ApiVersion enumeration value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is V2.
 - cultureInfo: To set the language for localization specify the target culture with a CultureInfo object. The default culture is en-US.
-
+- logClientErrors: Set this flag to false to disable logging of client errors. By default the library logs any communication error with the Metasys Server in this path: "C:\ProgramData\Johnson Controls\Metasys Services\Logs".
+  
 To create a client that ignores certificate errors for a 10.1 Metasys server with Italian translations of values:
 
 ```csharp
 CultureInfo culture = new CultureInfo("it-IT");
 var client = new MetasysClient(hostname, true, ApiVersion.V2, culture);
 ```
+In some cases you may want to enrich logs with more specific messages to your application. Typically, you disable internal library logging and catch Metasys Exceptions to be handled in your own logging framework or in use for Log4Net initializer provided by the library. The file log4Net.config allows you to customize settings such as the file path, size, append mode, etc.
+To create a client with default settings that does not log errors use:
 
+```csharp
+var client = new MetasysClient(hostname,logClientErrors:false);
+```
+
+To log your own errors with Log4Net initializer provided by the library use:
+
+```csharp
+// Initialize Logger with your context Class
+var log = new LogInitializer<Program>();
+// Your Try Catch logic here
+log.Logger.LogError(string.Format("An error occured - {0}", exception.Message);
+```
 ### Login and Access Tokens
 
 After creating the client, to login use the TryLogin method.
@@ -431,12 +446,20 @@ There are three optional parameters when creating a new client:
   
 - apiVersion: If your server is not a current 10.1 Metasys server or later this SDK will not function correctly. The version parameter takes in an ApiVersion string value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is V2.
 - cultureInfo: To set the language for localization specify the target culture with the ISO Language Code string. The default culture is en-US.
-
+- logClientErrors: Set this flag to false to disable logging of client errors. By default the library logs any communication error with the Metasys Server in this path: "C:\ProgramData\Johnson Controls\Metasys Services\Logs".
+  
 To create a client that ignores certificate errors for a 10.1 Metasys server with Italian translations of values:
 
 ```vb
 Set client = clientFactory.GetLegacyClient("host", true, "V2", "it-IT")
 ```
+In some cases you may want to enrich logs with more specific messages to your application. Typically, you disable internal library logging and catch Metasys Exceptions to be handled in your own logging framework or Log4Net configuration provided by the library. The file log4Net.config allows you to customize settings such as the file path, size, append mode, etc.
+To create a client that does not log errors use:
+
+```vb
+Set client = clientFactory.GetLegacyClient("host", true, "V2", "it-IT", false)
+```
+
 ### Login and Access Tokens
 
 After creating the client, to login use the TryLogin method.

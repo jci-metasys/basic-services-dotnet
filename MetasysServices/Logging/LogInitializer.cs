@@ -1,33 +1,27 @@
-﻿using JohnsonControls.Metasys.BasicServices;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using log4net;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
-   /// <summary>
-   /// Responsible for the Log initialization.
-   /// </summary>
-   /// <typeparam name="T"></typeparam>
-    public class LogInitializer<T>
+    /// <summary>
+    /// Responsible for the Log initialization.
+    /// </summary>
+    public class LogInitializer
     {
         /// <summary>
         /// Instance implementing ILogger.
         /// </summary>
-        public readonly ILogger<T> Logger;
+        public readonly ILog Logger;
 
         /// <summary>
-        /// Initialize Log4Net Logger using DI.
+        /// Initialize Log4Net Logger using Factory.
         /// </summary>
-        public LogInitializer()
+        public LogInitializer(Type source)
         {
-            var services = new ServiceCollection()
-                .AddLogging(logBuilder => logBuilder.SetMinimumLevel(LogLevel.Debug))
-                .BuildServiceProvider();
-
-
-            Logger = services.GetService<ILoggerFactory>()
-                .AddLog4Net("log4Net.config")
-                .CreateLogger<T>();
+            LogFactory logFactory = LogFactory.Instance;                           
+            Logger = logFactory.CreateLogger(source);         
         }
     }
 }
