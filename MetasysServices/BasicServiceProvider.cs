@@ -21,20 +21,37 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The log initiliazer.
         /// </summary>
-        protected LogInitializer Log = new LogInitializer(typeof(BasicServiceProvider));
+        protected LogInitializer Log;
+
+        private bool logClientErrors;
         /// <summary>
         /// Set this flag to false to disable logging of client errors.
         /// </summary>
-        public bool LogClientErrors { get; set; }
+        public bool LogClientErrors
+        {
+            get
+            {
+                return logClientErrors;
+            }
+            set
+            {
+                logClientErrors = value;
+                if (logClientErrors)
+                {
+                    // Init logger only when the flag is enabled
+                    Log = new LogInitializer(typeof(BasicServiceProvider));
+                }
+            }
+        }
 
         /// <summary>
         /// Empty constructor.
         /// </summary>
         /// <param name="logErrors">Set this flag to false to disable logging of client errors.</param>
         /// <remarks> Assume Client is initialized by extended class.</remarks>
-        public BasicServiceProvider(bool logErrors=true)
-        {                    
-            LogClientErrors = logErrors;
+        public BasicServiceProvider(bool logErrors = true)
+        {
+            LogClientErrors = logErrors;         
         }
 
         /// <summary>
@@ -42,10 +59,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="client">The Flurl client.</param>
         /// <param name="logErrors">Set this flag to false to disable logging of client errors.</param>
-        public BasicServiceProvider(IFlurlClient client, bool logErrors=true)
+        public BasicServiceProvider(IFlurlClient client, bool logErrors = true)
         {
-            Client = client; 
-            LogClientErrors = logErrors;
+            Client = client;
+            LogClientErrors = logErrors;          
         }
 
         /// <summary>
@@ -300,19 +317,19 @@ namespace JohnsonControls.Metasys.BasicServices
                 Log.Logger.Error(e.Message);
             }
             if (e.Call.Response != null && e.Call.Response.StatusCode == HttpStatusCode.NotFound)
-            {             
+            {
                 throw new MetasysHttpNotFoundException(e);
             }
             if (e.GetType() == typeof(FlurlParsingException))
-            {             
+            {
                 throw new MetasysHttpParsingException((FlurlParsingException)e);
             }
             else if (e.GetType() == typeof(FlurlHttpTimeoutException))
-            {                
+            {
                 throw new MetasysHttpTimeoutException((FlurlHttpTimeoutException)e);
             }
             else
-            {               
+            {
                 throw new MetasysHttpException(e);
             }
         }
