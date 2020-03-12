@@ -26,14 +26,14 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Creates a logger for the specified source.
         /// </summary>
-        /// <param name="source">The specified source of logger</param>
+        /// <param name="sourceType">The specified source type of logger</param>
         /// <returns>An Instance of diagnostic logger</returns>
-        public ILog CreateLogger(Type t)
+        public ILog CreateLogger(Type sourceType)
         {
             var assembly = Assembly.GetExecutingAssembly();
             ILoggerRepository repository = LogManager.GetRepository(assembly);
             XmlConfigurator.Configure(repository, new FileInfo(Path.Combine(Path.GetDirectoryName(assembly.Location),"log4net.config")));
-            return LogManager.GetLogger(repository.Name, t);
+            return LogManager.GetLogger(repository.Name, sourceType);
         }
        
     }

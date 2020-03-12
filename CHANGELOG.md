@@ -7,16 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.0] - 2020-03-12
+
+### Added
+
+- Added logClientErrors flag for MetasysClient constructor.
+- Added logClientErrors flag for GetLegacyClient method.
+- Added CredManException when an error occurs while retrieving Credential Manager target.
+- Runtime errors are now automatically written to a dedicated text file.
+
 ## [3.2.0] - 2020-02-28
 
 ### Added
 
--Added support to Credential Manager for TryLogin method of MetasysClient 
--Added support to Credential Manager for TryLoginWithCredMan method of LegacyMetasysClient.
--Added CredentialUtil to retrieve/set user and passwords from the secure vault.
--Added Log4Net support in MetasysClient and LegacyMetasysClient.
--Runtime errors are now automatically written to a dedicated text file.
--Added Log4Net support in Basic Services as a facility for the host application (see example apps for usage).
+- Added support to Credential Manager for TryLogin method of MetasysClient. 
+- Added support to Credential Manager for TryLoginWithCredMan method of LegacyMetasysClient.
+- Added CredentialUtil to retrieve/set user and passwords from the secure vault.
+- Added Log4Net support in MetasysClient and LegacyMetasysClient.
+- Added Log4Net support in Basic Services as a facility for the host application (see example apps for usage).
 
 ### Fixed
 

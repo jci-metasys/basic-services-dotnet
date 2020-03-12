@@ -148,7 +148,7 @@ log.Logger.LogError(string.Format("An error occured - {0}", exception.Message);
 
 After creating the client, to login use the TryLogin method.
 The signature has two overloads: the first uses the Credential Manager target to read the credentials, whilst the second takes a username and password.
-Both signatures take an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true. See more information [here](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager) on how to use Credential Manager.
+Both signatures take an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true. See more information [here](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager) on how to use Credential Manager. If something goes wrong while accessing a Credential Manager target, MetasysClient raises a CredManException. Keep in mind that Credential Manager is available on Windows and is not going to work on other platforms. However, MetasysClient Class could be extended by developers to implement different secure vaults support.
 
  **Notice: when developing an application that uses a system account always logged without user input, the preferred way to login is to store the username and password in the Credential Manager vault.**
 
@@ -464,7 +464,7 @@ Set client = clientFactory.GetLegacyClient("host", true, "V2", "it-IT", false)
 
 After creating the client, to login use the TryLogin method.
 The signature has two variants: the first (TryLoginWithCredMan) uses the Credential Manager target to read the credentials, whilst the second (TryLogin) takes a username and password.
-Both signatures take an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true. See more information [here](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager) on how to use Credential Manager.
+Both signatures take an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true. See more information [here](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager) on how to use Credential Manager. If something goes wrong while accessing a Credential Manager target, MetasysClient raises a CredManException. Keep in mind that Credential Manager is available on Windows and is not going to work on other platforms. However, MetasysClient Class could be extended by developers to implement different secure vaults support.
 
  **Notice: when developing an application that uses a system account always logged without user input, the preferred way to login is to store the username and password in the Credential Manager vault.**
 
