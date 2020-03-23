@@ -236,7 +236,7 @@ To get all available commands on an object use the GetCommands method. This meth
 ```csharp
 var commands = client.GetCommands(id).ToList();
 var command = commands[0].CommandId; // EnableAlarms, DisableAlarms, ReleaseAll, etc.
-client.SendCommand(command);
+client.SendCommand(id, command);
 ```
 
 When sending a command there may or may not be a single value or list of values that needs to be sent with the command. The Command.Items property will list all of these values as Items which contains the Title and Type of the value to change. If the type of an Item is "oneOf" this indicates the values is an enumeration and the possible values will be contained in the EnumerationValues list. Keep in mind the values to be sent in the command is the TitleEnumerationKey not the Title. The Title is the user friendly translated value that describes the enumeration. For example, an "AV Mapper" object has the following commands:
@@ -283,13 +283,13 @@ To send the command for each of these it would model the following:
 
 ```csharp
 var list1 = new List<object> { 70 };
-client.SendCommand(commandAdjust, list1);
+client.SendCommand(id, commandAdjust, list1);
 
 var list2 = new List<object> { 70, 1, 30 };
-client.SendCommand(commandOverride, list2);
+client.SendCommand(id, commandOverride, list2);
 
 var list3 = new List<object> { "attributeEnumSet.presentValue", "writePriorityEnumSet.priorityNone" };
-client.SendCommand(commandRelease, list3);
+client.SendCommand(id, commandRelease, list3);
 ```
 
 ### Get Network Devices and other Objects
@@ -363,9 +363,9 @@ AlarmFilter alarmFilter = new AlarmFilter
     EndTime = new DateTime(2020, 1, 12).ToString(),
     ExcludeAcknowledged=true
 };
-var alarms = client.GetAlarms(alarmFilter);
+var alarms = client.Alarms.GetAlarms(alarmFilter);
 var alarmId = alarms.Items.ElementAt(0).Id;
-var alarm = client.GetSingleAlarm(alarmId);
+var alarm = client.Alarms.GetSingleAlarm(alarmId);
 var message= alarm.Message;
 ```
 To get the alarms of a specific Object or NetworkDevice use the GetAlarmsForAnObject and GetAlarmsForNetworkDevice methods. The Guid of the parent object is required as input.
