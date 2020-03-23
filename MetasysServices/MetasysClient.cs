@@ -1083,22 +1083,26 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Gets all points for the given Equipment
+        /// Gets all points for the given Equipment.
         /// </summary>
-        /// <param name="equipmentId"></param>
+        /// <param name="equipmentId">The Guid of the equipment.</param>
+        /// <param name="readPresentValue">Set to true if you would like to read Points Present Value.</param>
+        /// <remarks> Reading the Present Value attribute could take time depending on the number of points. </remarks>
         /// <returns></returns>
-        public IEnumerable<Point> GetEquipmentPoints(Guid equipmentId)
+        public IEnumerable<Point> GetEquipmentPoints(Guid equipmentId, bool readPresentValue = false)
         {
-            return GetEquipmentPointsAsync(equipmentId).GetAwaiter().GetResult();
+            return GetEquipmentPointsAsync(equipmentId, readPresentValue).GetAwaiter().GetResult();
         }
 
         /// <summary>
-        /// Gets all points for the given Equipment asyncronously
+        /// Gets all points for the given Equipment asyncronously.
         /// </summary>
         /// <remarks> Returned Points List contains PresentValue when available. </remarks>
-        /// <param name="equipmentId"></param>
+        /// <param name="equipmentId">The Guid of the equipment.</param>
+        /// <param name="readPresentValue">Set to true if you would like to read Points Present Value.</param>
+        /// <remarks> Reading the Present Value attribute could take time depending on the number of points. </remarks>
         /// <returns></returns>
-        public async Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid equipmentId)
+        public async Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid equipmentId, bool readPresentValue = false)
         {
             List<Point> points = new List<Point>() { }; List<Guid> guids = new List<Guid>();
             var response = await GetAllAvailablePagesAsync("equipment", null, equipmentId.ToString(), "points").ConfigureAwait(false);
@@ -1122,18 +1126,22 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 throw new MetasysHttpParsingException(response.ToString(), e);
             }
-            // Try to Read Present Value when available. Note: can't read attribute ID from attribute full URL of point since we got only the description.
-            var results = await ReadPropertyMultipleAsync(guids, new List<string> { "presentValue" });
-            List<Point> pointsWithValues = new List<Point>() { };
-            foreach (var r in results)
+            if (readPresentValue)
             {
-                var point = points.SingleOrDefault(s => s.ObjectId == r.Id);
-                // Assign present values back
-                point.PresentValue = r.Variants?.SingleOrDefault(s => s.Attribute == "presentValue");
-                // Need to do a new list since structs will be passed by value
-                pointsWithValues.Add(point);
+                // Try to Read Present Value when available. Note: can't read attribute ID from attribute full URL of point since we got only the description.
+                var results = await ReadPropertyMultipleAsync(guids, new List<string> { "presentValue" });
+                List<Point> pointsWithValues = new List<Point>() { };
+                foreach (var r in results)
+                {
+                    var point = points.SingleOrDefault(s => s.ObjectId == r.Id);
+                    // Assign present values back
+                    point.PresentValue = r.Variants?.SingleOrDefault(s => s.Attribute == "presentValue");
+                    // Need to do a new list since structs will be passed by value
+                    pointsWithValues.Add(point);
+                }
+                points = pointsWithValues;
             }
-            return pointsWithValues;
+            return points;
         }
 
         /// <inheritdoc cref="GetObjects(Guid, int)"/>

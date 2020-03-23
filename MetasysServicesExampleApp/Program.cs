@@ -76,11 +76,12 @@ namespace MetasysServicesExampleApp
             Console.WriteLine("1) Get Object Identifier");
             Console.WriteLine("2) General Demo");
             Console.WriteLine("3) Refresh Token");
-            Console.WriteLine("4) Spaces and Equipment");
-            Console.WriteLine("5) Alarms");
-            Console.WriteLine("6) Trends");
-            Console.WriteLine("7) Audits");
-            Console.WriteLine("8) Exit");
+            Console.WriteLine("4) Spaces");
+            Console.WriteLine("5) Equipment");
+            Console.WriteLine("6) Alarms");
+            Console.WriteLine("7) Trends");
+            Console.WriteLine("8) Audits");
+            Console.WriteLine("9) Exit");
             Console.Write("\r\nSelect an option: ");
 
             switch (Console.ReadLine())
@@ -98,15 +99,18 @@ namespace MetasysServicesExampleApp
                     new SpacesDemo(client).Run();
                     return true;
                 case "5":
-                    new AlarmsDemo(client).Run();
+                    new EquipmentDemo(client).Run();
                     return true;
                 case "6":
-                    new TrendsDemo(client).Run();
+                    new AlarmsDemo(client).Run();
                     return true;
                 case "7":
-                    new AuditsDemo(client).Run();
+                    new TrendsDemo(client).Run();
                     return true;
                 case "8":
+                    new AuditsDemo(client).Run();
+                    return true;
+                case "9":
                     return false;
                 default:
                     return true;

@@ -42,16 +42,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 foreach (var o in spaceEquipment)
                 {
                     Console.WriteLine($"\n{o.Id}: {o.Name}, {o.ItemReference}");
-                }
-                // Select a point
-                Console.WriteLine("\nPlease enter the equipment ID to retrieve all related points:");
-                string equipmentID = Console.ReadLine();
-                IEnumerable<Point> equipmentPoints = client.GetEquipmentPoints(new Guid(equipmentID));
-                Console.WriteLine($"Equipment found: {equipmentPoints.Count()}");
-                foreach (var p in equipmentPoints)
-                {
-                    Console.WriteLine($"\n{p.ShortName}: {p.Label}, {p.PresentValue?.StringValue}");
-                }
+                }               
             }
             catch (Exception exception) {
                 log.Logger.Error(string.Format("An error occured while getting space information - {0}", exception.Message));
