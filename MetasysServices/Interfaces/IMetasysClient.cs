@@ -113,7 +113,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Send a command to an object.
         /// </summary>
         void SendCommand(Guid id, string command, IEnumerable<object> values = null);
-        
+
         /// <summary>
         /// Send a command to an object asynchronously.
         /// </summary>
@@ -169,7 +169,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets all spaces asynchronously.
         /// </summary>
-        Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId);    
+        Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId);
 
         /// <summary>
         /// Gets all spaces types.
@@ -194,12 +194,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets all points for the given Equipment
         /// </summary>
-        IEnumerable<Point> GetEquipmentPoints(Guid equipmentId, bool readPresentValue=false);
+        IEnumerable<Point> GetEquipmentPoints(Guid equipmentId, bool readAttributeValue = true);
 
         /// <summary>
         /// Gets all points for the given equipment asynchronously.
         /// </summary>
-        Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid equipmentId, bool readPresentValue = false);   
+        Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid equipmentId, bool readAttributeValue = true);
 
         /// <summary>
         /// Services for Trends and Samples.

@@ -109,9 +109,10 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Gets all points for the given Equipment
         /// </summary>
-        /// <param name="equipmentId"></param>
+        /// <param name="equipmentId">The Guid of the equipment.</param>
+        /// <param name="ReadAttributeValue">Set to false if you would not read Points Attribute Value.</param>
         /// <returns></returns>
-        object GetEquipmentPoints(string equipmentId);
+        object GetEquipmentPoints(string equipmentId, bool ReadAttributeValue = true);
 
 
         /// <summary>

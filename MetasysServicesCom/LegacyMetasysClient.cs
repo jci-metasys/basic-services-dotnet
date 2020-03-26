@@ -315,12 +315,13 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Gets all points for the given Equipment
         /// </summary>
-        /// <param name="equipmentId"></param>
+        /// <param name="equipmentId">The Guid of the equipment.</param>
+        /// <param name="ReadAttributeValue">Set to false if you would not read Points Attribute Value.</param>
         /// <returns></returns>
-        public object GetEquipmentPoints(string equipmentId)
+        public object GetEquipmentPoints(string equipmentId, bool ReadAttributeValue=true)
         {
             Guid guid = new Guid(equipmentId);
-            var res = Client.GetEquipmentPoints(guid);
+            var res = Client.GetEquipmentPoints(guid, ReadAttributeValue);
             return Mapper.Map<IComPoint[]>(res);
         }
 

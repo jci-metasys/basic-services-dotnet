@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.4.0] - 2020-03-26
+
+### Added
+
+- Added ReadAttributeValue option flag for GetEquipmentPoints method.
+
 ## [3.3.0] - 2020-03-12
 
 ### Added

@@ -13,14 +13,9 @@
     <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
-    <PackageReleaseNotes>This release adds built-in support for logging client errors:
-
-- Added logClientErrors flag for MetasysClient constructor.
-- Added logClientErrors flag for GetLegacyClient method.
-- Added CredManException when an error occurs while retrieving Credential Manager target.
-- Runtime errors are now automatically written to a dedicated text file.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added ReadAttributeValue option flag for GetEquipmentPoints method.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>3.3.0</Version>
+    <Version>3.4.0</Version>
     <UserSecretsId>9ce3a40a-a513-4155-b381-e66883c5bdf6</UserSecretsId>
   </PropertyGroup>
 
