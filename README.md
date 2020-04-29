@@ -675,7 +675,7 @@ filter.EndTime = "2020-01-10T09:10:20.243Z"
 filter.OriginApplications="1,2"
 filter.ActionTypes="0,1"
 Dim auditsPager As ComPagedResult
-Set auditsPager = client.GetAudits(objId, filter)
+Set auditsPager = client.GetAudits(filter)
 'Iterate paged results
 Dim audit As ComProvideAuditItem
 Dim audits() As Object
