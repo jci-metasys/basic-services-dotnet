@@ -225,7 +225,7 @@ To change the same attribute values of many objects use the WritePropertyMultipl
 
 ```csharp
 List<Guid> ids = new List<Guid> { id1, id2 };
-List<string> attributes = new List<string> { ("description", "This is an AV.") };
+List<(string,object)> attributes = new List<(string,object)> { ("description", "This is an AV.") };
 client.WritePropertyMultiple(ids, attributes);
 ```
 
