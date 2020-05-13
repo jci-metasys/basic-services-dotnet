@@ -12,7 +12,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The identifier of the audit(GUID).
         /// </summary>
-        string Id { get; set; }
+        Guid Id { get; set; }
 
         /// <summary>
         /// The dateTime representing the creation time when this audit message was created.

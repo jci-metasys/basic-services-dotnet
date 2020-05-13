@@ -40,6 +40,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>The current Culture Used for Metasys client localization.</summary>
         public CultureInfo Culture { get; set; }
 
+        /// <summary>
+        /// The hostname of Metasys API server.
+        /// </summary>
+        protected string Hostname { get; private set; }
+
         private static CultureInfo CultureEnUS = new CultureInfo(1033);
 
         /// <summary>
@@ -55,7 +60,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Local instance of Alarms service.
         /// </summary>
-		public  IProvideAlarmInfo Alarms { get; set; }
+		public IProvideAlarmInfo Alarms { get; set; }
 
         /// <summary>
         /// Local instance of Audits service.
@@ -79,13 +84,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="version">The server's Api version.</param>
         /// <param name="cultureInfo">Localization culture for Metasys enumeration translations.</param>
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
-        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v2, CultureInfo cultureInfo = null, bool logClientErrors=true)
+        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v2, CultureInfo cultureInfo = null, bool logClientErrors = true)
         {
+            Hostname = hostname;
             // Set Metasys culture if specified, otherwise use current machine Culture.
             Culture = cultureInfo ?? CultureInfo.CurrentCulture;
 
-            // Initialize the HTTP client with a base URL
-            AccessToken = new AccessToken(null, DateTime.UtcNow);
+            // Initialize the HTTP client with a base URL    
             if (ignoreCertificateErrors)
             {
                 HttpClientHandler httpClientHandler = new HttpClientHandler();
@@ -330,7 +335,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     .ReceiveJson<JToken>()
                     .ConfigureAwait(false);
 
-                CreateAccessToken(response);
+                CreateAccessToken(Hostname,username,response);
             }
             catch (FlurlHttpException e)
             {
@@ -363,8 +368,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 var response = await Client.Request("refreshToken")
                     .GetJsonAsync<JToken>()
                     .ConfigureAwait(false);
-
-                CreateAccessToken(response);
+                // Since it's a refresh, get issue info from the current token                
+                CreateAccessToken(AccessToken.Issuer, AccessToken.IssuedTo, response);
             }
             catch (FlurlHttpException e)
             {
@@ -378,9 +383,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// On failure leaves the AccessToken and authorization header in previous state.
         /// </summary>
         /// <param name="token"></param>
+        /// <param name="issuer"></param>
+        /// <param name="issuedTo"></param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysTokenException"></exception>
-        private void CreateAccessToken(JToken token)
+        private void CreateAccessToken(string issuer, string issuedTo, JToken token)
         {
             try
             {
@@ -388,7 +395,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var expires = token["expires"];
                 var accessToken = $"Bearer {accessTokenValue.Value<string>()}";
                 var date = expires.Value<DateTime>();
-                this.AccessToken = new AccessToken(accessToken, date);
+                this.AccessToken = new AccessToken(issuer, issuedTo, accessToken, date);
                 Client.Headers.Remove("Authorization");
                 Client.Headers.Add("Authorization", this.AccessToken.Token);
                 if (RefreshToken)
@@ -433,6 +440,15 @@ namespace JohnsonControls.Metasys.BasicServices
         public AccessToken GetAccessToken()
         {
             return this.AccessToken;
+        }
+
+        /// <summary>
+        /// Set the current session access token.
+        /// </summary>
+        /// <returns>Current session's Access Token.</returns>
+        public void SetAccessToken(AccessToken accessToken)
+        {
+            this.AccessToken = accessToken;
         }
 
         /// <summary>
@@ -1003,10 +1019,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets all spaces by requesting each available page.
         /// </summary>
-        /// <param name="type">Optional type number as a string</param>
+        /// <param name="type">Optional type ID belonging to SpaceTypeEnum.</param>            
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        public IEnumerable<MetasysObject> GetSpaces(string type = null)
+        public IEnumerable<MetasysObject> GetSpaces(SpaceTypeEnum? type = null)
         {
             return GetSpacesAsync(type).GetAwaiter().GetResult();
         }
@@ -1014,13 +1030,38 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets all spaces asynchronously by requesting each available page.
         /// </summary>
-        /// <param name="type">Optional type number as a string</param>
+        /// <param name="type">Optional type ID belonging to SpaceTypeEnum.</param>                
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        public async Task<IEnumerable<MetasysObject>> GetSpacesAsync(string type = null)
+        public async Task<IEnumerable<MetasysObject>> GetSpacesAsync(SpaceTypeEnum? type = null)
         {
-            var response = await GetAllAvailablePagesAsync("spaces", new Dictionary<string, string>() { { "type", type } });
-            return toMetasysObject(response);
+            Dictionary<string, string> parameters=null;
+            if (type != null)
+            {
+                // Init Dictionary with Space Type parameter
+                parameters = new Dictionary<string, string>() { { "type", ((int)type).ToString() } };
+            }
+            var spaces = await GetAllAvailablePagesAsync("spaces", parameters).ConfigureAwait(false);
+            return toMetasysObject(spaces,type:MetasysObjectTypeEnum.Space);                      
+        }
+
+        /// <summary>
+        /// Gets children spaces of the given space.
+        /// </summary>
+        /// <param name="id">The GUID of the parent space.</param>   
+        public IEnumerable<MetasysObject> GetSpaceChildren(Guid id)
+        {
+            return GetSpaceChildrenAsync(id).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Gets children spaces of the given space asynchronously.
+        /// </summary>
+        /// <param name="id">The GUID of the parent space.</param>      
+        public async Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid id)
+        {
+            var spaceChildren = await GetAllAvailablePagesAsync("spaces", null, id.ToString(), "spaces").ConfigureAwait(false);
+            return toMetasysObject(spaceChildren,MetasysObjectTypeEnum.Space);
         }
 
 
@@ -1039,8 +1080,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
         {
-            var response = await GetAllAvailablePagesAsync("equipment");
-            return toMetasysObject(response);
+            var equipment = await GetAllAvailablePagesAsync("equipment");
+            return toMetasysObject(equipment,MetasysObjectTypeEnum.Equipment);
         }
 
         /// <summary>
@@ -1078,8 +1119,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
         {
-            var response = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment");
-            return toMetasysObject(response);
+            var spaceEquipment = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment");
+            return toMetasysObject(spaceEquipment,MetasysObjectTypeEnum.Equipment);
         }
 
         /// <summary>
@@ -1116,12 +1157,12 @@ namespace JohnsonControls.Metasys.BasicServices
                     string objectId = point.ObjectUrl.Split('/').Last();
                     point.ObjectId = ParseObjectIdentifier(objectId);
                     // Retrieve attribute Id from full URL 
-                    string attributeId = point.AttributeUrl.Split('/').Last();                    
+                    string attributeId = point.AttributeUrl.Split('/').Last();
                     if (point.ObjectId != Guid.Empty) // Sometime can happen that there are empty Guids.
                     {
                         // Collect Guids to perform read property multiple in "one call" (supporting only presentValue so far)
                         if (attributeId == "85" && readAttributeValue)
-                        {   
+                        {
                             guids.Add(point.ObjectId);
                             pointsWithAttribute.Add(point);
                         }
@@ -1139,7 +1180,7 @@ namespace JohnsonControls.Metasys.BasicServices
             if (readAttributeValue)
             {
                 // Try to Read Present Value when available. Note: can't read attribute ID from attribute full URL of point since we got only the description.
-                var results = await ReadPropertyMultipleAsync(guids, new List<string> { "presentValue" });               
+                var results = await ReadPropertyMultipleAsync(guids, new List<string> { "presentValue" });
                 foreach (var r in results)
                 {
                     var point = pointsWithAttribute.SingleOrDefault(s => s.ObjectId == r.Id);
@@ -1147,7 +1188,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     point.PresentValue = r.Variants?.SingleOrDefault(s => s.Attribute == "presentValue");
                     // Finally add the point back to the original list
                     points.Add(point);
-                }                
+                }
             }
             return points;
         }

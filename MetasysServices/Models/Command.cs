@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices
@@ -251,37 +252,12 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Overwrites the ToString method to print out a command and all items it contains.
+        /// Return a pretty JSON string of the current object.
         /// </summary>
-        /// <returns>A string representation of the Command.</returns>
+        /// <returns></returns>
         public override string ToString()
         {
-            string str = string.Concat("Title: ", Title, "\nKey: ", TitleEnumerationKey, "\nCommandId: ", CommandId, "\nItems: ");
-            if (Items != null)
-            {
-                foreach (var item in Items)
-                {
-                    str = string.Concat(str, "\n\n  Title: ", item.Title, "\n  Type: ", item.Type);
-                    if (item.EnumerationValues != null)
-                    {
-                        str = string.Concat(str, "\n  Items: ");
-                        foreach (var value in item.EnumerationValues)
-                        {
-                            str = string.Concat(str, "\n\n    Title: ", value.Title, "\n    Key: ", value.TitleEnumerationKey);
-                        }
-                    }
-                    else
-                    {
-                        if (item.Maximum.HasValue)
-                            str = string.Concat(str, "\n  Maximum: ", item.Maximum.Value.ToString());
-
-                        if (item.Minimum.HasValue)
-                            str = string.Concat(str, "\n  Minimum: ", item.Minimum.Value.ToString());
-                    }
-                }
-                str = string.Concat(str, "\n");
-            }
-            return str;
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
 
         /// <summary>

@@ -15,15 +15,15 @@ namespace MetasysServices.Tests
         private const string Unsupported = "statusEnumSet.unsupportedObjectType";
         private const string Array = "dataTypeEnumSet.arrayDataType";
         private static readonly CultureInfo testCulture = new CultureInfo("en-US");
- 
+
         [Test]
         public void TestAccessTokenEqual()
         {
             string date = "2030-01-01T00:00:00Z";
             DateTime dateTime = DateTime.Parse(date).ToUniversalTime();
             DateTime dateTimeCopy = DateTime.Parse(date).ToUniversalTime();
-            var token1 = new AccessToken("Bearer faketoken", dateTime);
-            var token2 = new AccessToken("Bearer faketoken", dateTimeCopy);
+            var token1 = new AccessToken("fake_issuer", "fake_issued_to", "Bearer faketoken", dateTime);
+            var token2 = new AccessToken("fake_issuer", "fake_issued_to", "Bearer faketoken", dateTimeCopy);
 
             Assert.AreEqual(token1.GetHashCode(), token2.GetHashCode());
             Assert.AreEqual(token1, token2);
@@ -72,7 +72,7 @@ namespace MetasysServices.Tests
             string commandCopy = command.Clone().ToString();
             Command cmd = new Command(JToken.Parse(command), testCulture);
             Command cmdCopy = new Command(JToken.Parse(commandCopy), testCulture);
-            
+
             Assert.AreEqual(cmd.GetHashCode(), cmdCopy.GetHashCode());
             Assert.AreEqual(cmd, cmdCopy);
             Assert.NotNull(cmd.ToString());
@@ -110,9 +110,9 @@ namespace MetasysServices.Tests
         [Test]
         public void TestMetasysObjectTypeEqual()
         {
-            MetasysObjectType type = new MetasysObjectType(185, "objectTypeEnumSet.n50Class", 
+            MetasysObjectType type = new MetasysObjectType(185, "objectTypeEnumSet.n50Class",
                 "NAE55-NIE59", testCulture);
-            MetasysObjectType typeCopy = new MetasysObjectType(185, "objectTypeEnumSet.n50Class", 
+            MetasysObjectType typeCopy = new MetasysObjectType(185, "objectTypeEnumSet.n50Class",
                 "NAE55-NIE59", testCulture);
             Assert.AreEqual(type.GetHashCode(), typeCopy.GetHashCode());
             Assert.AreEqual(type, typeCopy);
@@ -159,7 +159,7 @@ namespace MetasysServices.Tests
 
             VariantMultiple vm = new VariantMultiple(id, vlist);
             VariantMultiple vmCopy = new VariantMultiple(idCopy, vlistCopy);
-            
+
             Assert.AreEqual(vm.GetHashCode(), vmCopy.GetHashCode());
             Assert.AreEqual(vm, vmCopy);
         }
@@ -170,8 +170,8 @@ namespace MetasysServices.Tests
             string date = "2030-01-01T00:00:00Z";
             DateTime dateTime1 = DateTime.Parse(date).ToUniversalTime();
             DateTime dateTime2 = DateTime.Parse(date).ToUniversalTime();
-            var token1 = new AccessToken("Bearer faketoken", dateTime1);
-            var token2 = new AccessToken("Bearer faketokem", dateTime2);
+            var token1 = new AccessToken("fake_issuer", "fake_issued_to","Bearer faketoken", dateTime1);
+            var token2 = new AccessToken("fake_issuer", "fake_issued_to","Bearer faketokem", dateTime2);
 
             Assert.AreNotEqual(token1.GetHashCode(), token2.GetHashCode());
             Assert.AreNotEqual(token1, token2);
@@ -184,8 +184,8 @@ namespace MetasysServices.Tests
             string date2 = "2030-01-01T00:00:01Z";
             DateTime dateTime1 = DateTime.Parse(date1).ToUniversalTime();
             DateTime dateTime2 = DateTime.Parse(date2).ToUniversalTime();
-            var token1 = new AccessToken("Bearer faketoken", dateTime1);
-            var token2 = new AccessToken("Bearer faketoken", dateTime2);
+            var token1 = new AccessToken("fake_issuer", "fake_issued_to","Bearer faketoken", dateTime1);
+            var token2 = new AccessToken("fake_issuer", "fake_issued_to","Bearer faketoken", dateTime2);
 
             Assert.AreNotEqual(token1.GetHashCode(), token2.GetHashCode());
             Assert.AreNotEqual(token1, token2);
@@ -220,7 +220,7 @@ namespace MetasysServices.Tests
                 "\"maxItems\": 1 }");
             Command cmd1 = new Command(JToken.Parse(command1), testCulture);
             Command cmd2 = new Command(JToken.Parse(command2), testCulture);
-            
+
             Assert.AreNotEqual(cmd1.GetHashCode(), cmd2.GetHashCode());
             Assert.AreNotEqual(cmd1, cmd2);
             Assert.AreNotEqual(cmd2, cmd1);
@@ -267,9 +267,9 @@ namespace MetasysServices.Tests
         [Test]
         public void TestMetasysObjectTypeDoesNotEqual()
         {
-            MetasysObjectType type = new MetasysObjectType(185, "objectTypeEnumSet.n50Class", 
+            MetasysObjectType type = new MetasysObjectType(185, "objectTypeEnumSet.n50Class",
                 "NAE55-NIE59", testCulture);
-            MetasysObjectType type2 = new MetasysObjectType(195, "objectTypeEnumSet.fieldBusClass", 
+            MetasysObjectType type2 = new MetasysObjectType(195, "objectTypeEnumSet.fieldBusClass",
                 "Field Bus MSTP", testCulture);
             Assert.AreNotEqual(type.GetHashCode(), type2.GetHashCode());
             Assert.AreNotEqual(type, type2);
@@ -324,7 +324,7 @@ namespace MetasysServices.Tests
 
             VariantMultiple vm = new VariantMultiple(id, vlist);
             VariantMultiple vm2 = new VariantMultiple(id2, vlist2);
-            
+
             Assert.AreNotEqual(vm.GetHashCode(), vm2.GetHashCode());
             Assert.AreNotEqual(vm, vm2);
         }

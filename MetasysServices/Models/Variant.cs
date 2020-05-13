@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices
@@ -284,6 +285,15 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
             }
             return code + arrCode;
+        }
+
+        /// <summary>
+        /// Return a pretty JSON string of the current object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
     }
 }

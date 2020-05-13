@@ -12,7 +12,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm Unique Identifier (GUID)
         /// </summary>
-        string Id { get; set; }
+        Guid Id { get; set; }
 
         /// <summary>
         /// Item fully qualified reference

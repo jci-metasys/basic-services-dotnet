@@ -10,40 +10,57 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// MetasysObject is a structure that holds information about a Metasys object.
     /// </summary>
-    public struct MetasysObject
+    public class MetasysObject
     {
         private CultureInfo _CultureInfo;
 
         /// <summary>The item reference of the Metasys object.</summary>
         [JsonProperty(Required = Required.Always)]
-        public string ItemReference { private set; get; }
+        public string ItemReference { set; get; }
 
         /// <summary>The id of the Metasys object.</summary>
         [JsonProperty(Required = Required.Always)]
-        public Guid Id { private set; get; }
+        public Guid Id { set; get; }
 
         /// <summary>The name of the Metasys object.</summary>
         [JsonProperty(Required = Required.Always)]
-        public string Name { private set; get; }   
+        public string Name { set; get; }   
 
         /// <summary>The description of the Metasys object.</summary>
-        public string Description { private set; get; }
+        public string Description { set; get; }
+        
+        /// <summary>
+        /// The actual Metasys Object type.
+        /// </summary>
+        public MetasysObjectTypeEnum? Type { get; set; }
+
+        /// <summary>
+        /// The resource type detail reference. 
+        /// </summary>
+        public string TypeUrl { get; set; }
+
+        /// <summary>
+        /// The specific category of the Metasys Object Type.
+        /// </summary>
+        public string Category { get; set; }
 
         /// <summary>The direct children objects of the Metasys object.</summary>
-        public IEnumerable<MetasysObject> Children { private set; get; }
+        public IEnumerable<MetasysObject> Children { set;  get; }
 
         /// <summary>
         /// The number of direct children objects.
         /// </summary>
         /// <value>The number of children or -1 if there is no children data.</value>
-        public int ChildrenCount { private set; get; }
+        public int ChildrenCount { set; get; }
 
-        internal MetasysObject(JToken token, IEnumerable<MetasysObject> children = null, CultureInfo cultureInfo = null)
+        public MetasysObject() { }
+
+        internal MetasysObject(JToken token, IEnumerable<MetasysObject> children = null, CultureInfo cultureInfo = null, MetasysObjectTypeEnum? type =null)
         {
             _CultureInfo = cultureInfo;           
             Children = children??new List<MetasysObject>(); // Return empty list by convention for null         
-            ChildrenCount = Children?.Count()??0; // Children count is 0 when children is null                       
-            string placeholder = "NULL";
+            ChildrenCount = Children?.Count()??0; // Children count is 0 when children is null                                 
+            Type = type;
 
             try
             {
@@ -61,7 +78,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch
             {
-                Name = placeholder;
+                Name = null;
             }
 
             try
@@ -70,21 +87,35 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             catch
             {
-                Description = placeholder;
+                Description = null;
+            }
+
+            try
+            {
+                TypeUrl = token["typeUrl"].Value<string>();
+                if (Type == MetasysObjectTypeEnum.Space)
+                {
+                    // Set the specific category for Space                
+                    var typeId = TypeUrl.Split('/').Last();
+                    // Convert space type to enum                
+                    Category = ((SpaceTypeEnum)int.Parse(typeId)).ToString();
+                }                
+            }
+            catch
+            {
+                TypeUrl = null;
+                Category = null;
             }
         }
 
+
         /// <summary>
-        /// Overwrites the ToString method to print out an object's information.
+        /// Return a pretty JSON string of the current object.
         /// </summary>
-        /// <returns>A string representation of the Command.</returns>
+        /// <returns></returns>
         public override string ToString()
         {
-            return string.Concat("Id: ", Id, "\n",
-                "ItemReference: ", ItemReference, "\n",
-                "Name: ", Name, "\n",             
-                "Description: ", Description, "\n",
-                "Number of Children: ", ChildrenCount);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
 
         /// <summary>

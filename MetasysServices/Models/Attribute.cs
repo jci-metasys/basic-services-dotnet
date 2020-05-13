@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -44,6 +45,16 @@ namespace JohnsonControls.Metasys.BasicServices
             if (this.Description != null)
                 code = (code * 7) + Description.GetHashCode();           
             return code;
+        }
+
+
+        /// <summary>
+        /// Return a pretty JSON string of the current object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
     }
 }

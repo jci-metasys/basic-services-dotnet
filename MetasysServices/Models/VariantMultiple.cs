@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -63,6 +64,16 @@ namespace JohnsonControls.Metasys.BasicServices
                 code = (code * 7) + arrCode;
             }
             return code;
+        }
+
+
+        /// <summary>
+        /// Return a pretty JSON string of the current object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
     }
 }

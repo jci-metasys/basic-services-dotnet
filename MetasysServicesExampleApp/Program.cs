@@ -20,17 +20,17 @@ namespace MetasysServicesExampleApp
                     connectionDetails = Console.ReadLine();
                     args = connectionDetails.Split(' ');
                 }
-                string username=null, password=null, hostname, credManTarget=null;
+                string username=null, password=null, hostname=null, credManTarget=null; 
                 if (args.Length > 2)
                 {
                     username = args[0];
                     password = args[1];
-                    hostname = args[2];
+                    hostname = args[2];                           
                 }
                 else
                 {                
                      credManTarget= args[0];
-                     hostname= args[1];
+                     hostname= args[1];                     
                 }
 
                 #region Login
@@ -38,9 +38,9 @@ namespace MetasysServicesExampleApp
                 // CultureInfo culture = new CultureInfo("en-US");
 
                 Console.WriteLine("\nLogging in...");
-                var client = new MetasysClient(hostname,logClientErrors:false); // Disable default logging since it is handled in this app.
+                var client = new MetasysClient(hostname,true,logClientErrors:false); // Disable default logging since it is handled in this app.
                 // var client = new MetasysClient(hostname, true); // Ignore Certificate Errors
-                // var client = new MetasysClient(hostname, false, ApiVersion.V2, culture);
+                // var client = new MetasysClient(hostname, false, ApiVersion.v2, culture);
 
                 AccessToken token;
                 if (string.IsNullOrWhiteSpace(credManTarget))
@@ -65,8 +65,8 @@ namespace MetasysServicesExampleApp
             {
                 log.Logger.Error(string.Format("An error occured while login - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to exit");
-            }
-            Console.ReadLine();
+                Console.ReadLine();
+            }          
         }
 
         private static bool MainMenu(MetasysClient client)
@@ -81,15 +81,17 @@ namespace MetasysServicesExampleApp
             Console.WriteLine("6) Alarms");
             Console.WriteLine("7) Trends");
             Console.WriteLine("8) Audits");
-            Console.WriteLine("9) Exit");
+            Console.WriteLine("9) JSON Output");
+            Console.WriteLine("10) Exit");
             Console.Write("\r\nSelect an option: ");
-
-            switch (Console.ReadLine())
+            var option = Console.ReadLine();
+            Console.WriteLine();
+            switch (option)
             {
-                case "1":
+                case "1":                 
                     new GetObjectIdentifierDemo(client).Run();
                     return true;
-                case "2":
+                case "2":                
                     new GeneralDemo(client).Run();
                     return true;
                 case "3":
@@ -111,6 +113,9 @@ namespace MetasysServicesExampleApp
                     new AuditsDemo(client).Run();
                     return true;
                 case "9":
+                    new JsonOutputDemo(client).Run();
+                    return true;
+                case "10":
                     return false;
                 default:
                     return true;

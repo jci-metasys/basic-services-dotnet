@@ -88,5 +88,15 @@ namespace JohnsonControls.Metasys.BasicServices
                 throw new MetasysObjectException(e);
             }
         }
+
+
+        /// <summary>
+        /// Return a pretty JSON string of the current object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
     }
 }

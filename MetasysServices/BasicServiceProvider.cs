@@ -69,7 +69,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Return Metasys Object representation from a generic JSON object tree.
         /// </summary>
         /// <returns></returns>
-        protected List<MetasysObject> toMetasysObject(IEnumerable<TreeObject> objects)
+        protected List<MetasysObject> toMetasysObject(IEnumerable<TreeObject> objects, MetasysObjectTypeEnum? objectType=null)
         {
             if (objects == null)
             {
@@ -79,7 +79,7 @@ namespace JohnsonControls.Metasys.BasicServices
             List<MetasysObject> metasysObjects = new List<MetasysObject>();
             foreach (var o in objects)
             {
-                metasysObjects.Add(new MetasysObject(o.Item, toMetasysObject(o.Children)));
+                metasysObjects.Add(new MetasysObject(o.Item, toMetasysObject(o.Children), type:objectType));
             }
             return metasysObjects;
         }
@@ -88,9 +88,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Return Metasys Object representation from a generic JSON object.
         /// </summary>
         /// <returns></returns>
-        protected MetasysObject toMetasysObject(JToken item)
+        protected MetasysObject toMetasysObject(JToken item, MetasysObjectTypeEnum? objectType = null)
         {
-            return new MetasysObject(item, null);
+            return new MetasysObject(item, null, type:objectType);
         }
 
 
@@ -98,12 +98,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Return Metasys Object representation from a generic JSON object List.
         /// </summary>
         /// <returns></returns>
-        protected List<MetasysObject> toMetasysObject(List<JToken> items)
+        protected List<MetasysObject> toMetasysObject(List<JToken> items, MetasysObjectTypeEnum? type = null)
         {
             List<MetasysObject> objects = new List<MetasysObject>();
             foreach (var i in items)
             {
-                objects.Add(toMetasysObject(i));
+                objects.Add(toMetasysObject(i, objectType:type));
             }
             return objects;
         }
@@ -252,7 +252,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         protected async Task<PagedResult<T>> GetPagedResultsAsync<T>(string resource, Dictionary<string, string> parameters, params object[] pathSegments)
         {
-            var response = await GetRequestAsync(resource, parameters, pathSegments);
+            var response = await GetRequestAsync(resource, parameters, pathSegments).ConfigureAwait(false);
             return new PagedResult<T>(response);
         }
 

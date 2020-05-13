@@ -44,6 +44,11 @@ namespace JohnsonControls.Metasys.BasicServices
         AccessToken GetAccessToken();
 
         /// <summary>
+        /// Set the current session access token.
+        /// </summary>     
+        void SetAccessToken(AccessToken accessToken);
+
+        /// <summary>
         /// Given the Item Reference of an object, returns the object identifier.
         /// </summary>
         Guid GetObjectIdentifier(string itemReference);
@@ -154,17 +159,28 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets all spaces.
         /// </summary>
-        IEnumerable<MetasysObject> GetSpaces(string type = null);
+        IEnumerable<MetasysObject> GetSpaces(SpaceTypeEnum? type = null);
+
+        /// <summary>
+        /// Gets children spaces of the given space.
+        /// </summary>
+        IEnumerable<MetasysObject> GetSpaceChildren(Guid spaceId);
+
 
         /// <summary>
         /// Gets all spaces asynchronously.
         /// </summary>
-        Task<IEnumerable<MetasysObject>> GetSpacesAsync(string type = null);
+        Task<IEnumerable<MetasysObject>> GetSpacesAsync(SpaceTypeEnum? type = null);
+
+        /// <summary>
+        /// Gets children spaces of the given space asynchronously.
+        /// </summary>
+        Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid id);
 
         /// <summary>
         /// Gets all Equipment for the given space
         /// </summary>
-        IEnumerable<MetasysObject> GetSpaceEquipment(Guid spaceId);
+        IEnumerable<MetasysObject> GetSpaceEquipment(Guid id);
 
         /// <summary>
         /// Gets all spaces asynchronously.

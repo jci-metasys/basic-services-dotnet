@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,40 +10,44 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Point is a structure that holds information about an object attribute mapped to a point.
     /// </summary>
-    public struct Point
+    public class Point
     {
         /// <summary>
         /// The name of the Equipment that contains the Point
         /// </summary>
         public string EquipmentName { get; set; }
         /// <summary>The Short name of the Point.</summary>
-        public string ShortName { private set; get; }
+        public string ShortName { set; get; }
         /// <summary>The Label of the Point.</summary>
-        public string Label { private set; get; }
+        public string Label { set; get; }
         /// <summary>
         /// Category of the Point.
         /// </summary>
-        public string Category { private set; get; }
+        public string Category { set; get; }
         /// <summary>
         /// Flag that states when the attribute object contains data suitable to display
         /// </summary>
-        public bool IsDisplayData { private set; get; }
+        public bool IsDisplayData {  set; get; }
         /// <summary>
         /// The ID of the object where the point is mapped
         /// </summary>
-        public Guid ObjectId { get; internal set; }
+        public Guid ObjectId { get; set; }
         /// <summary>
         /// Full URL of the attribute where the point is mapped
         /// </summary>
-        public string AttributeUrl {get; private  set; }
+        public string AttributeUrl {get;   set; }
         /// <summary>
         /// Full URL of the object where the point is mapped
         /// </summary>
-        public string ObjectUrl { get; private set; }
+        public string ObjectUrl { get;  set; }
         /// <summary>
         /// Value of the attribute where the point is mapped
         /// </summary>
-        public Variant? PresentValue { get; internal set; }
+        public Variant? PresentValue { get;  set; }
+        
+        public Point()
+        {
+        }
 
         internal Point(JToken token)
         {                   
@@ -61,6 +66,16 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 throw new MetasysObjectException(token.ToString(), e);
             }         
+        }
+
+
+        /// <summary>
+        /// Return a pretty JSON string of the current object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// 
         [JsonProperty(Required = Required.Always)]
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Item fully qualified reference
@@ -139,6 +139,15 @@ namespace JohnsonControls.Metasys.BasicServices
             if (this.TypeUrl != null)
                 code = (code * 7) + TypeUrl.GetHashCode();
             return code;
+        }
+
+        /// <summary>
+        /// Return a pretty JSON string of the current object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
     }
 }

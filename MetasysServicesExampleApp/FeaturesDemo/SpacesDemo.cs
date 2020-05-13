@@ -28,7 +28,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 // Select a space type
                 Console.WriteLine("\nPlease enter the Space Type ID to retrieve all related spaces:");
                 string spaceType = Console.ReadLine();
-                IEnumerable<MetasysObject> spaces = client.GetSpaces(spaceType);
+                IEnumerable<MetasysObject> spaces = client.GetSpaces((SpaceTypeEnum)Enum.Parse(typeof(SpaceTypeEnum),spaceType));
                 Console.WriteLine($"Spaces found: {spaces.Count()}");
                 foreach (var space in spaces)
                 {

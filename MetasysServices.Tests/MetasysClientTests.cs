@@ -49,7 +49,7 @@ namespace MetasysServices.Tests
                 .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
                 .Times(1);
             var token = client.GetAccessToken();
-            var expected = new AccessToken("Bearer faketokenLoginAsync", dateTime2);
+            var expected = new AccessToken("metasys_server","Bearer faketokenLoginAsync","fake_user", dateTime2);
             Assert.AreEqual(expected, token);
         }
 
@@ -69,7 +69,7 @@ namespace MetasysServices.Tests
                     .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
                     .Times(1);
                 var token = client.GetAccessToken();
-                var expected = new AccessToken("Bearer faketokenLoginAsyncContext", dateTime2);
+                var expected = new AccessToken("metasys_server","Bearer faketokenLoginAsyncContext","fake_user", dateTime2);
                 Assert.AreEqual(expected, token);
             });
         }
@@ -167,7 +167,7 @@ namespace MetasysServices.Tests
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var token = client.GetAccessToken();
-            var expected = new AccessToken("Bearer faketokenRefreshAsync", dateTime2);
+            var expected = new AccessToken("metasys_server", "Bearer faketokenRefreshAsyncContext", "fake_user", dateTime2);
             Assert.AreEqual(expected, token);
         }
 
@@ -185,7 +185,7 @@ namespace MetasysServices.Tests
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 var token = client.GetAccessToken();
-                var expected = new AccessToken("Bearer faketokenRefreshAsyncContext", dateTime2);
+                var expected = new AccessToken("metasys_server", "Bearer faketokenRefreshAsyncContext", "fake_user", dateTime2);
                 Assert.AreEqual(expected, token);
             });
         }
@@ -217,8 +217,8 @@ namespace MetasysServices.Tests
             string time = future.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
             httpTest.RespondWithJson(new { accessToken = "faketokenTimer1", expires = time })
                 .RespondWithJson(new { accessToken = "faketokenTimer2", expires = date2 });
-            var expected1 = new AccessToken("Bearer faketokenTimer1", future);
-            var expected2 = new AccessToken("Bearer faketokenTimer2", dateTime2);
+            var expected1 = new AccessToken("metasys_server","Bearer faketokenTimer1","fake_user", future);
+            var expected2 = new AccessToken("metasys_server", "Bearer faketokenTimer2", "fake_user", dateTime2);
 
             client.TryLogin("username", "password");
 
@@ -1972,7 +1972,7 @@ namespace MetasysServices.Tests
                 "\"items\": [", space, "],",
                 "\"self\": \"https://hostname/api/v2/spaces?page=1&pageSize=200&sort=name\"}"));
 
-            var devices = client.GetSpaces("3");
+            var devices = client.GetSpaces(SpaceTypeEnum.Room);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
