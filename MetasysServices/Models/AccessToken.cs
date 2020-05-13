@@ -43,8 +43,11 @@ namespace JohnsonControls.Metasys.BasicServices
             if (obj != null && obj is AccessToken)
             {
                 var other = (AccessToken)obj;
-                return (((this.Token == null && other.Token == null) || (this.Token != null && this.Token.Equals(other.Token))) &&
-                    other.Expires.Equals(this.Expires));
+                return (this.Token == null && other.Token == null || (this.Token != null && other.Token != null &&
+                    other.Token.Equals(this.Token) &&
+                    other.Expires.Equals(this.Expires) &&
+                    other.IssuedTo.Equals(this.IssuedTo) && 
+                    other.Issuer.Equals(this.Issuer)));
             }
             return false;
         }
@@ -57,6 +60,10 @@ namespace JohnsonControls.Metasys.BasicServices
                 code = (code * 7) + Token.GetHashCode();
             if (Expires != null)
                 code = (code * 7) + Expires.GetHashCode();
+            if (Issuer != null)
+                code = (code * 7) + Issuer.GetHashCode();
+            if (IssuedTo != null)
+                code = (code * 7) + IssuedTo.GetHashCode();
             return code;
         }
 

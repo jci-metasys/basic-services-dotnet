@@ -170,9 +170,8 @@ namespace MetasysServices.Tests
             string date = "2030-01-01T00:00:00Z";
             DateTime dateTime1 = DateTime.Parse(date).ToUniversalTime();
             DateTime dateTime2 = DateTime.Parse(date).ToUniversalTime();
-            var token1 = new AccessToken("fake_issuer", "fake_issued_to","Bearer faketoken", dateTime1);
-            var token2 = new AccessToken("fake_issuer", "fake_issued_to","Bearer faketokem", dateTime2);
-
+            var token1 = new AccessToken("fake_issuer1", "fake_issued_to1","Bearer faketoken", dateTime1);
+            var token2 = new AccessToken("fake_issuer2", "fake_issued_to2","Bearer faketokem", dateTime2);
             Assert.AreNotEqual(token1.GetHashCode(), token2.GetHashCode());
             Assert.AreNotEqual(token1, token2);
         }
