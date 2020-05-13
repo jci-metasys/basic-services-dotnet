@@ -56,6 +56,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 /* SNIPPET 4: END */
 
                 #endregion
+                
                 Console.WriteLine();
                 Console.WriteLine("Press Enter to continue...");
                 Console.ReadLine();
@@ -71,7 +72,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 d5d96cd3-db4a-52e0-affd-8bc3393c30ec
                 Console Output: End */
                 /* SNIPPET 1: END */
+                
                 #endregion
+
                 Console.WriteLine();
                 Console.WriteLine("Press Enter to continue...");
                 Console.ReadLine();
@@ -100,10 +103,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     }
                 Console Output: End */
                 /* SNIPPET 1: END */
+
                 #endregion
+                
                 Console.WriteLine();
                 Console.WriteLine("Press Enter to continue...");
-                //  Console.ReadLine();
+                Console.ReadLine();
                 Console.WriteLine();
 
                 #region GET AND SEND COMMANDS
@@ -232,8 +237,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                         }
                       ]
                     }
-               Console Output: End */
-                /* SNIPPET 1: END */
+               Console Output: End */               
                 var list1 = new List<object> { 70 };
                 client.SendCommand(objectId, adjust.CommandId, list1);
                 var list2 = new List<object> { 75 };
@@ -241,7 +245,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 var list3 = new List<object> { "attributeEnumSet.presentValue", "writePriorityEnumSet.priorityNone" };
                 client.SendCommand(objectId, release.CommandId, list3);
                 /* SNIPPET 2: END */
+
                 #endregion
+                
                 Console.WriteLine();
                 Console.WriteLine("Press Enter to continue...");
                 Console.ReadLine();
@@ -362,6 +368,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 }
                   Console Output: End */
                 /* SNIPPET 2: END */
+
                 #endregion
 
                 Console.WriteLine();
@@ -628,6 +635,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     }
                  Console Output: End */
                 /* SNIPPET 1: END */
+
                 #endregion
 
                 Console.WriteLine();
@@ -696,6 +704,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 AuditItemProvider singleAudit = client.Audits.GetSingleAudit(audit.Id);
                 PagedResult<AuditItemProvider> objectAudits = client.Audits.GetAuditsForAnObject(objectId, auditFilter);
                 /* SNIPPET 2: END */
+
                 #endregion
 
                 Console.WriteLine();
