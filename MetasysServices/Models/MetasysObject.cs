@@ -53,6 +53,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <value>The number of children or -1 if there is no children data.</value>
         public int ChildrenCount { set; get; }
 
+        /// <summary>
+        /// Default constructor for Metasys Object.
+        /// </summary>
         public MetasysObject() { }
 
         internal MetasysObject(JToken token, IEnumerable<MetasysObject> children = null, CultureInfo cultureInfo = null, MetasysObjectTypeEnum? type =null)

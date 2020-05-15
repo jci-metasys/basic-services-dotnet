@@ -45,6 +45,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public Variant? PresentValue { get;  set; }
         
+        /// <summary>
+        /// Default Constructor for Point.
+        /// </summary>
         public Point()
         {
         }

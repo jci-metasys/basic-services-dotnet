@@ -25,7 +25,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>Expiration date in UTC time.</summary>
         public DateTime Expires { private set; get; }
        
-
+        /// <summary>
+        /// Initialize an AccessToken Object with all required information.
+        /// </summary>
+        /// <param name="issuer"></param>
+        /// <param name="issuedTo"></param>
+        /// <param name="token"></param>
+        /// <param name="expires"></param>
         public AccessToken(string issuer, string issuedTo, string token, DateTime expires)
         {
             Issuer = issuer;

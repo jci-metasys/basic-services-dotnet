@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.5.0] - 2020-05-15
+
+### Added
+
+- GetSpaceChildren method
+- SpaceType enum
+- Set AccessToken method
+- Issuer and IssuedTo properties for AccessToken
+- TypeUrl property for MetasysObject
+- Category property for MetasysObject 
+- ToString with JSON format for output objects
+
 ## [3.4.0] - 2020-03-26
 
 ### Added

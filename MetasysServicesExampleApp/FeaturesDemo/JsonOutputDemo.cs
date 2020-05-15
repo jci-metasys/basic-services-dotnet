@@ -496,6 +496,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
                 /* SNIPPET 4: START */
                 IEnumerable<MetasysObject> spaceEquipment = client.GetSpaceEquipment(building.Id);
+                IEnumerable<MetasysObject> spaceChildren = client.GetSpaceChildren(building.Id);
                 MetasysObject sampleSpaceEquipment = spaceEquipment.FirstOrDefault();
                 /* SNIPPET 4: END */
 

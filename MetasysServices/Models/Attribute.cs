@@ -6,7 +6,7 @@ using System.Text;
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
-    /// DTO for the attribute of an Object
+    /// DTO for the attribute of an Object.
     /// </summary>
     public class Attribute
     {

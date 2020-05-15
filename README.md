@@ -333,15 +333,17 @@ If the enumeration key is desired over the translated value use the EnumerationK
 
 ### Spaces and equipment
 
-To get all available spaces on an object use the GetSpaces method. This method will return a list of MetasysObjects. This accepts an optional type number as a string to filter the response. To get all of the available types on your server use the GetSpaceTypes method which returns a list of MetasysObjectType. To get all of the equipment on your server use the GetEquipment method which returns a list of MetasysObjects.
+To get all available spaces on an object use the GetSpaces method. This method will return a list of MetasysObjects. This accepts an optional type as enum to filter the response. To get all of the available types on your server use the GetSpaceTypes method which returns a list of MetasysObjectType. To get all of the equipment on your server use the GetEquipment method which returns a list of MetasysObjects.
 ```csharp
 List<MetasysObjectType> types = client.GetSpaceTypes().ToList();
 int type1 = types[0].Id;
-List<MetasysObject> spaces = client.GetSpaces(type1.ToString()).ToList();
+// Retrieves the list of Buildings using SpaceTypeEnum helper
+List<MetasysObject> buildings = client.GetSpaces(SpaceTypeEnum.Building).ToList();
+MetasysObject building = buildings.LastOrDefault();
+IEnumerable<MetasysObject> spaceChildren = client.GetSpaceChildren(building.Id);
 List<MetasysObject> equipment = client.GetEquipment().ToList();
 ```
-To get the children objects of Spaces and Equipment use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete.
-If you wish to retrieve equipment for a given space you can use the GetSpaceEquipment method. The deeper element in the hierarchy is the point, use the getEquipmentPoints method to retrieve the points mapped to an equipment. The Point object contains PresentValue when available. 
+To get the children of a Space use the GetSpaceChildren method. If you wish to retrieve equipment for a given space you can use the GetSpaceEquipment method. The deeper element in the hierarchy is the point, use the getEquipmentPoints method to retrieve the points mapped to an equipment. The Point object contains PresentValue when available. 
 
 ```csharp
 Enumerable<MetasysObject> spaceEquipment = client.GetSpaceEquipment(new Guid(spaceID));
