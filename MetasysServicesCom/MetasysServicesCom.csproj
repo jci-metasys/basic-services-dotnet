@@ -17,7 +17,7 @@
     <Authors>Johnson Controls</Authors>
     <Description>Metasys Services Object Library</Description>
     <PackageId />
-    <Version>3.5.0</Version>
+    <Version>3.5.1</Version>
     <PackageReleaseNotes></PackageReleaseNotes>    
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

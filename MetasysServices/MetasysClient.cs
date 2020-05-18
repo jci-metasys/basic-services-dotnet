@@ -575,7 +575,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             try
             {
-                return await ReadPropertyAsync(id, attributeName);
+                return await ReadPropertyAsync(id, attributeName).ConfigureAwait(false); 
             }
             catch (MetasysHttpNotFoundException) when (suppressNotFoundException)
             {
@@ -896,7 +896,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
-            var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } });
+            var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } }).ConfigureAwait(false); 
             return toMetasysObject(response);
         }
 
@@ -917,7 +917,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public async Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync()
         {
-            return await GetResourceTypesAsync("networkDevices", "availableTypes");
+            return await GetResourceTypesAsync("networkDevices", "availableTypes").ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1080,7 +1080,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
         {
-            var equipment = await GetAllAvailablePagesAsync("equipment");
+            var equipment = await GetAllAvailablePagesAsync("equipment").ConfigureAwait(false);
             return toMetasysObject(equipment,MetasysObjectTypeEnum.Equipment);
         }
 
@@ -1099,7 +1099,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public async Task<IEnumerable<MetasysObjectType>> GetSpaceTypesAsync()
         {
-            return await GetResourceTypesAsync("enumSets", "1766/members");
+            return await GetResourceTypesAsync("enumSets", "1766/members").ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1119,7 +1119,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
         {
-            var spaceEquipment = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment");
+            var spaceEquipment = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment").ConfigureAwait(false);
             return toMetasysObject(spaceEquipment,MetasysObjectTypeEnum.Equipment);
         }
 
@@ -1180,7 +1180,7 @@ namespace JohnsonControls.Metasys.BasicServices
             if (readAttributeValue)
             {
                 // Try to Read Present Value when available. Note: can't read attribute ID from attribute full URL of point since we got only the description.
-                var results = await ReadPropertyMultipleAsync(guids, new List<string> { "presentValue" });
+                var results = await ReadPropertyMultipleAsync(guids, new List<string> { "presentValue" }).ConfigureAwait(false); 
                 foreach (var r in results)
                 {
                     var point = pointsWithAttribute.SingleOrDefault(s => s.ObjectId == r.Id);
@@ -1196,7 +1196,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="GetObjects(Guid, int)"/>
         public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels)
         {
-            var objects = await GetObjectChildrenAsync(id, null, levels);
+            var objects = await GetObjectChildrenAsync(id, null, levels).ConfigureAwait(false);
             return toMetasysObject(objects);
         }
 
@@ -1222,7 +1222,7 @@ namespace JohnsonControls.Metasys.BasicServices
             // Retrieve credentials first
             var credentials = CredentialUtil.GetCredential(credManTarget);
             // Get the control back to TryLogin method
-            return await TryLoginAsync(CredentialUtil.convertToUnSecureString(credentials.Username), CredentialUtil.convertToUnSecureString(credentials.Password), refresh);
+            return await TryLoginAsync(CredentialUtil.convertToUnSecureString(credentials.Username), CredentialUtil.convertToUnSecureString(credentials.Password), refresh).ConfigureAwait(false);
         }
     }
 }

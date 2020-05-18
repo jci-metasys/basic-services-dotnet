@@ -42,7 +42,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns>The list of alarms.</returns>
         public async Task<PagedResult<AlarmItemProvider>> GetAlarmsAsync(AlarmFilter alarmFilter)
         {                
-            return await GetPagedResultsAsync<AlarmItemProvider>("alarms", ToDictionary(alarmFilter));            
+            return await GetPagedResultsAsync<AlarmItemProvider>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);            
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns>The alarm details</returns>
         public async Task<AlarmItemProvider> GetSingleAlarmAsync(Guid alarmId)
         {
-            var response=await GetRequestAsync("alarms", null, alarmId);
+            var response=await GetRequestAsync("alarms", null, alarmId).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<AlarmItemProvider>(response.ToString());
         }
 
@@ -65,7 +65,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         public async Task<PagedResult<AlarmItemProvider>> GetAlarmsForAnObjectAsync(Guid objectId, AlarmFilter alarmFilter)
         {
-            return await GetPagedResultsAsync<AlarmItemProvider>("objects", ToDictionary(alarmFilter), objectId, "alarms");
+            return await GetPagedResultsAsync<AlarmItemProvider>("objects", ToDictionary(alarmFilter), objectId, "alarms").ConfigureAwait(false);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns>The list of alarms for the specified object.</returns>
         public async Task<PagedResult<AlarmItemProvider>> GetAlarmsForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter alarmFilter)
         {
-            return await GetPagedResultsAsync<AlarmItemProvider>("networkDevices", ToDictionary(alarmFilter), networkDeviceId, "alarms");
+            return await GetPagedResultsAsync<AlarmItemProvider>("networkDevices", ToDictionary(alarmFilter), networkDeviceId, "alarms").ConfigureAwait(false);
         }
 
         /// <summary>

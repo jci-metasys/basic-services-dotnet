@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.5.1] - 2020-05-18
+
+### Fixed
+
+- Fixed issue of silent thread termination on custom SynchronizationContext for async methods
+- Fixed parsing of type parameter for COM GetSpaces and added COM GetSpaceChildren method
+
 ## [3.5.0] - 2020-05-15
 
 ### Added

@@ -272,9 +272,22 @@ namespace JohnsonControls.Metasys.ComServices
         public object GetSpaces(string type = null)
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.GetSpaces();
+            var res = Client.GetSpaces((SpaceTypeEnum)Enum.Parse(typeof(SpaceTypeEnum),type));
             return Mapper.Map<IComMetasysObject[]>(res);
         }
+
+        /// <summary>
+        /// Gets children spaces of the given space.
+        /// </summary>
+        /// <param name="id">The GUID of the parent space.</param>   
+        public object GetSpaceChildren(string id)
+        {
+            Guid guid = new Guid(id);
+            // Note: need a generic object as return type in order to map correctly to VBA type array
+            var res = Client.GetSpaceChildren(guid);
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+
 
         /// <summary>
         /// Gets all space types.

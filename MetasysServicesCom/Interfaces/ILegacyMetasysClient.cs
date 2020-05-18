@@ -90,6 +90,11 @@ namespace JohnsonControls.Metasys.ComServices
         object GetSpaces(string type = null);
 
         /// <summary>
+        /// Gets children spaces of the given space.
+        /// </summary>       
+        object GetSpaceChildren(string id);
+
+        /// <summary>
         /// Gets all space types.
         /// </summary>
         object GetSpaceTypes();

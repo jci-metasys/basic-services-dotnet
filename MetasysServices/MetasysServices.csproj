@@ -13,15 +13,9 @@
     <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
-    <PackageReleaseNotes>- Added GetSpaceChildren method
-- Added SpaceType enum
-- Added Set AccessToken method
-- Added Issuer and IssuedTo properties for AccessToken
-- Added TypeUrl property for MetasysObject
-- Added Category property for MetasysObject 
-- Added ToString with JSON format for output objects</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed issue of silent thread termination on custom SynchronizationContext for async methods.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>3.5.0</Version>    
+    <Version>3.5.1</Version>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

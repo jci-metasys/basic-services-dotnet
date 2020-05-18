@@ -37,7 +37,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             List<Sample> objectSamples = new List<Sample>();                   
             // Perform a generic call using objects resource valid for Network Devices as well
-            var response = await GetPagedResultsAsync<JToken>("objects", ToDictionary(filter), objectId, "attributes", attributeId,"samples");
+            var response = await GetPagedResultsAsync<JToken>("objects", ToDictionary(filter), objectId, "attributes", attributeId,"samples").ConfigureAwait(false);
             // Read full attribute from url
             foreach (JToken s in response.Items)
             {
@@ -60,7 +60,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 // Read full url if not cached previously
                 if (!Units.ContainsKey(unitId))
                 {
-                    var unit = await GetWithFullUrl(unitsUrl);
+                    var unit = await GetWithFullUrl(unitsUrl).ConfigureAwait(false);
                     Units.Add(unitId, unit["description"].Value<string>());
                 }
                 sample.Unit = Units[unitId];
@@ -88,14 +88,14 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             List<Attribute> objectAttributes = new List<Attribute>();
             // Perform a generic call using objects resource valid for Network Devices as well
-            JToken attributes = (await GetRequestAsync("objects", null, id, "trendedAttributes"));
+            JToken attributes = (await GetRequestAsync("objects", null, id, "trendedAttributes").ConfigureAwait(false));
             // Read full attribute from url
             foreach (var a in attributes["items"])
             {
                 try
                 {
                     var attributeUrl = a["attributeUrl"].Value<string>();
-                    var attribute = await GetWithFullUrl(attributeUrl);
+                    var attribute = await GetWithFullUrl(attributeUrl).ConfigureAwait(false);
                     objectAttributes.Add(new Attribute
                     {
                         Id = attribute["id"].Value<int>(),
