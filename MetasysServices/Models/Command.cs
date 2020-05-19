@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using JohnsonControls.Metasys.BasicServices.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -195,7 +196,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 Title = token["title"].Value<string>();
                 // Translate the title from en-US to specified culture.
                 TitleEnumerationKey = MetasysClient.StaticGetCommandEnumeration(Title);
-                string translatedTitle = MetasysClient.StaticLocalize(TitleEnumerationKey, _CultureInfo);
+                string translatedTitle = Localization.Localize(TitleEnumerationKey, _CultureInfo);
                 if (translatedTitle != TitleEnumerationKey)
                 {
                     // A translation was found
@@ -231,7 +232,7 @@ namespace JohnsonControls.Metasys.BasicServices
                                 string eTitle = e["title"].Value<string>();
                                 string eKey = e["const"].Value<string>();
                                 // The title returned is an en-US value, translate the key
-                                string eTranslatedTitle = MetasysClient.StaticLocalize(eKey, _CultureInfo);
+                                string eTranslatedTitle = Localization.Localize(eKey, _CultureInfo);
                                 if (eTranslatedTitle != eKey)
                                 {
                                     // A translation was found

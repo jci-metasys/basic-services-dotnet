@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using JohnsonControls.Metasys.BasicServices;
 using Attribute = JohnsonControls.Metasys.BasicServices.Attribute;
+using JohnsonControls.Metasys.BasicServices.Utils;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
@@ -391,7 +392,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     Reliable
                  Console Output: End */
                 // Access without instantiating a client
-                translated = MetasysClient.StaticLocalize("reliabilityEnumSet.reliable",
+                translated = Localization.Localize("reliabilityEnumSet.reliable",
                     new CultureInfo("it-IT"));
                 Console.WriteLine(translated);
                 /* Console Output: Start                       

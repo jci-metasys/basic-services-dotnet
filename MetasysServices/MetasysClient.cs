@@ -129,40 +129,8 @@ namespace JohnsonControls.Metasys.BasicServices
         public string Localize(string resource, CultureInfo cultureInfo = null)
         {
             // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-            return StaticLocalize(resource, cultureInfo ?? Culture);
+            return Localization.Localize(resource, cultureInfo ?? Culture);
         }
-
-        /// <summary>
-        /// Localizes the specified resource key for the specified culture.
-        /// Static method for exposure to outside classes.
-        /// </summary>
-        /// <param name="resource">The key for the localization resource.</param>
-        /// <param name="cultureInfo">The culture specification.</param>
-        /// <returns>
-        /// Localized string if the resource was found, the default en-US localized string if not found,
-        /// or the resource parameter value if neither resource is found.
-        /// </returns>
-        public static string StaticLocalize(string resource, CultureInfo cultureInfo = null)
-        {
-            try
-            {
-                return Resource.GetString(resource, cultureInfo);
-            }
-            catch (MissingManifestResourceException)
-            {
-                try
-                {
-                    // Fallback to en-US language if no resource found.
-                    return Resource.GetString(resource, CultureEnUS);
-                }
-                catch (MissingManifestResourceException)
-                {
-                    // Just return resource placeholder when no translation found.
-                    return resource;
-                }
-            }
-        }
-
         /// <summary>
         /// Attempts to get the enumeration key of a given en-US localized command.
         /// </summary>

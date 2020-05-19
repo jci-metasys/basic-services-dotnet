@@ -3,6 +3,7 @@ using NUnit.Framework;
 using JohnsonControls.Metasys.BasicServices;
 using System.Globalization;
 using System.Diagnostics;
+using JohnsonControls.Metasys.BasicServices.Utils;
 
 namespace MetasysServices.Tests
 {
@@ -24,10 +25,10 @@ namespace MetasysServices.Tests
         public void TestLocalizeCultureUnsupportedCulture(string reliable, string unsupported, string priority, string array)
         {
             CultureInfo culture = new CultureInfo("fr-LU");
-            Assert.AreEqual(reliable, MetasysClient.StaticLocalize(Reliable, culture));
-            Assert.AreEqual(unsupported, MetasysClient.StaticLocalize(Unsupported, culture));
-            Assert.AreEqual(priority, MetasysClient.StaticLocalize(PriorityNone, culture));
-            Assert.AreEqual(array, MetasysClient.StaticLocalize(Array, culture));
+            Assert.AreEqual(reliable, Localization.Localize(Reliable, culture));
+            Assert.AreEqual(unsupported, Localization.Localize(Unsupported, culture));
+            Assert.AreEqual(priority, Localization.Localize(PriorityNone, culture));
+            Assert.AreEqual(array, Localization.Localize(Array, culture));
         }
 
         [TestCase("Reliable", "Unsupported object type", "0 (No Priority)", "Array")]
@@ -38,10 +39,10 @@ namespace MetasysServices.Tests
             Assert.AreEqual(priority, client.Localize(PriorityNone));
             Assert.AreEqual(array, client.Localize(Array));
 
-            Assert.AreEqual(reliable, MetasysClient.StaticLocalize(Reliable));
-            Assert.AreEqual(unsupported, MetasysClient.StaticLocalize(Unsupported));
-            Assert.AreEqual(priority, MetasysClient.StaticLocalize(PriorityNone));
-            Assert.AreEqual(array, MetasysClient.StaticLocalize(Array));
+            Assert.AreEqual(reliable, Localization.Localize(Reliable));
+            Assert.AreEqual(unsupported, Localization.Localize(Unsupported));
+            Assert.AreEqual(priority, Localization.Localize(PriorityNone));
+            Assert.AreEqual(array, Localization.Localize(Array));
         }
 
         [TestCase("en-US", "Reliable", "Unsupported object type", "0 (No Priority)", "Array")]
