@@ -303,7 +303,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     .ReceiveJson<JToken>()
                     .ConfigureAwait(false);
 
-                CreateAccessToken(Hostname,username,response);
+                CreateAccessToken(Hostname, username, response);
             }
             catch (FlurlHttpException e)
             {
@@ -384,21 +384,28 @@ namespace JohnsonControls.Metasys.BasicServices
         private void ScheduleRefresh()
         {
             DateTime now = DateTime.UtcNow;
-            TimeSpan delay = AccessToken.Expires - now;
-            delay.Subtract(new TimeSpan(0, 1, 0));
-
+            TimeSpan delay = AccessToken.Expires - now.AddSeconds(-1); // minimum renew gap of 1 sec in advance
+            // Renew one minute before expiration if there is more than one minute time 
+            if (delay > new TimeSpan(0, 1, 0))
+            {
+                delay.Subtract(new TimeSpan(0, 1, 0));
+            }
             if (delay <= TimeSpan.Zero)
             {
-                delay = TimeSpan.Zero;
+                // Token already expired
+                return;
             }
-
-            int delayms = (int)delay.TotalMilliseconds;
-
-            // If the time in milliseconds is greater than max int delayms will be negative and will not schedule a refresh.
-            if (delayms >= 0)
+            int delayms;
+            if (delay.TotalMilliseconds > int.MaxValue)
             {
-                System.Threading.Tasks.Task.Delay(delayms).ContinueWith(_ => Refresh());
+                // Delay is set to int MaxValue to do not go negative with double to int conversion.
+                delayms = int.MaxValue;
             }
+            else
+            {
+                delayms = (int)delay.TotalMilliseconds;
+            }
+            System.Threading.Tasks.Task.Delay(delayms).ContinueWith(_ => Refresh());
         }
 
         /// <summary>
@@ -543,7 +550,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             try
             {
-                return await ReadPropertyAsync(id, attributeName).ConfigureAwait(false); 
+                return await ReadPropertyAsync(id, attributeName).ConfigureAwait(false);
             }
             catch (MetasysHttpNotFoundException) when (suppressNotFoundException)
             {
@@ -864,7 +871,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
-            var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } }).ConfigureAwait(false); 
+            var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } }).ConfigureAwait(false);
             return toMetasysObject(response);
         }
 
@@ -1003,14 +1010,14 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         public async Task<IEnumerable<MetasysObject>> GetSpacesAsync(SpaceTypeEnum? type = null)
         {
-            Dictionary<string, string> parameters=null;
+            Dictionary<string, string> parameters = null;
             if (type != null)
             {
                 // Init Dictionary with Space Type parameter
                 parameters = new Dictionary<string, string>() { { "type", ((int)type).ToString() } };
             }
             var spaces = await GetAllAvailablePagesAsync("spaces", parameters).ConfigureAwait(false);
-            return toMetasysObject(spaces,type:MetasysObjectTypeEnum.Space);                      
+            return toMetasysObject(spaces, type: MetasysObjectTypeEnum.Space);
         }
 
         /// <summary>
@@ -1029,7 +1036,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid id)
         {
             var spaceChildren = await GetAllAvailablePagesAsync("spaces", null, id.ToString(), "spaces").ConfigureAwait(false);
-            return toMetasysObject(spaceChildren,MetasysObjectTypeEnum.Space);
+            return toMetasysObject(spaceChildren, MetasysObjectTypeEnum.Space);
         }
 
 
@@ -1049,7 +1056,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
         {
             var equipment = await GetAllAvailablePagesAsync("equipment").ConfigureAwait(false);
-            return toMetasysObject(equipment,MetasysObjectTypeEnum.Equipment);
+            return toMetasysObject(equipment, MetasysObjectTypeEnum.Equipment);
         }
 
         /// <summary>
@@ -1088,7 +1095,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
         {
             var spaceEquipment = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment").ConfigureAwait(false);
-            return toMetasysObject(spaceEquipment,MetasysObjectTypeEnum.Equipment);
+            return toMetasysObject(spaceEquipment, MetasysObjectTypeEnum.Equipment);
         }
 
         /// <summary>
@@ -1148,7 +1155,7 @@ namespace JohnsonControls.Metasys.BasicServices
             if (readAttributeValue)
             {
                 // Try to Read Present Value when available. Note: can't read attribute ID from attribute full URL of point since we got only the description.
-                var results = await ReadPropertyMultipleAsync(guids, new List<string> { "presentValue" }).ConfigureAwait(false); 
+                var results = await ReadPropertyMultipleAsync(guids, new List<string> { "presentValue" }).ConfigureAwait(false);
                 foreach (var r in results)
                 {
                     var point = pointsWithAttribute.SingleOrDefault(s => s.ObjectId == r.Id);

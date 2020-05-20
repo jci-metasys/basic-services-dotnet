@@ -208,12 +208,12 @@ namespace MetasysServices.Tests
         }
 
         [Test]
-        public void TestRefreshTimerTwoSeconds()
+        public void TestRefreshTimerThreeSeconds()
         {
             CleanLogin();
             DateTime now = DateTime.UtcNow;
             DateTime future = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond));
-            future.AddSeconds(2);
+            future.AddSeconds(3);
             string time = future.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
             httpTest.RespondWithJson(new { accessToken = "faketokenTimer1", expires = time })
                 .RespondWithJson(new { accessToken = "faketokenTimer2", expires = date2 });
@@ -225,7 +225,7 @@ namespace MetasysServices.Tests
             var token1 = client.GetAccessToken();
             Assert.AreEqual(expected1, token1);
 
-            System.Threading.Thread.Sleep(2000);
+            System.Threading.Thread.Sleep(3000);
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/refreshToken")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);

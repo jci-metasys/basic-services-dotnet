@@ -271,8 +271,14 @@ namespace JohnsonControls.Metasys.ComServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         public object GetSpaces(string type = null)
         {
+            SpaceTypeEnum? spaceType = null;
+            if (type != null)
+            {
+                // Parse type string to SpaceTypeEnum 
+                spaceType = (SpaceTypeEnum)Enum.Parse(typeof(SpaceTypeEnum), type);
+            }
             // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.GetSpaces((SpaceTypeEnum)Enum.Parse(typeof(SpaceTypeEnum),type));
+            var res = Client.GetSpaces(spaceType);
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
