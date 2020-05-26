@@ -26,8 +26,7 @@ namespace JohnsonControls.Metasys.BasicServices
         protected bool RefreshToken;
 
         /// <summary>Resource Manager to provide localized translations.</summary>
-        protected static ResourceManager Resource =
-            new ResourceManager("JohnsonControls.Metasys.BasicServices.Resources.MetasysResources", typeof(MetasysClient).Assembly);
+        protected static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager("JohnsonControls.Metasys.BasicServices.Resources.MetasysResources", typeof(MetasysClient).Assembly);
 
         /// <summary>Dictionary to provide keys from the commandIdEnumSet.</summary>
         /// <value>Keys as en-US translations, values as the commandIdEnumSet Enumerations.</value>
@@ -129,7 +128,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public string Localize(string resource, CultureInfo cultureInfo = null)
         {
             // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-            return Localization.Localize(resource, cultureInfo ?? Culture);
+            return Utils.ResourceManager.Localize(resource, cultureInfo ?? Culture);
         }
         /// <summary>
         /// Attempts to get the enumeration key of a given en-US localized command.
@@ -145,33 +144,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public string GetCommandEnumeration(string resource)
         {
             // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-            return StaticGetCommandEnumeration(resource);
-        }
-
-        /// <summary>
-        /// Attempts to get the enumeration key of a given en-US localized command.
-        /// </summary>
-        /// <remarks>
-        /// The resource parameter must be the value of a Metasys commandIdEnumSet en-US value,
-        /// otherwise no key will be found.
-        /// </remarks>
-        /// <param name="resource">The en-US value for the localization resource.</param>
-        /// <returns>
-        /// The enumeration key of the en-US command if found, original resource if not.
-        /// </returns>
-        public static string StaticGetCommandEnumeration(string resource)
-        {
-            if (CommandEnumerations == null)
-            {
-                SetEnumerationDictionaries();
-            }
-
-            if (CommandEnumerations.TryGetValue(resource, out string value))
-            {
-                return value;
-            }
-
-            return resource;
+            return Utils.ResourceManager.GetCommandEnumeration(resource);
         }
 
         /// <summary>
@@ -188,80 +161,8 @@ namespace JohnsonControls.Metasys.BasicServices
         public string GetObjectTypeEnumeration(string resource)
         {
             // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-            return StaticGetObjectTypeEnumeration(resource);
+            return Utils.ResourceManager.GetObjectTypeEnumeration(resource);
         }
-
-        /// <summary>
-        /// Attempts to get the enumeration key of a given en-US localized objectType.
-        /// </summary>
-        /// <remarks>
-        /// The resource parameter must be the value of a Metasys objectTypeEnumSet en-US value,
-        /// otherwise no key will be found.
-        /// </remarks>
-        /// <param name="resource">The en-US value for the localization resource.</param>
-        /// <returns>
-        /// The enumeration key of the en-US objectType if found, original resource if not.
-        /// </returns>
-        public static string StaticGetObjectTypeEnumeration(string resource)
-        {
-            if (ObjectTypeEnumerations == null)
-            {
-                SetEnumerationDictionaries();
-            }
-
-            foreach (var dict in ObjectTypeEnumerations)
-            {
-                if (dict.TryGetValue(resource, out string value))
-                {
-                    return value;
-                }
-            }
-
-            return resource;
-        }
-
-        /// <summary>
-        /// Populates the needed enumeration Dictionaries for translating en-US strings by 
-        /// transversing the en-US resource file and finding the appropriate EnumSets.
-        /// </summary>
-        /// <remarks>
-        /// This method should be faster than using the enumSets/{id}/members api endpoint.
-        /// This method has a potential for value mismatch if the local enumeration values differ 
-        /// from the server. This will cause the translation functionality to fail since no matching
-        /// enumeration key will be found in dictionaries.
-        /// </remarks>
-        private static void SetEnumerationDictionaries()
-        {
-            // First time setup, there are about 349 values in the command set, 800 in the objectType set
-            CommandEnumerations = new Dictionary<string, string>();
-            ObjectTypeEnumerations = new List<Dictionary<string, string>>();
-            var ObjectTypeEnumerations1 = new Dictionary<string, string>();
-            var ObjectTypeEnumerations2 = new Dictionary<string, string>();
-            ResourceSet ResourcesEnUS = Resource.GetResourceSet(CultureEnUS, true, true);
-            IDictionaryEnumerator ide = ResourcesEnUS.GetEnumerator();
-            while (ide.MoveNext())
-            {
-                if (ide.Key.ToString().Contains("commandIdEnumSet."))
-                {
-                    CommandEnumerations.Add(ide.Value.ToString(), ide.Key.ToString());
-                }
-                else if (ide.Key.ToString().Contains("objectTypeEnumSet."))
-                {
-                    try
-                    {
-                        ObjectTypeEnumerations1.Add(ide.Value.ToString(), ide.Key.ToString());
-                    }
-                    catch
-                    {
-                        ObjectTypeEnumerations2.Add(ide.Value.ToString(), ide.Key.ToString());
-                    }
-                }
-            }
-            ObjectTypeEnumerations.Add(ObjectTypeEnumerations1);
-            ObjectTypeEnumerations.Add(ObjectTypeEnumerations2);
-        }
-
-
 
         /// <summary>Use to log an error message from an asynchronous context.</summary>
         private async Task LogErrorAsync(String message)

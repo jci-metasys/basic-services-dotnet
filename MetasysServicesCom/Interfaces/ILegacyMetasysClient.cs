@@ -187,5 +187,46 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="auditFilter">The filter to be applied to audit list.</param>
         /// <returns>The list of audit with details.</returns>
         IComPagedResult GetAuditsForAnObject(string objectId, IComAuditFilter auditFilter);
+
+        /// <summary>
+        /// Localizes the specified resource key for the current MetasysClient locale or specified culture.
+        /// </summary>
+        /// <remarks>
+        /// The resource parameter must be the key of a Metasys enumeration resource,
+        /// otherwise no translation will be found.
+        /// </remarks>
+        /// <param name="resource">The key for the localization resource.</param>
+        /// <param name="cultureInfo">Optional culture specification.</param>
+        /// <returns>
+        /// Localized string if the resource was found, the default en-US localized string if not found,
+        /// or the resource parameter value if neither resource is found.
+        /// </returns>
+        string Localize(string resource, string cultureInfo);
+
+        /// <summary>
+        /// Attempts to get the enumeration key of a given en-US localized command.
+        /// </summary>
+        /// <remarks>
+        /// The resource parameter must be the value of a Metasys commandIdEnumSet en-US value,
+        /// otherwise no key will be found.
+        /// </remarks>
+        /// <param name="resource">The en-US value for the localization resource.</param>
+        /// <returns>
+        /// The enumeration key of the en-US command if found, original resource if not.
+        /// </returns>
+        string GetCommandEnumeration(string resource);
+
+        /// <summary>
+        /// Attempts to get the enumeration key of a given en-US localized objectType.
+        /// </summary>
+        /// <remarks>
+        /// The resource parameter must be the value of a Metasys objectTypeEnumSet en-US value,
+        /// otherwise no key will be found.
+        /// </remarks>
+        /// <param name="resource">The en-US value for the localization resource.</param>
+        /// <returns>
+        /// The enumeration key of the en-US objectType if found, original resource if not.
+        /// </returns>
+        string GetObjectTypeEnumeration(string resource);
     }
 }

@@ -19,6 +19,16 @@ namespace JohnsonControls.Metasys.BasicServices
         string Localize(string resource, CultureInfo cultureInfo = null);
 
         /// <summary>
+        /// Attempts to get the enumeration key of a given en-US localized command.
+        /// </summary>
+        string GetCommandEnumeration(string resource);
+
+        /// <summary>
+        /// Attempts to get the enumeration key of a given en-US localized objectType.
+        /// </summary>
+        string GetObjectTypeEnumeration(string resource);
+
+        /// <summary>
         /// Attempts to login to the given host and retrieve an access token.
         /// </summary>
         AccessToken TryLogin(string username, string password, bool refresh = true);

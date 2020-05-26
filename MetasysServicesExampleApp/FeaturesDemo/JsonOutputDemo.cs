@@ -392,7 +392,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     Reliable
                  Console Output: End */
                 // Access without instantiating a client
-                translated = Localization.Localize("reliabilityEnumSet.reliable",
+                translated = ResourceManager.Localize("reliabilityEnumSet.reliable",
                     new CultureInfo("it-IT"));
                 Console.WriteLine(translated);
                 /* Console Output: Start                       
