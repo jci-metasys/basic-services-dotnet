@@ -25,10 +25,10 @@ namespace MetasysServices.Tests
         public void TestLocalizeCultureUnsupportedCulture(string reliable, string unsupported, string priority, string array)
         {
             CultureInfo culture = new CultureInfo("fr-LU");
-            Assert.AreEqual(reliable, Localization.Localize(Reliable, culture));
-            Assert.AreEqual(unsupported, Localization.Localize(Unsupported, culture));
-            Assert.AreEqual(priority, Localization.Localize(PriorityNone, culture));
-            Assert.AreEqual(array, Localization.Localize(Array, culture));
+            Assert.AreEqual(reliable, ResourceManager.Localize(Reliable, culture));
+            Assert.AreEqual(unsupported, ResourceManager.Localize(Unsupported, culture));
+            Assert.AreEqual(priority, ResourceManager.Localize(PriorityNone, culture));
+            Assert.AreEqual(array, ResourceManager.Localize(Array, culture));
         }
 
         [TestCase("Reliable", "Unsupported object type", "0 (No Priority)", "Array")]
@@ -39,10 +39,10 @@ namespace MetasysServices.Tests
             Assert.AreEqual(priority, client.Localize(PriorityNone));
             Assert.AreEqual(array, client.Localize(Array));
 
-            Assert.AreEqual(reliable, Localization.Localize(Reliable));
-            Assert.AreEqual(unsupported, Localization.Localize(Unsupported));
-            Assert.AreEqual(priority, Localization.Localize(PriorityNone));
-            Assert.AreEqual(array, Localization.Localize(Array));
+            Assert.AreEqual(reliable, ResourceManager.Localize(Reliable));
+            Assert.AreEqual(unsupported, ResourceManager.Localize(Unsupported));
+            Assert.AreEqual(priority, ResourceManager.Localize(PriorityNone));
+            Assert.AreEqual(array, ResourceManager.Localize(Array));
         }
 
         [TestCase("en-US", "Reliable", "Unsupported object type", "0 (No Priority)", "Array")]
@@ -76,14 +76,14 @@ namespace MetasysServices.Tests
         {
             Stopwatch timer = new System.Diagnostics.Stopwatch();
             timer.Start();
-            string commandEnum = MetasysClient.StaticGetCommandEnumeration("Reset Field Device");
+            string commandEnum = ResourceManager.GetCommandEnumeration("Reset Field Device");
             timer.Stop();
             Assert.AreEqual("commandIdEnumSet.resetFieldDeviceCommand", commandEnum);
             Assert.GreaterOrEqual(2, timer.Elapsed.TotalSeconds);
 
             timer.Reset();
             timer.Start();
-            string typeEnum = MetasysClient.StaticGetObjectTypeEnumeration("AV");
+            string typeEnum = ResourceManager.GetObjectTypeEnumeration("AV");
             timer.Stop();
             Assert.AreEqual("objectTypeEnumSet.bacAvClass", commandEnum);
             Assert.GreaterOrEqual(2, timer.Elapsed.TotalSeconds);

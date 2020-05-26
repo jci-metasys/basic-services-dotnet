@@ -100,7 +100,7 @@ namespace JohnsonControls.Metasys.BasicServices
             Id = id;
             Attribute = attribute;
             ReliabilityEnumerationKey = Reliable;
-            Reliability = Localization.Localize(Reliable, _CultureInfo);
+            Reliability = ResourceManager.Localize(Reliable, _CultureInfo);
             Priority = null;
             PriorityEnumerationKey = null;
             StringValueEnumerationKey = null;
@@ -121,7 +121,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 NumericValue = 1;
                 StringValueEnumerationKey = Unsupported;
-                StringValue = Localization.Localize(StringValueEnumerationKey, _CultureInfo);
+                StringValue = ResourceManager.Localize(StringValueEnumerationKey, _CultureInfo);
                 return;
             }
             // switch on token type and set the fields appropriately
@@ -141,7 +141,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 case JTokenType.String:
                     NumericValue = 0;
                     StringValueEnumerationKey = token.Value<string>();
-                    StringValue = Localization.Localize(StringValueEnumerationKey, _CultureInfo);
+                    StringValue = ResourceManager.Localize(StringValueEnumerationKey, _CultureInfo);
                     break;
                 case JTokenType.Array:
                     ProcessArray(token);
@@ -167,7 +167,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 default:
                     NumericValue = 1;
                     StringValueEnumerationKey = Unsupported;
-                    StringValue = Localization.Localize(StringValueEnumerationKey, _CultureInfo);
+                    StringValue = ResourceManager.Localize(StringValueEnumerationKey, _CultureInfo);
                     break;
             }
         }
@@ -185,7 +185,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             NumericValue = 0;
             StringValueEnumerationKey = Array;
-            StringValue = Localization.Localize(StringValueEnumerationKey, _CultureInfo);
+            StringValue = ResourceManager.Localize(StringValueEnumerationKey, _CultureInfo);
         }
 
         /// <summary>Searches the JObject for reliability and priority fields and uses the field called "value" as value for result.</summary>
@@ -200,12 +200,12 @@ namespace JohnsonControls.Metasys.BasicServices
                 if (reliabilityToken != null)
                 {
                     ReliabilityEnumerationKey = reliabilityToken.ToString();
-                    Reliability = Localization.Localize(ReliabilityEnumerationKey, _CultureInfo);
+                    Reliability = ResourceManager.Localize(ReliabilityEnumerationKey, _CultureInfo);
                 }
                 if (priorityToken != null)
                 {
                     PriorityEnumerationKey = priorityToken.ToString();
-                    Priority = Localization.Localize(PriorityEnumerationKey, _CultureInfo);
+                    Priority = ResourceManager.Localize(PriorityEnumerationKey, _CultureInfo);
                 }
                 ProcessToken(valueToken);
             }

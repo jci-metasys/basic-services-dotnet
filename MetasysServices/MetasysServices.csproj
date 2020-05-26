@@ -28,6 +28,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Utils\Localization.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="log4Net.config" />
     <None Remove="Resources\MetasysResources.en-US.resources" />
     <None Remove="Resources\MetasysResources.it-IT.resources" />

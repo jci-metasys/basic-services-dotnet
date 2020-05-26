@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Attribute = JohnsonControls.Metasys.BasicServices.Attribute;
+using System.Globalization;
+
 
 namespace JohnsonControls.Metasys.ComServices
 {
@@ -95,6 +97,27 @@ namespace JohnsonControls.Metasys.ComServices
         public IComAccessToken Refresh()
         {
             return Mapper.Map<IComAccessToken>(Client.Refresh());
+        }
+
+        /// <inheritdoc/>
+        public string Localize(string resource, string cultureInfo = "en-US")
+        {
+            CultureInfo culture = new CultureInfo(cultureInfo);
+            return Client.Localize(resource, culture);
+        }
+
+        /// <inheritdoc/>
+        public string GetCommandEnumeration(string resource)
+        {
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+            return Client.GetCommandEnumeration(resource);
+        }
+
+        /// <inheritdoc/>
+        public string GetObjectTypeEnumeration(string resource)
+        {
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+            return Client.GetObjectTypeEnumeration(resource);
         }
 
         /// <summary>
