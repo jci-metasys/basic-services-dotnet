@@ -114,11 +114,45 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Retrieves a collection of alarms for the specified network device.
         /// </summary>
         /// <param name="networkDeviceId">The identifier of the network device.</param>
-        /// <param name="alarmFilter">TThe alarm alarmFilter to get alarms.</param>
+        /// <param name="alarmFilter">The alarm alarmFilter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
         public PagedResult<AlarmItemProvider> GetAlarmsForNetworkDevice(Guid networkDeviceId, AlarmFilter alarmFilter)
         {
             return GetAlarmsForNetworkDeviceAsync(networkDeviceId, alarmFilter).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<AlarmAnnotation> GetAlarmAnnotations(Guid alarmId)
+        {
+            return GetAlarmAnnotationsAsync(alarmId).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public async Task<IEnumerable<AlarmAnnotation>> GetAlarmAnnotationsAsync(Guid alarmId)
+        {
+            // Retrieve JSON collection of Annotation
+            var annotations= await GetAllAvailablePagesAsync("alarms",null,alarmId.ToString(),"annotations");
+            List<AlarmAnnotation> annotationsList = new List<AlarmAnnotation>();
+            // Convert to a collection of AlarmAnnotation          
+            foreach (var token in annotations)
+            {
+                AlarmAnnotation alarmAnnotation = new AlarmAnnotation();
+                // Build AlarmAnnotation object
+                try
+                {
+                    alarmAnnotation.Text = token["text"].Value<string>();
+                    alarmAnnotation.User = token["user"].Value<string>();
+                    alarmAnnotation.CreationTime = token["creationTime"].Value<DateTime>();
+                    alarmAnnotation.Action = token["action"].Value<string>();
+                    alarmAnnotation.AlarmUrl = token["alarmUrl"].Value<string>();
+                    annotationsList.Add(alarmAnnotation);
+                }
+                catch (Exception e)
+                {
+                    throw new MetasysObjectException(token.ToString(), e);
+                }              
+            }
+            return annotationsList;
         }
     }
 }

@@ -35,6 +35,20 @@ namespace JohnsonControls.Metasys.BasicServices
         PagedResult<AlarmItemProvider> GetAlarms(AlarmFilter alarmFilter);
 
         /// <summary>
+        /// Retrieve a collection of Alarm Annotations.
+        /// </summary>
+        /// <param name="alarmId"></param>
+        /// <returns></returns>
+        IEnumerable<AlarmAnnotation> GetAlarmAnnotations(Guid alarmId);
+
+        /// <summary>
+        /// Retrieve a collection of Alarm Annotations asynchronously.
+        /// </summary>
+        /// <param name="alarmId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<AlarmAnnotation>> GetAlarmAnnotationsAsync(Guid alarmId);
+
+        /// <summary>
         /// Retrieves a collection of alarms.
         /// </summary>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>

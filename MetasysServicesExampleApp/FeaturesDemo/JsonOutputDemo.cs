@@ -42,14 +42,14 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 /* SNIPPET 3: START */
                 AccessToken accessToken = client.TryLogin("metasys-energy-app");
                 Console.WriteLine(accessToken);
-                /* Console Output: Start       
+                /*        
                     {
                       "Issuer": "metasysserver",
                       "IssuedTo": "metasysapiuser",
                       "Token": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkJzR0lWelVZcjN0MkI0RGRtT1ljMTdBLVZJOCIsImtpZCI6IkJzR0lWelVZcjN0MkI0RGRtT1ljMTdBLVZJOCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0Ojk1MDYvQVBJLkF1dGhlbnRpY2F0aW9uU2VydmljZSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6OTUwNi9BUEkuQXV0aGVudGljYXRpb25TZXJ2aWNlL3Jlc291cmNlcyIsImV4cCI6MTU4OTI5MzEzMCwibmJmIjoxNTg5MjkxMzMwLCJjbGllbnRfaWQiOiJtZXRhc3lzX3VpIiwic2NvcGUiOlsibWV0YXN5c19hcGkiLCJvZmZsaW5lX2FjY2VzcyIsIm9wZW5pZCJdLCJzdWIiOiI4ZGE4YjE4Yy1lMTk1LTRlMmMtOGU2Zi0zNTE2Zjc0ZWFhNGIiLCJhdXRoX3RpbWUiOjE1ODkyOTEzMzAsImlkcCI6Imlkc3J2IiwiVXNlcklkIjoiMSIsIlVzZXJOYW1lIjoibWV0YXN5c3N5c2FnZW50IiwiSXNBZG1pbiI6IlRydWUiLCJJc1Bhc3N3b3JkQ2hhbmdlUmVxdWlyZWQiOiJGYWxzZSIsIklzVGVybXNBbmRDb25kaXRpb25zUmVxdWlyZWQiOiJGYWxzZSIsIkxpY2Vuc2VJbmZvIjoie1wiSXNMaWNlbnNlZFwiOnRydWUsXCJMaWNlbnNlVHlwZVwiOlwiZ3JhY2VcIn0iLCJDdWx0dXJlIjoiZW4tVVMiLCJhbXIiOlsicGFzc3dvcmQiXX0.egzw1bs1831pEBWWXbBOYWGU5wFsI3sEnL7RgCIHHbHmcxtpPPqLq54znpoUoLFrMUeymZj5rkrt_mF-CNIpCE3halZNAH-CR1U46LTZi5CMaDfYlP-wHxikAGV5GwFjlHjGNOUaFtd7n4yC5sH08pHQfXXD5gKDm_FVMfUJXAo-E8gmrkU0wMn5U2FRyQyj7Yhq6jaj7MPTF__Xz46sG3WtDr45WK2NmuwiLDv408URZ5fJxlMngRpjSIONHVAIwna_H0AguHiIELkvuRVYcRqIH5kb1YdFt-3fsnTV9xwpozZZ44dh-4I7x466I-UGlLHAnScWILUbPcpRNWm0Uw",
                       "Expires": "2020-05-12T14:18:51Z"
                     }
-                Console Output: End */
+                 */
                 /* SNIPPET 3: END */
 
                 /* SNIPPET 4: START */
@@ -69,9 +69,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 /* SNIPPET 1: START */
                 Guid objectId = client.GetObjectIdentifier("Win2016-VM2:vNAE2343996/Field Bus MSTP1.VAV-08.ZN-SP");
                 Console.WriteLine(objectId);
-                /* Console Output: Start       
+                /*        
                 d5d96cd3-db4a-52e0-affd-8bc3393c30ec
-                Console Output: End */
+                 */
                 /* SNIPPET 1: END */
                 
                 #endregion
@@ -87,7 +87,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 /* SNIPPET 1: START */
                 Variant property = client.ReadProperty(objectId, "presentValue");
                 Console.WriteLine(property);
-                /* Console Output: Start       
+                /*        
                    {
                       "StringValue": "72",
                       "StringValueEnumerationKey": null,
@@ -102,7 +102,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                       "PriorityEnumerationKey": "writePriorityEnumSet.priorityNone",
                       "IsReliable": true
                     }
-                Console Output: End */
+                 */
                 /* SNIPPET 1: END */
 
                 #endregion
@@ -119,7 +119,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 List<Command> commands = client.GetCommands(objectId).ToList();
                 Command command = commands[0]; // Adjust
                 Console.WriteLine(command);
-                /* Console Output: Start                       
+                /*                        
                     {
                       "Title": "Adjust",
                       "TitleEnumerationKey": "commandIdEnumSet.adjustCommand",
@@ -134,7 +134,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                         }
                       ]
                     }
-                Console Output: End */
+                 */
                 /* SNIPPET 1: END */
 
                 /* SNIPPET 2: START */
@@ -142,7 +142,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Command operatorOverride = commands[1]; // OperatorOverride
                 Command release = commands[4]; // Release 
                 Console.WriteLine(release);
-                /* Console Output: Start                       
+                /*                        
                   {
                       "Title": "Release",
                       "TitleEnumerationKey": "commandIdEnumSet.releaseCommand",
@@ -238,7 +238,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                         }
                       ]
                     }
-               Console Output: End */               
+                */               
                 var list1 = new List<object> { 70 };
                 client.SendCommand(objectId, adjust.CommandId, list1);
                 var list2 = new List<object> { 75 };
@@ -260,18 +260,18 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 /* SNIPPET 1: START */
                 List<MetasysObjectType> types = client.GetNetworkDeviceTypes().ToList();
                 Console.WriteLine(types[0]);
-                /* Console Output: Start                       
+                /*                        
                 {
                   "Description": "NAE55-NIE59",
                   "DescriptionEnumerationKey": "objectTypeEnumSet.n50Class",
                   "Id": 185
                 }
-                Console Output: End */
+                 */
                 int type1 = types[0].Id;
                 List<MetasysObject> devices = client.GetNetworkDevices(type1.ToString()).ToList();
                 MetasysObject device = devices.LastOrDefault();
                 Console.WriteLine(device);
-                /* Console Output: Start                       
+                /*                        
                     {
                       "ItemReference": "Win2016-VM2:vNAE2343996",
                       "Id": "142558f8-c4c7-5f89-be97-d806adb72053",
@@ -283,7 +283,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                       "Children": [],
                       "ChildrenCount": 0
                     }
-                Console Output: End */
+                 */
                 /* SNIPPET 1: END */
 
                 /* SNIPPET 2: START */
@@ -292,7 +292,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 List<MetasysObject> directChildren = client.GetObjects(parentId).ToList();
                 MetasysObject lastChild = directChildren.LastOrDefault();
                 Console.WriteLine(lastChild);
-                /* Console Output: Start                       
+                /*                        
                     {
                       "ItemReference": "Win2016-VM2:vNAE2343996/Field Bus MSTP1.VAV-08.ZN-T",
                       "Id": "d5d96cd3-db4a-52e0-affd-8bc3393c30ec",
@@ -304,13 +304,13 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                       "Children": [],
                       "ChildrenCount": 0
                     }
-                  Console Output: End */
+                   */
                 Guid twoLevelsParentId = client.GetObjectIdentifier("Win2016-VM2:vNAE2343996/WeatherForecast");
                 // Get descendant for 2 levels (it could take long time, depending on the number of objects)
                 List<MetasysObject> level2Descendants = client.GetObjects(twoLevelsParentId, 2).ToList();
                 MetasysObject level1Parent = level2Descendants.SingleOrDefault(s => s.Name == "Time");
                 Console.WriteLine(level1Parent);
-                /* Console Output: Start                       
+                /*                        
                   {
                     "ItemReference": "Win2016-VM2:vNAE2343996/WeatherForecast.Time",
                     "Id": "22bb952e-7557-5de9-b7e5-dce39e21addd",
@@ -367,7 +367,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     ],
                     "ChildrenCount": 4
                 }
-                  Console Output: End */
+                   */
                 /* SNIPPET 2: END */
 
                 #endregion
@@ -388,16 +388,16 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 // Access from the client object (uses client.Culture as input)
                 string translated = client.Localize("reliabilityEnumSet.reliable");
                 Console.WriteLine(translated);
-                /* Console Output: Start                       
+                /*                        
                     Reliable
-                 Console Output: End */
+                  */
                 // Access without instantiating a client
                 translated = ResourceManager.Localize("reliabilityEnumSet.reliable",
                     new CultureInfo("it-IT"));
                 Console.WriteLine(translated);
-                /* Console Output: Start                       
+                /*                        
                     Affidabile
-                 Console Output: End */
+                  */
                 /* SNIPPET 2: END */
                 #endregion
 
@@ -414,7 +414,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 List<MetasysObject> buildings = client.GetSpaces(SpaceTypeEnum.Building).ToList();
                 MetasysObject building = buildings.LastOrDefault();
                 Console.WriteLine(building);
-                /* Console Output: Start                       
+                /*                        
                     {
                       "ItemReference": "Win2016-VM2:Win2016-VM2/JCI.Building 1",
                       "Id": "164aaba2-0fb3-5b5d-bfe9-49cf6b797c93",
@@ -426,12 +426,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                       "Children": [],
                       "ChildrenCount": 0
                     }
-                Console Output: End */
+                 */
                 // Retrieves all the spaces in a flat hierarchy
                 List<MetasysObject> spaces = client.GetSpaces().ToList();
                 MetasysObject firstSpace = spaces.FirstOrDefault();
                 Console.WriteLine(firstSpace);
-                /* Console Output: Start                       
+                /*                        
                     {
                       "ItemReference": "Win2016-VM2:Win2016-VM2/JCI.Building 1.Floor 1.Milwaukee.507 E Michigan Street Campus",
                       "Id": "896ba096-db3c-5038-8505-636785906cca",
@@ -443,7 +443,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                       "Children": [],
                       "ChildrenCount": 0
                     }
-                Console Output: End */
+                 */
                 /* SNIPPET 1: END */
 
                 /* SNIPPET 2: START */
@@ -452,7 +452,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 {
                     Console.WriteLine(type);
                 }
-                /* Console Output: Start                       
+                /*                        
                     {
                       "Description": "Building",
                       "DescriptionEnumerationKey": "Building",
@@ -473,14 +473,14 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                       "DescriptionEnumerationKey": "Room",
                       "Id": 3
                     }
-                Console Output: End */
+                 */
                 /* SNIPPET 2: END */
 
                 /* SNIPPET 3: START */
                 List<MetasysObject> equipment = client.GetEquipment().ToList();
                 MetasysObject sampleEquipment = equipment.FirstOrDefault();
                 Console.WriteLine(sampleEquipment);
-                /* Console Output: Start                       
+                /*                        
                      {
                       "ItemReference": "Win2016-VM2:Win2016-VM2/equipment.vNAE2343947.Field Bus MSTP1.AHU-07",
                       "Id": "6c6e18b8-015f-572a-814c-1e5d66142850",
@@ -492,7 +492,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                       "Children": [],
                       "ChildrenCount": 0
                     }
-                Console Output: End */
+                 */
                 /* SNIPPET 3: END */
 
                 /* SNIPPET 4: START */
@@ -506,7 +506,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Point point = equipmentPoints.FirstOrDefault();
                 string presentValue = point.PresentValue?.StringValue;
                 Console.WriteLine(point);
-                /* Console Output: Start                       
+                /*                        
                     {
                       "EquipmentName": "AHU-07",
                       "ShortName": "CLG-O",
@@ -531,7 +531,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                         "IsReliable": true
                       }
                     }
-                Console Output: End */
+                 */
                 /* SNIPPET 5: END */
                 #endregion
 
@@ -556,15 +556,15 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Console.WriteLine("Current page:" + alarmsPager.CurrentPage);
                 Console.WriteLine("Page size:" + alarmsPager.PageSize);
                 Console.WriteLine("Pages:" + alarmsPager.PageCount);
-                /* Console Output: Start                       
+                /*                        
                     Total:4611
                     Current page:1
                     Page size:100
                     Pages:47
-                Console Output: End */
+                */
                 AlarmItemProvider alarm = alarmsPager.Items.ElementAt(0);
                 Console.WriteLine(alarm);
-                /* Console Output: Start                       
+                /*                        
                     {
                       "Self": "https://win2016-vm2/api/v2/alarms/ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7",
                       "Id": "ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7",
@@ -585,7 +585,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                       "ObjectUrl": "https://win2016-vm2/api/v2/objects/28bed6b0-4a0f-5bb0-a16f-57a7200685bb",
                       "AnnotationsUrl": "https://win2016-vm2/api/v2/alarms/ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7/annotations"
                     }
-                 Console Output: End */
+                 */
                 /* SNIPPET 1: END */
 
                 /* SNIPPET 2: START */
@@ -594,6 +594,21 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 PagedResult<AlarmItemProvider> deviceAlarms = client.Alarms.GetAlarmsForNetworkDevice(device.Id,
                 alarmFilter);
                 /* SNIPPET 2: END */
+
+                /* SNIPPET 3: START */
+                IEnumerable<AlarmAnnotation> annotations = client.Alarms.GetAlarmAnnotations(new Guid("f0f64d5c-b70e-8754-836c-1ac99182f4e4"));
+                AlarmAnnotation firstAnnotation = annotations.FirstOrDefault();
+                Console.WriteLine(firstAnnotation);
+                /*
+                {
+                    "AlarmUrl": "https://win-ervotujej94/api/v2/alarms/f0f64d5c-b70e-8754-836c-1ac99182f4e4",
+                    "Text": "Test Annotation 00",
+                    "User": "metasyssysagent",
+                    "CreationTime": "2020-05-27T06:21:31Z",
+                    "Action": "none"
+                } 
+                */
+                /* SNIPPET 3: END */
                 #endregion
 
                 Console.WriteLine();
@@ -620,22 +635,22 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Console.WriteLine("Current page:" + samplesPager.CurrentPage);
                 Console.WriteLine("Page size:" + samplesPager.PageSize);
                 Console.WriteLine("Pages:" + samplesPager.PageCount);
-                /* Console Output: Start                       
+                /*                        
                     Total:145
                     Current page:1
                     Page size:100
                     Pages:2
-                Console Output: End */
+                 */
                 Sample firstSample = samplesPager.Items.FirstOrDefault();
                 Console.WriteLine(firstSample);
-                /* Console Output: Start                       
+                /*                        
                     {
                       "Value": 82.0,
                       "Unit": "deg F",
                       "Timestamp": "2020-05-12T05:00:00Z",
                       "IsReliable": true
                     }
-                 Console Output: End */
+                  */
                 /* SNIPPET 1: END */
 
                 #endregion
@@ -662,15 +677,15 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Console.WriteLine("Current page:" + auditsPager.CurrentPage);
                 Console.WriteLine("Page size:" + auditsPager.PageSize);
                 Console.WriteLine("Pages:" + auditsPager.PageCount);
-                /* Console Output: Start                       
+                /*                        
                     Total:323
                     Current page:1
                     Page size:100
                     Pages:4
-                Console Output: End */
+                 */
                 AuditItemProvider audit = auditsPager.Items.FirstOrDefault();
                 Console.WriteLine(audit);
-                /* Console Output: Start                       
+                /*                        
                      {
                       "Id": "aab3a269-8aec-4be1-b3a6-761853442d56",
                       "CreationTime": "2020-01-10T13:52:53.547Z",
@@ -699,7 +714,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                       },
                       "Self": "https://win2016-vm2/api/v2/audits/aab3a269-8aec-4be1-b3a6-761853442d56"
                     }
-                Console Output: End */
+                 */
                 /* SNIPPET 1: END */
 
                 /* SNIPPET 2: START */
