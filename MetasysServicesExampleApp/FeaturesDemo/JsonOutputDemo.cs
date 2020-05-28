@@ -596,7 +596,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 /* SNIPPET 2: END */
 
                 /* SNIPPET 3: START */
-                IEnumerable<AlarmAnnotation> annotations = client.Alarms.GetAlarmAnnotations(new Guid("f0f64d5c-b70e-8754-836c-1ac99182f4e4"));
+                IEnumerable<AlarmAnnotation> annotations = client.Alarms.GetAlarmAnnotations(alarm.Id);
                 AlarmAnnotation firstAnnotation = annotations.FirstOrDefault();
                 Console.WriteLine(firstAnnotation);
                 /*

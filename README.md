@@ -379,6 +379,22 @@ var objectAlarms = client.Alarms.GetAlarmsForAnObject(objectId, alarmFilter);
 var networkDeviceId="2aefbd18-9088-54ee-b6ef-6d9312da3c33";
 var networkDevicesAlarms = client.Alarms.GetAlarmsForNetworkDevice(networkDeviceId, alarmFilter);
 ```
+To get the annotations of an alarm use the GetAlarmsAnnotation method, it takes the Guid of the alarm and returns a collection of AlarmAnnotation objects.
+
+```csharp
+ IEnumerable<AlarmAnnotation> annotations = client.Alarms.GetAlarmAnnotations(alarm.Id);
+ AlarmAnnotation firstAnnotation = annotations.FirstOrDefault();
+ Console.WriteLine(firstAnnotation);
+  /*
+  {
+      "AlarmUrl": "https://win-ervotujej94/api/v2/alarms/f0f64d5c-b70e-8754-836c-1ac99182f4e4",
+      "Text": "Test Annotation 00",
+      "User": "metasyssysagent",
+      "CreationTime": "2020-05-27T06:21:31Z",
+      "Action": "none"
+  } 
+  */
+```
 
 ### Trends
 
