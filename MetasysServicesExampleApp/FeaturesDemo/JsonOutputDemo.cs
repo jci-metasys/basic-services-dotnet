@@ -96,25 +96,68 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         }
         private void ReadPropertyMultiple(Guid id1, Guid id2)
         {
+            /* SNIPPET 2: START */
             List<Guid> ids = new List<Guid> { id1, id2 };
             List<string> attributes = new List<string> { "name", "description" };
             IEnumerable<VariantMultiple> results = client.ReadPropertyMultiple(ids, attributes);
-            IEnumerable<Variant> id1Variants = results.ElementAt(0).Variants;
+            VariantMultiple multiple1 = results.ElementAt(0);
+            Console.WriteLine(multiple1);
+            /*
+                {
+                    "Id": "d5d96cd3-db4a-52e0-affd-8bc3393c30ec",
+                    "Variants": [
+                    {
+                        "StringValue": "ZN-T",
+                        "StringValueEnumerationKey": "ZN-T",
+                        "NumericValue": 0.0,
+                        "BooleanValue": false,
+                        "ArrayValue": null,
+                        "Attribute": "name",
+                        "Id": "d5d96cd3-db4a-52e0-affd-8bc3393c30ec",
+                        "Reliability": "Reliable",
+                        "ReliabilityEnumerationKey": "reliabilityEnumSet.reliable",
+                        "Priority": null,
+                        "PriorityEnumerationKey": null,
+                        "IsReliable": true
+                    },
+                    {
+                        "StringValue": "Zone Temperature",
+                        "StringValueEnumerationKey": "Zone Temperature",
+                        "NumericValue": 0.0,
+                        "BooleanValue": false,
+                        "ArrayValue": null,
+                        "Attribute": "description",
+                        "Id": "d5d96cd3-db4a-52e0-affd-8bc3393c30ec",
+                        "Reliability": "Reliable",
+                        "ReliabilityEnumerationKey": "reliabilityEnumSet.reliable",
+                        "Priority": null,
+                        "PriorityEnumerationKey": null,
+                        "IsReliable": true
+                    }
+                    ]
+                }
+            */
+            IEnumerable<Variant> multiple1Variants = multiple1.Variants;
+            /* SNIPPET 2: END */
         }
         #endregion
 
         #region WRITE A PROPERTY
         private void WriteProperty()
         {
+            /* SNIPPET 1: START */
             Guid id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1");
             client.WriteProperty(id, "description", "This is an AV.");
             client.WriteProperty(id, "description", "This is an AV.", "writePriorityEnumSet.priorityNone");
+            /* SNIPPET 1: END */
         }
         private void WritePropertyMultiple(Guid id1, Guid id2)
         {
+            /* SNIPPET 2: START */
             List<Guid> ids = new List<Guid> { id1, id2 };
             List<(string, object)> attributes = new List<(string, object)> { ("description", "This is an AV.") };
             client.WritePropertyMultiple(ids, attributes);
+            /* SNIPPET 2: END */
         }
         #endregion
 
@@ -140,7 +183,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     }
                   ]
                 }
-             */
+            */
             /* SNIPPET 1: END */
         }
         private void SendCommands(Guid objectId, List<Command> commands)
