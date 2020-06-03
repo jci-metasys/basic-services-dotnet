@@ -40,12 +40,12 @@ namespace MetasysServicesCom.Tests
             //Arrange
             var legacyClientMock = new Mock<ILegacyMetasysClient>();
             var comMetasysClientFactoryMock = new Mock<IComMetasysClientFactory>();
-            comMetasysClientFactoryMock.Setup(m => m.GetLegacyClient("hostname", false, "V3", null, true)).Throws(new MetasysUnsupportedApiVersion("V3"));
+            comMetasysClientFactoryMock.Setup(m => m.GetLegacyClient("hostname", false, "v1", null, true)).Throws(new MetasysUnsupportedApiVersion("v1"));
 
             //Act
             void Act()
             {
-                var res = InitMethod.ComMetasysClientFactory.GetLegacyClient("hostname", false, "V3", null);
+                var res = InitMethod.ComMetasysClientFactory.GetLegacyClient("hostname", false, "v1", null);
             }
 
             //Assert

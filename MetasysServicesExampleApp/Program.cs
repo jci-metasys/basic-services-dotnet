@@ -20,17 +20,19 @@ namespace MetasysServicesExampleApp
                     connectionDetails = Console.ReadLine();
                     args = connectionDetails.Split(' ');
                 }
-                string username=null, password=null, hostname=null, credManTarget=null; 
-                if (args.Length > 2)
+                string username=null, password=null, hostname=null, credManTarget=null; string version = null;
+                if (args.Length > 3)
                 {
                     username = args[0];
                     password = args[1];
-                    hostname = args[2];                           
+                    hostname = args[2];
+                    version = args[3];
                 }
                 else
                 {                
                      credManTarget= args[0];
                      hostname= args[1];                     
+                     version= args[2];                     
                 }
 
                 #region Login
@@ -38,7 +40,8 @@ namespace MetasysServicesExampleApp
                 // CultureInfo culture = new CultureInfo("en-US");
 
                 Console.WriteLine("\nLogging in...");
-                var client = new MetasysClient(hostname,true,logClientErrors:false); // Disable default logging since it is handled in this app.
+                var apiVersion = (ApiVersion)Enum.Parse(typeof(ApiVersion), version);
+                var client = new MetasysClient(hostname,true,apiVersion,logClientErrors:false); // Disable default logging since it is handled in this app.
                 // var client = new MetasysClient(hostname, true); // Ignore Certificate Errors
                 // var client = new MetasysClient(hostname, false, ApiVersion.v2, culture);
 

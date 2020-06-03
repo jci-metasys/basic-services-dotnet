@@ -92,10 +92,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <value>True if the reliability of the value is reliable.</value>
         public bool IsReliable => ReliabilityEnumerationKey == Reliable;
 
+        /// <summary>
+        /// The Metasys API version taken as a reference to process the JToken. 
+        /// </summary>
+        private ApiVersion apiVersion;
+
         private CultureInfo _CultureInfo;
 
-        internal Variant(Guid id, JToken token, string attribute, CultureInfo cultureInfo)
+        internal Variant(Guid id, JToken token, string attribute, CultureInfo cultureInfo, ApiVersion apiVersion)
         {
+            this.apiVersion = apiVersion;
             _CultureInfo = cultureInfo;
             Id = id;
             Attribute = attribute;
@@ -108,8 +114,12 @@ namespace JohnsonControls.Metasys.BasicServices
             NumericValue = 1;
             ArrayValue = null;
             BooleanValue = false;
-
             ProcessToken(token);
+            if (apiVersion > ApiVersion.v2)
+            {
+                // From v3 onwards we may have condition property
+                ProcessCondition(token);
+            }
         }
 
         /// <summary>
@@ -117,37 +127,38 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         private void ProcessToken(JToken token)
         {
-            if (token == null)
+            var attributeToken =token["item"][Attribute];
+            if (attributeToken == null)
             {
                 NumericValue = 1;
                 StringValueEnumerationKey = Unsupported;
                 StringValue = ResourceManager.Localize(StringValueEnumerationKey, _CultureInfo);
                 return;
             }
-            // switch on token type and set the fields appropriately
-            switch (token.Type)
+            // switch on attributeToken type and set the fields appropriately
+            switch (attributeToken.Type)
             {
                 case JTokenType.Integer:
-                    NumericValue = token.Value<double>();
+                    NumericValue = attributeToken.Value<double>();
                     StringValue = NumericValue.ToString(_CultureInfo);
                     BooleanValue = Convert.ToBoolean(NumericValue);
                     ArrayValue = null;
                     break;
                 case JTokenType.Float:
-                    NumericValue = token.Value<double>();
+                    NumericValue = attributeToken.Value<double>();
                     StringValue = NumericValue.ToString(_CultureInfo);
                     BooleanValue = Convert.ToBoolean(NumericValue);
                     break;
                 case JTokenType.String:
                     NumericValue = 0;
-                    StringValueEnumerationKey = token.Value<string>();
+                    StringValueEnumerationKey = attributeToken.Value<string>();
                     StringValue = ResourceManager.Localize(StringValueEnumerationKey, _CultureInfo);
                     break;
                 case JTokenType.Array:
-                    ProcessArray(token);
+                    ProcessArray(attributeToken);
                     break;
                 case JTokenType.Boolean:
-                    if ((bool)(token) == true)
+                    if ((bool)(attributeToken) == true)
                     {
                         NumericValue = 1;
                         BooleanValue = true;
@@ -162,14 +173,18 @@ namespace JohnsonControls.Metasys.BasicServices
                     break;
                 case JTokenType.Object:
                     // It is assumed the attribute read was the presentValue
-                    ProcessPresentValue(token);
+                    if (apiVersion < ApiVersion.v3)
+                    {
+                        // From v3 onwards presentValue is threated like other attributes and additional information are moved in Condition property.
+                        ProcessPresentValue(attributeToken);
+                    }
                     break;
                 default:
                     NumericValue = 1;
                     StringValueEnumerationKey = Unsupported;
                     StringValue = ResourceManager.Localize(StringValueEnumerationKey, _CultureInfo);
                     break;
-            }
+            }          
         }
 
         /// <summary>Parses a JArray and adds each item as a Variant.</summary>
@@ -180,7 +195,10 @@ namespace JohnsonControls.Metasys.BasicServices
             int index = 0;
             foreach (var item in arr.Children())
             {
-                ArrayValue[index] = new Variant(Id, item, Attribute, _CultureInfo);
+                string json = "{\"item\": { }}";
+                var t = JToken.Parse(json);
+                t["item"][Attribute] = item;
+                ArrayValue[index] = new Variant(Id, t, Attribute, _CultureInfo, apiVersion);
                 index++;
             }
             NumericValue = 0;
@@ -213,6 +231,34 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 ProcessToken(null);
             }
+        }
+
+        /// <summary>Retrieve non-normal conditions for the current attribute (if any). </summary>
+        internal void ProcessCondition(JToken token)
+        {
+            var conditionToken = token["condition"];
+            if (conditionToken == null)
+            {
+                return; // condition section not available
+            }
+            conditionToken = conditionToken[Attribute];
+            if (conditionToken == null)
+            {
+                return; // condition is normal for this attribute
+            }
+            JToken reliabilityToken = conditionToken["reliability"];
+            JToken priorityToken = conditionToken["priority"];
+
+            if (reliabilityToken != null)
+            {
+                ReliabilityEnumerationKey = reliabilityToken.ToString();
+                Reliability = ResourceManager.Localize(ReliabilityEnumerationKey, _CultureInfo);
+            }
+            if (priorityToken != null)
+            {
+                PriorityEnumerationKey = priorityToken.ToString();
+                Priority = ResourceManager.Localize(PriorityEnumerationKey, _CultureInfo);
+            }          
         }
 
         /// <summary>

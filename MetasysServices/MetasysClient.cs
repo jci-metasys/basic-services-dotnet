@@ -44,6 +44,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         protected string Hostname { get; private set; }
 
+        /// <summary>
+        /// An optional boolean flag for ignoring certificate errors by bypassing certificate verification steps.
+        /// </summary>
+        protected bool IgnoreCertificateErrors { get; private set; }
+
+        /// <summary>
+        /// The server's Api version.
+        /// </summary>
+        protected ApiVersion Version { get; private set; }        
+
         private static CultureInfo CultureEnUS = new CultureInfo(1033);
 
         /// <summary>
@@ -88,21 +98,22 @@ namespace JohnsonControls.Metasys.BasicServices
             Hostname = hostname;
             // Set Metasys culture if specified, otherwise use current machine Culture.
             Culture = cultureInfo ?? CultureInfo.CurrentCulture;
-
+            Version = version;
+            IgnoreCertificateErrors = ignoreCertificateErrors;
             // Initialize the HTTP client with a base URL    
-            if (ignoreCertificateErrors)
+            if (IgnoreCertificateErrors)
             {
                 HttpClientHandler httpClientHandler = new HttpClientHandler();
                 httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
                 HttpClient httpClient = new HttpClient(httpClientHandler);
                 httpClient.BaseAddress = new Uri($"https://{hostname}"
-                    .AppendPathSegments("api", version));
+                    .AppendPathSegments("api", Version));
                 Client = new FlurlClient(httpClient);
             }
             else
             {
                 Client = new FlurlClient($"https://{hostname}"
-                    .AppendPathSegments("api", version));
+                    .AppendPathSegments("api", Version));
             }
             // Set preferences about logging
             LogClientErrors = logClientErrors;
@@ -425,9 +436,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 response = await Client.Request(new Url("objects")
                     .AppendPathSegments(id, "attributes", attributeName))
                     .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
-                var attribute = response["item"][attributeName];
-                result = new Variant(id, attribute, attributeName, Culture);
+                    .ConfigureAwait(false);             
+                result = new Variant(id, response, attributeName, Culture, Version);
             }
             catch (FlurlHttpException e)
             {

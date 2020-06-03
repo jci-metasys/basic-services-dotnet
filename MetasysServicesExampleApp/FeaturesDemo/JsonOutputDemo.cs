@@ -777,9 +777,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             try
             {
                 /**** Common vars shared between different snippets: modify the following input according to your testing server *****/
-                Guid objectId = new Guid("d5d96cd3-db4a-52e0-affd-8bc3393c30ec");
+                Guid objectId = new Guid("3a6cac5e-5578-55da-b74e-ca43548ab3a8");
                 Guid id1 = objectId;
-                Guid id2 = new Guid("6c999f43-6007-5137-b6d3-c30b93fb70ec");
+                Guid id2 = new Guid("01e025e8-0fb3-59da-a9b8-2f238c6f011c");
                 List<Command> commands = client.GetCommands(objectId).ToList();
                 string jsonSpace = @"{
                   ""ItemReference"": ""Win2016-VM2:Win2016-VM2/JCI.Building1"",

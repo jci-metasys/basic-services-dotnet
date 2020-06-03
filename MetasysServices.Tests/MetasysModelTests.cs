@@ -123,9 +123,10 @@ namespace MetasysServices.Tests
         {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid idCopy = new Guid("11111111-2222-3333-4444-555555555555");
-
-            Variant v = new Variant(id, JArray.Parse("[ 0, 1, 2 ]"), "attr", testCulture);
-            Variant vCopy = new Variant(idCopy, JArray.Parse("[ 0, 1, 2 ]"), "attr", testCulture);
+            string json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
+            string json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
+            Variant v = new Variant(id, JToken.Parse(json1), "attr", testCulture, ApiVersion.v2);
+            Variant vCopy = new Variant(idCopy, JToken.Parse(json2), "attr", testCulture, ApiVersion.v2);
             Assert.AreEqual(v.GetHashCode(), vCopy.GetHashCode());
             Assert.AreEqual(v, vCopy);
         }
@@ -135,14 +136,19 @@ namespace MetasysServices.Tests
         {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid idCopy = new Guid("11111111-2222-3333-4444-555555555555");
-            string data = string.Concat("{ ",
-                "\"value\": 23,",
-                "\"reliability\": \"", Reliable, "\",",
-                "\"priority\": \"", PriorityNone, "\"}");
+            string data = @"{
+                ""item"": {
+                    ""presentValue"": {
+                            ""value"": 23,
+                        ""reliability"": ""reliabilityEnumSet.reliable"",
+                        ""priority"": ""writePriorityEnumSet.priorityDefault""
+                    }
+                    }
+                }";
             string dataCopy = data.Clone().ToString();
 
-            Variant v = new Variant(id, JToken.Parse(data), "presentValue", testCulture);
-            Variant vCopy = new Variant(idCopy, JToken.Parse(dataCopy), "presentValue", testCulture);
+            Variant v = new Variant(id, JToken.Parse(data), "presentValue", testCulture, ApiVersion.v2);
+            Variant vCopy = new Variant(idCopy, JToken.Parse(dataCopy), "presentValue", testCulture, ApiVersion.v2);
             Assert.AreEqual(v.GetHashCode(), vCopy.GetHashCode());
             Assert.AreEqual(v, vCopy);
         }
@@ -152,8 +158,13 @@ namespace MetasysServices.Tests
         {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid idCopy = new Guid("11111111-2222-3333-4444-555555555555");
-            Variant v = new Variant(id, JToken.FromObject("stringvalue"), "attr", testCulture);
-            Variant vCopy = new Variant(idCopy, JToken.FromObject("stringvalue"), "attr", testCulture);
+            var json= @"{
+                ""item"": {
+                    ""attr"": ""stringvalue""
+                    }
+                }";
+            Variant v = new Variant(id, JToken.Parse(json), "attr", testCulture, ApiVersion.v2);
+            Variant vCopy = new Variant(idCopy, JToken.Parse(json), "attr", testCulture, ApiVersion.v2);
             List<Variant> vlist = new List<Variant>() { v };
             List<Variant> vlistCopy = new List<Variant>() { vCopy };
 
@@ -280,8 +291,10 @@ namespace MetasysServices.Tests
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid id2 = new Guid("11111111-2222-3333-4444-555555555555");
 
-            Variant v = new Variant(id, JArray.Parse("[ 0, 1, 2 ]"), "attr", testCulture);
-            Variant v2 = new Variant(id2, JArray.Parse("[ 0, 1, 3 ]"), "attr", testCulture);
+            string json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
+            string json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 3 ] }}";
+            Variant v = new Variant(id, JToken.Parse(json1), "attr", testCulture, ApiVersion.v2);
+            Variant v2 = new Variant(id2, JToken.Parse(json2), "attr", testCulture, ApiVersion.v2);
             Assert.AreNotEqual(v.GetHashCode(), v2.GetHashCode());
             Assert.AreNotEqual(v, v2);
         }
@@ -290,21 +303,36 @@ namespace MetasysServices.Tests
         public void TestVariantDoesNotEqual()
         {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
-            string data = string.Concat("{ ",
-                "\"value\": 23,",
-                "\"reliability\": \"", Reliable, "\",",
-                "\"priority\": \"", PriorityNone, "\"}");
-            string data2 = string.Concat("{ ",
-                "\"value\": 23,",
-                "\"reliability\": \"", Reliable, "\"}");
-            string data3 = string.Concat("{ ",
-                "\"value\": 24,",
-                "\"reliability\": \"", Reliable, "\",",
-                "\"priority\": \"", PriorityNone, "\"}");
+            string data = @"{
+                ""item"": {
+                    ""presentValue"": {
+                            ""value"": 23,
+                        ""reliability"": ""reliabilityEnumSet.reliable"",
+                        ""priority"": ""writePriorityEnumSet.priorityDefault""
+                    }
+                    }
+                }";
+            string data2 = @"{
+                ""item"": {
+                    ""presentValue"": {
+                            ""value"": 23,
+                        ""reliability"": ""reliabilityEnumSet.reliable""                      
+                    }
+                    }
+                }";
+            string data3 = @"{
+                ""item"": {
+                    ""presentValue"": {
+                            ""value"": 24,
+                        ""reliability"": ""reliabilityEnumSet.reliable"",
+                        ""priority"": ""writePriorityEnumSet.priorityDefault""
+                    }
+                    }
+                }";
 
-            Variant v = new Variant(id, JToken.Parse(data), "presentValue", testCulture);
-            Variant v2 = new Variant(id, JToken.Parse(data2), "presentValue", testCulture);
-            Variant v3 = new Variant(id, JToken.Parse(data3), "presentValue", testCulture);
+            Variant v = new Variant(id, JToken.Parse(data), "presentValue", testCulture, ApiVersion.v2);
+            Variant v2 = new Variant(id, JToken.Parse(data2), "presentValue", testCulture, ApiVersion.v2);
+            Variant v3 = new Variant(id, JToken.Parse(data3), "presentValue", testCulture, ApiVersion.v2);
             Assert.AreNotEqual(v.GetHashCode(), v2.GetHashCode());
             Assert.AreNotEqual(v, v2);
             Assert.AreNotEqual(v.GetHashCode(), v3.GetHashCode());
@@ -316,8 +344,18 @@ namespace MetasysServices.Tests
         {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid id2 = new Guid("11111111-2222-3333-4444-555555555555");
-            Variant v = new Variant(id, JToken.FromObject("stringvalue"), "attr", testCulture);
-            Variant v2 = new Variant(id2, JToken.FromObject("stringvalwe"), "attr", testCulture);
+            string json1 = @"{
+                ""item"": {
+                    ""attr"": ""stringvalue""
+                    }
+                }";
+            string json2 = @"{
+                ""item"": {
+                    ""attr"": ""stringvalwe""
+                    }
+                }";
+            Variant v = new Variant(id, JToken.Parse(json1), "attr", testCulture, ApiVersion.v2);
+            Variant v2 = new Variant(id2, JToken.Parse(json2), "attr", testCulture, ApiVersion.v2);
             List<Variant> vlist = new List<Variant>() { v };
             List<Variant> vlist2 = new List<Variant>() { v2 };
 
