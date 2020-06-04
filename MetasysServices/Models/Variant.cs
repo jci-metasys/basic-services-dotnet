@@ -127,14 +127,15 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         private void ProcessToken(JToken token)
         {
-            var attributeToken =token["item"][Attribute];
-            if (attributeToken == null)
+            if (token == null || token["item"]== null || token ["item"][Attribute] == null)
             {
+                // return unsupported attribute result
                 NumericValue = 1;
                 StringValueEnumerationKey = Unsupported;
                 StringValue = ResourceManager.Localize(StringValueEnumerationKey, _CultureInfo);
                 return;
             }
+            JToken attributeToken=token["item"][Attribute];           
             // switch on attributeToken type and set the fields appropriately
             switch (attributeToken.Type)
             {
@@ -225,7 +226,10 @@ namespace JohnsonControls.Metasys.BasicServices
                     PriorityEnumerationKey = priorityToken.ToString();
                     Priority = ResourceManager.Localize(PriorityEnumerationKey, _CultureInfo);
                 }
-                ProcessToken(valueToken);
+                string json = "{\"item\":{}}";
+                var t = JToken.Parse(json);
+                t[Attribute] = valueToken;
+                ProcessToken(t);
             }
             else
             {

@@ -72,7 +72,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
         #region GET A PROPERTY
         private void ReadProperty(Guid objectId)
-        {         
+        {
             /* SNIPPET 1: START */
             Variant property = client.ReadProperty(objectId, "presentValue");
             Console.WriteLine(property);
@@ -780,7 +780,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Guid objectId = new Guid("3a6cac5e-5578-55da-b74e-ca43548ab3a8");
                 Guid id1 = objectId;
                 Guid id2 = new Guid("01e025e8-0fb3-59da-a9b8-2f238c6f011c");
-                List<Command> commands = client.GetCommands(objectId).ToList();
+                // Common objects are mocked to do not waste precious roundtrip time on each snippet
+                List<Command> commands = new List<Command> { new Command { CommandId = "Adjust" }, new Command { CommandId = "OperatorOverride" }, new Command(), new Command(), new Command { CommandId = "Release" } };
                 string jsonSpace = @"{
                   ""ItemReference"": ""Win2016-VM2:Win2016-VM2/JCI.Building1"",
                   ""Id"": ""164aaba2-0fb3-5b5d-bfe9-49cf6b797c93"",

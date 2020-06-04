@@ -15,7 +15,7 @@ namespace MetasysServicesExampleApp
             {
                 if (args.Length != 3)
                 {
-                    Console.WriteLine("Please enter in your credentials in this format: {username} {password} {hostname} or as an alternative you can specify just the Credential Manager target and the hostname in this way {credmantarget} {hostname}." +
+                    Console.WriteLine("Please enter in your credentials in this format: {username} {password} {hostname} {api_version} or as an alternative you can specify just the Credential Manager target and the hostname in this way {credmantarget} {hostname} {api_version}." +
                         "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
                     connectionDetails = Console.ReadLine();
                     args = connectionDetails.Split(' ');
