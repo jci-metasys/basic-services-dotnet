@@ -228,7 +228,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
                 string json = "{\"item\":{}}";
                 var t = JToken.Parse(json);
-                t[Attribute] = valueToken;
+                t["item"][Attribute] = valueToken;
                 ProcessToken(t);
             }
             else
