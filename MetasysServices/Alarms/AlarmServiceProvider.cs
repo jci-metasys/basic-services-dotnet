@@ -28,8 +28,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Initializes a new instance of <see cref="AlarmServiceProvider"/> with supplied data.
         /// </summary>
         /// <param name="client">The FlurlClient to get response from URL.</param>
+        /// <param name="version">The server's Api version.</param>
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
-        public AlarmServiceProvider(IFlurlClient client, bool logClientErrors=true):base(client, logClientErrors)
+        public AlarmServiceProvider(IFlurlClient client, ApiVersion version, bool logClientErrors=true):base(client, version, logClientErrors)
         {
             this.client = client ?? throw new ArgumentNullException(nameof(client),
                                                "FlurlClient can not be null.");

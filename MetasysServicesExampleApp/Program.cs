@@ -17,23 +17,23 @@ namespace MetasysServicesExampleApp
                 {
                     Console.WriteLine("Please enter in your credentials in this format: {username} {password} {hostname} {api_version} or as an alternative you can specify just the Credential Manager target and the hostname in this way {credmantarget} {hostname} {api_version}." +
                         "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
-                    connectionDetails = Console.ReadLine();
+                    connectionDetails = "";// Console.ReadLine();
                     args = connectionDetails.Split(' ');
                 }
-                string username=null, password=null, hostname=null, credManTarget=null; string version = null;
-                if (args.Length > 3)
-                {
-                    username = args[0];
-                    password = args[1];
-                    hostname = args[2];
-                    version = args[3];
-                }
-                else
-                {                
-                     credManTarget= args[0];
-                     hostname= args[1];                     
-                     version= args[2];                     
-                }
+                string username=null, password= null, hostname="10.164.104.81", credManTarget="metasys-EEC-11"; string version = "v3";
+                //if (args.Length > 3)
+                //{
+                //    username = args[0];
+                //    password = args[1];
+                //    hostname = args[2];
+                //    version = args[3];
+                //}
+                //else
+                //{                
+                //     credManTarget= args[0];
+                //     hostname= args[1];                     
+                //     version= args[2];                     
+                //}
 
                 #region Login
                 Console.WriteLine("Default culture is en_US. The culture for client translations can be changed in the code.");
@@ -87,7 +87,7 @@ namespace MetasysServicesExampleApp
             Console.WriteLine("9) JSON Output");
             Console.WriteLine("10) Exit");
             Console.Write("\r\nSelect an option: ");
-            var option = Console.ReadLine();
+            var option = "9";// Console.ReadLine();
             Console.WriteLine();
             switch (option)
             {

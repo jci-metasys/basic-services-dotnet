@@ -28,8 +28,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Initializes a new instance of <see cref="AuditServiceProvider"/> with supplied data.
         /// </summary>
         /// <param name="client">The FlurlClient to get response from URL.</param>
+        /// <param name="version">The server's Api version.</param>
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
-        public AuditServiceProvider(IFlurlClient client, bool logClientErrors = true) :base(client, logClientErrors)
+        public AuditServiceProvider(IFlurlClient client, ApiVersion version, bool logClientErrors = true) :base(client, version, logClientErrors)
         {
             this.client = client ?? throw new ArgumentNullException(nameof(client),
                                                "FlurlClient can not be null.");

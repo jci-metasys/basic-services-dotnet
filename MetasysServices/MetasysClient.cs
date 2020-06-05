@@ -48,11 +48,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// An optional boolean flag for ignoring certificate errors by bypassing certificate verification steps.
         /// </summary>
         protected bool IgnoreCertificateErrors { get; private set; }
-
-        /// <summary>
-        /// The server's Api version.
-        /// </summary>
-        protected ApiVersion Version { get; private set; }        
+           
 
         private static CultureInfo CultureEnUS = new CultureInfo(1033);
 
@@ -118,9 +114,9 @@ namespace JohnsonControls.Metasys.BasicServices
             // Set preferences about logging
             LogClientErrors = logClientErrors;
             // Init related services
-            Trends = new TrendServiceProvider(Client, logClientErrors);
-            Alarms = new AlarmServiceProvider(Client, logClientErrors);
-            Audits = new AuditServiceProvider(Client, logClientErrors);
+            Trends = new TrendServiceProvider(Client, Version,logClientErrors);
+            Alarms = new AlarmServiceProvider(Client, Version, logClientErrors);
+            Audits = new AuditServiceProvider(Client, Version, logClientErrors);
         }
 
         /// <summary>

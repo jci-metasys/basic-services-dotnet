@@ -670,14 +670,14 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         private void GetTrendedAttributes_GetSamples()
         {
             /* SNIPPET 1: START */
-            Guid trendedObjectId = client.GetObjectIdentifier("Win2016-VM2:vNAE2343701/Field Bus MSTP1.VAV-08.ZN-T");
+            Guid trendedObjectId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB.10FEC11 - V6 Unit.E4 Network Outdoor Temperature");
             // Get attributes where trend extension is configured
             List<MetasysAttribute> trendedAttributes = client.Trends.GetTrendedAttributes(trendedObjectId);
             int attributeId = trendedAttributes[0].Id;
             TimeFilter timeFilter = new TimeFilter
             {
-                StartTime = new DateTime(2020, 5, 12),
-                EndTime = new DateTime(2020, 5, 13)
+                StartTime = new DateTime(2020, 6, 5),
+                EndTime = new DateTime(2020, 6, 6)
             };
             PagedResult<Sample> samplesPager = client.Trends.GetSamples(trendedObjectId, attributeId, timeFilter);
             // Prints the number of records fetched and paging information
