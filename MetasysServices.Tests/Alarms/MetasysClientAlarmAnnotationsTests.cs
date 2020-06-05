@@ -1,12 +1,10 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 
 namespace MetasysServices.Tests
 {
@@ -17,25 +15,25 @@ namespace MetasysServices.Tests
     {
              
         [Test]
-        public void TestGetAlarmAnnotationsNone()
+        public void TestGetAuditAnnotationsNone()
         {
             var response = @"{
                     ""total"": 1,
                     ""next"": null,
                     ""previous"": null,
                     ""items"": [],
-                    ""self"": ""https://win-ervotujej94/api/v2/alarms/f0f64d5c-b70e-8754-836c-1ac99182f4e4/annotations?pageSize=100&page=1""
+                    ""self"": ""https://win-ervotujej94/api/v2/audits/f0f64d5c-b70e-8754-836c-1ac99182f4e4/annotations?pageSize=100&page=1""
                 }";
             httpTest.RespondWith(response);
-            var annotations = client.Alarms.GetAlarmAnnotations(mockid); 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms/{mockid}/annotations")
+            var annotations = client.Audits.GetAuditAnnotations(mockid); 
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits/{mockid}/annotations")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, annotations.Count());
         }
      
         [Test]
-        public void TestGetAlarmAnnotationsOnePage()
+        public void TestGetAuditAnnotationsOnePage()
         {
             var response = @"
                 {

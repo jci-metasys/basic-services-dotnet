@@ -146,6 +146,14 @@ namespace MetasysServices.Tests
                 ""objectUrl"": ""https://hostname/api/v2/objects/28bed6b0-4a0f-5bb0-a16f-57a7200685bb""
             }";
 
+        protected string AuditAnnotation = @"{
+                            ""text"": ""Test Annotation 00"",
+                            ""user"": ""metasyssysagent"",
+                            ""creationTime"": ""2020-05-27T06:21:31Z"",
+                            ""action"": ""none"",
+                            ""auditUrl"": ""https://win-ervotujej94/api/v2/audits/f0f64d5c-b70e-8754-836c-1ac99182f4e4""
+                         }";
+
         [OneTimeSetUp]
         public void Init()
         {

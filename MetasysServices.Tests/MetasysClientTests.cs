@@ -12,7 +12,7 @@ using System.Globalization;
 
 namespace MetasysServices.Tests
 {
-    public class MetasysClientTests:MetasysClientTestsBase
+    public class MetasysClientTests : MetasysClientTestsBase
     {
         // Update these en-US resources as needed
         private const string ArrayEnum = "dataTypeEnumSet.arrayDataType";

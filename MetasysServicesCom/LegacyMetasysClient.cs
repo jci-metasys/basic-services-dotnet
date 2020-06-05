@@ -70,7 +70,9 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<PagedResult<AuditItemProvider>, IComPagedResult>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComProvideAuditItem[]>(src.Items)));
-                cfg.CreateMap<Point, IComPoint>();                  
+                cfg.CreateMap<Point, IComPoint>();
+                cfg.CreateMap<AlarmAnnotation, IComAlarmAnnotation>();
+                cfg.CreateMap<AuditAnnotation, IComAuditAnnotation>();
             }).CreateMapper();
         }
 
@@ -384,6 +386,14 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc />
+        public object GetAlarmAnnotations(string alarmId)
+        {
+            Guid guidAlarmId = Guid.Parse(alarmId);
+            var response = Client.Alarms.GetAlarmAnnotations(guidAlarmId);
+            return Mapper.Map<IComAlarmAnnotation[]>(response);
+        }
+
+        /// <inheritdoc />
         public IComPagedResult GetAlarmsForAnObject(string objectId, IComFilterAlarm alarmFilter)
         {
             Guid guidObjectId = Guid.Parse(objectId);
@@ -439,6 +449,14 @@ namespace JohnsonControls.Metasys.ComServices
             var mapAuditFilter = Mapper.Map<AuditFilter>(auditFilter);
             PagedResult<AuditItemProvider> auditItems = Client.Audits.GetAudits(mapAuditFilter);
             return Mapper.Map<IComPagedResult>(auditItems);
+        }
+
+        /// <inheritdoc />
+        public object GetAuditAnnotations(string auditId)
+        {
+            Guid guidAuditId = Guid.Parse(auditId);
+            var response = Client.Audits.GetAuditAnnotations(guidAuditId);
+            return Mapper.Map<IComAuditAnnotation[]>(response);
         }
 
         /// <summary>

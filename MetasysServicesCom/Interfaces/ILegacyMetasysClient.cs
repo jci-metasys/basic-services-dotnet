@@ -135,6 +135,14 @@ namespace JohnsonControls.Metasys.ComServices
         IComPagedResult GetAlarms(IComFilterAlarm alarmFilter);
 
         /// <summary>
+        /// Retrieve a collection of Alarm Annotations.
+        /// </summary>
+        /// <param name="alarmId"></param>
+        /// <returns></returns>
+        object GetAlarmAnnotations(string alarmId);
+
+
+        /// <summary>
         /// Retrieves a collection of alarms for the specified object.
         /// </summary>
         /// <param name="objectId">The identifier of the object.</param>
@@ -179,6 +187,13 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="auditFilter">The audit model to filter audits.</param>
         /// <returns>The list of audits with details.</returns>
         IComPagedResult GetAudits(IComAuditFilter auditFilter);
+
+        /// <summary>
+        /// Retrieve a collection of Audit Annotations.
+        /// </summary>
+        /// <param name="auditId"></param>
+        /// <returns></returns>
+        object GetAuditAnnotations(string auditId);
 
         /// <summary>
         /// Retrieves a collection of audits for the specified object.

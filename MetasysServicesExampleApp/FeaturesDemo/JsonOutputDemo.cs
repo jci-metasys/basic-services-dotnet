@@ -770,6 +770,26 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             PagedResult<AuditItemProvider> objectAudits = client.Audits.GetAuditsForAnObject(objectId, auditFilter);
             /* SNIPPET 2: END */
         }
+
+        private void GetAuditsAnnotation(AuditItemProvider audit)
+        {
+            /* SNIPPET 3: START */
+            IEnumerable<AuditAnnotation> annotations = client.Audits.GetAuditAnnotations(audit.Id);
+            AuditAnnotation firstAnnotation = annotations.FirstOrDefault();
+            Console.WriteLine(firstAnnotation);
+            /*
+            {
+                "auditUrl": "https://win-ervotujej94/api/v2/audits/40aff6ec-ecb2-4b65-a504-0ac659756956",
+                "creationTime": "2020-06-05T15:58:40.407Z",
+                "user": "MetasysSysAgent",
+                "text": "TEST AUDIT ANNOTATION 02",
+                "signature": null,
+                "action": "none"
+            } 
+            */
+            /* SNIPPET 3: END */
+        }
+
         #endregion
 
         public void Run()
@@ -957,6 +977,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                             GetSingleAudit_GetAuditsForAnObject(audit, objectId, auditFilter);
                             break;
                         case "23":
+                            GetAuditsAnnotation(audit);
+                            break;
+                        case "24":
                             return; // Exit from JSON output demo                            
                     }
                     Console.WriteLine();
@@ -995,11 +1018,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("16) GetEquipmentPoints");
             Console.WriteLine("17) GetAlarms");
             Console.WriteLine("18) GetSingleAlarm, GetAlarmsForAnObject, GetAlarmsForNetworkDevice");
-            Console.WriteLine("19) GetAlarmsAnnotation");
+            Console.WriteLine("19) GetAlarmAnnotations");
             Console.WriteLine("20) GetTrendedAttributes, GetSamples");
             Console.WriteLine("21) GetAudits");
             Console.WriteLine("22) GetSingleAudit, GetAuditsForAnObject");
-            Console.WriteLine("23) Exit");
+            Console.WriteLine("23) GetAuditAnnotations");
+            Console.WriteLine("24) Exit");
         }
     }
 }

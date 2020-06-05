@@ -18,7 +18,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns>The specified audit details.</returns>
         AuditItemProvider GetSingleAudit(Guid auditId);
 
-
         /// <summary>
         /// Retrieves the specified audit.
         /// </summary>
@@ -41,6 +40,20 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns>The list of audits with details.</returns>
         /// <inheritdoc cref="AuditInfoProvider.GetAudits(AuditFilter)"/>
 		Task<PagedResult<AuditItemProvider>> GetAuditsAsync(AuditFilter auditFilter);
+
+        /// <summary>
+        /// Retrieve a collection of Audit Annotations.
+        /// </summary>
+        /// <param name="auditId"></param>
+        /// <returns></returns>
+        IEnumerable<AuditAnnotation> GetAuditAnnotations(Guid auditId);
+
+        /// <summary>
+        /// Retrieve a collection of Audit Annotations asynchronously.
+        /// </summary>
+        /// <param name="auditId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<AuditAnnotation>> GetAuditAnnotationsAsync(Guid auditId);
 
         /// <summary>
         /// Retrieves a collection of audits for the specified object.

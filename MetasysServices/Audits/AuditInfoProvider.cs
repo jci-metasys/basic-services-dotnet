@@ -23,7 +23,6 @@ namespace JohnsonControls.Metasys.BasicServices
         private const string BaseParam = "audits";
         private readonly IFlurlClient client;
 
-
         /// <summary>
         /// Initializes a new instance of <see cref="AuditInfoProvider"/> with supplied data.
         /// </summary>
@@ -71,5 +70,40 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             return GetAuditsForAnObjectAsync(objectId, auditFilter).GetAwaiter().GetResult();
         }
+
+        /// <inheritdoc/>
+        public IEnumerable<AuditAnnotation> GetAuditAnnotations(Guid auditId)
+        {
+            return GetAuditAnnotationsAsync(auditId).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public async Task<IEnumerable<AuditAnnotation>> GetAuditAnnotationsAsync(Guid auditId)
+        {
+            // Retrieve JSON collection of Annotation
+            var annotations = await GetAllAvailablePagesAsync("audits", null, auditId.ToString(), "annotations");
+            List<AuditAnnotation> annotationsList = new List<AuditAnnotation>();
+            // Convert to a collection of AuditAnnotation          
+            foreach (var token in annotations)
+            {
+                AuditAnnotation auditAnnotation = new AuditAnnotation();
+                // Build AlarmAnnotation object
+                try
+                {
+                    auditAnnotation.Text = token["text"].Value<string>();
+                    auditAnnotation.User = token["user"].Value<string>();
+                    auditAnnotation.CreationTime = token["creationTime"].Value<DateTime>();
+                    auditAnnotation.Action = token["action"].Value<string>();
+                    auditAnnotation.AuditUrl = token["auditUrl"].Value<string>();
+                    annotationsList.Add(auditAnnotation);
+                }
+                catch (Exception e)
+                {
+                    throw new MetasysObjectException(token.ToString(), e);
+                }
+            }
+            return annotationsList;
+        }
+
     }
 }
