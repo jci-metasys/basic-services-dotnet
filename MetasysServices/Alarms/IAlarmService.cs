@@ -9,14 +9,14 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Defines method to provide alarm infos for endpoints of the Metasys Alarm API.
     /// </summary>
-    public interface IProvideAlarmInfo
+    public interface IAlarmsService
     {            
         /// <summary>
         /// Retrieves the specified alarm.
         /// </summary>
         /// <param name="alarmId">The identifier of the alarm.</param>
         /// <returns>The specified alarm details.</returns>
-        AlarmItemProvider GetSingleAlarm(Guid alarmId);
+        Alarm GetSingleAlarm(Guid alarmId);
 
 
         /// <summary>
@@ -24,15 +24,15 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="alarmId">The identifier of the alarm.</param>
         /// <returns>The specified alarm details.</returns>
-        /// <inheritdoc cref="IProvideAlarmInfo.GetSingleAlarm(Guid)"/>
-		Task<AlarmItemProvider> GetSingleAlarmAsync(Guid alarmId);
+        /// <inheritdoc cref="IAlarmsService.GetSingleAlarm(Guid)"/>
+		Task<Alarm> GetSingleAlarmAsync(Guid alarmId);
 		
         /// <summary>
         /// Retrieves a collection of alarms.
         /// </summary>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms with details.</returns>
-        PagedResult<AlarmItemProvider> GetAlarms(AlarmFilter alarmFilter);
+        PagedResult<Alarm> GetAlarms(AlarmFilter alarmFilter);
 
         /// <summary>
         /// Retrieve a collection of Alarm Annotations.
@@ -53,8 +53,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms with details.</returns>
-        /// <inheritdoc cref="AlarmInfoProvider.GetAlarms(AlarmFilter)"/>
-		Task<PagedResult<AlarmItemProvider>> GetAlarmsAsync(AlarmFilter alarmFilter);
+        /// <inheritdoc cref="AlarmServiceProvider.GetAlarms(AlarmFilter)"/>
+		Task<PagedResult<Alarm>> GetAlarmsAsync(AlarmFilter alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
@@ -62,7 +62,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="objectId">The identifier of the object.</param>
         /// <param name="alarmFilter">The filter to be applied to alarms list.</param>
         /// <returns>The list of alarms with details.</returns>
-        PagedResult<AlarmItemProvider> GetAlarmsForAnObject(Guid objectId, AlarmFilter alarmFilter);
+        PagedResult<Alarm> GetAlarmsForAnObject(Guid objectId, AlarmFilter alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
@@ -70,8 +70,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="objectId">The identifier of the object.</param>
         /// <param name="alarmFilter">The filter to be applied to alarms list.</param>
         /// <returns>The list of alarms with details.</returns>
-        /// <inheritdoc cref="AlarmInfoProvider.GetAlarmsForAnObject(Guid, AlarmFilter)"/> 
-        Task<PagedResult<AlarmItemProvider>> GetAlarmsForAnObjectAsync(Guid objectId, AlarmFilter alarmFilter);
+        /// <inheritdoc cref="AlarmServiceProvider.GetAlarmsForAnObject(Guid, AlarmFilter)"/> 
+        Task<PagedResult<Alarm>> GetAlarmsForAnObjectAsync(Guid objectId, AlarmFilter alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
@@ -79,7 +79,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="networkDeviceId">The identifier of the network device.</param>
         /// <param name="alarmFilter">The filter to be applied to alarms list.</param>
         /// <returns>The list of alarms with details.</returns>
-        PagedResult<AlarmItemProvider> GetAlarmsForNetworkDevice(Guid networkDeviceId, AlarmFilter alarmFilter);
+        PagedResult<Alarm> GetAlarmsForNetworkDevice(Guid networkDeviceId, AlarmFilter alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
@@ -87,7 +87,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="networkDeviceId">The identifier of the network device.</param>
         /// <param name="alarmFilter">The filter to be applied to alarms list.</param>
         /// <returns>The list of alarms with details.</returns>
-        /// <inheritdoc cref="AlarmInfoProvider.GetAlarmsForNetworkDevice(Guid, AlarmFilter)"/>
-		Task<PagedResult<AlarmItemProvider>> GetAlarmsForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter alarmFilter);
+        /// <inheritdoc cref="AlarmServiceProvider.GetAlarmsForNetworkDevice(Guid, AlarmFilter)"/>
+		Task<PagedResult<Alarm>> GetAlarmsForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter alarmFilter);
     }
 }

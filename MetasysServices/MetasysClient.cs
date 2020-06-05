@@ -64,17 +64,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Local instance of Trends service.
         /// </summary>
-        public ITrendsService Trends { get; set; }
+        public ITrendService Trends { get; set; }
 
         /// <summary>
         /// Local instance of Alarms service.
         /// </summary>
-		public IProvideAlarmInfo Alarms { get; set; }
+		public IAlarmsService Alarms { get; set; }
 
         /// <summary>
         /// Local instance of Audits service.
         /// </summary>
-        public IProvideAuditInfo Audits { get; set; }
+        public IAuditService Audits { get; set; }
 
         /// <summary>
         /// Creates a new MetasysClient.
@@ -118,9 +118,9 @@ namespace JohnsonControls.Metasys.BasicServices
             // Set preferences about logging
             LogClientErrors = logClientErrors;
             // Init related services
-            Trends = new TrendsServiceProvider(Client, logClientErrors);
-            Alarms = new AlarmInfoProvider(Client, logClientErrors);
-            Audits = new AuditInfoProvider(Client, logClientErrors);
+            Trends = new TrendServiceProvider(Client, logClientErrors);
+            Alarms = new AlarmServiceProvider(Client, logClientErrors);
+            Audits = new AuditServiceProvider(Client, logClientErrors);
         }
 
         /// <summary>
@@ -1016,7 +1016,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="readAttributeValue">Set to false if you would not read Points Attribute Value.</param>
         /// <remarks> Reading the Attribute Value attribute could take time depending on the number of points. </remarks>
         /// <returns></returns>
-        public IEnumerable<Point> GetEquipmentPoints(Guid equipmentId, bool readAttributeValue = true)
+        public IEnumerable<MetasysPoint> GetEquipmentPoints(Guid equipmentId, bool readAttributeValue = true)
         {
             return GetEquipmentPointsAsync(equipmentId, readAttributeValue).GetAwaiter().GetResult();
         }
@@ -1029,16 +1029,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="readAttributeValue">Set to false if you would not read Points Attribute Value.</param>
         /// <remarks> Reading the Attribute Value could take time depending on the number of points. </remarks>
         /// <returns></returns>
-        public async Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid equipmentId, bool readAttributeValue = true)
+        public async Task<IEnumerable<MetasysPoint>> GetEquipmentPointsAsync(Guid equipmentId, bool readAttributeValue = true)
         {
-            List<Point> points = new List<Point>() { }; List<Guid> guids = new List<Guid>();
-            List<Point> pointsWithAttribute = new List<Point>() { };
+            List<MetasysPoint> points = new List<MetasysPoint>() { }; List<Guid> guids = new List<Guid>();
+            List<MetasysPoint> pointsWithAttribute = new List<MetasysPoint>() { };
             var response = await GetAllAvailablePagesAsync("equipment", null, equipmentId.ToString(), "points").ConfigureAwait(false);
             try
             {
                 foreach (var item in response)
                 {
-                    Point point = new Point(item);
+                    MetasysPoint point = new MetasysPoint(item);
                     // Retrieve object Id from full URL 
                     string objectId = point.ObjectUrl.Split('/').Last();
                     point.ObjectId = ParseObjectIdentifier(objectId);
@@ -1071,7 +1071,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     var point = pointsWithAttribute.SingleOrDefault(s => s.ObjectId == r.Id);
                     // Assign present values back from the attribute collection
-                    point.PresentValue = r.Variants?.SingleOrDefault(s => s.Attribute == "presentValue");
+                    point.PresentValue = r.Values?.SingleOrDefault(s => s.Attribute == "presentValue");
                     // Finally add the point back to the original list
                     points.Add(point);
                 }

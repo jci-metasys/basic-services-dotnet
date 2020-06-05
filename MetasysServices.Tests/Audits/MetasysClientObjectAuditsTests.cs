@@ -47,7 +47,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = JsonConvert.DeserializeObject<AuditItemProvider>(Audit);
+            var expected = JsonConvert.DeserializeObject<Audit>(Audit);
             Assert.AreEqual(expected, audits.Items.ElementAt(0));
         }
 
@@ -67,7 +67,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = JsonConvert.DeserializeObject<AuditItemProvider>(Audit);
+            var expected = JsonConvert.DeserializeObject<Audit>(Audit);
             Assert.AreEqual(expected, audits.Items.ElementAt(0));
         }
 
@@ -89,7 +89,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = JsonConvert.DeserializeObject<AuditItemProvider>(Audit);
+            var expected = JsonConvert.DeserializeObject<Audit>(Audit);
             Assert.AreEqual(expected, audits.Items.ElementAt(0));
         }
 

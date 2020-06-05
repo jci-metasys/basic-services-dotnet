@@ -11,7 +11,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Provider Class for Trend Service
     /// </summary>
-    public class TrendsServiceProvider : BasicServiceProvider, ITrendsService
+    public class TrendServiceProvider : BasicServiceProvider, ITrendService
     {
         /// <summary>
         /// Caching about read units.
@@ -22,7 +22,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="client"></param>
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
-        public TrendsServiceProvider(IFlurlClient client, bool logClientErrors=true) : base(client, logClientErrors)
+        public TrendServiceProvider(IFlurlClient client, bool logClientErrors=true) : base(client, logClientErrors)
         {
         }
 
@@ -78,15 +78,15 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public List<Attribute> GetTrendedAttributes(Guid id)
+        public List<MetasysAttribute> GetTrendedAttributes(Guid id)
         {
             return GetTrendedAttributesAsync(id).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task<List<Attribute>> GetTrendedAttributesAsync(Guid id)
+        public async Task<List<MetasysAttribute>> GetTrendedAttributesAsync(Guid id)
         {
-            List<Attribute> objectAttributes = new List<Attribute>();
+            List<MetasysAttribute> objectAttributes = new List<MetasysAttribute>();
             // Perform a generic call using objects resource valid for Network Devices as well
             JToken attributes = (await GetRequestAsync("objects", null, id, "trendedAttributes").ConfigureAwait(false));
             // Read full attribute from url
@@ -96,7 +96,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     var attributeUrl = a["attributeUrl"].Value<string>();
                     var attribute = await GetWithFullUrl(attributeUrl).ConfigureAwait(false);
-                    objectAttributes.Add(new Attribute
+                    objectAttributes.Add(new MetasysAttribute
                     {
                         Id = attribute["id"].Value<int>(),
                         Description = attribute["description"].Value<string>()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using JohnsonControls.Metasys.BasicServices;
-using Attribute = JohnsonControls.Metasys.BasicServices.Attribute;
+using MetasysAttribute = JohnsonControls.Metasys.BasicServices.MetasysAttribute;
 using JohnsonControls.Metasys.BasicServices.Utils;
 using Newtonsoft.Json;
 
@@ -137,7 +137,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     ]
                 }
             */
-            IEnumerable<Variant> multiple1Variants = multiple1.Variants;
+            IEnumerable<Variant> multiple1Variants = multiple1.Values;
             /* SNIPPET 2: END */
         }
         #endregion
@@ -555,8 +555,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         private void GetEquipmentPoints(MetasysObject sampleEquipment)
         {
             /* SNIPPET 5: START */
-            IEnumerable<Point> equipmentPoints = client.GetEquipmentPoints(sampleEquipment.Id);
-            Point point = equipmentPoints.FirstOrDefault();
+            IEnumerable<MetasysPoint> equipmentPoints = client.GetEquipmentPoints(sampleEquipment.Id);
+            MetasysPoint point = equipmentPoints.FirstOrDefault();
             string presentValue = point.PresentValue?.StringValue;
             Console.WriteLine(point);
             /*                        
@@ -595,11 +595,11 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 1: START */
             AlarmFilter alarmFilter = new AlarmFilter
             {
-                StartTime = new DateTime(2019, 12, 12),
-                EndTime = new DateTime(2020, 1, 12),
+                StartTime = new DateTime(2020, 5, 1),
+                EndTime = new DateTime(2020, 6, 2),
                 ExcludeAcknowledged = true
             };
-            PagedResult<AlarmItemProvider> alarmsPager = client.Alarms.GetAlarms(alarmFilter);
+            PagedResult<Alarm> alarmsPager = client.Alarms.GetAlarms(alarmFilter);
             // Prints the number of records fetched and paging information
             Console.WriteLine("Total:" + alarmsPager.Total);
             Console.WriteLine("Current page:" + alarmsPager.CurrentPage);
@@ -611,7 +611,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Page size:100
                 Pages:47
             Console Output: End */
-            AlarmItemProvider alarm = alarmsPager.Items.ElementAt(0);
+            Alarm alarm = alarmsPager.Items.ElementAt(0);
             Console.WriteLine(alarm);
             /* Console Output: Start                       
                 {
@@ -638,16 +638,16 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 1: END */
         }
 
-        private void GetSingleAlarm_GetAlarmsForAnObject_GetAlarmsForNetworkDevice(AlarmItemProvider alarm, Guid objectId, AlarmFilter alarmFilter, MetasysObject device)
+        private void GetSingleAlarm_GetAlarmsForAnObject_GetAlarmsForNetworkDevice(Alarm alarm, Guid objectId, AlarmFilter alarmFilter, MetasysObject device)
         {
             /* SNIPPET 2: START */
-            AlarmItemProvider singleAlarm = client.Alarms.GetSingleAlarm(alarm.Id);
-            PagedResult<AlarmItemProvider> objectAlarms = client.Alarms.GetAlarmsForAnObject(objectId, alarmFilter);
-            PagedResult<AlarmItemProvider> deviceAlarms = client.Alarms.GetAlarmsForNetworkDevice(device.Id, alarmFilter);
+            Alarm singleAlarm = client.Alarms.GetSingleAlarm(alarm.Id);
+            PagedResult<Alarm> objectAlarms = client.Alarms.GetAlarmsForAnObject(objectId, alarmFilter);
+            PagedResult<Alarm> deviceAlarms = client.Alarms.GetAlarmsForNetworkDevice(device.Id, alarmFilter);
             /* SNIPPET 2: END */
         }
 
-        private void GetAlarmsAnnotation(AlarmItemProvider alarm)
+        private void GetAlarmsAnnotation(Alarm alarm)
         {
             /* SNIPPET 3: START */
             IEnumerable<AlarmAnnotation> annotations = client.Alarms.GetAlarmAnnotations(alarm.Id);
@@ -672,7 +672,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 1: START */
             Guid trendedObjectId = client.GetObjectIdentifier("Win2016-VM2:vNAE2343701/Field Bus MSTP1.VAV-08.ZN-T");
             // Get attributes where trend extension is configured
-            List<Attribute> trendedAttributes = client.Trends.GetTrendedAttributes(trendedObjectId);
+            List<MetasysAttribute> trendedAttributes = client.Trends.GetTrendedAttributes(trendedObjectId);
             int attributeId = trendedAttributes[0].Id;
             TimeFilter timeFilter = new TimeFilter
             {
@@ -716,7 +716,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 OriginApplications = "6,1",
                 ActionTypes = "5,0",
             };
-            PagedResult<AuditItemProvider> auditsPager = client.Audits.GetAudits(auditFilter);
+            PagedResult<Audit> auditsPager = client.Audits.GetAudits(auditFilter);
             // Prints the number of records fetched and paging information
             Console.WriteLine("Total:" + auditsPager.Total);
             Console.WriteLine("Current page:" + auditsPager.CurrentPage);
@@ -728,7 +728,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Page size:100
                 Pages:4
              */
-            AuditItemProvider audit = auditsPager.Items.FirstOrDefault();
+            Audit audit = auditsPager.Items.FirstOrDefault();
             Console.WriteLine(audit);
             /*                        
                  {
@@ -763,11 +763,11 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 1: END */
         }
 
-        private void GetSingleAudit_GetAuditsForAnObject(AuditItemProvider audit, Guid objectId, AuditFilter auditFilter)
+        private void GetSingleAudit_GetAuditsForAnObject(Audit audit, Guid objectId, AuditFilter auditFilter)
         {
             /* SNIPPET 2: START */
-            AuditItemProvider singleAudit = client.Audits.GetSingleAudit(audit.Id);
-            PagedResult<AuditItemProvider> objectAudits = client.Audits.GetAuditsForAnObject(objectId, auditFilter);
+            Audit singleAudit = client.Audits.GetSingleAudit(audit.Id);
+            PagedResult<Audit> objectAudits = client.Audits.GetAuditsForAnObject(objectId, auditFilter);
             /* SNIPPET 2: END */
         }
         #endregion
@@ -844,7 +844,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                   ""ObjectUrl"": ""https://win2016-vm2/api/v2/objects/28bed6b0-4a0f-5bb0-a16f-57a7200685bb"",
                   ""AnnotationsUrl"": ""https://win2016-vm2/api/v2/alarms/ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7/annotations""
                 }";
-                AlarmItemProvider alarm = JsonConvert.DeserializeObject<AlarmItemProvider>(jsonAlarm);
+                Alarm alarm = JsonConvert.DeserializeObject<Alarm>(jsonAlarm);
                 AuditFilter auditFilter = new AuditFilter
                 {
                     StartTime = new DateTime(2019, 12, 12),
@@ -880,7 +880,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                   },
                   ""Self"": ""https://win2016-vm2/api/v2/audits/aab3a269-8aec-4be1-b3a6-761853442d56""
                 }";
-                AuditItemProvider audit = JsonConvert.DeserializeObject<AuditItemProvider>(jsonAudit);
+                Audit audit = JsonConvert.DeserializeObject<Audit>(jsonAudit);
                 /********************************************************************************************************************/
                 while (true)
                 {

@@ -76,7 +76,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 foreach (var varMultiple in results)
                 {
                     // Grab the list of Variants for each id
-                    var variants = varMultiple.Variants;
+                    var variants = varMultiple.Values;
                     foreach (var result in variants)
                     {
                         Console.WriteLine($"{result.Id} {result.Attribute} values (string, int, bool, reliability): " +

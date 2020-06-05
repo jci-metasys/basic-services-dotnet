@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Attribute = JohnsonControls.Metasys.BasicServices.Attribute;
+using MetasysAttribute = JohnsonControls.Metasys.BasicServices.MetasysAttribute;
 using System.Globalization;
 
 
@@ -31,7 +31,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Local instance of Trends service
         /// </summary>
-        public ITrendsService Trends;
+        public ITrendService Trends;
 
         /// <summary>
         /// Creates a new LegacyMetasysClient.
@@ -50,27 +50,27 @@ namespace JohnsonControls.Metasys.ComServices
                     .ForMember(dest => dest.ArrayValue, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.ArrayValue)));
                 cfg.CreateMap<VariantMultiple, IComVariantMultiple>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
-                    .ForMember(dest => dest.Variants, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.Variants)));
+                    .ForMember(dest => dest.Variants, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.Values)));
                 cfg.CreateMap<AccessToken, IComAccessToken>();
                 cfg.CreateMap<Command, IComCommand>();
                 cfg.CreateMap<MetasysObjectType, IComMetasysObjectType>();
                 cfg.CreateMap<IComFilterAlarm, AlarmFilter>();
-                cfg.CreateMap<AlarmItemProvider, IComProvideAlarmItem>();
+                cfg.CreateMap<Alarm, IComProvideAlarmItem>();
                 cfg.CreateMap<Sample, IComSample>();
                 cfg.CreateMap<IComTimeFilter, TimeFilter>();
-                cfg.CreateMap<Attribute, IComAttribute>();
-                cfg.CreateMap<PagedResult<AlarmItemProvider>, IComPagedResult>()
+                cfg.CreateMap<MetasysAttribute, IComAttribute>();
+                cfg.CreateMap<PagedResult<Alarm>, IComPagedResult>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComProvideAlarmItem[]>(src.Items)));
                 cfg.CreateMap<PagedResult<Sample>, IComPagedResult>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComSample[]>(src.Items)));
                 cfg.CreateMap<IComAuditFilter, AuditFilter>();
-                cfg.CreateMap<AuditItemProvider, IComProvideAuditItem>();
-                cfg.CreateMap<PagedResult<AuditItemProvider>, IComPagedResult>()
+                cfg.CreateMap<Audit, IComProvideAuditItem>();
+                cfg.CreateMap<PagedResult<Audit>, IComPagedResult>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComProvideAuditItem[]>(src.Items)));
-                cfg.CreateMap<Point, IComPoint>();                  
+                cfg.CreateMap<MetasysPoint, IComPoint>();                  
             }).CreateMapper();
         }
 
@@ -379,7 +379,7 @@ namespace JohnsonControls.Metasys.ComServices
         public IComPagedResult GetAlarms(IComFilterAlarm alarmFilter)
         {
             var mapAlarmFilter = Mapper.Map<AlarmFilter>(alarmFilter);
-            PagedResult<AlarmItemProvider> alarmItems = Client.Alarms.GetAlarms(mapAlarmFilter);
+            PagedResult<Alarm> alarmItems = Client.Alarms.GetAlarms(mapAlarmFilter);
             return Mapper.Map<IComPagedResult>(alarmItems);
         }
 
@@ -437,7 +437,7 @@ namespace JohnsonControls.Metasys.ComServices
         public IComPagedResult GetAudits(IComAuditFilter auditFilter)
         {
             var mapAuditFilter = Mapper.Map<AuditFilter>(auditFilter);
-            PagedResult<AuditItemProvider> auditItems = Client.Audits.GetAudits(mapAuditFilter);
+            PagedResult<Audit> auditItems = Client.Audits.GetAudits(mapAuditFilter);
             return Mapper.Map<IComPagedResult>(auditItems);
         }
 

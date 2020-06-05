@@ -645,7 +645,7 @@ namespace MetasysServices.Tests
 
             httpTest.ShouldNotHaveCalled($"https://hostname/api/v2/objects/{mockid}");
             Assert.AreEqual(1, results.Count());
-            Assert.AreEqual(0, results.ElementAt(0).Variants.Count());
+            Assert.AreEqual(0, results.ElementAt(0).Values.Count());
         }
 
         [Test]
@@ -663,8 +663,8 @@ namespace MetasysServices.Tests
                 .Times(1);
             Variant expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
             Assert.AreEqual(1, results.Count());
-            Assert.AreEqual(1, results.ElementAt(0).Variants.Count());
-            Assert.AreEqual(expected, results.ElementAt(0).Variants.ElementAt(0));
+            Assert.AreEqual(1, results.ElementAt(0).Values.Count());
+            Assert.AreEqual(expected, results.ElementAt(0).Values.ElementAt(0));
         }
 
         [Test]
@@ -694,8 +694,8 @@ namespace MetasysServices.Tests
                 .WithVerb(HttpMethod.Get)
                 .Times(5);
             Assert.AreEqual(results.Count(), 2);
-            Assert.AreEqual(5, results.ElementAt(0).Variants.Count());
-            Assert.AreEqual(5, results.ElementAt(1).Variants.Count());
+            Assert.AreEqual(5, results.ElementAt(0).Values.Count());
+            Assert.AreEqual(5, results.ElementAt(1).Values.Count());
         }
 
         [Test]
@@ -726,8 +726,8 @@ namespace MetasysServices.Tests
                     .WithVerb(HttpMethod.Get)
                     .Times(5);
                 Assert.AreEqual(results.Count(), 2);
-                Assert.AreEqual(5, results.ElementAt(0).Variants.Count());
-                Assert.AreEqual(5, results.ElementAt(1).Variants.Count());
+                Assert.AreEqual(5, results.ElementAt(0).Values.Count());
+                Assert.AreEqual(5, results.ElementAt(1).Values.Count());
             });
         }
 
