@@ -9,7 +9,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Provides audit Item
     /// </summary>
-    public class AuditItemProvider : IProvideAuditItem
+    public class Audit 
     {
 
         /// <summary>
@@ -26,10 +26,16 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <summary>
         /// The action performed that initiated the audit.
-        /// https://{hostname}/api/v2/enumSets/577/members for possible values
+        /// https://{hostname}/api/v2/enumSets/577/members for possible values.
         /// </summary>
-        [JsonProperty(Required = Required.Always)]
+        /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
         public string ActionTypeUrl { get; set; }
+
+        /// <summary>
+        /// Fully qualified enumeration for Action Type.
+        /// </summary>
+        /// <remarks> This is available since Metasys API v3. </remarks>
+        public string ActionType { get; set; }
 
         /// <summary>
         /// Indicates if the audit has been discarded.
@@ -41,6 +47,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// https://{hostname}/api/v2/enumSets/516/members for possible values
         /// </summary>
         public string StatusUrl { get; set; }
+
+        /// <summary>
+        /// Fully qualified enumeration for Status.
+        /// </summary>
+        /// <remarks> This is available since Metasys API v3. </remarks>
+        public string Status { get; set; }
 
         /// <summary>
         /// Data value prior to the Audit.
@@ -100,9 +112,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is AuditItemProvider)
+            if (obj != null && obj is Audit)
             {
-                var o = (AuditItemProvider)obj;
+                var o = (Audit)obj;
                 // Compare each properties one by one for better performance
                 return this.Id == o.Id && this.CreationTime == o.CreationTime && this.ActionTypeUrl == o.ActionTypeUrl
                                   && this.Discarded == o.Discarded && this.StatusUrl == o.StatusUrl

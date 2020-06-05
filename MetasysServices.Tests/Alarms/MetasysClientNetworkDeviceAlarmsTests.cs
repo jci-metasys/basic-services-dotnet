@@ -50,7 +50,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = JsonConvert.DeserializeObject<AlarmItemProvider>(Alarm);
+            var expected = JsonConvert.DeserializeObject<Alarm>(Alarm);
             Assert.AreEqual(expected, alarms.Items.ElementAt(0));
         }
 
@@ -70,7 +70,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = JsonConvert.DeserializeObject<AlarmItemProvider>(Alarm);
+            var expected = JsonConvert.DeserializeObject<Alarm>(Alarm);
             Assert.AreEqual(expected, alarms.Items.ElementAt(0));
         }
 
@@ -92,7 +92,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = JsonConvert.DeserializeObject<AlarmItemProvider>(Alarm);
+            var expected = JsonConvert.DeserializeObject<Alarm>(Alarm);
             Assert.AreEqual(expected, alarms.Items.ElementAt(0));
         }
 

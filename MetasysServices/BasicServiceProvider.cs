@@ -18,6 +18,12 @@ namespace JohnsonControls.Metasys.BasicServices
     {
         /// <summary>The http client.</summary>
         protected IFlurlClient Client;
+
+        /// <summary>
+        /// The Metasys server's Api version.
+        /// </summary>
+        protected ApiVersion Version { get; set; }
+
         /// <summary>
         /// The log initiliazer.
         /// </summary>
@@ -58,10 +64,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Constructor for dedicated services with Flurl client initialization already performed.
         /// </summary>
         /// <param name="client">The Flurl client.</param>
+        /// <param name="version">The server's Api version.</param>
         /// <param name="logErrors">Set this flag to false to disable logging of client errors.</param>
-        public BasicServiceProvider(IFlurlClient client, bool logErrors = true)
+        public BasicServiceProvider(IFlurlClient client, ApiVersion version, bool logErrors = true)
         {
             Client = client;
+            Version = version;
             LogClientErrors = logErrors;          
         }
 

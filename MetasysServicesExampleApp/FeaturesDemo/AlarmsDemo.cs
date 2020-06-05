@@ -23,7 +23,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 string stringAlarmId = Console.ReadLine();
                 Guid alarmId = Guid.Parse(stringAlarmId);
 
-                AlarmItemProvider alarmItem = client.Alarms.GetSingleAlarm(alarmId);
+                Alarm alarmItem = client.Alarms.GetSingleAlarm(alarmId);
 
                 Console.WriteLine(string.Format("\n Alarm details found for {0}", alarmId));
                 Console.WriteLine($"\n Id: {alarmItem.Id}, Name: {alarmItem.Name}, ItemReference: {alarmItem.ItemReference}");
