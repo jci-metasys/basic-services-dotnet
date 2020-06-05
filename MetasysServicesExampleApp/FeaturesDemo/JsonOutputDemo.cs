@@ -711,8 +711,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 1: START */
             AuditFilter auditFilter = new AuditFilter
             {
-                StartTime = new DateTime(2019, 12, 12),
-                EndTime = new DateTime(2020, 1, 12),
+                StartTime = new DateTime(2020, 5, 20),
+                EndTime = new DateTime(2020, 6, 3),
                 OriginApplications = "6,1",
                 ActionTypes = "5,0",
             };

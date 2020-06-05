@@ -48,7 +48,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm type route
         /// </summary>
-        /// <remarks> This is available only in Metasys API v2 and v1. </remarks>
+        /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
         public string TypeUrl { get; set; }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm Category route
         /// </summary>
-        /// <remarks> This is available only in Metasys API v2 and v1. </remarks>
+        /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
         public string CategoryUrl { get; set; }
 
         /// <summary>

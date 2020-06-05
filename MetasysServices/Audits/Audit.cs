@@ -26,10 +26,16 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <summary>
         /// The action performed that initiated the audit.
-        /// https://{hostname}/api/v2/enumSets/577/members for possible values
+        /// https://{hostname}/api/v2/enumSets/577/members for possible values.
         /// </summary>
-        [JsonProperty(Required = Required.Always)]
+        /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
         public string ActionTypeUrl { get; set; }
+
+        /// <summary>
+        /// Fully qualified enumeration for Action Type.
+        /// </summary>
+        /// <remarks> This is available since Metasys API v3. </remarks>
+        public string ActionType { get; set; }
 
         /// <summary>
         /// Indicates if the audit has been discarded.
@@ -41,6 +47,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// https://{hostname}/api/v2/enumSets/516/members for possible values
         /// </summary>
         public string StatusUrl { get; set; }
+
+        /// <summary>
+        /// Fully qualified enumeration for Status.
+        /// </summary>
+        /// <remarks> This is available since Metasys API v3. </remarks>
+        public string Status { get; set; }
 
         /// <summary>
         /// Data value prior to the Audit.
