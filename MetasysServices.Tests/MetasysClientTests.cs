@@ -1412,7 +1412,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            MetasysObject expected = new MetasysObject(JToken.Parse(device), null, testCulture);
+            MetasysObject expected = new MetasysObject(JToken.Parse(device), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected, devices.ElementAt(0));
         }
 
@@ -1454,8 +1454,8 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
-            MetasysObject expected1 = new MetasysObject(JToken.Parse(device1), null, testCulture);
-            MetasysObject expected2 = new MetasysObject(JToken.Parse(device2), null, testCulture);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(device1), ApiVersion.v2, null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(device2), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected1, devices.ElementAt(0));
             Assert.AreEqual(expected2, devices.ElementAt(1));
         }
@@ -1483,7 +1483,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            MetasysObject expected = new MetasysObject(JToken.Parse(device), null, testCulture);
+            MetasysObject expected = new MetasysObject(JToken.Parse(device), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected, devices.ElementAt(0));
         }
 
@@ -1713,7 +1713,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            MetasysObject expected = new MetasysObject(JToken.Parse(obj), null, testCulture);
+            MetasysObject expected = new MetasysObject(JToken.Parse(obj), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected, objects.ElementAt(0));
         }
 
@@ -1751,8 +1751,8 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
-            MetasysObject expected1 = new MetasysObject(JToken.Parse(obj1), null, testCulture);
-            MetasysObject expected2 = new MetasysObject(JToken.Parse(obj2), null, testCulture);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(obj1), ApiVersion.v2, null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(obj2), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected1, objects.ElementAt(0));
             Assert.AreEqual(expected2, objects.ElementAt(1));
         }
@@ -1803,9 +1803,9 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
               .WithVerb(HttpMethod.Get)
               .Times(1);
-            MetasysObject expected2 = new MetasysObject(JToken.Parse(obj2), null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(obj2), ApiVersion.v2, null, testCulture);
             List<MetasysObject> child = new List<MetasysObject>() { expected2 };
-            MetasysObject expected1 = new MetasysObject(JToken.Parse(obj1), child.AsEnumerable(), testCulture);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(obj1), ApiVersion.v2, child.AsEnumerable(), testCulture);
             Assert.AreEqual(expected1, objects.ElementAt(0));
         }
 
@@ -1913,7 +1913,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
+            MetasysObject expected = new MetasysObject(JToken.Parse(space), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected, devices.ElementAt(0));
         }
 
@@ -1951,8 +1951,8 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
-            MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), null, testCulture);
-            MetasysObject expected2 = new MetasysObject(JToken.Parse(space2), null, testCulture);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), ApiVersion.v2, null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(space2), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected1, spaces.ElementAt(0));
             Assert.AreEqual(expected2, spaces.ElementAt(1));
         }
@@ -1978,7 +1978,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
+            MetasysObject expected = new MetasysObject(JToken.Parse(space), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected, devices.ElementAt(0));
         }
 
@@ -2185,7 +2185,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/equipment")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
+            MetasysObject expected = new MetasysObject(JToken.Parse(space), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected, devices.ElementAt(0));
         }
 
@@ -2223,8 +2223,8 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/equipment")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
-            MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), null, testCulture);
-            MetasysObject expected2 = new MetasysObject(JToken.Parse(space2), null, testCulture);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), ApiVersion.v2, null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(space2), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected1, Equipment.ElementAt(0));
             Assert.AreEqual(expected2, Equipment.ElementAt(1));
         }

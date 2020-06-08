@@ -336,7 +336,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         private void GetObjects()
         {
             /* SNIPPET 2: START */
-            Guid parentId = client.GetObjectIdentifier("Win2016-VM2:vNAE2343996/Field Bus MSTP1.VAV-08");
+            Guid parentId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB");
             // Get direct children (1 level)
             List<MetasysObject> directChildren = client.GetObjects(parentId).ToList();
             MetasysObject lastChild = directChildren.LastOrDefault();
@@ -354,9 +354,10 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                   "ChildrenCount": 0
                 }
                */
-            Guid twoLevelsParentId = client.GetObjectIdentifier("Win2016-VM2:vNAE2343996/WeatherForecast");
+            // Get direct children (1 level) with internal objects
+            directChildren = client.GetObjects(parentId, includeInternalObjects:true).ToList();  
             // Get descendant for 2 levels (it could take long time, depending on the number of objects)
-            List<MetasysObject> level2Descendants = client.GetObjects(twoLevelsParentId, 2).ToList();
+            List<MetasysObject> level2Descendants = client.GetObjects(parentId, 2).ToList();
             MetasysObject level1Parent = level2Descendants.SingleOrDefault(s => s.Name == "Time");
             Console.WriteLine(level1Parent);
             /*                        

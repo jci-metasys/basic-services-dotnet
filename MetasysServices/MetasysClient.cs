@@ -890,11 +890,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </remarks>
         /// <param name="id"></param>
         /// <param name="levels">The depth of the children to retrieve.</param>      
+        /// <param name="includeInternalObjects">Set it to true to see also internal objects that are not displayed in the Metasys tree. </param>      
+        /// <remarks> The flag includeInternalObjects applies since Metasys API v3. </remarks>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1)
+        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false)
         {
-            return GetObjectsAsync(id, levels).GetAwaiter().GetResult();
+            return GetObjectsAsync(id, levels, includeInternalObjects).GetAwaiter().GetResult();
         }
 
 
@@ -1076,9 +1078,16 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc cref="GetObjects(Guid, int)"/>
-        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels)
+        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels, bool includeInternalObjects = false)
         {
-            var objects = await GetObjectChildrenAsync(id, null, levels).ConfigureAwait(false);
+            Dictionary<string, string> parameters = null;
+            if (Version > ApiVersion.v2)
+            {
+                // Since API v3 we could use the includeInternalObjects parameter
+                parameters = new Dictionary<string, string>();
+                parameters.Add("includeInternalObjects", includeInternalObjects.ToString());
+            }
+            var objects = await GetObjectChildrenAsync(id, parameters, levels).ConfigureAwait(false);
             return toMetasysObject(objects);
         }
 

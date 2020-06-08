@@ -87,7 +87,7 @@ namespace JohnsonControls.Metasys.BasicServices
             List<MetasysObject> metasysObjects = new List<MetasysObject>();
             foreach (var o in objects)
             {
-                metasysObjects.Add(new MetasysObject(o.Item, toMetasysObject(o.Children), type:objectType));
+                metasysObjects.Add(new MetasysObject(o.Item, Version, toMetasysObject(o.Children), type:objectType));
             }
             return metasysObjects;
         }
@@ -98,7 +98,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         protected MetasysObject toMetasysObject(JToken item, MetasysObjectTypeEnum? objectType = null)
         {
-            return new MetasysObject(item, null, type:objectType);
+            return new MetasysObject(item, Version, null, type:objectType);
         }
 
 
@@ -137,10 +137,16 @@ namespace JohnsonControls.Metasys.BasicServices
             List<TreeObject> objects = new List<TreeObject>() { }; // Contains the couple of parent/children JToken
             bool hasNext = true;
             int page = 1;
+            if (parameters == null)
+            {
+                // Init dictionary to add page parameter when not already initialized in input parameters.
+                parameters = new Dictionary<string, string>();
+            }
             while (hasNext)
             {
                 hasNext = false;
-                var response = await GetPagedResultsAsync<JToken>("objects", new Dictionary<string, string>() { { "page", page.ToString() } }, id, "objects").ConfigureAwait(false);
+                parameters["page"] = page.ToString();
+                var response = await GetPagedResultsAsync<JToken>("objects", parameters, id, "objects").ConfigureAwait(false);
                 foreach (var item in response.Items)
                 {
                     List<TreeObject> children = null;
