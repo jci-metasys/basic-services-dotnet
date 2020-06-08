@@ -771,7 +771,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 2: END */
         }
 
-        private void GetAuditsAnnotation(AuditItemProvider audit)
+        private void GetAuditsAnnotation(Audit audit)
         {
             /* SNIPPET 3: START */
             IEnumerable<AuditAnnotation> annotations = client.Audits.GetAuditAnnotations(audit.Id);

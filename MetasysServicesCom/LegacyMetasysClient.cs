@@ -382,6 +382,13 @@ namespace JohnsonControls.Metasys.ComServices
             PagedResult<Alarm> alarmItems = Client.Alarms.GetAlarms(mapAlarmFilter);
             return Mapper.Map<IComPagedResult>(alarmItems);
         }
+        /// <inheritdoc />
+        public object GetAlarmAnnotations(string alarmId)
+        {
+            Guid guidAlarmId = Guid.Parse(alarmId);
+            var response = Client.Alarms.GetAlarmAnnotations(guidAlarmId);
+            return Mapper.Map<IComAlarmAnnotation[]>(response);
+        }
 
         /// <inheritdoc />
         public IComPagedResult GetAlarmsForAnObject(string objectId, IComFilterAlarm alarmFilter)
@@ -439,6 +446,14 @@ namespace JohnsonControls.Metasys.ComServices
             var mapAuditFilter = Mapper.Map<AuditFilter>(auditFilter);
             PagedResult<Audit> auditItems = Client.Audits.GetAudits(mapAuditFilter);
             return Mapper.Map<IComPagedResult>(auditItems);
+        }
+
+        /// <inheritdoc />
+        public object GetAuditAnnotations(string auditId)
+        {
+            Guid guidAuditId = Guid.Parse(auditId);
+            var response = Client.Audits.GetAuditAnnotations(guidAuditId);
+            return Mapper.Map<IComAuditAnnotation[]>(response);
         }
 
         /// <summary>
