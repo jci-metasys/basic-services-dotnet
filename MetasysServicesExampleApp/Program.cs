@@ -17,23 +17,23 @@ namespace MetasysServicesExampleApp
                 {
                     Console.WriteLine("Please enter in your credentials in this format: {username} {password} {hostname} {api_version} or as an alternative you can specify just the Credential Manager target and the hostname in this way {credmantarget} {hostname} {api_version}." +
                         "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
-                    connectionDetails = "";// Console.ReadLine();
+                    connectionDetails = Console.ReadLine();
                     args = connectionDetails.Split(' ');
                 }
-                string username=null, password= null, hostname="10.164.104.81", credManTarget="metasys-EEC-11"; string version = "v3";
-                //if (args.Length > 3)
-                //{
-                //    username = args[0];
-                //    password = args[1];
-                //    hostname = args[2];
-                //    version = args[3];
-                //}
-                //else
-                //{                
-                //     credManTarget= args[0];
-                //     hostname= args[1];                     
-                //     version= args[2];                     
-                //}
+                string username = null, password = null, hostname = null, credManTarget = null; string version = null;
+                if (args.Length > 3)
+                {
+                    username = args[0];
+                    password = args[1];
+                    hostname = args[2];
+                    version = args[3];
+                }
+                else
+                {
+                    credManTarget = args[0];
+                    hostname = args[1];
+                    version = args[2];
+                }
 
                 #region Login
                 Console.WriteLine("Default culture is en_US. The culture for client translations can be changed in the code.");
@@ -41,7 +41,7 @@ namespace MetasysServicesExampleApp
 
                 Console.WriteLine("\nLogging in...");
                 var apiVersion = (ApiVersion)Enum.Parse(typeof(ApiVersion), version);
-                var client = new MetasysClient(hostname,true,apiVersion,logClientErrors:false); // Disable default logging since it is handled in this app.
+                var client = new MetasysClient(hostname, true, apiVersion, logClientErrors: false); // Disable default logging since it is handled in this app.
                 // var client = new MetasysClient(hostname, true); // Ignore Certificate Errors
                 // var client = new MetasysClient(hostname, false, ApiVersion.v2, culture);
 
@@ -64,12 +64,12 @@ namespace MetasysServicesExampleApp
                     showMenu = MainMenu(client);
                 }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 log.Logger.Error(string.Format("An error occured while login - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to exit");
                 Console.ReadLine();
-            }          
+            }
         }
 
         private static bool MainMenu(MetasysClient client)
@@ -87,14 +87,14 @@ namespace MetasysServicesExampleApp
             Console.WriteLine("9) JSON Output");
             Console.WriteLine("10) Exit");
             Console.Write("\r\nSelect an option: ");
-            var option = "9";// Console.ReadLine();
+            var option = Console.ReadLine();
             Console.WriteLine();
             switch (option)
             {
-                case "1":                 
+                case "1":
                     new GetObjectIdentifierDemo(client).Run();
                     return true;
-                case "2":                
+                case "2":
                     new GeneralDemo(client).Run();
                     return true;
                 case "3":

@@ -105,7 +105,15 @@ namespace JohnsonControls.Metasys.BasicServices
             // Perform a generic call using objects resource valid for Network Devices as well
             JToken attributes = (await GetRequestAsync("objects", null, id, "trendedAttributes").ConfigureAwait(false));
             // Read full attribute from url
-            foreach (var a in attributes["items"]["item"])
+            if (!(attributes["items"] is JArray))
+            {
+                // This structure applies since v3-pre release
+                if (attributes["items"]["item"] != null)
+                {
+                    attributes["items"] = attributes["items"]["item"];
+                }
+            }
+            foreach (var a in attributes["items"])
             {
                 try
                 {
