@@ -20,7 +20,7 @@ namespace MetasysServicesExampleApp
                     connectionDetails = "";// Console.ReadLine();
                     args = connectionDetails.Split(' ');
                 }
-                string username=null, password= null, hostname="10.164.104.81", credManTarget="metasys-EEC-11"; string version = "v3";
+                string username=null, password= null, hostname= "WIN-21DJ9JV9QH6", credManTarget="metasys-EEC-11"; string version = "v3";
                 //if (args.Length > 3)
                 //{
                 //    username = args[0];
