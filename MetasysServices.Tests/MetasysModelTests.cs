@@ -94,13 +94,13 @@ namespace MetasysServices.Tests
                 "\"description\": \"description2\",",
                 "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
             string objCopy = obj.Clone().ToString();
-            MetasysObject child = new MetasysObject(JToken.Parse(obj2), null, testCulture);
-            MetasysObject childCopy = new MetasysObject(JToken.Parse(obj2), null, testCulture);
+            MetasysObject child = new MetasysObject(JToken.Parse(obj2), ApiVersion.v2, null, testCulture);
+            MetasysObject childCopy = new MetasysObject(JToken.Parse(obj2), ApiVersion.v2, null, testCulture);
             List<MetasysObject> childlist = new List<MetasysObject>() { child };
             List<MetasysObject> childlistCopy = new List<MetasysObject>() { childCopy };
 
-            MetasysObject metObj = new MetasysObject(JToken.Parse(obj), childlist, testCulture);
-            MetasysObject metObjCopy = new MetasysObject(JToken.Parse(objCopy), childlistCopy, testCulture);
+            MetasysObject metObj = new MetasysObject(JToken.Parse(obj), ApiVersion.v2, childlist, testCulture);
+            MetasysObject metObjCopy = new MetasysObject(JToken.Parse(objCopy), ApiVersion.v2, childlistCopy, testCulture);
 
             Assert.AreEqual(metObj.GetHashCode(), metObjCopy.GetHashCode());
             Assert.AreEqual(metObj, metObjCopy);
@@ -258,15 +258,15 @@ namespace MetasysServices.Tests
                 "\"description\": \"description3\",",
                 "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
 
-            MetasysObject child = new MetasysObject(JToken.Parse(obj3), null, testCulture);
-            MetasysObject child2 = new MetasysObject(JToken.Parse(obj3), null, testCulture);
+            MetasysObject child = new MetasysObject(JToken.Parse(obj3), ApiVersion.v2, null, testCulture);
+            MetasysObject child2 = new MetasysObject(JToken.Parse(obj3), ApiVersion.v2, null, testCulture);
             List<MetasysObject> childlist = new List<MetasysObject>() { child };
             List<MetasysObject> childlist2 = new List<MetasysObject>() { child2 };
 
-            MetasysObject metObj = new MetasysObject(JToken.Parse(obj), childlist, testCulture);
-            MetasysObject metObj2 = new MetasysObject(JToken.Parse(obj2), childlist2, testCulture);
-            MetasysObject metObj3 = new MetasysObject(JToken.Parse(obj), null, testCulture);
-            MetasysObject metObj4 = new MetasysObject(JToken.Parse(obj2), null, testCulture);
+            MetasysObject metObj = new MetasysObject(JToken.Parse(obj), ApiVersion.v2, childlist, testCulture);
+            MetasysObject metObj2 = new MetasysObject(JToken.Parse(obj2), ApiVersion.v2, childlist2, testCulture);
+            MetasysObject metObj3 = new MetasysObject(JToken.Parse(obj), ApiVersion.v2, null, testCulture);
+            MetasysObject metObj4 = new MetasysObject(JToken.Parse(obj2), ApiVersion.v2, null, testCulture);
 
             Assert.AreNotEqual(metObj.GetHashCode(), metObj2.GetHashCode());
             Assert.AreNotEqual(metObj, metObj2);
