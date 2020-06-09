@@ -43,7 +43,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Value of the attribute where the point is mapped
         /// </summary>
-        public Variant? PresentValue { get;  set; }
+        public Variant PresentValue { get;  set; }
         
         /// <summary>
         /// Default Constructor for Point.

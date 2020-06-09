@@ -9,13 +9,13 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// A structure for grouping Variant values with the same id.
     /// </summary>
-    public struct VariantMultiple
+    public class VariantMultiple
     {
         /// <summary>The object id.</summary>
         public Guid Id { private set; get; }
 
         /// <summary>The list of Variants.</summary>
-        public IEnumerable<Variant> Values { private set; get; }
+        public IEnumerable<Variant> Values {set; get; }
 
         internal VariantMultiple(Guid id, IEnumerable<Variant> values)
         {

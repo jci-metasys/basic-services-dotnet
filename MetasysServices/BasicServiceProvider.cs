@@ -8,6 +8,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Net.Http;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -358,6 +359,49 @@ namespace JohnsonControls.Metasys.BasicServices
             var json = JsonConvert.SerializeObject(obj);
             var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             return dictionary;
+        }       
+
+        /// <summary>
+        /// Perform multiple requests to the Server with a single HTTP call asynchronously.
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="ids"></param>
+        /// <param name="resources"></param>
+        /// <param name="paths"></param>
+        /// <returns></returns>
+        protected async Task<JToken> PostBatchRequestAsync(string endpoint, IEnumerable<Guid> ids, IEnumerable<string> resources, params string[] paths)
+        {         
+            // Create URL with base resource
+            Url url = new Url(endpoint);
+            // Concatenate batch segment to use batch request and prepare the list of requests
+            url.AppendPathSegments("batch");
+            var objectsRequests = new List<ObjectRequest>();          
+            // Concatenate batch segment to use batch request and prepare the list of requests  
+            foreach (var id in ids)
+            {
+                foreach (var r in resources)
+                {
+                    Url relativeUrl = new Url(id.ToString());
+                    relativeUrl.AppendPathSegments(paths); // e.g. "00000000-0000-0000-0000-000000000001/attributes"
+                    relativeUrl.AppendPathSegment(r); // e.g. "00000000-0000-0000-0000-000000000001/attributes/presentValue"                    
+                    // Use the object id concatenated to the resource to uniquely identify each request
+                    objectsRequests.Add(new ObjectRequest { Id = id.ToString()+'_'+r, RelativeUrl = relativeUrl });
+                }
+            }
+            JToken responseToken = null;
+            try
+            {
+                // Post the list of requests and return responses as JToken
+                var response= await Client.Request(url)
+                                            .PostJsonAsync(new BatchRequest { Requests=objectsRequests})                
+                                            .ConfigureAwait(false);
+                responseToken= JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return responseToken;
         }
 
     }

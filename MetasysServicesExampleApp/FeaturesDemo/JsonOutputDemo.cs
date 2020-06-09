@@ -98,7 +98,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             /* SNIPPET 2: START */
             List<Guid> ids = new List<Guid> { id1, id2 };
-            List<string> attributes = new List<string> { "name", "description" };
+            List<string> attributes = new List<string> { "name", "description", "presentValue" };
             IEnumerable<VariantMultiple> results = client.ReadPropertyMultiple(ids, attributes);
             VariantMultiple multiple1 = results.ElementAt(0);
             Console.WriteLine(multiple1);

@@ -453,7 +453,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeName"></param>
         /// <param name="suppressNotFoundException"></param>
         /// <returns></returns>
-        protected async Task<Variant?> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException = true)
+        protected async Task<Variant> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException = true)
         {
             try
             {
@@ -502,7 +502,11 @@ namespace JohnsonControls.Metasys.BasicServices
                 return null;
             }
             List<VariantMultiple> results = new List<VariantMultiple>();
-            var taskList = new List<Task<Variant?>>();
+            if (Version > ApiVersion.v2) {
+                var response=await PostBatchRequestAsync("objects", ids, attributeNames, "attributes").ConfigureAwait(false);
+                return ToVariantMultiples(response);
+            }
+            var taskList = new List<Task<Variant>>();
             // Prepare Tasks to Read attributes list. In Metasys 11 this will be implemented server side
             foreach (var id in ids)
             {
@@ -516,14 +520,14 @@ namespace JohnsonControls.Metasys.BasicServices
             foreach (var id in ids)
             {
                 // Get attributes of the specific Id
-                List<Task<Variant?>> attributeList = taskList.Where(w =>
-                    (w.Result != null && w.Result.Value.Id == id)).ToList();
+                List<Task<Variant>> attributeList = taskList.Where(w =>
+                    (w.Result != null && w.Result.Id == id)).ToList();
                 List<Variant> variants = new List<Variant>();
                 foreach (var t in attributeList)
                 {
                     if (t.Result != null) // Something went wrong if the result is unknown
                     {
-                        variants.Add(t.Result.Value); // Prepare variants list
+                        variants.Add(t.Result); // Prepare variants list
                     }
                 }
                 if (variants.Count > 0 || attributeNames.Count() == 0)
@@ -533,7 +537,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
             }
             return results.AsEnumerable();
-        }
+        }    
 
         /// <summary>
         /// Write a single attribute given the Guid of the object. 
@@ -1114,6 +1118,41 @@ namespace JohnsonControls.Metasys.BasicServices
             var credentials = CredentialUtil.GetCredential(credManTarget);
             // Get the control back to TryLogin method
             return await TryLoginAsync(CredentialUtil.convertToUnSecureString(credentials.Username), CredentialUtil.convertToUnSecureString(credentials.Password), refresh).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Convert a JToken batch request response into VariantMultiple.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        protected IEnumerable<VariantMultiple> ToVariantMultiples(JToken response)
+        {
+            List<VariantMultiple> multiples = new List<VariantMultiple>();
+            foreach (var r in response["responses"])
+            {
+                var respIds = r["id"].Value<string>().Split('_');
+                var objId = new Guid(respIds[0]);
+                string attr = respIds[1];
+                List<Variant> values= new List<Variant>();
+                if (r["status"].Value<int>() == 200)
+                {
+                    values.Add(new Variant(objId, r["body"], attr, Culture, Version));
+                } // Don't add the variant to the list if the response is not successful
+                var m = multiples.SingleOrDefault(s => s.Id == objId);
+                if (m == null)
+                {
+                    // Add a new multiple for the current object                   
+                    multiples.Add(new VariantMultiple(objId, values));
+                }
+                else
+                {
+                    // Variant multiple already exists, just add Values
+                    var newList = m.Values.ToList();
+                    newList.AddRange(values);
+                    m.Values = newList;
+                }                             
+            }
+            return multiples;
         }
     }
 }

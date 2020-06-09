@@ -14,7 +14,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// If the returned property is an array of values the ArrayValue will hold 
     /// each of these values in a new Variant object.
     /// </remarks>
-    public struct Variant
+    public class Variant
     {
         private const string Reliable = "reliabilityEnumSet.reliable";
 
@@ -98,6 +98,9 @@ namespace JohnsonControls.Metasys.BasicServices
         private ApiVersion apiVersion;
 
         private CultureInfo _CultureInfo;
+
+        public Variant() {
+        }
 
         internal Variant(Guid id, JToken token, string attribute, CultureInfo cultureInfo, ApiVersion apiVersion)
         {
