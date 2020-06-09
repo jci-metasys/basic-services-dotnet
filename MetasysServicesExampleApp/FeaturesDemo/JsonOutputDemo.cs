@@ -790,6 +790,18 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 3: END */
         }
 
+        private void DiscardSingleAudit(Audit audit)
+        {
+            client.Audits.DiscardSingleAudit(audit.Id);
+
+            /* SNIPPET 4: START */
+            /*
+             * 
+             * 
+            */
+            /* SNIPPET 4: END */
+        }
+
         #endregion
 
         public void Run()
@@ -873,7 +885,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     ActionTypes = "5,0",
                 };
                 string jsonAudit = @"{
-                  ""Id"": ""aab3a269-8aec-4be1-b3a6-761853442d56"",
+                  ""Id"": ""b2c19294-ed3b-422f-b670-9fff4d7495b9"",
                   ""CreationTime"": ""2020-01-10T13:52:53.547Z"",
                   ""ActionTypeUrl"": ""https://win2016-vm2/api/v2/enumsets/577/members/5"",
                   ""Discarded"": false,
@@ -902,11 +914,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 }";
                 Audit audit = JsonConvert.DeserializeObject<Audit>(jsonAudit);
                 /********************************************************************************************************************/
-                while (true)
+                var option = "";
+                while (option != "99")
                 {
                     PrintMenu();
                     Console.Write("\r\nSelect an option: ");
-                    var option = Console.ReadLine();
+                    option = Console.ReadLine();
                     Console.WriteLine();
                     switch (option)
                     {
@@ -980,6 +993,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                             GetAuditsAnnotation(audit);
                             break;
                         case "24":
+                            DiscardSingleAudit(audit);
+                            break;
+                        case "99":
                             return; // Exit from JSON output demo                            
                     }
                     Console.WriteLine();
@@ -994,6 +1010,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
                 Console.ReadLine();
             }
+
         }
 
         private static void PrintMenu()
@@ -1023,7 +1040,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("21) GetAudits");
             Console.WriteLine("22) GetSingleAudit, GetAuditsForAnObject");
             Console.WriteLine("23) GetAuditAnnotations");
-            Console.WriteLine("24) Exit");
+            Console.WriteLine("24) DiscardAudit");
+            Console.WriteLine("99) Exit");
         }
     }
 }

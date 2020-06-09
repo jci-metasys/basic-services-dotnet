@@ -106,5 +106,36 @@ namespace JohnsonControls.Metasys.BasicServices
             return annotationsList;
         }
 
+        /// <inheritdoc/>
+        public void DiscardSingleAudit(Guid id)
+        {
+            DiscardSingleAuditAsync(id).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public async Task DiscardSingleAuditAsync(Guid id)
+        {
+            try
+            {
+                if (Version >= ApiVersion.v3)
+                {
+                    var response = await Client.Request(new Url("audits")
+                    .AppendPathSegments(id, "discard"))
+                    .PutJsonAsync(null)
+                    .ConfigureAwait(false);
+                }
+                else
+                {
+                    throw new MetasysUnsupportedApiVersion(Version.ToString());
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+        }
+
+
+
     }
 }
