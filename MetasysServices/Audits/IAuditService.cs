@@ -71,5 +71,21 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns>The list of audits with details.</returns>
         /// <inheritdoc cref="AuditServiceProvider.GetAuditsForAnObject(Guid, AuditFilter)"/> 
         Task<PagedResult<Audit>> GetAuditsForAnObjectAsync(Guid objectId, AuditFilter auditFilter);
+
+        /// <summary>
+        /// Discard an Audit.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="MetasysUnsupportedApiVersion"></exception>
+        void DiscardSingleAudit(Guid id);
+
+        /// <summary>
+        /// Discard an Audit asynchronously.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="MetasysUnsupportedApiVersion"></exception>
+        /// <returns>Asynchronous Task Result.</returns>
+        Task DiscardSingleAuditAsync(Guid id);
+
     }
 }
