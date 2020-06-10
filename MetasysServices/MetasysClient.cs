@@ -39,16 +39,31 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>The current Culture Used for Metasys client localization.</summary>
         public CultureInfo Culture { get; set; }
 
+        private string hostname;
         /// <summary>
         /// The hostname of Metasys API server.
         /// </summary>
-        protected string Hostname { get; private set; }
+        protected string Hostname
+        {
+            get
+            {
+                return hostname;
+            }
+            set
+            {
+                hostname = value;
+                // reset the base client according to settings
+                initBaseUrl();
+                // reset Access Token
+                AccessToken = null;
+            }
+        }
 
         /// <summary>
         /// An optional boolean flag for ignoring certificate errors by bypassing certificate verification steps.
         /// </summary>
         protected bool IgnoreCertificateErrors { get; private set; }
-           
+
 
         private static CultureInfo CultureEnUS = new CultureInfo(1033);
 
@@ -71,6 +86,27 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Local instance of Audits service.
         /// </summary>
         public IAuditService Audits { get; set; }
+
+        /// <summary>
+        /// Initialize the HTTP client with a base URL.    
+        /// </summary>
+        private void initBaseUrl()
+        {            
+            if (IgnoreCertificateErrors)
+            {
+                HttpClientHandler httpClientHandler = new HttpClientHandler();
+                httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                HttpClient httpClient = new HttpClient(httpClientHandler);
+                httpClient.BaseAddress = new Uri($"https://{hostname}"
+                    .AppendPathSegments("api", Version));
+                Client = new FlurlClient(httpClient);
+            }
+            else
+            {
+                Client = new FlurlClient($"https://{hostname}"
+                    .AppendPathSegments("api", Version));
+            }
+        }
 
         /// <summary>
         /// Creates a new MetasysClient.
@@ -96,25 +132,11 @@ namespace JohnsonControls.Metasys.BasicServices
             Culture = cultureInfo ?? CultureInfo.CurrentCulture;
             Version = version;
             IgnoreCertificateErrors = ignoreCertificateErrors;
-            // Initialize the HTTP client with a base URL    
-            if (IgnoreCertificateErrors)
-            {
-                HttpClientHandler httpClientHandler = new HttpClientHandler();
-                httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
-                HttpClient httpClient = new HttpClient(httpClientHandler);
-                httpClient.BaseAddress = new Uri($"https://{hostname}"
-                    .AppendPathSegments("api", Version));
-                Client = new FlurlClient(httpClient);
-            }
-            else
-            {
-                Client = new FlurlClient($"https://{hostname}"
-                    .AppendPathSegments("api", Version));
-            }
+            initBaseUrl();
             // Set preferences about logging
             LogClientErrors = logClientErrors;
             // Init related services
-            Trends = new TrendServiceProvider(Client, Version,logClientErrors);
+            Trends = new TrendServiceProvider(Client, Version, logClientErrors);
             Alarms = new AlarmServiceProvider(Client, Version, logClientErrors);
             Audits = new AuditServiceProvider(Client, Version, logClientErrors);
         }
@@ -432,7 +454,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 response = await Client.Request(new Url("objects")
                     .AppendPathSegments(id, "attributes", attributeName))
                     .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);             
+                    .ConfigureAwait(false);
                 result = new Variant(id, response, attributeName, Culture, Version);
             }
             catch (FlurlHttpException e)
@@ -502,8 +524,9 @@ namespace JohnsonControls.Metasys.BasicServices
                 return null;
             }
             List<VariantMultiple> results = new List<VariantMultiple>();
-            if (Version > ApiVersion.v2) {
-                var response=await PostBatchRequestAsync("objects", ids, attributeNames, "attributes").ConfigureAwait(false);
+            if (Version > ApiVersion.v2)
+            {
+                var response = await PostBatchRequestAsync("objects", ids, attributeNames, "attributes").ConfigureAwait(false);
                 return ToVariantMultiples(response);
             }
             var taskList = new List<Task<Variant>>();
@@ -537,7 +560,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
             }
             return results.AsEnumerable();
-        }    
+        }
 
         /// <summary>
         /// Write a single attribute given the Guid of the object. 
@@ -1133,7 +1156,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var respIds = r["id"].Value<string>().Split('_');
                 var objId = new Guid(respIds[0]);
                 string attr = respIds[1];
-                List<Variant> values= new List<Variant>();
+                List<Variant> values = new List<Variant>();
                 if (r["status"].Value<int>() == 200)
                 {
                     values.Add(new Variant(objId, r["body"], attr, Culture, Version));
@@ -1150,7 +1173,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     var newList = m.Values.ToList();
                     newList.AddRange(values);
                     m.Values = newList;
-                }                             
+                }
             }
             return multiples;
         }
