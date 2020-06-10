@@ -21,7 +21,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             Id = id;
             Values = values;
-        }
+        }       
 
         /// <summary>
         /// Returns a value indicating whither this instance has values equal to a specified object.

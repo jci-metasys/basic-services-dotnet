@@ -9,10 +9,12 @@ using Newtonsoft.Json.Linq;
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
-    /// Command is a structure that holds information about a Metasys object command.
+    /// Command is a class that holds information about a Metasys object command.
     /// </summary>
-    public struct Command
+    public class Command
     {
+        public Command() { }
+
         private CultureInfo _CultureInfo;
 
         /// <summary>
