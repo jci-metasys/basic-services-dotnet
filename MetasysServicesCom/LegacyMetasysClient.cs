@@ -371,7 +371,7 @@ namespace JohnsonControls.Metasys.ComServices
         public object GetSingleAlarm(string alarmId)
         {
             Guid guidAlarmId = Guid.Parse(alarmId);
-            var alarmItem = Client.Alarms.GetSingleAlarm(guidAlarmId);
+            var alarmItem = Client.Alarms.FindById(guidAlarmId);
             return Mapper.Map<IComProvideAlarmItem>(alarmItem);
         }
 
@@ -379,14 +379,14 @@ namespace JohnsonControls.Metasys.ComServices
         public IComPagedResult GetAlarms(IComFilterAlarm alarmFilter)
         {
             var mapAlarmFilter = Mapper.Map<AlarmFilter>(alarmFilter);
-            PagedResult<Alarm> alarmItems = Client.Alarms.GetAlarms(mapAlarmFilter);
+            PagedResult<Alarm> alarmItems = Client.Alarms.Get(mapAlarmFilter);
             return Mapper.Map<IComPagedResult>(alarmItems);
         }
         /// <inheritdoc />
         public object GetAlarmAnnotations(string alarmId)
         {
             Guid guidAlarmId = Guid.Parse(alarmId);
-            var response = Client.Alarms.GetAlarmAnnotations(guidAlarmId);
+            var response = Client.Alarms.GetAnnotations(guidAlarmId);
             return Mapper.Map<IComAlarmAnnotation[]>(response);
         }
 
@@ -395,7 +395,7 @@ namespace JohnsonControls.Metasys.ComServices
         {
             Guid guidObjectId = Guid.Parse(objectId);
             var mapAlarmFilterForAnObject = Mapper.Map<AlarmFilter>(alarmFilter);
-            var alarmItems = Client.Alarms.GetAlarmsForAnObject(guidObjectId, mapAlarmFilterForAnObject);
+            var alarmItems = Client.Alarms.GetForObject(guidObjectId, mapAlarmFilterForAnObject);
             return Mapper.Map<IComPagedResult>(alarmItems);
         }
 
@@ -404,7 +404,7 @@ namespace JohnsonControls.Metasys.ComServices
         {
             Guid guidNetworkDeviceId = Guid.Parse(networkDeviceId);
             var mapAlarmFilterForObject = Mapper.Map<AlarmFilter>(alarmFilter);
-            var alarmItems = Client.Alarms.GetAlarmsForNetworkDevice(guidNetworkDeviceId, mapAlarmFilterForObject);
+            var alarmItems = Client.Alarms.GetForNetworkDevice(guidNetworkDeviceId, mapAlarmFilterForObject);
             return Mapper.Map<IComPagedResult>(alarmItems);
         }
 
@@ -432,7 +432,7 @@ namespace JohnsonControls.Metasys.ComServices
         public object GetSingleAudit(string auditId)
         {
             Guid guidAuditId = Guid.Parse(auditId);
-            var auditItem = Client.Audits.GetSingleAudit(guidAuditId);
+            var auditItem = Client.Audits.FindById(guidAuditId);
             return Mapper.Map<IComProvideAuditItem>(auditItem);
         }
 
@@ -444,7 +444,7 @@ namespace JohnsonControls.Metasys.ComServices
         public IComPagedResult GetAudits(IComAuditFilter auditFilter)
         {
             var mapAuditFilter = Mapper.Map<AuditFilter>(auditFilter);
-            PagedResult<Audit> auditItems = Client.Audits.GetAudits(mapAuditFilter);
+            PagedResult<Audit> auditItems = Client.Audits.Get(mapAuditFilter);
             return Mapper.Map<IComPagedResult>(auditItems);
         }
 
@@ -452,7 +452,7 @@ namespace JohnsonControls.Metasys.ComServices
         public object GetAuditAnnotations(string auditId)
         {
             Guid guidAuditId = Guid.Parse(auditId);
-            var response = Client.Audits.GetAuditAnnotations(guidAuditId);
+            var response = Client.Audits.GetAnnotations(guidAuditId);
             return Mapper.Map<IComAuditAnnotation[]>(response);
         }
 
@@ -466,7 +466,7 @@ namespace JohnsonControls.Metasys.ComServices
         {
             Guid guidObjectId = Guid.Parse(objectId);
             var mapAuditFilterForAnObject = Mapper.Map<AuditFilter>(auditFilter);
-            var auditItems = Client.Audits.GetAuditsForAnObject(guidObjectId, mapAuditFilterForAnObject);
+            var auditItems = Client.Audits.GetForObject(guidObjectId, mapAuditFilterForAnObject);
             return Mapper.Map<IComPagedResult>(auditItems);
         }
 

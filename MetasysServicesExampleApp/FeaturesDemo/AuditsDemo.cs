@@ -23,7 +23,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
                 Guid auditId = Guid.Parse(inputAuditId);
 
-                var auditItem = client.Audits.GetSingleAudit(auditId);
+                var auditItem = client.Audits.FindById(auditId);
 
                 Console.WriteLine(string.Format("\n Audit details found for {0}", auditId));
                 Console.WriteLine($"\n Id: {auditItem.Id}, User: {auditItem.User}, PreData: {auditItem.PreData}, PostDate: {auditItem.PostData}");
@@ -47,7 +47,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
                 Console.WriteLine("\n List of audits with details");
 
-                var auditItems = client.Audits.GetAudits(auditFilterItem);
+                var auditItems = client.Audits.Get(auditFilterItem);
 
                 Console.WriteLine($"\n Total: {auditItems.Total}");
                 Console.WriteLine($"\n Page Count: {auditItems.PageCount}");
@@ -78,7 +78,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
                 Console.WriteLine(string.Format("\nAudit details found for this object {0}", objectId));
 
-                var auditItemsForObject = client.Audits.GetAuditsForAnObject(Guid.Parse(objectId), auditsForObject);
+                var auditItemsForObject = client.Audits.GetForObject(Guid.Parse(objectId), auditsForObject);
 
                 Console.WriteLine($"\n Total: {auditItemsForObject.Total}");
                 Console.WriteLine($"\n Page Count: {auditItemsForObject.PageCount}");

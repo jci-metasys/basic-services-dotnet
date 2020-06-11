@@ -174,8 +174,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             /* SNIPPET 2: START */
             List<Guid> ids = new List<Guid> { id1, id2 };
-            List<(string, object)> attributes = new List<(string, object)> { ("description", "This is an AV.") };
-            client.WritePropertyMultiple(ids, attributes);
+            // Write to many attributes values using a list of tuples
+            List<(string, object)> attributesList = new List<(string, object)> { ("description", "This is an AV.") };
+            client.WritePropertyMultiple(ids, attributesList);
+            // Write to many attributes values using a dictionary of attribute/value pairs
+            Dictionary<string, object> attributesDictionary = new Dictionary<string, object> { { "description", "This is an AV." } };
+            client.WritePropertyMultiple(ids, attributesDictionary);
             /* SNIPPET 2: END */
         }
         #endregion
@@ -619,7 +623,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 EndTime = new DateTime(2020, 6, 2),
                 ExcludeAcknowledged = true
             };
-            PagedResult<Alarm> alarmsPager = client.Alarms.GetAlarms(alarmFilter);
+            PagedResult<Alarm> alarmsPager = client.Alarms.Get(alarmFilter);
             // Prints the number of records fetched and paging information
             Console.WriteLine("Total:" + alarmsPager.Total);
             Console.WriteLine("Current page:" + alarmsPager.CurrentPage);
@@ -661,16 +665,16 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         private void GetSingleAlarm_GetAlarmsForAnObject_GetAlarmsForNetworkDevice(Alarm alarm, Guid objectId, AlarmFilter alarmFilter, MetasysObject device)
         {
             /* SNIPPET 2: START */
-            Alarm singleAlarm = client.Alarms.GetSingleAlarm(alarm.Id);
-            PagedResult<Alarm> objectAlarms = client.Alarms.GetAlarmsForAnObject(objectId, alarmFilter);
-            PagedResult<Alarm> deviceAlarms = client.Alarms.GetAlarmsForNetworkDevice(device.Id, alarmFilter);
+            Alarm singleAlarm = client.Alarms.FindById(alarm.Id);
+            PagedResult<Alarm> objectAlarms = client.Alarms.GetForObject(objectId, alarmFilter);
+            PagedResult<Alarm> deviceAlarms = client.Alarms.GetForNetworkDevice(device.Id, alarmFilter);
             /* SNIPPET 2: END */
         }
 
         private void GetAlarmsAnnotation(Alarm alarm)
         {
             /* SNIPPET 3: START */
-            IEnumerable<AlarmAnnotation> annotations = client.Alarms.GetAlarmAnnotations(alarm.Id);
+            IEnumerable<AlarmAnnotation> annotations = client.Alarms.GetAnnotations(alarm.Id);
             AlarmAnnotation firstAnnotation = annotations.FirstOrDefault();
             Console.WriteLine(firstAnnotation);
             /*
@@ -736,7 +740,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 OriginApplications = "6,1",
                 ActionTypes = "5,0",
             };
-            PagedResult<Audit> auditsPager = client.Audits.GetAudits(auditFilter);
+            PagedResult<Audit> auditsPager = client.Audits.Get(auditFilter);
             // Prints the number of records fetched and paging information
             Console.WriteLine("Total:" + auditsPager.Total);
             Console.WriteLine("Current page:" + auditsPager.CurrentPage);
@@ -786,15 +790,15 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         private void GetSingleAudit_GetAuditsForAnObject(Audit audit, Guid objectId, AuditFilter auditFilter)
         {
             /* SNIPPET 2: START */
-            Audit singleAudit = client.Audits.GetSingleAudit(audit.Id);
-            PagedResult<Audit> objectAudits = client.Audits.GetAuditsForAnObject(objectId, auditFilter);
+            Audit singleAudit = client.Audits.FindById(audit.Id);
+            PagedResult<Audit> objectAudits = client.Audits.GetForObject(objectId, auditFilter);
             /* SNIPPET 2: END */
         }
 
         private void GetAuditsAnnotation(Audit audit)
         {
             /* SNIPPET 3: START */
-            IEnumerable<AuditAnnotation> annotations = client.Audits.GetAuditAnnotations(audit.Id);
+            IEnumerable<AuditAnnotation> annotations = client.Audits.GetAnnotations(audit.Id);
             AuditAnnotation firstAnnotation = annotations.FirstOrDefault();
             Console.WriteLine(firstAnnotation);
             /*
@@ -812,7 +816,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
         private void DiscardSingleAudit(Audit audit)
         {
-            client.Audits.DiscardSingleAudit(audit.Id);
+            client.Audits.DiscardAudit(audit.Id);
 
             /* SNIPPET 4: START */
             /*

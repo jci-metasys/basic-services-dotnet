@@ -35,49 +35,49 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public async Task<Audit> GetSingleAuditAsync(Guid auditId)
+        public async Task<Audit> FindByIdAsync(Guid auditId)
         {
             var response = await GetRequestAsync("audits", null, auditId).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<Audit>(response.ToString());
         }
 
         /// <inheritdoc/>
-        public async Task<PagedResult<Audit>> GetAuditsAsync(AuditFilter auditFilter)
+        public async Task<PagedResult<Audit>> GetAsync(AuditFilter auditFilter)
         {
             return await GetPagedResultsAsync<Audit>("audits", ToDictionary(auditFilter)).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task<PagedResult<Audit>> GetAuditsForAnObjectAsync(Guid objectId, AuditFilter auditFilter)
+        public async Task<PagedResult<Audit>> GetForObjectAsync(Guid objectId, AuditFilter auditFilter)
         {
             return await GetPagedResultsAsync<Audit>("objects", ToDictionary(auditFilter), objectId, BaseParam).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public Audit GetSingleAudit(Guid auditId)
+        public Audit FindById(Guid auditId)
         {
-            return GetSingleAuditAsync(auditId).GetAwaiter().GetResult();
+            return FindByIdAsync(auditId).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public PagedResult<Audit> GetAudits(AuditFilter auditFilter)
+        public PagedResult<Audit> Get(AuditFilter auditFilter)
         {
-            return GetAuditsAsync(auditFilter).GetAwaiter().GetResult();
+            return GetAsync(auditFilter).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public PagedResult<Audit> GetAuditsForAnObject(Guid objectId, AuditFilter auditFilter)
+        public PagedResult<Audit> GetForObject(Guid objectId, AuditFilter auditFilter)
         {
-            return GetAuditsForAnObjectAsync(objectId, auditFilter).GetAwaiter().GetResult();
+            return GetForObjectAsync(objectId, auditFilter).GetAwaiter().GetResult();
         }
         /// <inheritdoc/>
-        public IEnumerable<AuditAnnotation> GetAuditAnnotations(Guid auditId)
+        public IEnumerable<AuditAnnotation> GetAnnotations(Guid auditId)
         {
-            return GetAuditAnnotationsAsync(auditId).GetAwaiter().GetResult();
+            return GetAuditAsync(auditId).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<AuditAnnotation>> GetAuditAnnotationsAsync(Guid auditId)
+        public async Task<IEnumerable<AuditAnnotation>> GetAuditAsync(Guid auditId)
         {
             // Retrieve JSON collection of Annotation
             var annotations = await GetAllAvailablePagesAsync("audits", null, auditId.ToString(), "annotations");
@@ -105,13 +105,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public void DiscardSingleAudit(Guid id)
+        public void DiscardAudit(Guid id)
         {
-            DiscardSingleAuditAsync(id).GetAwaiter().GetResult();
+            DiscardAuditAsync(id).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task DiscardSingleAuditAsync(Guid id)
+        public async Task DiscardAuditAsync(Guid id)
         {
             try
             {

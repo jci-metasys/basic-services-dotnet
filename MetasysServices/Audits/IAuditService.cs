@@ -16,44 +16,44 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="auditId">The identifier of the audit.</param>
         /// <returns>The specified audit details.</returns>
-        Audit GetSingleAudit(Guid auditId);
+        Audit FindById(Guid auditId);
 
         /// <summary>
         /// Retrieves the specified audit.
         /// </summary>
         /// <param name="auditId">The identifier of the audit.</param>
         /// <returns>The specified audit details.</returns>
-        /// <inheritdoc cref="IAuditService.GetSingleAudit(Guid)"/>
-		Task<Audit> GetSingleAuditAsync(Guid auditId);
+        /// <inheritdoc cref="IAuditService.FindById(Guid)"/>
+		Task<Audit> FindByIdAsync(Guid auditId);
 
         /// <summary>
         /// Retrieves a collection of audits.
         /// </summary>
         /// <param name="auditFilter">The audit model to filter audits.</param>
         /// <returns>The list of audits with details.</returns>
-        PagedResult<Audit> GetAudits(AuditFilter auditFilter);
+        PagedResult<Audit> Get(AuditFilter auditFilter);
 
         /// <summary>
         /// Retrieves a collection of audits.
         /// </summary>
         /// <param name="auditFilter">The audit model to filter audits.</param>
         /// <returns>The list of audits with details.</returns>
-        /// <inheritdoc cref="AuditServiceProvider.GetAudits(AuditFilter)"/>
-		Task<PagedResult<Audit>> GetAuditsAsync(AuditFilter auditFilter);
+        /// <inheritdoc cref="AuditServiceProvider.Get(AuditFilter)"/>
+		Task<PagedResult<Audit>> GetAsync(AuditFilter auditFilter);
 
         /// <summary>
         /// Retrieve a collection of Audit Annotations.
         /// </summary>
         /// <param name="auditId"></param>
         /// <returns></returns>
-        IEnumerable<AuditAnnotation> GetAuditAnnotations(Guid auditId);
+        IEnumerable<AuditAnnotation> GetAnnotations(Guid auditId);
 
         /// <summary>
         /// Retrieve a collection of Audit Annotations asynchronously.
         /// </summary>
         /// <param name="auditId"></param>
         /// <returns></returns>
-        Task<IEnumerable<AuditAnnotation>> GetAuditAnnotationsAsync(Guid auditId);
+        Task<IEnumerable<AuditAnnotation>> GetAuditAsync(Guid auditId);
 
         /// <summary>
         /// Retrieves a collection of audits for the specified object.
@@ -61,7 +61,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="objectId">The identifier of the object.</param>
         /// <param name="auditFilter">The filter to be applied to audit list.</param>
         /// <returns>The list of audit with details.</returns>
-        PagedResult<Audit> GetAuditsForAnObject(Guid objectId, AuditFilter auditFilter);
+        PagedResult<Audit> GetForObject(Guid objectId, AuditFilter auditFilter);
 
         /// <summary>
         /// Retrieves a collection of audits for the specified object.
@@ -69,15 +69,15 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="objectId">The identifier of the object.</param>
         /// <param name="auditFilter">The filter to be applied to audit list.</param>
         /// <returns>The list of audits with details.</returns>
-        /// <inheritdoc cref="AuditServiceProvider.GetAuditsForAnObject(Guid, AuditFilter)"/> 
-        Task<PagedResult<Audit>> GetAuditsForAnObjectAsync(Guid objectId, AuditFilter auditFilter);
+        /// <inheritdoc cref="AuditServiceProvider.GetForObject(Guid, AuditFilter)"/> 
+        Task<PagedResult<Audit>> GetForObjectAsync(Guid objectId, AuditFilter auditFilter);
 
         /// <summary>
         /// Discard an Audit.
         /// </summary>
         /// <param name="id"></param>
         /// <exception cref="MetasysUnsupportedApiVersion"></exception>
-        void DiscardSingleAudit(Guid id);
+        void DiscardAudit(Guid id);
 
         /// <summary>
         /// Discard an Audit asynchronously.
@@ -85,7 +85,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <exception cref="MetasysUnsupportedApiVersion"></exception>
         /// <returns>Asynchronous Task Result.</returns>
-        Task DiscardSingleAuditAsync(Guid id);
+        Task DiscardAuditAsync(Guid id);
 
     }
 }

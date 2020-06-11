@@ -1052,7 +1052,8 @@ namespace MetasysServices.Tests
         [Test]
         public void TestWritePropertyMultipleNullArguments()
         {
-            client.WritePropertyMultiple(null, null);
+            Dictionary<string, object> attributeValues = null;
+            client.WritePropertyMultiple(null, attributeValues);
             httpTest.ShouldNotHaveCalled($"https://hostname/api/v2/objects/{mockid}");
         }
 

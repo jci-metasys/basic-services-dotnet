@@ -117,11 +117,25 @@ namespace JohnsonControls.Metasys.BasicServices
             IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null);
 
         /// <summary>
+        /// Write to many attribute values given the Guids of the objects.
+        /// </summary>
+        void WritePropertyMultiple(IEnumerable<Guid> ids,
+
+            Dictionary<string, object> attributeValues, string priority = null);
+
+        /// <summary>
         /// Write to many attribute values given the Guids of the objects asynchronously.
         /// </summary>
         Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
 
             IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null);
+
+        /// <summary>
+        /// Write to many attribute values given the Guids of the objects asynchronously.
+        /// </summary>
+        Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
+
+            Dictionary<string, object> attributeValues, string priority = null);
 
         /// <summary>
         /// Get all available commands given the Guid of the object.

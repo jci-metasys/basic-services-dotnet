@@ -1203,5 +1203,22 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return multiples;
         }
+
+        ///<inheritdoc/>
+        public void WritePropertyMultiple(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues, string priority = null)
+        {
+            WritePropertyMultipleAsync(ids, attributeValues, priority).GetAwaiter().GetResult();
+        }
+
+        ///<inheritdoc/>
+        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues, string priority = null)
+        {
+            if (ids == null || attributeValues == null)
+            {
+                return;
+            }
+            // convert dictionary to a list of tuples and use existing overload
+            await WritePropertyMultipleAsync(ids, attributeValues.Select(x => (x.Key, x.Value)), priority);
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="alarmFilter">The alarmFilter to be applied to alarms list.</param>
         /// <returns>The list of alarms.</returns>
-        public async Task<PagedResult<Alarm>> GetAlarmsAsync(AlarmFilter alarmFilter)
+        public async Task<PagedResult<Alarm>> GetAsync(AlarmFilter alarmFilter)
         {                
             return await GetPagedResultsAsync<Alarm>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);            
         }
@@ -49,7 +49,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="alarmId">The identifier of the alarm.</param>
         /// <returns>The alarm details</returns>
-        public async Task<Alarm> GetSingleAlarmAsync(Guid alarmId)
+        public async Task<Alarm> FindByIdAsync(Guid alarmId)
         {
             var response=await GetRequestAsync("alarms", null, alarmId).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<Alarm>(response.ToString());
@@ -62,7 +62,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="alarmFilter">TThe alarm alarmFilter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
 
-        public async Task<PagedResult<Alarm>> GetAlarmsForAnObjectAsync(Guid objectId, AlarmFilter alarmFilter)
+        public async Task<PagedResult<Alarm>> GetForObjectAsync(Guid objectId, AlarmFilter alarmFilter)
         {
             return await GetPagedResultsAsync<Alarm>("objects", ToDictionary(alarmFilter), objectId, "alarms").ConfigureAwait(false);
         }
@@ -73,7 +73,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="networkDeviceId">The identifier of the network device.</param>
         /// <param name="alarmFilter">The alarm alarmFilter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
-        public async Task<PagedResult<Alarm>> GetAlarmsForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter alarmFilter)
+        public async Task<PagedResult<Alarm>> GetForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter alarmFilter)
         {
             return await GetPagedResultsAsync<Alarm>("networkDevices", ToDictionary(alarmFilter), networkDeviceId, "alarms").ConfigureAwait(false);
         }
@@ -83,9 +83,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="alarmId">The identifier of the alarm.</param>
         /// <returns>The alarm details</returns>
-        public Alarm GetSingleAlarm(Guid alarmId)
+        public Alarm FindById(Guid alarmId)
         {
-            return GetSingleAlarmAsync(alarmId).GetAwaiter().GetResult();
+            return FindByIdAsync(alarmId).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -93,9 +93,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="alarmFilter">The alarm alarmFilter to get alarms.</param>
         /// <returns>The list of alarms.</returns>
-        public PagedResult<Alarm> GetAlarms(AlarmFilter alarmFilter)
+        public PagedResult<Alarm> Get(AlarmFilter alarmFilter)
         {
-            return GetAlarmsAsync(alarmFilter).GetAwaiter().GetResult();
+            return GetAsync(alarmFilter).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -104,9 +104,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="objectId">The identifier of the object.</param>
         /// <param name="alarmFilter">TThe alarm alarmFilter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
-        public PagedResult<Alarm> GetAlarmsForAnObject(Guid objectId, AlarmFilter alarmFilter)
+        public PagedResult<Alarm> GetForObject(Guid objectId, AlarmFilter alarmFilter)
         {
-            return GetAlarmsForAnObjectAsync(objectId, alarmFilter).GetAwaiter().GetResult();
+            return GetForObjectAsync(objectId, alarmFilter).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -115,19 +115,19 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="networkDeviceId">The identifier of the network device.</param>
         /// <param name="alarmFilter">The alarm alarmFilter to get alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
-        public PagedResult<Alarm> GetAlarmsForNetworkDevice(Guid networkDeviceId, AlarmFilter alarmFilter)
+        public PagedResult<Alarm> GetForNetworkDevice(Guid networkDeviceId, AlarmFilter alarmFilter)
         {
-            return GetAlarmsForNetworkDeviceAsync(networkDeviceId, alarmFilter).GetAwaiter().GetResult();
+            return GetForNetworkDeviceAsync(networkDeviceId, alarmFilter).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public IEnumerable<AlarmAnnotation> GetAlarmAnnotations(Guid alarmId)
+        public IEnumerable<AlarmAnnotation> GetAnnotations(Guid alarmId)
         {
-            return GetAlarmAnnotationsAsync(alarmId).GetAwaiter().GetResult();
+            return GetAnnotationsAsync(alarmId).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<AlarmAnnotation>> GetAlarmAnnotationsAsync(Guid alarmId)
+        public async Task<IEnumerable<AlarmAnnotation>> GetAnnotationsAsync(Guid alarmId)
         {
             // Retrieve JSON collection of Annotation
             var annotations= await GetAllAvailablePagesAsync("alarms",null,alarmId.ToString(),"annotations");
