@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Net.Http;
+using System.Globalization;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -23,7 +24,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The Metasys server's Api version.
         /// </summary>
-        protected ApiVersion Version { get; set; }
+        public ApiVersion Version { get; set; }
 
         /// <summary>
         /// The log initiliazer.
@@ -49,8 +50,9 @@ namespace JohnsonControls.Metasys.BasicServices
                     Log = new LogInitializer(typeof(BasicServiceProvider));
                 }
             }
-        }
+        }        
 
+       
         /// <summary>
         /// Empty constructor.
         /// </summary>
@@ -69,8 +71,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="logErrors">Set this flag to false to disable logging of client errors.</param>
         public BasicServiceProvider(IFlurlClient client, ApiVersion version, bool logErrors = true)
         {
-            Client = client;
-            Version = version;
+            Client = client ?? throw new ArgumentNullException(nameof(client),
+                                              "FlurlClient can not be null.");            
+            Version = version;                     
             LogClientErrors = logErrors;          
         }
 

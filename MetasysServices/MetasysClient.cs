@@ -19,53 +19,9 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public class MetasysClient : BasicServiceProvider, IMetasysClient
     {
-        /// <summary>The current session token.</summary>
-        protected AccessToken AccessToken;
 
         /// <summary>The flag used to control automatic session refreshing.</summary>
         protected bool RefreshToken;
-
-        /// <summary>Resource Manager to provide localized translations.</summary>
-        protected static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager("JohnsonControls.Metasys.BasicServices.Resources.MetasysResources", typeof(MetasysClient).Assembly);
-
-        /// <summary>Dictionary to provide keys from the commandIdEnumSet.</summary>
-        /// <value>Keys as en-US translations, values as the commandIdEnumSet Enumerations.</value>
-        protected static Dictionary<string, string> CommandEnumerations;
-
-        /// <summary>Dictionaries to provide keys from the objectTypeEnumSet since there are duplicate keys.</summary>
-        /// <value>Keys as en-US translations, values as the objectTypeEnumSet Enumerations.</value>
-        protected static List<Dictionary<string, string>> ObjectTypeEnumerations;
-
-        /// <summary>The current Culture Used for Metasys client localization.</summary>
-        public CultureInfo Culture { get; set; }
-
-        private string hostname;
-        /// <summary>
-        /// The hostname of Metasys API server.
-        /// </summary>
-        protected string Hostname
-        {
-            get
-            {
-                return hostname;
-            }
-            set
-            {
-                hostname = value;
-                // reset the base client according to settings
-                initBaseUrl();
-                // reset Access Token
-                AccessToken = null;
-            }
-        }
-
-        /// <summary>
-        /// An optional boolean flag for ignoring certificate errors by bypassing certificate verification steps.
-        /// </summary>
-        protected bool IgnoreCertificateErrors { get; private set; }
-
-
-        private static CultureInfo CultureEnUS = new CultureInfo(1033);
 
         /// <summary>
         /// Stores retrieved Ids and serves as an in-memory caching layer.
@@ -87,11 +43,80 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public IAuditService Audits { get; set; }
 
+        private string hostname;
+        /// <summary>
+        /// The hostname of Metasys API server.
+        /// </summary>
+        public string Hostname
+        {
+            get
+            {
+                return hostname;
+            }
+            set
+            {                                
+                // No need to init base url on first call (already done on Version set)
+                if (hostname != null && hostname != value) // it's the same hostname: no changes
+                {                   
+                    // reset the base client according to settings
+                    InitFlurlClient(value);                               
+                }
+                hostname = value;
+            }
+        }
+
+        private ApiVersion? version;
+        /// <summary>
+        /// The Metasys server's Api version.
+        /// </summary>
+        public new ApiVersion Version
+        {
+            get
+            {
+                return version.Value;
+            }
+            set
+            {
+                // When version is null we need to do the first init
+                if (version != null && version == value)
+                {
+                    return; // it's the same version: no changes
+                }
+                version = value;
+                // set base url and all related services to the new value
+                InitFlurlClient(Hostname);
+                if (Trends != null)
+                {
+                    Trends.Version = version.Value;
+                }
+                if (Audits != null)
+                {
+                    Audits.Version = version.Value;
+                }
+                if (Alarms != null)
+                {
+                    Alarms.Version = version.Value;
+                }
+            }
+        }
+
+        /// <summary>The current session token.</summary>
+        protected AccessToken AccessToken;
+
+        /// <summary>
+        /// An optional boolean flag for ignoring certificate errors by bypassing certificate verification steps.
+        /// </summary>
+        protected bool IgnoreCertificateErrors { get; set; }
+
+
+        /// <summary>The current Culture Used for localization.</summary>
+        public CultureInfo Culture { get; set; }
+
         /// <summary>
         /// Initialize the HTTP client with a base URL.    
         /// </summary>
-        private void initBaseUrl()
-        {            
+        protected void InitFlurlClient(string hostname)
+        {
             if (IgnoreCertificateErrors)
             {
                 HttpClientHandler httpClientHandler = new HttpClientHandler();
@@ -106,6 +131,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 Client = new FlurlClient($"https://{hostname}"
                     .AppendPathSegments("api", Version));
             }
+            // reset Access Token
+            AccessToken = null;
         }
 
         /// <summary>
@@ -127,18 +154,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
         public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v2, CultureInfo cultureInfo = null, bool logClientErrors = true)
         {
+            IgnoreCertificateErrors = ignoreCertificateErrors;
             Hostname = hostname;
             // Set Metasys culture if specified, otherwise use current machine Culture.
-            Culture = cultureInfo ?? CultureInfo.CurrentCulture;
-            Version = version;
-            IgnoreCertificateErrors = ignoreCertificateErrors;
-            initBaseUrl();
+            Culture = cultureInfo ?? CultureInfo.CurrentCulture;                       
             // Set preferences about logging
             LogClientErrors = logClientErrors;
+            Version = version;
             // Init related services
-            Trends = new TrendServiceProvider(Client, Version, logClientErrors);
-            Alarms = new AlarmServiceProvider(Client, Version, logClientErrors);
-            Audits = new AuditServiceProvider(Client, Version, logClientErrors);
+            Trends = new TrendServiceProvider(Client, version, logClientErrors);
+            Alarms = new AlarmServiceProvider(Client, version, logClientErrors);
+            Audits = new AuditServiceProvider(Client, version, logClientErrors);           
         }
 
         /// <summary>

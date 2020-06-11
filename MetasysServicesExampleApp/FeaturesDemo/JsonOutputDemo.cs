@@ -20,6 +20,25 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             log = new LogInitializer(typeof(JsonOutputDemo));
         }
 
+        #region CLIENT PROPERTIES
+        private void ChangeApiVersion()
+        {
+            /* SNIPPET 1: START */
+            // Changing Api version resets the AccessToken and a new login is required
+            client.Version = ApiVersion.v2;
+            /* SNIPPET 1: END */
+        }
+
+        private void ChangeHostname()
+        {
+            /* SNIPPET 1: START */
+            // Changing Metasys Server resets the AccessToken and a new login is required
+            client.Hostname = "WIN2016-VM2";
+            /* SNIPPET 1: END */
+        }
+
+        #endregion
+
         #region LOGIN AND ACCESS TOKENS        
         private void TryLogin_Refresh()
         {
@@ -996,6 +1015,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                         case "24":
                             DiscardSingleAudit(audit);
                             break;
+                        case "25":
+                            ChangeApiVersion();
+                            break;
+                        case "26":
+                            ChangeHostname();
+                            break;
                         case "99":
                             return; // Exit from JSON output demo                            
                     }
@@ -1042,6 +1067,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("22) GetSingleAudit, GetAuditsForAnObject");
             Console.WriteLine("23) GetAuditAnnotations");
             Console.WriteLine("24) DiscardAudit");
+            Console.WriteLine("25) ChangeApiVersion");
+            Console.WriteLine("26) ChangeHostname");
             Console.WriteLine("99) Exit");
         }
     }

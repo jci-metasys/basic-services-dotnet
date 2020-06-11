@@ -8,8 +8,8 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// 
     /// </summary>
-    public interface ITrendService
-    {
+    public interface ITrendService:IBasicService
+    {       
         /// <summary>
         /// Get the list of trended attributes for the given object.
         /// </summary>    

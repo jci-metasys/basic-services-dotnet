@@ -9,7 +9,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Defines method to provide alarm infos for endpoints of the Metasys Alarm API.
     /// </summary>
-    public interface IAlarmsService
+    public interface IAlarmsService:IBasicService
     {            
         /// <summary>
         /// Retrieves the specified alarm.
