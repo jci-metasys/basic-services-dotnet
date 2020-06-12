@@ -456,6 +456,22 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComAuditAnnotation[]>(response);
         }
 
+        /// <inheritdoc />
+        public void DiscardAudit(string id)
+        {
+            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
+            Guid guid = new Guid(id);
+            Client.Audits.Discard(guid);
+        }
+
+        /// <inheritdoc />
+        public void AddAuditAnnotation(string id, string text)
+        {
+            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
+            Guid guid = new Guid(id);
+            Client.Audits.AddAnnotation(guid, text);
+        }
+
         /// <summary>
         /// Retrieves a collection of audits for the specified object.
         /// </summary>

@@ -816,7 +816,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
         private void DiscardSingleAudit(Audit audit)
         {
-            client.Audits.DiscardAudit(audit.Id);
+            client.Audits.Discard(audit.Id);
 
             /* SNIPPET 4: START */
             /*
@@ -825,6 +825,19 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             */
             /* SNIPPET 4: END */
         }
+
+        private void AddAuditAnnotation(Audit audit, string text)
+        {
+            client.Audits.AddAnnotation(audit.Id, text);
+
+            /* SNIPPET 5: START */
+            /*
+             * 
+             * 
+            */
+            /* SNIPPET 5: END */
+        }
+
 
         #endregion
 
@@ -909,7 +922,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     ActionTypes = "5,0",
                 };
                 string jsonAudit = @"{
-                  ""Id"": ""b2c19294-ed3b-422f-b670-9fff4d7495b9"",
+                  ""Id"": ""85bd2bb5-a80d-46d8-bd62-a9fdd08b598e"",
                   ""CreationTime"": ""2020-01-10T13:52:53.547Z"",
                   ""ActionTypeUrl"": ""https://win2016-vm2/api/v2/enumsets/577/members/5"",
                   ""Discarded"": false,
@@ -937,6 +950,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                   ""Self"": ""https://win2016-vm2/api/v2/audits/aab3a269-8aec-4be1-b3a6-761853442d56""
                 }";
                 Audit audit = JsonConvert.DeserializeObject<Audit>(jsonAudit);
+
+                string auditAnnotation = "THIS IS A TEST AUDIT ANNOTATION";
                 /********************************************************************************************************************/
                 var option = "";
                 while (option != "99")
@@ -1025,6 +1040,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                         case "26":
                             ChangeHostname();
                             break;
+                        case "27":
+                            AddAuditAnnotation(audit, auditAnnotation);
+                            break;
                         case "99":
                             return; // Exit from JSON output demo                            
                     }
@@ -1073,6 +1091,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("24) DiscardAudit");
             Console.WriteLine("25) ChangeApiVersion");
             Console.WriteLine("26) ChangeHostname");
+            Console.WriteLine("27) AddAuditAnnotation");
             Console.WriteLine("99) Exit");
         }
     }

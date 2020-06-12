@@ -53,7 +53,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="auditId"></param>
         /// <returns></returns>
-        Task<IEnumerable<AuditAnnotation>> GetAuditAsync(Guid auditId);
+        Task<IEnumerable<AuditAnnotation>> GetAnnotationsAsync(Guid auditId);
 
         /// <summary>
         /// Retrieves a collection of audits for the specified object.
@@ -77,7 +77,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="id"></param>
         /// <exception cref="MetasysUnsupportedApiVersion"></exception>
-        void DiscardAudit(Guid id);
+        void Discard(Guid id);
 
         /// <summary>
         /// Discard an Audit asynchronously.
@@ -85,7 +85,24 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <exception cref="MetasysUnsupportedApiVersion"></exception>
         /// <returns>Asynchronous Task Result.</returns>
-        Task DiscardAuditAsync(Guid id);
+        Task DiscardAsync(Guid id);
+
+        /// <summary>
+        /// Add an Annotation to the specified Audit.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="text"></param>
+        /// <exception cref="MetasysUnsupportedApiVersion"></exception>
+        void AddAnnotation(Guid id, string text);
+
+        /// <summary>
+        /// Add an Annotation to the specified Audit asynchronously.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="text"></param>
+        /// <exception cref="MetasysUnsupportedApiVersion"></exception>
+        /// <returns>Asynchronous Task Result.</returns>
+        Task AddAnnotationAsync(Guid id, string text);
 
     }
 }

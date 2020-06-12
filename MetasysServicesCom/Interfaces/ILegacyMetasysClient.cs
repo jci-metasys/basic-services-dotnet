@@ -192,8 +192,23 @@ namespace JohnsonControls.Metasys.ComServices
         /// Retrieve a collection of Audit Annotations.
         /// </summary>
         /// <param name="auditId"></param>
-        /// <returns></returns>
+        /// <returns>The list of Audit Annotations</returns>
         object GetAuditAnnotations(string auditId);
+
+        /// <summary>
+        /// Discard an Audit.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        void DiscardAudit(string id);
+
+        /// <summary>
+        /// Add an Audit Annotation.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        void AddAuditAnnotation(string id, string text);
 
         /// <summary>
         /// Retrieves a collection of audits for the specified object.

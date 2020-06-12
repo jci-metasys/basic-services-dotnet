@@ -25,10 +25,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Choosen ID to indentify the request/response.
         /// </summary>
         public string Id { get; set; }
+
         /// <summary>
         /// Relative Url to read from the endpoint, e.g."00000000-0000-0000-0000-000000000001/attributes/presentValue"
         /// </summary>
         public string RelativeUrl { get; set; }
+
+        /// <summary>
+        /// Relative Url to read from the endpoint, e.g."00000000-0000-0000-0000-000000000001/attributes/presentValue"
+        /// </summary>
+        public object Body { get; set; }
     }
 
 }

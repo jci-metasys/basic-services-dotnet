@@ -73,11 +73,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public IEnumerable<AuditAnnotation> GetAnnotations(Guid auditId)
         {
-            return GetAuditAsync(auditId).GetAwaiter().GetResult();
+            return GetAnnotationsAsync(auditId).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<AuditAnnotation>> GetAuditAsync(Guid auditId)
+        public async Task<IEnumerable<AuditAnnotation>> GetAnnotationsAsync(Guid auditId)
         {
             // Retrieve JSON collection of Annotation
             var annotations = await GetAllAvailablePagesAsync("audits", null, auditId.ToString(), "annotations");
@@ -105,13 +105,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public void DiscardAudit(Guid id)
+        public void Discard(Guid id)
         {
-            DiscardAuditAsync(id).GetAwaiter().GetResult();
+            DiscardAsync(id).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task DiscardAuditAsync(Guid id)
+        public async Task DiscardAsync(Guid id)
         {
             try
             {
@@ -133,7 +133,33 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+        /// <inheritdoc/>
+        public void AddAnnotation(Guid id, string text)
+        {
+            AddAnnotationAsync(id, text).GetAwaiter().GetResult();
+        }
 
-
+        /// <inheritdoc/>
+        public async Task AddAnnotationAsync(Guid id, string text)
+        {
+            try
+            {
+                if (Version >= ApiVersion.v3)
+                {
+                    var response = await Client.Request(new Url("audits")
+                    .AppendPathSegments(id, "annotations"))
+                    .PostJsonAsync(new { text })
+                    .ConfigureAwait(false);
+                }
+                else
+                {
+                    throw new MetasysUnsupportedApiVersion(Version.ToString());
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+        }
     }
 }
