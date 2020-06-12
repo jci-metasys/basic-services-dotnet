@@ -10,37 +10,31 @@ namespace JohnsonControls.Metasys.ComServices
     [ClassInterface(ClassInterfaceType.None)]
     public class ComPoint : IComPoint
     {
-        /// <summary>
-        /// The name of the Equipment that contains the Point
-        /// </summary>
+        /// <inheritdoc/>
         public string EquipmentName { get; set; }
-        /// <summary>The Short name of the Point.</summary>
+
+        /// <inheritdoc/>
         public string ShortName { set; get; }
-        /// <summary>The Label of the Point.</summary>
+
+        /// <inheritdoc/>
         public string Label { set; get; }
-        /// <summary>
-        /// Category of the Point.
-        /// </summary>
+
+        /// <inheritdoc/>
         public string Category { set; get; }
-        /// <summary>
-        /// Flag that states when the attribute object contains data suitable to display
-        /// </summary>
+
+        /// <inheritdoc/>
         public bool IsDisplayData { set; get; }
-        /// <summary>
-        /// The ID of the object where the point is mapped
-        /// </summary>
+
+        /// <inheritdoc/>
         public string ObjectId { get; set; }
-        /// <summary>
-        /// Full URL of the attribute where the point is mapped
-        /// </summary>
+
+        /// <inheritdoc/>
         public string AttributeUrl { get; set; }
-        /// <summary>
-        /// Full URL of the object where the point is mapped
-        /// </summary>
+
+        /// <inheritdoc/>
         public string ObjectUrl { get; set; }
-        /// <summary>
-        /// Value of the attribute where the point is mapped
-        /// </summary>
+
+        /// <inheritdoc/>
         public IComVariant PresentValue { get; set; }
     }
 }
