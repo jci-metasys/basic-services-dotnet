@@ -45,6 +45,6 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Signature of the annotation.
         /// </summary>
-         string Signature { get; set; }
+        string Signature { get; set; }
     }
 }

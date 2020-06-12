@@ -11,17 +11,13 @@ namespace JohnsonControls.Metasys.ComServices
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]   
     public class ComVariantMultiple:IComVariantMultiple
-    { 
+    {
         // Note: in order to correctly work with VBA registered types, class need to implement a defined interface. Neither inheritance nor encapsulation will work when the defined class is in another assembly.
 
-        /// <summary>
-        /// The object id.
-        /// </summary>
+        /// <inheritdoc />
         public string Id { set; get; }
 
-        /// <summary>
-        /// The list of Variants.
-        /// </summary>
+        /// <inheritdoc />
         public object Variants { set; get; }
     }
 }

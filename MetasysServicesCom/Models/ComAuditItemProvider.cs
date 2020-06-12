@@ -11,76 +11,46 @@ namespace JohnsonControls.Metasys.ComServices
     [ClassInterface(ClassInterfaceType.None)]
     public class ComAuditItemProvider : IComProvideAuditItem
     {
-        /// <summary>
-        /// The identifier of the audit(GUID).
-        /// </summary>
+        /// <inheritdoc />
         public string Id { get; set; }
 
-        /// <summary>
-        /// The dateTime representing the creation time when this audit message was created.
-        /// </summary>
+        /// <inheritdoc />
         public string CreationTime { get; set; }
 
-        /// <summary>
-        /// The action performed that initiated the audit.
-        /// https://{hostname}/api/v2/enumSets/577/members for possible values
-        /// </summary>
+        /// <inheritdoc />
         public string ActionTypeUrl { get; set; }
 
-        /// <summary>
-        /// Indicates if the audit has been discarded.
-        /// </summary>
+        /// <inheritdoc />
         public bool Discarded { get; set; }
 
-        /// <summary>
-        /// Enumeration representing status.
-        /// https://{hostname}/api/v2/enumSets/516/members for possible values
-        /// </summary>
+        /// <inheritdoc />
         public string StatusUrl { get; set; }
 
-        /// <summary>
-        /// Data value prior to the Audit.
-        /// </summary>
+        /// <inheritdoc />
         public dynamic PreData { get; set; }
 
-        /// <summary>
-        /// Data value after the Audit.
-        /// </summary>
+        /// <inheritdoc />
         public dynamic PostData { get; set; }
 
-        /// <summary>
-        /// Parameters for the Audit.
-        /// </summary>
+        /// <inheritdoc />
         public dynamic Parameters { get; set; }
 
-        /// <summary>
-        /// The error that may have occurred during an audit.
-        /// </summary>
+        /// <inheritdoc />
         public string ErrorString { get; set; }
 
-        /// <summary>
-        /// The userName of the user that initiated the audit.
-        /// </summary>
+        /// <inheritdoc />
         public string User { get; set; }
 
-        /// <summary>
-        /// The user who created this audit
-        /// </summary>
+        /// <inheritdoc />
         public dynamic Signature { get; set; }
 
-        /// <summary>
-        /// A link to the object on which the activity was generated.
-        /// </summary>
+        /// <inheritdoc />
         public string ObjectUrl { get; set; }
 
-        /// <summary>
-        /// Link to annotations.
-        /// </summary>
+        /// <inheritdoc />
         public string AnnotationsUrl { get; set; }
 
-        /// <summary>
-        /// Metasys specific data.
-        /// </summary>
+        /// <inheritdoc />
         public dynamic Legacy { get; set; }
 
         /// <summary>

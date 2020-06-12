@@ -16,74 +16,46 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         public string Self { get; set; }
 
-        /// <summary>
-        /// Alarm Unique Identifier (GUID)
-        /// </summary>
+        /// <inheritdoc />
         public string Id { get; set; }
 
-        /// <summary>
-        /// Item fully qualified reference
-        /// </summary>
+        /// <inheritdoc />
         public string ItemReference { get; set; }
 
-        /// <summary>
-        /// Item name
-        /// </summary>
+        /// <inheritdoc />
         public string Name { get; set; }
 
-        /// <summary>
-        /// Alarm message
-        /// </summary>
+        /// <inheritdoc />
         public string Message { get; set; }
 
-        /// <summary>
-        /// Is acknowledge required for alarm
-        /// </summary>
+        /// <inheritdoc />
         public bool IsAckRequired { get; set; }
 
-        /// <summary>
-        /// Alarm type route
-        /// </summary>
+        /// <inheritdoc />
         public string TypeUrl { get; set; }
 
-        /// <summary>
-        /// Alarm priority
-        /// </summary>
+        /// <inheritdoc />
         public int Priority { get; set; }
 
-        /// <summary>
-        /// Alarm trigger value details
-        /// </summary>
+        /// <inheritdoc />
         public object TriggerValue { get; set; }
 
-        /// <summary>
-        /// Alarm creation time
-        /// </summary>
+        /// <inheritdoc />
         public string CreationTime { get; set; }
 
-        /// <summary>
-        /// Is alarm already acknowledged
-        /// </summary>
+        /// <inheritdoc />
         public bool IsAcknowledged { get; set; }
 
-        /// <summary>
-        /// Is alarm discarded
-        /// </summary>
+        /// <inheritdoc />
         public bool IsDiscarded { get; set; }
 
-        /// <summary>
-        /// Alarm Category route
-        /// </summary>
+        /// <inheritdoc />
         public string CategoryUrl { get; set; }
 
-        /// <summary>
-        /// Link to Point
-        /// </summary>
+        /// <inheritdoc />
         public string ObjectUrl { get; set; }
 
-        /// <summary>
-        /// Link to annotations
-        /// </summary>
+        /// <inheritdoc />
         public string AnnotationsUrl { get; set; }
     }
 }

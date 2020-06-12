@@ -70,30 +70,17 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<PagedResult<Audit>, IComPagedResult>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComProvideAuditItem[]>(src.Items)));
-                cfg.CreateMap<MetasysPoint, IComPoint>();                  
+                cfg.CreateMap<MetasysPoint, IComPoint>();
             }).CreateMapper();
         }
 
-        /// <summary>
-        /// Attempts to login to the given host.
-        /// </summary>
-        /// <returns>Access Token.</returns>  
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysTokenException"></exception>
+        /// <inheritdoc />
         public IComAccessToken TryLogin(string username, string password, bool refresh = true)
         {
             return Mapper.Map<IComAccessToken>(Client.TryLogin(username, password, refresh));
         }
 
-        /// <summary>
-        /// Requests a new access token from the server before the current token expires.
-        /// </summary>
-        /// <returns>Access Token.</returns>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysTokenException"></exception>
+        /// <inheritdoc />
         public IComAccessToken Refresh()
         {
             return Mapper.Map<IComAccessToken>(Client.Refresh());
@@ -120,35 +107,14 @@ namespace JohnsonControls.Metasys.ComServices
             return Client.GetObjectTypeEnumeration(resource);
         }
 
-        /// <summary>
-        /// Given the Item Reference of an object, returns the object identifier.
-        /// </summary>
-        /// <remarks>
-        /// The itemReference will be automatically URL encoded.
-        /// </remarks>
-        /// <returns>A Guid representing the id, or an empty Guid if errors occurred.</returns>
-        /// <param name="itemReference"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysGuidException"></exception>
+        /// <inheritdoc />
         public string GetObjectIdentifier(string itemReference)
         {
             Guid? response = Client.GetObjectIdentifier(itemReference);
             return response?.ToString();
         }
 
-        /// <summary>
-        /// Read one attribute value given the Guid of the object.
-        /// </summary>
-        /// <returns>
-        /// Variant if the attribute exists, null if does not exist.
-        /// </returns>
-        /// <param name="id"></param>
-        /// <param name="attributeName"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpTimeoutException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        /// <exception cref="MetasysHttpNotFoundException"></exception>
-        /// <exception cref="MetasysPropertyException"></exception>
+        /// <inheritdoc />
         public IComVariant ReadProperty(string id, string attributeName)
         {
             // Parse Id and generate GUID
@@ -157,16 +123,7 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComVariant>(response);
         }
 
-        /// <summary>
-        /// Read many attribute values given the Guids of the objects.
-        /// </summary>
-        /// <returns>
-        /// A list of VariantMultiple with all the specified attributes (if existing).
-        /// </returns>
-        /// <param name="ids"></param>
-        /// <param name="attributeNames"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysPropertyException"></exception>
+        /// <inheritdoc/>
         public object ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributeNames)
         {
             // Note: MarshalAs decorator is needed for arrays, otherwise will cause a VBA app crash
@@ -180,27 +137,13 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComVariantMultiple[]>(response);
         }
 
-        /// <summary>
-        /// Write a single attribute given the Guid of the object. 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="attributeName"></param>
-        /// <param name="newValue"></param>
-        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
-        /// <exception cref="MetasysHttpException"></exception>
+        /// <inheritdoc/>
         public void WriteProperty(string id, string attributeName, string newValue, string priority = null)
         {
             Client.WriteProperty(new Guid(id), attributeName, newValue, priority);
         }
 
-        /// <summary>
-        /// Write to many attribute values given the Guids of the objects.
-        /// </summary>
-        /// <param name="ids"></param>
-        /// <param name="attributes"></param>
-        /// <param name="attributeValues">The (attribute, value) pairs split in a array.</param>
-        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
-        /// <exception cref="MetasysHttpException"></exception>
+        /// <inheritdoc/>
         public void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributeValues, string priority = null)
         {
             // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
@@ -218,11 +161,7 @@ namespace JohnsonControls.Metasys.ComServices
             Client.WritePropertyMultiple(guidList, valueList, priority);
         }
 
-        /// <summary>
-        /// Get all available commands given the Guid of the object.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>List of Commands.</returns>
+        /// <inheritdoc/>
         public object GetCommands(string id)
         {
             Guid guid = new Guid(id);
@@ -230,13 +169,7 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComCommand[]>(res);
         }
 
-        /// <summary>
-        /// Send a command to an object.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="command"></param>
-        /// <param name="values"></param>
-        /// <exception cref="MetasysHttpException"></exception>
+        /// <inheritdoc/>
         public void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] values = null)
         {
             // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
@@ -244,17 +177,7 @@ namespace JohnsonControls.Metasys.ComServices
             Client.SendCommand(guid, command, values?.ToList());
         }
 
-        /// <summary>
-        /// Gets all child objects given a parent Guid.
-        /// Level indicates how deep to retrieve objects.
-        /// </summary>
-        /// <remarks>
-        /// A level of 1 only retrieves immediate children of the parent object.
-        /// </remarks>
-        /// <param name="id"></param>
-        /// <param name="levels">The depth of the children to retrieve.</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <inheritdoc/>
         public object GetObjects(string id, int levels = 1)
         {
             Guid guid = new Guid(id);
@@ -262,12 +185,7 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
-        /// <summary>
-        /// Gets all network devices.
-        /// </summary>
-        /// <param name="type">Optional type number as a string</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <inheritdoc/>
         public object GetNetworkDevices(string type = null)
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
@@ -275,23 +193,14 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
-        /// <summary>
-        /// Gets all available network device types.
-        /// </summary>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <inheritdoc/>
         public object GetNetworkDeviceTypes(string type = null)
         {
             var res = Client.GetNetworkDeviceTypes();
             return Mapper.Map<IComMetasysObjectType[]>(res);
         }
 
-        /// <summary>
-        /// Gets all spaces.
-        /// </summary>
-        /// <param name="type">Optional type number as a string</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <inheritdoc/>
         public object GetSpaces(string type = null)
         {
             SpaceTypeEnum? spaceType = null;
@@ -305,10 +214,7 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
-        /// <summary>
-        /// Gets children spaces of the given space.
-        /// </summary>
-        /// <param name="id">The GUID of the parent space.</param>   
+        /// <inheritdoc/>
         public object GetSpaceChildren(string id)
         {
             Guid guid = new Guid(id);
@@ -317,12 +223,7 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
-
-        /// <summary>
-        /// Gets all space types.
-        /// </summary>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysObjectTypeException"></exception>
+        /// <inheritdoc/>
         public object GetSpaceTypes()
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
@@ -330,11 +231,7 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComMetasysObjectType[]>(res);
         }
 
-        /// <summary>
-        ///  Gets all Equipment for the given space
-        /// </summary>
-        /// <param name="spaceId"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public object GetSpaceEquipment(string spaceId)
         {
             Guid guid = new Guid(spaceId);
@@ -342,11 +239,7 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
-        /// <summary>
-        /// Gets all equipments by requesting each available page.
-        /// </summary>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <inheritdoc/>
         public object GetEquipment()
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
@@ -354,12 +247,7 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
-        /// <summary>
-        /// Gets all points for the given Equipment
-        /// </summary>
-        /// <param name="equipmentId">The Guid of the equipment.</param>
-        /// <param name="ReadAttributeValue">Set to false if you would not read Points Attribute Value.</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public object GetEquipmentPoints(string equipmentId, bool ReadAttributeValue=true)
         {
             Guid guid = new Guid(equipmentId);
@@ -424,11 +312,7 @@ namespace JohnsonControls.Metasys.ComServices
             return map;
         }
 
-        /// <summary>
-        /// Retrieves the specified audit.
-        /// </summary>
-        /// <param name="auditId">The identifier of the audit.</param>
-        /// <returns>The specified audit details.</returns>
+        /// <inheritdoc/>
         public object GetSingleAudit(string auditId)
         {
             Guid guidAuditId = Guid.Parse(auditId);
@@ -436,11 +320,7 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComProvideAuditItem>(auditItem);
         }
 
-        /// <summary>
-        /// Retrieves a collection of audits.
-        /// </summary>
-        /// <param name="auditFilter">The audit model to filter audits.</param>
-        /// <returns>The list of audits with details.</returns>
+        /// <inheritdoc />
         public IComPagedResult GetAudits(IComAuditFilter auditFilter)
         {
             var mapAuditFilter = Mapper.Map<AuditFilter>(auditFilter);
@@ -456,12 +336,7 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComAuditAnnotation[]>(response);
         }
 
-        /// <summary>
-        /// Retrieves a collection of audits for the specified object.
-        /// </summary>
-        /// <param name="objectId">The identifier of the object.</param>
-        /// <param name="auditFilter">The filter to be applied to audit list.</param>
-        /// <returns>The list of audit with details.</returns>
+        /// <inheritdoc />
         public IComPagedResult GetAuditsForAnObject(string objectId, IComAuditFilter auditFilter)
         {
             Guid guidObjectId = Guid.Parse(objectId);

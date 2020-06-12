@@ -29,17 +29,17 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Creation time of the annotation.
         /// </summary>
-         DateTime CreationTime { get; set; }
+        DateTime CreationTime { get; set; }
 
         /// <summary>
         /// Action of the annotation.
         /// </summary>
-         string Action { get; set; }
+        string Action { get; set; }
 
         /// <summary>
         /// URL of the alarm related to the annotation.
         /// </summary>
-         string AlarmUrl { get; set; }
+        string AlarmUrl { get; set; }
 
     }
 }

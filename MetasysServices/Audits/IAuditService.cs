@@ -24,7 +24,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="auditId">The identifier of the audit.</param>
         /// <returns>The specified audit details.</returns>
         /// <inheritdoc cref="IAuditService.GetSingleAudit(Guid)"/>
-		Task<Audit> GetSingleAuditAsync(Guid auditId);
+        Task<Audit> GetSingleAuditAsync(Guid auditId);
 
         /// <summary>
         /// Retrieves a collection of audits.
@@ -39,7 +39,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="auditFilter">The audit model to filter audits.</param>
         /// <returns>The list of audits with details.</returns>
         /// <inheritdoc cref="AuditServiceProvider.GetAudits(AuditFilter)"/>
-		Task<PagedResult<Audit>> GetAuditsAsync(AuditFilter auditFilter);
+        Task<PagedResult<Audit>> GetAuditsAsync(AuditFilter auditFilter);
 
         /// <summary>
         /// Retrieve a collection of Audit Annotations.

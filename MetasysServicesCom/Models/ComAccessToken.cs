@@ -11,11 +11,10 @@ namespace JohnsonControls.Metasys.ComServices
     [ClassInterface(ClassInterfaceType.None)]
     public class ComAccessToken:IComAccessToken
     {
-        /// <summary>The session access token for bearer authentication.</summary>
-        /// <value>String in the format "Bearer ..."</value>
+        /// <inheritdoc />
         public string Token { set; get; }
 
-        /// <summary>Expiration date in UTC time.</summary>
+        /// <inheritdoc />
         public DateTime Expires { set; get; }
     }
 }

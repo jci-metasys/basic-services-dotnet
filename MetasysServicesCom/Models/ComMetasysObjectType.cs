@@ -11,19 +11,13 @@ namespace JohnsonControls.Metasys.ComServices
     [ClassInterface(ClassInterfaceType.None)]
     public class ComMetasysObjectType : IComMetasysObjectType
     {
-        /// <summary>
-        /// The description of the Metasys space type object.
-        /// </summary>
+        /// <inheritdoc />
         public string Description { get; set; }
 
-        /// <summary>
-        /// The enumeration key of the description.
-        /// </summary>
+        /// <inheritdoc />
         public string DescriptionEnumerationKey { get; set; }
 
-        /// <summary>
-        /// The id of the object.
-        /// </summary>
+        /// <inheritdoc />
         public int Id { get; set; }
     }
 }
