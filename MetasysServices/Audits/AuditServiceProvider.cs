@@ -161,5 +161,82 @@ namespace JohnsonControls.Metasys.BasicServices
                 ThrowHttpException(e);
             }
         }
+
+        /// <summary>
+        /// Read many attribute values given the Guids of the objects.
+        /// </summary>
+        /// <returns>
+        /// A list of VariantMultiple with all the specified attributes (if existing).        
+        /// </returns>
+        /// <param name="ids"></param>
+        /// <param name="attributeNames"></param>        
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysPropertyException"></exception>
+        public IEnumerable<VariantMultiple> AddAnnotationMultiple(IEnumerable<BatchRequestParam> requests)
+        {
+            return AddAnnotationMultipleAsync(requests).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Read many attribute values given the Guids of the objects asynchronously.
+        /// </summary>
+        /// <remarks>
+        /// In order to allow method to run to completion without error, this will ignore properties that do not exist on a given object.         
+        /// </remarks>
+        /// <returns>
+        /// Asynchronous Task Result as list of VariantMultiple with all the specified attributes (if existing).
+        /// </returns>
+        /// <param name="ids"></param>
+        /// <param name="attributeNames"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysPropertyException"></exception>
+        public async Task<IEnumerable<VariantMultiple>> AddAnnotationMultipleAsync(IEnumerable<BatchRequestParam> requests)
+        {
+            if (requests == null)
+            {
+                return null;
+            }
+            List<VariantMultiple> results = new List<VariantMultiple>();
+
+            var response = await PostBatchRequestAsync("audits", requests, "annotations").ConfigureAwait(false);
+
+            return ToVariantMultiples(response);
+        }
+
+        /// <summary>
+        /// Convert a JToken batch request response into VariantMultiple.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        protected IEnumerable<VariantMultiple> ToVariantMultiples(JToken response)
+        {
+            List<VariantMultiple> multiples = new List<VariantMultiple>();
+            foreach (var r in response["responses"])
+            {
+                var respIds = r["id"].Value<string>().Split('_');
+                var objId = new Guid(respIds[0]);
+                string attr = respIds[1];
+                List<Variant> values = new List<Variant>();
+                if (r["status"].Value<int>() == 200)
+                {
+                    values.Add(new Variant(objId, r["headers"], attr, Culture, Version));
+                } // Don't add the variant to the list if the response is not successful
+                var m = multiples.SingleOrDefault(s => s.Id == objId);
+                if (m == null)
+                {
+                    // Add a new multiple for the current object                   
+                    multiples.Add(new VariantMultiple(objId, values));
+                }
+                else
+                {
+                    // Variant multiple already exists, just add Values
+                    var newList = m.Values.ToList();
+                    newList.AddRange(values);
+                    m.Values = newList;
+                }
+            }
+            return multiples;
+        }
+
     }
 }

@@ -32,7 +32,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public string RelativeUrl { get; set; }
 
         /// <summary>
-        /// Relative Url to read from the endpoint, e.g."00000000-0000-0000-0000-000000000001/attributes/presentValue"
+        /// Body to specify extra values related to the request, e.g.""text": "Annotation text""
         /// </summary>
         public object Body { get; set; }
     }

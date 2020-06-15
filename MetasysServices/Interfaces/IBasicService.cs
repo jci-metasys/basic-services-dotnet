@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Globalization;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -10,5 +11,7 @@ namespace JohnsonControls.Metasys.BasicServices
     public interface IBasicService
     {
         ApiVersion Version { get; set; }
+
+        CultureInfo Culture { get; set; }
     }
 }

@@ -27,6 +27,11 @@ namespace JohnsonControls.Metasys.BasicServices
         public ApiVersion Version { get; set; }
 
         /// <summary>
+        /// The current Culture Used for localization.
+        /// </summary>
+        public CultureInfo Culture { get; set; }
+
+        /// <summary>
         /// The log initiliazer.
         /// </summary>
         protected LogInitializer Log;
@@ -372,7 +377,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="resources"></param>
         /// <param name="paths"></param>
         /// <returns></returns>
-        protected async Task<JToken> PostBatchRequestAsync(string endpoint, IEnumerable<Guid> ids, IEnumerable<string> resources, params string[] paths)
+        protected async Task<JToken> GetBatchRequestAsync(string endpoint, IEnumerable<Guid> ids, IEnumerable<string> resources, params string[] paths)
         {         
             // Create URL with base resource
             Url url = new Url(endpoint);
@@ -388,7 +393,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     relativeUrl.AppendPathSegments(paths); // e.g. "00000000-0000-0000-0000-000000000001/attributes"
                     relativeUrl.AppendPathSegment(r); // e.g. "00000000-0000-0000-0000-000000000001/attributes/presentValue"                    
                     // Use the object id concatenated to the resource to uniquely identify each request
-                    objectsRequests.Add(new ObjectRequest { Id = id.ToString()+'_'+r, RelativeUrl = relativeUrl });
+                    objectsRequests.Add(new ObjectRequest { Id = id.ToString() + '_' + r, RelativeUrl = relativeUrl });
                 }
             }
             JToken responseToken = null;
@@ -399,6 +404,47 @@ namespace JohnsonControls.Metasys.BasicServices
                                             .PostJsonAsync(new BatchRequest { Requests=objectsRequests})                
                                             .ConfigureAwait(false);
                 responseToken= JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return responseToken;
+        }
+        /// <summary>
+        /// Perform multiple requests to the Server with a single HTTP call asynchronously.
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="requests"></param>
+        /// <param name="paths"></param>
+        /// <returns></returns>
+        protected async Task<JToken> PostBatchRequestAsync(string endpoint, IEnumerable<BatchRequestParam> requests, params string[] paths)
+        {
+            // Create URL with base resource
+            Url url = new Url(endpoint);
+            // Concatenate batch segment to use batch request and prepare the list of requests
+            url.AppendPathSegments("batch");
+            var objectsRequests = new List<ObjectRequest>();
+            // Concatenate batch segment to use batch request and prepare the list of requests  
+            foreach (var r in requests)
+            {
+                Url relativeUrl = new Url(r.ObjectId.ToString());
+                relativeUrl.AppendPathSegments(paths); // e.g. "00000000-0000-0000-0000-000000000001/annotations"
+                    
+
+                // Use the object id concatenated to the resource to uniquely identify each request
+                objectsRequests.Add(new ObjectRequest { Id = r.ObjectId.ToString() + '_' + r.Resource , RelativeUrl = relativeUrl, Body = @"""Text"":""" + r.Resource + @"" });
+            }
+
+            JToken responseToken = null;
+            try
+            {
+                // Post the list of requests and return responses as JToken
+                var response = await Client.Request(url)
+                                            .PostJsonAsync(new BatchRequest { Requests = objectsRequests })
+                                            .ConfigureAwait(false);
+                
+                responseToken = JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
             }
             catch (FlurlHttpException e)
             {

@@ -110,8 +110,33 @@ namespace JohnsonControls.Metasys.BasicServices
         protected bool IgnoreCertificateErrors { get; set; }
 
 
+        private CultureInfo culture;
         /// <summary>The current Culture Used for localization.</summary>
-        public CultureInfo Culture { get; set; }
+        //public CultureInfo Culture { get; set; }
+        /// <summary>
+        /// The current Culture Used for localization.
+        /// </summary>
+        public new CultureInfo Culture
+        {
+            get
+            {
+                return culture;
+            }
+            set
+            {
+                // When version is null we need to do the first init
+                if (culture != null && culture == value)
+                {
+                    return; // it's the same version: no changes
+                }
+                culture = value;
+                // set all related services to the new value
+                if (Audits != null)
+                {
+                    Audits.Culture = culture;
+                }
+            }
+        }
 
         /// <summary>
         /// Initialize the HTTP client with a base URL.    
@@ -553,7 +578,7 @@ namespace JohnsonControls.Metasys.BasicServices
             List<VariantMultiple> results = new List<VariantMultiple>();
             if (Version > ApiVersion.v2)
             {
-                var response = await PostBatchRequestAsync("objects", ids, attributeNames, "attributes").ConfigureAwait(false);
+                var response = await GetBatchRequestAsync("objects", ids, attributeNames, "attributes").ConfigureAwait(false);
                 return ToVariantMultiples(response);
             }
             var taskList = new List<Task<Variant>>();
