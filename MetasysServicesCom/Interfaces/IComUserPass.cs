@@ -19,6 +19,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// Username's credentials
         /// </summary>
         string Username { get;  set; }
+
         /// <summary>
         /// Password's credentials
         /// </summary>

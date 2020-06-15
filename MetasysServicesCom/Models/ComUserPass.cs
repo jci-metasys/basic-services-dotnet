@@ -15,13 +15,10 @@ namespace JohnsonControls.Metasys.ComServices
     [ClassInterface(ClassInterfaceType.None)]    
     public class ComUserPass:IComUserPass
     {
-        /// <summary>
-        /// Username's credentials
-        /// </summary>
+        /// <inheritdoc/>
         public string Username { get; set; }
-        /// <summary>
-        /// Password's credentials
-        /// </summary>
-        public string Password { get; set; }       
+
+        /// <inheritdoc/>
+        public string Password { get; set; }
     }
 }

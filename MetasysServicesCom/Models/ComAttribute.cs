@@ -11,13 +11,10 @@ namespace JohnsonControls.Metasys.ComServices
     [ClassInterface(ClassInterfaceType.None)]
     public class ComAttribute : IComAttribute
     {
-        /// <summary>
-        /// unique identifier
-        /// </summary>
+        /// <inheritdoc/>
         public int Id { get; set; }
-        /// <summary>
-        /// unique identifier
-        /// </summary>
+
+        /// <inheritdoc/>
         public string Description { get; set; }
     }
 }

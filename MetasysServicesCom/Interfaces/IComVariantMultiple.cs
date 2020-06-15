@@ -14,6 +14,7 @@ namespace JohnsonControls.Metasys.ComServices
     {
         /// <summary>The object id.</summary>
         string Id { set; get; }
+
         /// <summary>The list of Variants. </summary>
         object Variants { set; get; } // Note: need a generic object as return type in order to map correctly to VBA type array (can't assign to array error)
     }

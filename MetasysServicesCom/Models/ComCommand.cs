@@ -10,27 +10,16 @@ namespace JohnsonControls.Metasys.ComServices
     [ClassInterface(ClassInterfaceType.None)]
     public class ComCommand : IComCommand
     {
-        /// <summary>
-        /// The translated title of the command.
-        /// </summary>
-        /// <value>The translated title of the command or the default en-US version.</value>
+        /// <inheritdoc/>
         public string Title { set; get; }
 
-        /// <summary>
-        /// The title enumeration key of the command.
-        /// </summary>
-        /// <value>An enumeration key from the commandIdEnumSet or the default en-US title if not found .</value>
+        /// <inheritdoc/>
         public string TitleEnumerationKey { set; get; }
 
-        /// <summary>
-        /// The command id used to send command requests.
-        /// </summary>
+        /// <inheritdoc/>
         public string CommandId { set; get; }
 
-        /// <summary>
-        /// The list of values that can be modified by the command.
-        /// </summary>
-        /// <value>A list of Items or null if the command does not accept any parameter values.</value>
+        /// <inheritdoc/>
         public object Items { set; get; }
     }
 }

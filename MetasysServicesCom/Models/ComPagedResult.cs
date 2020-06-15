@@ -11,25 +11,15 @@ namespace JohnsonControls.Metasys.ComServices
     [ClassInterface(ClassInterfaceType.None)]
     public class ComPagedResult : IComPagedResult
     {
-        /// <summary>
-        /// The total number of elements. 
-        /// </summary>
+        /// <inheritdoc/>
         public int Total { get; set; }
-        /// <summary>
-        /// The items of the current page.
-        /// </summary>
+        /// <inheritdoc/>
         public object Items { get; set; }
-        /// <summary>
-        /// The actual page.
-        /// </summary>
+        /// <inheritdoc/>
         public int CurrentPage { get; set; }
-        /// <summary>
-        /// Total number of pages.
-        /// </summary>
+        /// <inheritdoc/>
         public int PageCount { get; set; }
-        /// <summary>
-        /// Maximum number of elements on a page.
-        /// </summary>
+        /// <inheritdoc/>
         public int PageSize { get; set; }
 
     }
