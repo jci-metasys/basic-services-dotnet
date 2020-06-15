@@ -15,14 +15,17 @@ namespace JohnsonControls.Metasys.ComServices
         /// Value
         /// </summary>
         double Value { get; set; }
+
         /// <summary>
         /// Unit
         /// </summary>
         string Unit { get; set; }
+
         /// <summary>
         /// Timestamp
         /// </summary>
         DateTime Timestamp { get; set; }
+
         /// <summary>
         /// Checks the reliability
         /// </summary>

@@ -11,25 +11,16 @@ namespace JohnsonControls.Metasys.ComServices
     [ClassInterface(ClassInterfaceType.None)]
     public class ComSample : IComSample
     {
-        /// <summary>
-        /// Value
-        /// </summary>
+        /// <inheritdoc/>
         public double Value { get; set; }
 
-        /// <summary>
-        /// Unit
-        /// </summary>
+        /// <inheritdoc/>
         public string Unit { get; set; }
 
-        /// <summary>
-        /// TimeStamp
-        /// </summary>
+        /// <inheritdoc/>
         public DateTime Timestamp { get; set; }
 
-
-        /// <summary>
-        /// Checks for reliability
-        /// </summary>
+        /// <inheritdoc/>
         public bool IsReliable { get; set; }
 
     }

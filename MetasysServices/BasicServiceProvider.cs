@@ -21,9 +21,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>The http client.</summary>
         protected IFlurlClient Client;
 
-        /// <summary>
-        /// The Metasys server's Api version.
-        /// </summary>
+        /// <inheritdoc/>
         public ApiVersion Version { get; set; }
 
         /// <summary>

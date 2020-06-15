@@ -15,6 +15,12 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Attempts to login to the given host.
         /// </summary>
+        /// <returns>Access Token.</returns>  
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysTokenException"></exception>
         IComAccessToken TryLogin(string username, string password, bool refresh = true);
 
         /// <summary>
@@ -23,7 +29,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="target"></param>       
         /// <param name="refresh"></param>       
         /// <returns></returns>
-        IComAccessToken TryLoginWithCredMan(string target, bool refresh = true);              
+        IComAccessToken TryLoginWithCredMan(string target, bool refresh = true);
 
         /// <summary>
         /// Requests a new access token from the server before the current token expires.
@@ -36,47 +42,92 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Read one attribute value given the Guid of the object.
         /// </summary>
+        /// <returns>
+        /// Variant if the attribute exists, null if does not exist.
+        /// </returns>
+        /// <param name="id"></param>
+        /// <param name="attributeName"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpTimeoutException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <exception cref="MetasysHttpNotFoundException"></exception>
+        /// <exception cref="MetasysPropertyException"></exception>
         IComVariant ReadProperty(string id, string attributeName);
 
         /// <summary>
         /// Read many attribute values given the Guids of the objects.
         /// </summary>
+        /// <returns>
+        /// A list of VariantMultiple with all the specified attributes (if existing).
+        /// </returns>
+        /// <param name="ids"></param>
+        /// <param name="attributeNames"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysPropertyException"></exception>
         object ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeNames);
 
         /// <summary>
         /// Write a single attribute given the Guid of the object. 
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="newValue"></param>
+        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
+        /// <exception cref="MetasysHttpException"></exception>
         void WriteProperty(string id, string attributeName, string newValue, string priority = null);
 
         /// <summary>
         /// Write to many attribute values given the Guids of the objects.
         /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="attributes"></param>
+        /// <param name="attributeValues">The (attribute, value) pairs split in a array.</param>
+        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
+        /// <exception cref="MetasysHttpException"></exception>
         void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeValues, string priority = null);
 
         /// <summary>
         /// Get all available commands given the Guid of the object.
         /// </summary>
+        /// <param name="id"></param>
+        /// <returns>List of Commands.</returns>
         object GetCommands(string id);
 
         /// <summary>
         /// Send a command to an object.
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="command"></param>
+        /// <param name="values"></param>
+        /// <exception cref="MetasysHttpException"></exception>
         void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] values = null);
 
         /// <summary>
         /// Gets all network devices.
         /// </summary>
+        /// <param name="type">Optional type number as a string</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
         object GetNetworkDevices(string type = null);
 
         /// <summary>
         /// Gets all available network device types.
         /// </summary>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
         object GetNetworkDeviceTypes(string type = null);
 
         /// <summary>
         /// Gets all child objects given a parent Guid.
         /// Level indicates how deep to retrieve objects.
         /// </summary>
+        /// <remarks>
+        /// A level of 1 only retrieves immediate children of the parent object.
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <param name="levels">The depth of the children to retrieve.</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
         object GetObjects(string id, int levels = 1);
 
         /// <summary>
@@ -87,16 +138,22 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Gets all network devices.
         /// </summary>
+        /// <param name="type">Optional type number as a string</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
         object GetSpaces(string type = null);
 
         /// <summary>
         /// Gets children spaces of the given space.
-        /// </summary>       
+        /// </summary>
+        /// <param name="id">The GUID of the parent space.</param> 
         object GetSpaceChildren(string id);
 
         /// <summary>
         /// Gets all space types.
         /// </summary>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysObjectTypeException"></exception>
         object GetSpaceTypes();
 
         /// <summary>
@@ -109,6 +166,8 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Gets all network devices.
         /// </summary>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
         object GetEquipment();
 
         /// <summary>

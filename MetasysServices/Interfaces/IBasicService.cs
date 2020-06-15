@@ -10,6 +10,9 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public interface IBasicService
     {
+        /// <summary>
+        /// The Metasys server's Api version.
+        /// </summary>
         ApiVersion Version { get; set; }
 
         CultureInfo Culture { get; set; }
