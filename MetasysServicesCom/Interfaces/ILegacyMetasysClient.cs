@@ -258,8 +258,9 @@ namespace JohnsonControls.Metasys.ComServices
         /// Discard an Audit.
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="annontationText"></param>
         /// <returns></returns>
-        void DiscardAudit(string id);
+        void DiscardAudit(string id, string annontationText);
 
         /// <summary>
         /// Add an Audit Annotation.

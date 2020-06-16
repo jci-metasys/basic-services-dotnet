@@ -11,6 +11,11 @@ namespace JohnsonControls.Metasys.BasicServices
     public class BatchRequest
     {
         /// <summary>
+        /// Specify the type of the call, e.g. GET, POST etc...
+        /// </summary>
+        public string Method { get; set; }
+
+        /// <summary>
         /// List of requests.
         /// </summary>
         public List<ObjectRequest> Requests { get; set; }
@@ -34,7 +39,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Body to specify extra values related to the request, e.g.""text": "Annotation text""
         /// </summary>
-        public object Body { get; set; }
+        public Object Body { get; set; }
     }
 
 }

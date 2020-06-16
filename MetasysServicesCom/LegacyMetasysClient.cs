@@ -346,11 +346,11 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc />
-        public void DiscardAudit(string id)
+        public void DiscardAudit(string id, string annotationText)
         {
             // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
             Guid guid = new Guid(id);
-            Client.Audits.Discard(guid);
+            Client.Audits.Discard(guid, annotationText);
         }
 
         /// <inheritdoc />

@@ -31,10 +31,10 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
         private void ChangeHostname()
         {
-            /* SNIPPET 1: START */
+            /* SNIPPET 2: START */
             // Changing Metasys Server resets the AccessToken and a new login is required
             client.Hostname = "WIN2016-VM2";
-            /* SNIPPET 1: END */
+            /* SNIPPET 2: END */
         }
 
         #endregion
@@ -814,9 +814,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 3: END */
         }
 
-        private void DiscardSingleAudit(Audit audit)
+        private void DiscardSingleAudit(Audit audit, string annotationText)
         {
-            client.Audits.Discard(audit.Id);
+            client.Audits.Discard(audit.Id, annotationText);
 
             /* SNIPPET 4: START */
             /*
@@ -838,6 +838,48 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 5: END */
         }
 
+        private void AddAuditAnnotationMultiple()
+        {
+            var requests = new List<BatchRequestParam>();
+            BatchRequestParam singleRequest1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST AUDIT ANNOTATION" };
+            requests.Add(singleRequest1);
+            BatchRequestParam singleRequest2 = new BatchRequestParam { ObjectId = new Guid("5ff1341e-dbf1-4eaf-b9a1-987f51dabefa"), Resource = "THIS IS THE SECOND AUDIT ANNOTATION" };
+            requests.Add(singleRequest2);
+
+            /* SNIPPET 6: START */
+            IEnumerable<Result> results = client.Audits.AddAnnotationMultiple(requests);
+            Result resultItem = results.ElementAt(0);
+            Console.WriteLine(resultItem);
+            /*
+            {
+              "Id": "e0fb025a-d8a2-4258-91ea-c4026c1620d1",
+              "Status": 201,
+              "Annotation": "THIS IS THE FIRST AUDIT ANNOTATION"
+            }            /*
+            */
+            /* SNIPPET 6: END */
+        }
+        private void DiscardAuditMultiple()
+        {
+            var requests = new List<BatchRequestParam>();
+            BatchRequestParam singleRequest1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST DISCARD ANNOTATION" };
+            requests.Add(singleRequest1);
+            BatchRequestParam singleRequest2 = new BatchRequestParam { ObjectId = new Guid("5ff1341e-dbf1-4eaf-b9a1-987f51dabefa"), Resource = "THIS IS THE SECOND DISCARD ANNOTATION" };
+            requests.Add(singleRequest2);
+
+            /* SNIPPET 7: START */
+            IEnumerable<Result> results = client.Audits.DiscardMultiple(requests);
+            Result resultItem = results.ElementAt(0);
+            Console.WriteLine(resultItem);
+            /*
+            {
+              "Id": "e0fb025a-d8a2-4258-91ea-c4026c1620d1",
+              "Status": 204,
+              "Annotation": "THIS IS THE FIRST DISCARD ANNOTATION"
+            }  
+            */
+            /* SNIPPET 7: END */
+        }
 
         #endregion
 
@@ -922,7 +964,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     ActionTypes = "5,0",
                 };
                 string jsonAudit = @"{
-                  ""Id"": ""85bd2bb5-a80d-46d8-bd62-a9fdd08b598e"",
+                  ""Id"": ""9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf"",
                   ""CreationTime"": ""2020-01-10T13:52:53.547Z"",
                   ""ActionTypeUrl"": ""https://win2016-vm2/api/v2/enumsets/577/members/5"",
                   ""Discarded"": false,
@@ -952,6 +994,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Audit audit = JsonConvert.DeserializeObject<Audit>(jsonAudit);
 
                 string auditAnnotation = "THIS IS A TEST AUDIT ANNOTATION";
+
                 /********************************************************************************************************************/
                 var option = "";
                 while (option != "99")
@@ -1032,7 +1075,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                             GetAuditsAnnotation(audit);
                             break;
                         case "24":
-                            DiscardSingleAudit(audit);
+                            DiscardSingleAudit(audit, auditAnnotation);
                             break;
                         case "25":
                             ChangeApiVersion();
@@ -1042,6 +1085,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                             break;
                         case "27":
                             AddAuditAnnotation(audit, auditAnnotation);
+                            break;
+                        case "28":
+                            AddAuditAnnotationMultiple();
+                            break;
+                        case "29":
+                            DiscardAuditMultiple();
                             break;
                         case "99":
                             return; // Exit from JSON output demo                            
@@ -1092,6 +1141,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("25) ChangeApiVersion");
             Console.WriteLine("26) ChangeHostname");
             Console.WriteLine("27) AddAuditAnnotation");
+            Console.WriteLine("28) AddAuditAnnotationMultiple");
+            Console.WriteLine("29) DiscardAuditMultiple");
             Console.WriteLine("99) Exit");
         }
     }

@@ -917,7 +917,7 @@ namespace JohnsonControls.Metasys.BasicServices
             return TryLoginAsync(credManTarget, refresh).GetAwaiter().GetResult();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="TryLogin(Guid, int)"/>
         public virtual async Task<AccessToken> TryLoginAsync(string credManTarget, bool refresh = true)
         {
             // Retrieve credentials first

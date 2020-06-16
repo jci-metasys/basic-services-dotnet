@@ -105,13 +105,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public void Discard(Guid id)
+        public void Discard(Guid id, string annotationText)
         {
-            DiscardAsync(id).GetAwaiter().GetResult();
+            DiscardAsync(id, annotationText).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task DiscardAsync(Guid id)
+        public async Task DiscardAsync(Guid id, string annotationText)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     var response = await Client.Request(new Url("audits")
                     .AppendPathSegments(id, "discard"))
-                    .PutJsonAsync(null)
+                    .PutJsonAsync(new { annotationText })
                     .ConfigureAwait(false);
                 }
                 else
@@ -162,35 +162,14 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        /// <summary>
-        /// Read many attribute values given the Guids of the objects.
-        /// </summary>
-        /// <returns>
-        /// A list of VariantMultiple with all the specified attributes (if existing).        
-        /// </returns>
-        /// <param name="ids"></param>
-        /// <param name="attributeNames"></param>        
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysPropertyException"></exception>
-        public IEnumerable<VariantMultiple> AddAnnotationMultiple(IEnumerable<BatchRequestParam> requests)
+        /// <inheritdoc/>
+        public IEnumerable<Result> AddAnnotationMultiple(IEnumerable<BatchRequestParam> requests)
         {
             return AddAnnotationMultipleAsync(requests).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Read many attribute values given the Guids of the objects asynchronously.
-        /// </summary>
-        /// <remarks>
-        /// In order to allow method to run to completion without error, this will ignore properties that do not exist on a given object.         
-        /// </remarks>
-        /// <returns>
-        /// Asynchronous Task Result as list of VariantMultiple with all the specified attributes (if existing).
-        /// </returns>
-        /// <param name="ids"></param>
-        /// <param name="attributeNames"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysPropertyException"></exception>
-        public async Task<IEnumerable<VariantMultiple>> AddAnnotationMultipleAsync(IEnumerable<BatchRequestParam> requests)
+        /// <inheritdoc/>
+        public async Task<IEnumerable<Result>> AddAnnotationMultipleAsync(IEnumerable<BatchRequestParam> requests)
         {
             if (requests == null)
             {
@@ -200,7 +179,27 @@ namespace JohnsonControls.Metasys.BasicServices
 
             var response = await PostBatchRequestAsync("audits", requests, "annotations").ConfigureAwait(false);
 
-            return ToVariantMultiples(response);
+            return ToResult(response);
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<Result> DiscardMultiple(IEnumerable<BatchRequestParam> requests)
+        {
+            return DiscardMultipleAsync(requests).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public async Task<IEnumerable<Result>> DiscardMultipleAsync(IEnumerable<BatchRequestParam> requests)
+        {
+            if (requests == null)
+            {
+                return null;
+            }
+            List<VariantMultiple> results = new List<VariantMultiple>();
+
+            var response = await PutBatchRequestAsync("audits", requests, "discard").ConfigureAwait(false);
+
+            return ToResult(response);
         }
 
         /// <summary>
@@ -208,35 +207,46 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        protected IEnumerable<VariantMultiple> ToVariantMultiples(JToken response)
+        protected IEnumerable<Result> ToResult(JToken response)
         {
-            List<VariantMultiple> multiples = new List<VariantMultiple>();
+            List<Result> results = new List<Result>();
             foreach (var r in response["responses"])
             {
                 var respIds = r["id"].Value<string>().Split('_');
-                var objId = new Guid(respIds[0]);
-                string attr = respIds[1];
-                List<Variant> values = new List<Variant>();
-                if (r["status"].Value<int>() == 200)
-                {
-                    values.Add(new Variant(objId, r["headers"], attr, Culture, Version));
-                } // Don't add the variant to the list if the response is not successful
-                var m = multiples.SingleOrDefault(s => s.Id == objId);
-                if (m == null)
-                {
-                    // Add a new multiple for the current object                   
-                    multiples.Add(new VariantMultiple(objId, values));
-                }
-                else
-                {
-                    // Variant multiple already exists, just add Values
-                    var newList = m.Values.ToList();
-                    newList.AddRange(values);
-                    m.Values = newList;
-                }
+                
+                Result resultItem = new Result();
+                resultItem.Id = new Guid(respIds[0]); ;
+                resultItem.Status = r["status"].Value<int>();
+                resultItem.Annotation = respIds[1];
+                results.Add(resultItem);
+
             }
-            return multiples;
+            return results;
         }
 
+    }
+
+    /// <summary>
+    /// This holds the inofrmation returned as result of a call
+    /// </summary>
+    public class Result
+    {
+        /// <summary>The id of the Audit affected by the call.</summary>
+        public Guid Id {  set; get; }
+
+        /// <summary>The Status of the call.</summary>
+        public int Status {  set; get; }
+
+        /// <summary>Text of the Audit Annotation set according to the call.</summary>
+        public string Annotation {  set; get; }
+
+        /// <summary>
+        /// Return a pretty JSON string of the current object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
     }
 }

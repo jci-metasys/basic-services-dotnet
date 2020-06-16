@@ -66,7 +66,6 @@ namespace JohnsonControls.Metasys.BasicServices
             return code;
         }
 
-
         /// <summary>
         /// Return a pretty JSON string of the current object.
         /// </summary>
