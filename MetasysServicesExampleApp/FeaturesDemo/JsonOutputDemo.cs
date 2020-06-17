@@ -20,21 +20,62 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             log = new LogInitializer(typeof(JsonOutputDemo));
         }
 
-        #region CLIENT PROPERTIES
-        private void ChangeApiVersion()
+        #region CREATING A CLIENT
+        
+        private void CreateClientSignature1()
         {
             /* SNIPPET 1: START */
-            // Changing Api version resets the AccessToken and a new login is required
-            client.Version = ApiVersion.v2;
+            var client = new MetasysClient("hostname");
             /* SNIPPET 1: END */
+       
+        }
+
+        private void CreateClientSignature2()
+        {
+            /* SNIPPET 2: START */
+            CultureInfo culture = new CultureInfo("it-IT");
+            var client = new MetasysClient("hostname", true, ApiVersion.v2, culture);
+            /* SNIPPET 2: END */
+        }
+
+        private void CreateClientSignature3()
+        {
+            /* SNIPPET 3: START */
+            var client = new MetasysClient("hostname", logClientErrors: false);
+            /* SNIPPET 3: END */
+        }
+
+        private void LogError()
+        {
+            /* SNIPPET 4: START */
+            // Initialize Logger with your context Class
+            var log = new LogInitializer(typeof(Program));            
+            try
+            {
+                // Your Try logic here...
+            }
+            catch (Exception ex) {
+                log.Logger.Error(string.Format("An error occured - {0}", ex.Message));
+            }
+            /* SNIPPET 4: END */
+        }
+
+        private void ChangeApiVersion()
+        {
+            /* SNIPPET 5: START */
+            // Changing Api version after creating a client
+            var client = new MetasysClient("hostname",version: ApiVersion.v3);
+            client.Version = ApiVersion.v2;
+            /* SNIPPET 5: END */
         }
 
         private void ChangeHostname()
         {
-            /* SNIPPET 2: START */
-            // Changing Metasys Server resets the AccessToken and a new login is required
+            /* SNIPPET 6: START */
+            // Changing Metasys Server after creating a client
+            var client = new MetasysClient("hostname");
             client.Hostname = "WIN2016-VM2";
-            /* SNIPPET 2: END */
+            /* SNIPPET 6: END */
         }
 
         #endregion
@@ -119,7 +160,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             List<Guid> ids = new List<Guid> { id1, id2 };
             List<string> attributes = new List<string> { "name", "description", "presentValue" };
             IEnumerable<VariantMultiple> results = client.ReadPropertyMultiple(ids, attributes);
-            VariantMultiple multiple1 = results.ElementAt(0);
+            VariantMultiple multiple1 = results.FindById(id1);
             Console.WriteLine(multiple1);
             /*
                 {
@@ -156,7 +197,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     ]
                 }
             */
-            IEnumerable<Variant> multiple1Variants = multiple1.Values;
+            Variant multiple1Description = multiple1.FindAttributeByName("description");
             /* SNIPPET 2: END */
         }
         #endregion
@@ -189,7 +230,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             /* SNIPPET 1: START */
             List<Command> commands = client.GetCommands(objectId).ToList();
-            Command command = commands[0]; // Adjust
+            Command command = commands.FindById("Adjust");
             Console.WriteLine(command);
             /*                        
                 {
@@ -212,9 +253,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         private void SendCommands(Guid objectId, List<Command> commands)
         {
             /* SNIPPET 2: START */
-            Command adjust = commands[0]; // Adjust
-            Command operatorOverride = commands[1]; // OperatorOverride
-            Command release = commands[4]; // Release 
+            Command adjust = commands.FindById("Adjust");
+            Command operatorOverride = commands.FindById("OperatorOverride");
+            Command release = commands.FindById("Release"); 
             Console.WriteLine(release);
             /*                        
               {
@@ -381,7 +422,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             directChildren = client.GetObjects(parentId, includeInternalObjects:true).ToList();  
             // Get descendant for 2 levels (it could take long time, depending on the number of objects)
             List<MetasysObject> level2Descendants = client.GetObjects(parentId, 2).ToList();
-            MetasysObject level1Parent = level2Descendants.SingleOrDefault(s => s.Name == "Time");
+            MetasysObject level1Parent = level2Descendants.FindByName("Time");
             Console.WriteLine(level1Parent);
             /*                        
               {
@@ -580,7 +621,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             /* SNIPPET 5: START */
             IEnumerable<MetasysPoint> equipmentPoints = client.GetEquipmentPoints(sampleEquipment.Id);
-            MetasysPoint point = equipmentPoints.FirstOrDefault();
+            MetasysPoint point = equipmentPoints.FindByShortName("CLG-O");
             string presentValue = point.PresentValue?.StringValue;
             Console.WriteLine(point);
             /*                        
