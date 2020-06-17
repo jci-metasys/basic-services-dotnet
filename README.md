@@ -140,9 +140,26 @@ To log your own errors with Log4Net initializer provided by the library use:
 
 ```csharp
 // Initialize Logger with your context Class
-var log = new LogInitializer<Program>();
-// Your Try Catch logic here
-log.Logger.LogError(string.Format("An error occured - {0}", exception.Message);
+var log = new LogInitializer(typeof(Program));            
+try
+{
+    // Your Try logic here...
+}
+catch (Exception ex) {
+    log.Logger.Error(string.Format("An error occured - {0}", ex.Message));
+}
+```
+See the following examples to change the API version and/or hostname after creating a client, keep in mind that changing one of these properties resets the access token and a new login is required.
+```csharp
+// Changing Api version after creating a client
+var client = new MetasysClient("hostname", version: ApiVersion.v3);
+client.Version = ApiVersion.v2;
+```
+
+```csharp
+ // Change Metasys Server after creating a client
+var client = new MetasysClient("hostname");
+client.Hostname = "WIN2016-VM2";
 ```
 ### Login and Access Tokens
 
