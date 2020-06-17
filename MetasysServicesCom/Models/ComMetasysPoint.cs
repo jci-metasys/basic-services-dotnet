@@ -5,10 +5,10 @@ namespace JohnsonControls.Metasys.ComServices
     /// <summary>
     /// COM Command is a specialized structure that holds information about a Command.
     /// </summary>
-    [Guid("028b6c6f-9730-4424-aed6-325e43fef6ef")]
+    [Guid("ddf6f3a0-46de-4ec0-92b4-87cf78f0c666")]
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
-    public class ComPoint : IComPoint
+    public class ComMetasysPoint : IComMetasysPoint
     {
         /// <inheritdoc/>
         public string EquipmentName { get; set; }

@@ -26,7 +26,7 @@ namespace MetasysServicesCom.Tests
                 cfg.CreateMap<VariantMultiple, IComVariantMultiple>();
                 cfg.CreateMap<MetasysObject, IComMetasysObject>().ForMember(dest => dest.Children, opt => opt.MapFrom(src => Mapper.Map<IComMetasysObject[]>(src.Children)));
                 cfg.CreateMap<VariantMultiple, IComVariantMultiple>()
-                    .ForMember(dest => dest.Variants, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.Values)));
+                    .ForMember(dest => dest.Values, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.Values)));
                 cfg.CreateMap<Command, IComCommand>();
                 cfg.CreateMap<MetasysObjectType, IComMetasysObjectType>();
             }).CreateMapper();

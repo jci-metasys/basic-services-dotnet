@@ -24,7 +24,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 Console.WriteLine("Enter audit id to get audit details: ");
                 string inputAuditId = Console.ReadLine();
 
-                IComProvideAuditItem auditItem = (IComProvideAuditItem)legacyClient.GetSingleAudit(inputAuditId);
+                IComAudit auditItem = (IComAudit)legacyClient.GetSingleAudit(inputAuditId);
 
                 Console.WriteLine(string.Format("\n Audit details found for {0}", inputAuditId));
                 Console.WriteLine($"\n Id: {auditItem.Id}, User: {auditItem.User}, PreData: {auditItem.PreData}, PostDate: {auditItem.PostData}");
@@ -49,7 +49,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 Console.WriteLine("\n List of audits with details");
 
                 IComPagedResult PagedResult = (IComPagedResult)legacyClient.GetAudits(auditFilterItem);
-                IComProvideAuditItem[] auditItems = (IComProvideAuditItem[])PagedResult.Items;
+                IComAudit[] auditItems = (IComAudit[])PagedResult.Items;
 
                 Console.WriteLine($"\n Total: {PagedResult.Total}");
                 Console.WriteLine($"\n Page Count: {PagedResult.PageCount}");
@@ -88,7 +88,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 Console.WriteLine(string.Format("\nAudit details found for this object {0}", objectId));
 
                 IComPagedResult PagedResultAuditForObject = (IComPagedResult)legacyClient.GetAuditsForAnObject(objectId, auditsForObject);
-                IComProvideAuditItem[] auditItemsForObject = (IComProvideAuditItem[])PagedResultAuditForObject.Items;
+                IComAudit[] auditItemsForObject = (IComAudit[])PagedResultAuditForObject.Items;
 
                 Console.WriteLine($"\n Total: {PagedResultAuditForObject.Total}");
                 Console.WriteLine($"\n Page Count: {PagedResultAuditForObject.PageCount}");

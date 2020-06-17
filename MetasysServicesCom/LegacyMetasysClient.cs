@@ -50,27 +50,27 @@ namespace JohnsonControls.Metasys.ComServices
                     .ForMember(dest => dest.ArrayValue, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.ArrayValue)));
                 cfg.CreateMap<VariantMultiple, IComVariantMultiple>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
-                    .ForMember(dest => dest.Variants, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.Values)));
+                    .ForMember(dest => dest.Values, opt => opt.MapFrom(src => Mapper.Map<IComVariant[]>(src.Values)));
                 cfg.CreateMap<AccessToken, IComAccessToken>();
                 cfg.CreateMap<Command, IComCommand>();
                 cfg.CreateMap<MetasysObjectType, IComMetasysObjectType>();
                 cfg.CreateMap<IComFilterAlarm, AlarmFilter>();
-                cfg.CreateMap<Alarm, IComProvideAlarmItem>();
+                cfg.CreateMap<Alarm, IComAlarm>();
                 cfg.CreateMap<Sample, IComSample>();
                 cfg.CreateMap<IComTimeFilter, TimeFilter>();
-                cfg.CreateMap<MetasysAttribute, IComAttribute>();
+                cfg.CreateMap<MetasysAttribute, IComMetasysAttribute>();
                 cfg.CreateMap<PagedResult<Alarm>, IComPagedResult>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
-                    .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComProvideAlarmItem[]>(src.Items)));
+                    .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComAlarm[]>(src.Items)));
                 cfg.CreateMap<PagedResult<Sample>, IComPagedResult>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComSample[]>(src.Items)));
                 cfg.CreateMap<IComAuditFilter, AuditFilter>();
-                cfg.CreateMap<Audit, IComProvideAuditItem>();
+                cfg.CreateMap<Audit, IComAudit>();
                 cfg.CreateMap<PagedResult<Audit>, IComPagedResult>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
-                    .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComProvideAuditItem[]>(src.Items)));
-                cfg.CreateMap<MetasysPoint, IComPoint>();
+                    .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComAudit[]>(src.Items)));
+                cfg.CreateMap<MetasysPoint, IComMetasysPoint>();
                 cfg.CreateMap<AlarmAnnotation, IComAlarmAnnotation>();
                 cfg.CreateMap<AuditAnnotation, IComAuditAnnotation>();
             }).CreateMapper();
@@ -263,7 +263,7 @@ namespace JohnsonControls.Metasys.ComServices
         {
             Guid guid = new Guid(equipmentId);
             var res = Client.GetEquipmentPoints(guid, ReadAttributeValue);
-            return Mapper.Map<IComPoint[]>(res);
+            return Mapper.Map<IComMetasysPoint[]>(res);
         }
 
         /// <inheritdoc />
@@ -271,7 +271,7 @@ namespace JohnsonControls.Metasys.ComServices
         {
             Guid guidAlarmId = Guid.Parse(alarmId);
             var alarmItem = Client.Alarms.FindById(guidAlarmId);
-            return Mapper.Map<IComProvideAlarmItem>(alarmItem);
+            return Mapper.Map<IComAlarm>(alarmItem);
         }
 
         /// <inheritdoc />
@@ -311,7 +311,7 @@ namespace JohnsonControls.Metasys.ComServices
         public object GetTrendedAttributes(string id)
         {
             var res = Client.Trends.GetTrendedAttributes(new Guid(id));
-            return Mapper.Map<IComAttribute[]>(res);
+            return Mapper.Map<IComMetasysAttribute[]>(res);
         }
 
         /// <inheritdoc />
@@ -328,7 +328,7 @@ namespace JohnsonControls.Metasys.ComServices
         {
             Guid guidAuditId = Guid.Parse(auditId);
             var auditItem = Client.Audits.FindById(guidAuditId);
-            return Mapper.Map<IComProvideAuditItem>(auditItem);
+            return Mapper.Map<IComAudit>(auditItem);
         }
 
         /// <inheritdoc />

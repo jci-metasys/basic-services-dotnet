@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 namespace JohnsonControls.Metasys.ComServices
 {
     /// <summary>
-    /// COM Point is a specialized structure that holds information about a Point.
+    /// COM specialized structure that holds information about a  Metasys Point.
     /// </summary>
-    [Guid("f4a329fb-0d4b-4ae3-99d9-18813a37c95e")]
+    [Guid("eb26acd8-3928-41ad-bbc3-bb02277041ee")]
     [ComVisible(true)]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
-    public interface IComPoint
+    public interface IComMetasysPoint
     {
         /// <summary>
         /// The name of the Equipment that contains the Point

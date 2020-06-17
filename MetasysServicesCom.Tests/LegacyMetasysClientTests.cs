@@ -173,7 +173,7 @@ namespace MetasysServicesCom.Tests
             //Assert
             Assert.IsInstanceOfType(properties, typeof(IComVariantMultiple[]));
             Assert.IsNotNull(properties);
-            Assert.AreEqual(properties[0].Variants.Length, attributes.Length);
+            Assert.AreEqual(properties[0].Values.Length, attributes.Length);
         }
 
         #endregion
