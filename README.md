@@ -127,13 +127,13 @@ To create a client that ignores certificate errors for a 10.1 Metasys server wit
 
 ```csharp
 CultureInfo culture = new CultureInfo("it-IT");
-var client = new MetasysClient(hostname, true, ApiVersion.V2, culture);
+var client = new MetasysClient("hostname", true, ApiVersion.v2, culture);
 ```
 In some cases you may want to enrich logs with more specific messages to your application. Typically, you disable internal library logging and catch Metasys Exceptions to be handled in your own logging framework or in use for Log4Net initializer provided by the library. The file log4Net.config allows you to customize settings such as the file path, size, append mode, etc.
 To create a client with default settings that does not log errors use:
 
 ```csharp
-var client = new MetasysClient(hostname,logClientErrors:false);
+var client = new MetasysClient("hostname", logClientErrors: false);
 ```
 
 To log your own errors with Log4Net initializer provided by the library use:
@@ -152,12 +152,12 @@ catch (Exception ex) {
 See the following examples to change the API version and/or hostname after creating a client, keep in mind that changing one of these properties resets the access token and a new login is required.
 ```csharp
 // Changing Api version after creating a client
-var client = new MetasysClient("hostname", version: ApiVersion.v3);
+var client = new MetasysClient("hostname",version: ApiVersion.v3);
 client.Version = ApiVersion.v2;
 ```
 
 ```csharp
- // Change Metasys Server after creating a client
+// Changing Metasys Server after creating a client
 var client = new MetasysClient("hostname");
 client.Hostname = "WIN2016-VM2";
 ```
@@ -170,17 +170,15 @@ Both signatures take an optional parameter to automatically refresh the access t
  **Notice: when developing an application that uses a system account always logged without user input, the preferred way to login is to store the username and password in the Credential Manager vault.**
 
 ```csharp
-// Read username/password from Credential Manager vault and automatically refresh token
-client.TryLogin("vault-target");
-
-// Read username/password from Credential Manager vault and do not automatically refresh token
-client.TryLogin("vault-target", false);
-
 // Automatically refresh token using plain credentials
 client.TryLogin("username", "password");
-
 // Do not automatically refresh token using plain credentials
 client.TryLogin("username", "password", false);
+
+// Read target from Credential Manager and automatically refresh token
+client.TryLogin("metasys-energy-app");
+// Read target from Credential Manager and do not refresh token
+client.TryLogin("metasys-energy-app", false);
 ```
 
 At any time you want to manually refresh the access token before it expires use the following:
@@ -192,11 +190,16 @@ client.Refresh();
 To use the authorization token in an different HttpClient use the AccessToken object returned by these methods or use the GetAccessToken method. A successful token will be in the form "Bearer ...".
 
 ```csharp
-AccessToken token = client.GetAccessToken();
-Console.WriteLine($"Token: {token.Token}\nExpires: {dateToDisplay.ToString("g", token.Expires)}");
-
-// Token: Bearer eyJ0eXAi...
-// Expires: 10/1/2019 5:04 PM
+AccessToken accessToken = client.TryLogin("metasys-energy-app");
+Console.WriteLine(accessToken);
+/*        
+{
+    "Issuer": "metasysserver",
+    "IssuedTo": "metasysapiuser",
+    "Token": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkJzR0lWelVZcjN0MkI0RGRtT1ljMTdBLVZJOCIsImtpZCI6IkJzR0lWelVZcjN0MkI0RGRtT1ljMTdBLVZJOCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0Ojk1MDYvQVBJLkF1dGhlbnRpY2F0aW9uU2VydmljZSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6OTUwNi9BUEkuQXV0aGVudGljYXRpb25TZXJ2aWNlL3Jlc291cmNlcyIsImV4cCI6MTU4OTI5MzEzMCwibmJmIjoxNTg5MjkxMzMwLCJjbGllbnRfaWQiOiJtZXRhc3lzX3VpIiwic2NvcGUiOlsibWV0YXN5c19hcGkiLCJvZmZsaW5lX2FjY2VzcyIsIm9wZW5pZCJdLCJzdWIiOiI4ZGE4YjE4Yy1lMTk1LTRlMmMtOGU2Zi0zNTE2Zjc0ZWFhNGIiLCJhdXRoX3RpbWUiOjE1ODkyOTEzMzAsImlkcCI6Imlkc3J2IiwiVXNlcklkIjoiMSIsIlVzZXJOYW1lIjoibWV0YXN5c3N5c2FnZW50IiwiSXNBZG1pbiI6IlRydWUiLCJJc1Bhc3N3b3JkQ2hhbmdlUmVxdWlyZWQiOiJGYWxzZSIsIklzVGVybXNBbmRDb25kaXRpb25zUmVxdWlyZWQiOiJGYWxzZSIsIkxpY2Vuc2VJbmZvIjoie1wiSXNMaWNlbnNlZFwiOnRydWUsXCJMaWNlbnNlVHlwZVwiOlwiZ3JhY2VcIn0iLCJDdWx0dXJlIjoiZW4tVVMiLCJhbXIiOlsicGFzc3dvcmQiXX0.egzw1bs1831pEBWWXbBOYWGU5wFsI3sEnL7RgCIHHbHmcxtpPPqLq54znpoUoLFrMUeymZj5rkrt_mF-CNIpCE3halZNAH-CR1U46LTZi5CMaDfYlP-wHxikAGV5GwFjlHjGNOUaFtd7n4yC5sH08pHQfXXD5gKDm_FVMfUJXAo-E8gmrkU0wMn5U2FRyQyj7Yhq6jaj7MPTF__Xz46sG3WtDr45WK2NmuwiLDv408URZ5fJxlMngRpjSIONHVAIwna_H0AguHiIELkvuRVYcRqIH5kb1YdFt-3fsnTV9xwpozZZ44dh-4I7x466I-UGlLHAnScWILUbPcpRNWm0Uw",
+    "Expires": "2020-05-12T14:18:51Z"
+}
+*/
 ```
 
 ### Get an Object Id
@@ -204,7 +207,11 @@ Console.WriteLine($"Token: {token.Token}\nExpires: {dateToDisplay.ToString("g", 
 In order to use most of the methods in MetasysClient the id of the target object must be known. This id is in the form of a Guid and can be requested using the following given you know the item reference of the object:
 
 ```csharp
-Guid id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1");
+Guid objectId = client.GetObjectIdentifier("Win2016-VM2:vNAE2343996/Field Bus MSTP1.VAV-08.ZN-SP");
+Console.WriteLine(objectId);
+/*        
+d5d96cd3-db4a-52e0-affd-8bc3393c30ec
+*/
 ```
 
 ### Get a Property
@@ -212,20 +219,70 @@ Guid id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1");
 In order to get a property you must know the Guid of the target object. An object called "Variant" is returned when getting a property from an object. Variant contains the property received in many different forms. There is a bit of intuition when handling a Variant since it will not explicitly provide the type of object received by the server. If the server cannot find the target object or attribute on the object this method will throw a MetasysHttpNotFoundException.
 
 ```csharp
-Variant result = client.ReadProperty(id, "presentValue");
-string stringValue = result.StringValue;
-double numericValue = result.NumericValue;
-bool booleanValue = result.BooleanValue;
-Variant[] array = result.ArrayValue;
+Variant property = client.ReadProperty(objectId, "presentValue");
+Console.WriteLine(property);
+/*        
+{
+    "StringValue": "72",
+    "StringValueEnumerationKey": null,
+    "NumericValue": 72.0,
+    "BooleanValue": true,
+    "ArrayValue": null,
+    "Attribute": "presentValue",
+    "Id": "f1469e25-c46c-5009-b92e-d82603e742a4",
+    "Reliability": "Reliable",
+    "ReliabilityEnumerationKey": "reliabilityEnumSet.reliable",
+    "Priority": "0 (No Priority)",
+    "PriorityEnumerationKey": "writePriorityEnumSet.priorityNone",
+    "IsReliable": true
+}
+*/
 ```
 
 There is a method to get multiple properties from multiple objects. This can be very useful if the objects all are of the same type or have the same target properties.
 
 ```csharp
 List<Guid> ids = new List<Guid> { id1, id2 };
-List<string> attributes = new List<string> { "name", "description" };
+List<string> attributes = new List<string> { "name", "description", "presentValue" };
 IEnumerable<VariantMultiple> results = client.ReadPropertyMultiple(ids, attributes);
-IEnumerable<Variant> id1Variants = results.ElementAt(0).Variants;
+VariantMultiple multiple1 = results.FindById(id1);
+Console.WriteLine(multiple1);
+/*
+{
+    "Id": "d5d96cd3-db4a-52e0-affd-8bc3393c30ec",
+    "Variants": [
+    {
+        "StringValue": "ZN-T",
+        "StringValueEnumerationKey": "ZN-T",
+        "NumericValue": 0.0,
+        "BooleanValue": false,
+        "ArrayValue": null,
+        "Attribute": "name",
+        "Id": "d5d96cd3-db4a-52e0-affd-8bc3393c30ec",
+        "Reliability": "Reliable",
+        "ReliabilityEnumerationKey": "reliabilityEnumSet.reliable",
+        "Priority": null,
+        "PriorityEnumerationKey": null,
+        "IsReliable": true
+    },
+    {
+        "StringValue": "Zone Temperature",
+        "StringValueEnumerationKey": "Zone Temperature",
+        "NumericValue": 0.0,
+        "BooleanValue": false,
+        "ArrayValue": null,
+        "Attribute": "description",
+        "Id": "d5d96cd3-db4a-52e0-affd-8bc3393c30ec",
+        "Reliability": "Reliable",
+        "ReliabilityEnumerationKey": "reliabilityEnumSet.reliable",
+        "Priority": null,
+        "PriorityEnumerationKey": null,
+        "IsReliable": true
+    }
+    ]
+}
+*/
+Variant multiple1Description = multiple1.FindAttributeByName("description");
 ```
 
 ### Write a Property
@@ -242,8 +299,13 @@ To change the same attribute values of many objects use the WritePropertyMultipl
 
 ```csharp
 List<Guid> ids = new List<Guid> { id1, id2 };
-List<(string,object)> attributes = new List<(string,object)> { ("description", "This is an AV.") };
-client.WritePropertyMultiple(ids, attributes);
+// Write to many attributes values using a list of tuples
+List<(string, object)> attributesList = new List<(string, object)> { ("description", "This is an AV.") };
+client.WritePropertyMultiple(ids, attributesList);
+
+// Write to many attributes values using a dictionary of attribute/value pairs
+Dictionary<string, object> attributesDictionary = new Dictionary<string, object> { { "description", "This is an AV." } };
+client.WritePropertyMultiple(ids, attributesDictionary);
 ```
 
 ### Get and Send Commands
@@ -251,9 +313,25 @@ client.WritePropertyMultiple(ids, attributes);
 To get all available commands on an object use the GetCommands method. This method will return a list of Command objects. The ToString() method is a useful tool to display the available commands and any information associated with it. When sending a command the Command.CommandId attribute is used as the parameter:
 
 ```csharp
-var commands = client.GetCommands(id).ToList();
-var command = commands[0].CommandId; // EnableAlarms, DisableAlarms, ReleaseAll, etc.
-client.SendCommand(id, command);
+List<Command> commands = client.GetCommands(objectId).ToList();
+Command command = commands.FindById("Adjust");
+Console.WriteLine(command);
+/*                        
+{
+    "Title": "Adjust",
+    "TitleEnumerationKey": "commandIdEnumSet.adjustCommand",
+    "CommandId": "Adjust",
+    "Items": [
+    {
+        "Title": "Value",
+        "Type": "number",
+        "EnumerationValues": null,
+        "Minimum": null,
+        "Maximum": null
+    }
+    ]
+}
+*/
 ```
 
 When sending a command there may or may not be a single value or list of values that needs to be sent with the command. The Command.Items property will list all of these values as Items which contains the Title and Type of the value to change. If the type of an Item is "oneOf" this indicates the values is an enumeration and the possible values will be contained in the EnumerationValues list. Keep in mind the values to be sent in the command is the TitleEnumerationKey not the Title. The Title is the user friendly translated value that describes the enumeration. For example, an "AV Mapper" object has the following commands:
@@ -265,48 +343,120 @@ When sending a command there may or may not be a single value or list of values 
 The values on the Commands will model the following:
 
 ```csharp
-var commands = client.GetCommands(id).ToList();
-var commandAdjust = commands[0].CommandId; // Adjust
-var commandOverride = commands[1].CommandId; // TemporaryOperatorOverride
-var commandRelease = commands[2].CommandId; // Release
-
-var adjustItems = commands[0].Items.ToList();
-var overrideItems = commands[1].Items.ToList();
-var releaseItems = commands[2].Items.ToList();
-
-adjustItems[0].Title; // Value
-adjustItems[0].Type; // number
-
-overrideItems[0].Title; // Value
-overrideItems[0].Type; // number
-overrideItems[1].Title; // Hours
-overrideItems[1].Type; // number
-overrideItems[2].Title; // Minutes
-overrideItems[2].Type; // number
-
-releaseItems[0].Title; // oneOf
-releaseItems[0].Type; // enum
-var enumValues = releaseItems[0].EnumerationValues.ToList();
-enumValues[0].TitleEnumerationKey; // attributeEnumSet.presentValue
-releaseItems[1].Title; // oneOf
-releaseItems[1].Type; // enum
-var enumValues2 = releaseItems[1].EnumerationValues.ToList();
-enumValues2[0].TitleEnumerationKey; // writePriorityEnumSet.priorityNone
-enumValues2[1].TitleEnumerationKey; // writePriorityEnumSet.priorityManualEmergency
-// ...etc
+Command adjust = commands.FindById("Adjust");
+Command operatorOverride = commands.FindById("OperatorOverride");
+Command release = commands.FindById("Release"); 
+Console.WriteLine(release);
+/*                        
+{
+    "Title": "Release",
+    "TitleEnumerationKey": "commandIdEnumSet.releaseCommand",
+    "CommandId": "Release",
+    "Items": [
+    {
+        "Title": "oneOf",
+        "Type": "enum",
+        "EnumerationValues": [
+        {
+            "Title": "Present Value",
+            "TitleEnumerationKey": "attributeEnumSet.presentValue"
+        }
+        ],
+        "Minimum": 1.0,
+        "Maximum": 1.0
+    },
+    {
+        "Title": "oneOf",
+        "Type": "enum",
+        "EnumerationValues": [
+        {
+            "Title": "0 (No Priority)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priorityNone"
+        },
+        {
+            "Title": "1 (Manual Life Safety)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priorityManualEmergency"
+        },
+        {
+            "Title": "2 (Auto Life Safety)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priorityFireApplications"
+        },
+        {
+            "Title": "3 (Application)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priority3"
+        },
+        {
+            "Title": "4 (Application)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priority4"
+        },
+        {
+            "Title": "5 (Critical Equipment)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priorityCriticalEquipment"
+        },
+        {
+            "Title": "6 (Minimum On Off)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priorityMinimumOnOff"
+        },
+        {
+            "Title": "7 (Heavy Equip Delay)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priorityHeavyEquipDelay"
+        },
+        {
+            "Title": "8 (Operator Override)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priorityOperatorOverride"
+        },
+        {
+            "Title": "9 (Application)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priority9"
+        },
+        {
+            "Title": "10 (Application)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priority10"
+        },
+        {
+            "Title": "11 (Demand Limiting)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priorityDemandLimiting"
+        },
+        {
+            "Title": "12 (Application)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priority12"
+        },
+        {
+            "Title": "13 (Load Rolling)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priorityLoadRolling"
+        },
+        {
+            "Title": "14 (Application)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priority14"
+        },
+        {
+            "Title": "15 (Scheduling)",
+            "TitleEnumerationKey": "writePriorityEnumSet.prioritySchedulingOst"
+        },
+        {
+            "Title": "16 (Default)",
+            "TitleEnumerationKey": "writePriorityEnumSet.priorityDefault"
+        }
+        ],
+        "Minimum": 1.0,
+        "Maximum": 1.0
+    }
+    ]
+}
+*/
 ```
 
 To send the command for each of these it would model the following:
 
 ```csharp
 var list1 = new List<object> { 70 };
-client.SendCommand(id, commandAdjust, list1);
+client.SendCommand(objectId, adjust.CommandId, list1);
 
-var list2 = new List<object> { 70, 1, 30 };
-client.SendCommand(id, commandOverride, list2);
+var list2 = new List<object> { 75 };
+client.SendCommand(objectId, operatorOverride.CommandId, list2);
 
 var list3 = new List<object> { "attributeEnumSet.presentValue", "writePriorityEnumSet.priorityNone" };
-client.SendCommand(id, commandRelease, list3);
+client.SendCommand(objectId, release.CommandId, list3);
 ```
 
 ### Get Network Devices and other Objects
@@ -315,14 +465,119 @@ To get all the available network devices use the GetNetworkDevices method which 
 
 ```csharp
 List<MetasysObjectType> types = client.GetNetworkDeviceTypes().ToList();
+Console.WriteLine(types[0]);
+/*                        
+{
+    "Description": "NAE55-NIE59",
+    "DescriptionEnumerationKey": "objectTypeEnumSet.n50Class",
+    "Id": 185
+}
+*/
 int type1 = types[0].Id;
 List<MetasysObject> devices = client.GetNetworkDevices(type1.ToString()).ToList();
+MetasysObject device = devices.LastOrDefault();
+Console.WriteLine(device);
+/*                        
+{
+    "ItemReference": "Win2016-VM2:vNAE2343996",
+    "Id": "142558f8-c4c7-5f89-be97-d806adb72053",
+    "Name": "vNAE2343996",
+    "Description": "",
+    "Type": null,
+    "TypeUrl": "https://win2016-vm2/api/v2/enumSets/508/members/185",
+    "Category": null,
+    "Children": [],
+    "ChildrenCount": 0
+}
+*/
 ```
 
 To get the child devices or objects of an object use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete.
 
 ```csharp
-List<MetasysObject> devices = client.GetObjects(id).ToList();
+Guid parentId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB");
+// Get direct children (1 level)
+List<MetasysObject> directChildren = client.GetObjects(parentId).ToList();
+MetasysObject lastChild = directChildren.LastOrDefault();
+Console.WriteLine(lastChild);
+/*                        
+{
+    "ItemReference": "Win2016-VM2:vNAE2343996/Field Bus MSTP1.VAV-08.ZN-T",
+    "Id": "d5d96cd3-db4a-52e0-affd-8bc3393c30ec",
+    "Name": "ZN-T",
+    "Description": null,
+    "Type": null,
+    "TypeUrl": "https://win2016-vm2/api/v2/enumSets/508/members/601",
+    "Category": null,
+    "Children": [],
+    "ChildrenCount": 0
+}
+*/
+
+// Get direct children (1 level) with internal objects
+directChildren = client.GetObjects(parentId, includeInternalObjects:true).ToList();  
+// Get descendant for 2 levels (it could take long time, depending on the number of objects)
+List<MetasysObject> level2Descendants = client.GetObjects(parentId, 2).ToList();
+MetasysObject level1Parent = level2Descendants.FindByName("Time");
+Console.WriteLine(level1Parent);
+/*                        
+{
+"ItemReference": "Win2016-VM2:vNAE2343996/WeatherForecast.Time",
+"Id": "22bb952e-7557-5de9-b7e5-dce39e21addd",
+"Name": "Time",
+"Description": null,
+"Type": null,
+"TypeUrl": "https://win2016-vm2/api/v2/enumSets/508/members/176",
+"Category": null,
+"Children": [
+{
+    "ItemReference": "Win2016-VM2:vNAE2343996/WeatherForecast.Time.Day",
+    "Id": "5886a93f-9260-553c-995e-6a65374de85d",
+    "Name": "Day",
+    "Description": null,
+    "Type": null,
+    "TypeUrl": "https://win2016-vm2/api/v2/enumSets/508/members/165",
+    "Category": null,
+    "Children": [],
+    "ChildrenCount": 0
+},
+{
+    "ItemReference": "Win2016-VM2:vNAE2343996/WeatherForecast.Time.Hour",
+    "Id": "6a50d3af-d0a2-537c-a2f7-9c1b5f271cc5",
+    "Name": "Hour",
+    "Description": null,
+    "Type": null,
+    "TypeUrl": "https://win2016-vm2/api/v2/enumSets/508/members/165",
+    "Category": null,
+    "Children": [],
+    "ChildrenCount": 0
+},
+{
+    "ItemReference": "Win2016-VM2:vNAE2343996/WeatherForecast.Time.Minute",
+    "Id": "19a53f38-2fd7-5ac3-a12c-f3b9704ac194",
+    "Name": "Minute",
+    "Description": null,
+    "Type": null,
+    "TypeUrl": "https://win2016-vm2/api/v2/enumSets/508/members/165",
+    "Category": null,
+    "Children": [],
+    "ChildrenCount": 0
+},
+{
+    "ItemReference": "Win2016-VM2:vNAE2343996/WeatherForecast.Time.Year",
+    "Id": "74dfc214-22c1-57a7-ace5-606636d0049c",
+    "Name": "Year",
+    "Description": null,
+    "Type": null,
+    "TypeUrl": "https://win2016-vm2/api/v2/enumSets/508/members/165",
+    "Category": null,
+    "Children": [],
+    "ChildrenCount": 0
+}
+],
+"ChildrenCount": 4
+}
+*/
 ```
 
 ### Localization of Metasys Enumerations
@@ -349,25 +604,134 @@ Note: If an automatically translated value (such as Variant.StringValue) contain
 If the enumeration key is desired over the translated value use the EnumerationKey attribute. For example, the translated Variant.Reliability has the enumeration key under the attribute: Variant.ReliabilityEnumerationKey. See the documentation of each Model for more information.
 
 ### Spaces and equipment
+To get all the space types use the GetSpaceTypes method. This method will return a list of MetasysObjectType.
+```csharp
+IEnumerable<MetasysObjectType> spaceTypes = client.GetSpaceTypes();
+foreach (var type in spaceTypes)
+{
+    Console.WriteLine(type);
+}
+/*                        
+{
+    "Description": "Building",
+    "DescriptionEnumerationKey": "Building",
+    "Id": 1
+}
+{
+    "Description": "Floor",
+    "DescriptionEnumerationKey": "Floor",
+    "Id": 2
+}
+{
+    "Description": "Generic",
+    "DescriptionEnumerationKey": "Generic",
+    "Id": 0
+}
+{
+    "Description": "Room",
+    "DescriptionEnumerationKey": "Room",
+    "Id": 3
+}
+*/
+```
 
 To get all available spaces on an object use the GetSpaces method. This method will return a list of MetasysObjects. This accepts an optional type as enum to filter the response. To get all of the available types on your server use the GetSpaceTypes method which returns a list of MetasysObjectType. To get all of the equipment on your server use the GetEquipment method which returns a list of MetasysObjects.
 ```csharp
-List<MetasysObjectType> types = client.GetSpaceTypes().ToList();
-int type1 = types[0].Id;
 // Retrieves the list of Buildings using SpaceTypeEnum helper
 List<MetasysObject> buildings = client.GetSpaces(SpaceTypeEnum.Building).ToList();
 MetasysObject building = buildings.LastOrDefault();
-IEnumerable<MetasysObject> spaceChildren = client.GetSpaceChildren(building.Id);
-List<MetasysObject> equipment = client.GetEquipment().ToList();
+Console.WriteLine(building);
+/*                        
+{
+    "ItemReference": "Win2016-VM2:Win2016-VM2/JCI.Building 1",
+    "Id": "164aaba2-0fb3-5b5d-bfe9-49cf6b797c93",
+    "Name": "North America (BACnet)",
+    "Description": null,
+    "Type": 2,
+    "TypeUrl": "https://win2016-vm2/api/v2/enumSets/1766/members/1",
+    "Category": "Building",
+    "Children": [],
+    "ChildrenCount": 0
+}
+*/
+// Retrieves all the spaces in a flat hierarchy
+List<MetasysObject> spaces = client.GetSpaces().ToList();
+MetasysObject firstSpace = spaces.FirstOrDefault();
+Console.WriteLine(firstSpace);
+/*                        
+{
+    "ItemReference": "Win2016-VM2:Win2016-VM2/JCI.Building 1.Floor 1.Milwaukee.507 E Michigan Street Campus",
+    "Id": "896ba096-db3c-5038-8505-636785906cca",
+    "Name": "507 E Michigan Street Campus",
+    "Description": null,
+    "Type": 2,
+    "TypeUrl": "https://win2016-vm2/api/v2/enumSets/1766/members/3",
+    "Category": "Room",
+    "Children": [],
+    "ChildrenCount": 0
+}
+*/
 ```
-To get the children of a Space use the GetSpaceChildren method. If you wish to retrieve equipment for a given space you can use the GetSpaceEquipment method. The deeper element in the hierarchy is the point, use the getEquipmentPoints method to retrieve the points mapped to an equipment. The Point object contains PresentValue when available. 
 
+To get the children of a Space use the GetSpaceChildren method. If you wish to retrieve equipment for a given space you can use the GetSpaceEquipment method. The deeper element in the hierarchy is the point, use the getEquipmentPoints method to retrieve the points mapped to an equipment. The Point object contains PresentValue when available. 
 ```csharp
-Enumerable<MetasysObject> spaceEquipment = client.GetSpaceEquipment(new Guid(spaceID));
-var equipment= spaceEquipment[0];
-IEnumerable<Point> equipmentPoints = client.GetEquipmentPoints(equipment.Id);
-var point=equipmentPoints[0];
-var presentValue=point.PresentValue?.StringValue
+IEnumerable<MetasysObject> spaceChildren = client.GetSpaceChildren(building.Id);
+IEnumerable<MetasysObject> spaceEquipment = client.GetSpaceEquipment(building.Id);
+MetasysObject sampleSpaceEquipment = spaceEquipment.FirstOrDefault();
+```
+
+To get all the equipment use the GetEquipment method. This method will return a list of MetasysObject objects.
+```csharp
+List<MetasysObject> equipment = client.GetEquipment().ToList();
+MetasysObject sampleEquipment = equipment.FirstOrDefault();
+Console.WriteLine(sampleEquipment);
+/*                        
+{
+    "ItemReference": "Win2016-VM2:Win2016-VM2/equipment.vNAE2343947.Field Bus MSTP1.AHU-07",
+    "Id": "6c6e18b8-015f-572a-814c-1e5d66142850",
+    "Name": "AHU-07",
+    "Description": null,
+    "Type": 3,
+    "TypeUrl": null,
+    "Category": null,
+    "Children": [],
+    "ChildrenCount": 0
+}
+*/
+```
+
+To get all the points of an equipment use the GetEquipmentPoint method. It takes the Guid of the equipments and it will return the list of MetasysPoint objects.
+```csharp
+IEnumerable<MetasysPoint> equipmentPoints = client.GetEquipmentPoints(sampleEquipment.Id);
+MetasysPoint point = equipmentPoints.FindByShortName("CLG-O");
+string presentValue = point.PresentValue?.StringValue;
+Console.WriteLine(point);
+/*                        
+{
+    "EquipmentName": "AHU-07",
+    "ShortName": "CLG-O",
+    "Label": "Cooling Output",
+    "Category": "",
+    "IsDisplayData": true,
+    "ObjectId": "9dd107cf-e8dc-583a-9557-813395ae1971",
+    "AttributeUrl": "https://win2016-vm2/api/v2/enumSets/509/members/85",
+    "ObjectUrl": "https://win2016-vm2/api/v2/objects/9dd107cf-e8dc-583a-9557-813395ae1971",
+    "PresentValue": {
+    "StringValue": "0",
+    "StringValueEnumerationKey": null,
+    "NumericValue": 0.0,
+    "BooleanValue": false,
+    "ArrayValue": null,
+    "Attribute": "presentValue",
+    "Id": "9dd107cf-e8dc-583a-9557-813395ae1971",
+    "Reliability": "Reliable",
+    "ReliabilityEnumerationKey": "reliabilityEnumSet.reliable",
+    "Priority": "0 (No Priority)",
+    "PriorityEnumerationKey": "writePriorityEnumSet.priorityNone",
+    "IsReliable": true
+    }
+}
+*/
 ```
 
 ### Alarms
@@ -378,21 +742,58 @@ To get all available alarms use the Get method. This method will return a PagedR
 ```csharp
 AlarmFilter alarmFilter = new AlarmFilter
 {
-    StartTime = new DateTime(2019, 12, 12).ToString(),
-    EndTime = new DateTime(2020, 1, 12).ToString(),
-    ExcludeAcknowledged=true
+    StartTime = new DateTime(2020, 5, 1),
+    EndTime = new DateTime(2020, 6, 2),
+    ExcludeAcknowledged = true
 };
-var alarms = client.Alarms.Get(alarmFilter);
-var alarmId = alarms.Items.ElementAt(0).Id;
-var alarm = client.Alarms.FindById(alarmId);
-var message= alarm.Message;
+PagedResult<Alarm> alarmsPager = client.Alarms.Get(alarmFilter);
+// Prints the number of records fetched and paging information
+Console.WriteLine("Total:" + alarmsPager.Total);
+Console.WriteLine("Current page:" + alarmsPager.CurrentPage);
+Console.WriteLine("Page size:" + alarmsPager.PageSize);
+Console.WriteLine("Pages:" + alarmsPager.PageCount);
+/* Console Output: Start                       
+    Total:4611
+    Current page:1
+    Page size:100
+    Pages:47
+Console Output: End */
+
+Alarm alarm = alarmsPager.Items.ElementAt(0);
+Console.WriteLine(alarm);
+/* Console Output: Start                       
+{
+    "Self": "https://win2016-vm2/api/v2/alarms/ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7",
+    "Id": "ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7",
+    "ItemReference": "Win2016-VM2:Win2016-VM2",
+    "Name": "WIN2016-VM2",
+    "Message": "ActivityData queue's messages are not getting processed.",
+    "IsAckRequired": true,
+    "TypeUrl": "https://win2016-vm2/api/v2/enumSets/108/members/68",
+    "Priority": 95,
+    "TriggerValue": {
+    "value": "1233",
+    "unitsUrl": "https://win2016-vm2/api/v2/enumSets/507/members/95"
+    },
+    "CreationTime": "2020-01-12T11:54:30Z",
+    "IsAcknowledged": false,
+    "IsDiscarded": false,
+    "CategoryUrl": "https://win2016-vm2/api/v2/enumSets/33/members/12",
+    "ObjectUrl": "https://win2016-vm2/api/v2/objects/28bed6b0-4a0f-5bb0-a16f-57a7200685bb",
+    "AnnotationsUrl": "https://win2016-vm2/api/v2/alarms/ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7/annotations"
+}
+Console Output: End */
 ```
 To get the alarms of a specific Object or NetworkDevice use the GetForObject and GetForNetworkDevice methods. The Guid of the parent object is required as input.
 
 ```csharp
+var alarmId="6c6e18b8-015f-572a-814c-1e5d66142850";
+Alarm singleAlarm = client.Alarms.FindById(alarmId);
+
 AlarmFilter alarmFilter = new AlarmFilter{};
 var objectId="f5fe6054-d0b0-55b6-b03f-d4554f80d8e6";
 var objectAlarms = client.Alarms.GetForObject(objectId, alarmFilter);
+
 var networkDeviceId="2aefbd18-9088-54ee-b6ef-6d9312da3c33";
 var networkDevicesAlarms = client.Alarms.GetForNetworkDevice(networkDeviceId, alarmFilter);
 ```
@@ -418,18 +819,39 @@ To get the annotations of an alarm use the GetAnnotations method, it takes the G
 All services about trends are provided by Trends local instance of MetasysClient. To get all available samples given a time filter use the GetSamples method. This method will return a PagedResult with a list of Sample. This accepts the Guid of the object, the attribute ID and a TimeFilter object to filter the response. To get all of the available trended attributes of an object given the ID use the GetTrendedAttributes method. 
 
 ```csharp
-List<Attribute> trendedAttributes=client.Trends.GetTrendedAttributes(objectId);
-int attributeId=trendedAttributes[0].Id;
+Guid trendedObjectId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB.10FEC11 - V6 Unit.E4 Network Outdoor Temperature");
+
+// Get attributes where trend extension is configured
+List<MetasysAttribute> trendedAttributes = client.Trends.GetTrendedAttributes(trendedObjectId);
+int attributeId = trendedAttributes[0].Id;
 TimeFilter timeFilter = new TimeFilter
 {
-    StartTime = new DateTime(2020, 1, 20).ToString(),
-    EndTime = new DateTime(2020, 1, 21).ToString()
+    StartTime = new DateTime(2020, 6, 5),
+    EndTime = new DateTime(2020, 6, 6)
 };
-PagedResult<Sample> samples = client.Trends.GetSamples(objectId, attributeId, timeFilter);
-int pages= samples.PageCount;
-int samplesCount= sample.Total;
-Sample firstSample = samples.Items.First();
-double value= firstSample.Value;
+
+PagedResult<Sample> samplesPager = client.Trends.GetSamples(trendedObjectId, attributeId, timeFilter);
+// Prints the number of records fetched and paging information
+Console.WriteLine("Total:" + samplesPager.Total);
+Console.WriteLine("Current page:" + samplesPager.CurrentPage);
+Console.WriteLine("Page size:" + samplesPager.PageSize);
+Console.WriteLine("Pages:" + samplesPager.PageCount);
+/*                        
+    Total:145
+    Current page:1
+    Page size:100
+    Pages:2
+    */
+Sample firstSample = samplesPager.Items.FirstOrDefault();
+Console.WriteLine(firstSample);
+/*                        
+    {
+        "Value": 82.0,
+        "Unit": "deg F",
+        "Timestamp": "2020-05-12T05:00:00Z",
+        "IsReliable": true
+    }
+*/
 ```
 Keep in mind that the object must be properly configured with trended attributes and samples are sent to the ADS/ADX. If you try to retrieve values from an object that has no valid trended attributes a MetasysHttpNotFoundException is raised.
 
@@ -441,15 +863,56 @@ To get all available audits use the Get method. This method will return a PagedR
 ```csharp
 AuditFilter auditFilter = new AuditFilter
 {
-    StartTime = new DateTime(2019, 12, 12).ToString(),
-    EndTime = new DateTime(2020, 1, 12).ToString(),
-    OriginApplications="0,1",
-    ActionTypes="1,2,4",
+    StartTime = new DateTime(2020, 5, 20),
+    EndTime = new DateTime(2020, 6, 3),
+    OriginApplications = "6,1",
+    ActionTypes = "5,0",
 };
-var audits = client.Get(auditFilter);
-var auditId = audits.Items.ElementAt(0).Id;
-var audit = client.FindById(auditId);
-var message= audit.Message;
+PagedResult<Audit> auditsPager = client.Audits.Get(auditFilter);
+
+// Prints the number of records fetched and paging information
+Console.WriteLine("Total:" + auditsPager.Total);
+Console.WriteLine("Current page:" + auditsPager.CurrentPage);
+Console.WriteLine("Page size:" + auditsPager.PageSize);
+Console.WriteLine("Pages:" + auditsPager.PageCount);
+/*                        
+    Total:323
+    Current page:1
+    Page size:100
+    Pages:4
+*/
+Audit audit = auditsPager.Items.FirstOrDefault();
+Console.WriteLine(audit);
+/*                        
+{
+    "Id": "aab3a269-8aec-4be1-b3a6-761853442d56",
+    "CreationTime": "2020-01-10T13:52:53.547Z",
+    "ActionTypeUrl": "https://win2016-vm2/api/v2/enumsets/577/members/5",
+    "Discarded": false,
+    "StatusUrl": null,
+    "PreData": null,
+    "PostData": {
+    "unitUrl": null,
+    "precisionUrl": null,
+    "value": "::1",
+    "typeUrl": "https://win2016-vm2/api/v2/enumsets/501/members/7"
+    },
+    "Parameters": [],
+    "ErrorString": null,
+    "User": "MetasysSysAgent",
+    "Signature": null,
+    "ObjectUrl": "https://win2016-vm2/api/v2/objects/28bed6b0-4a0f-5bb0-a16f-57a7200685bb",
+    "AnnotationsUrl": "https://win2016-vm2/api/v2/audits/aab3a269-8aec-4be1-b3a6-761853442d56/annotations",
+    "Legacy": {
+    "fullyQualifiedItemReference": "Win2016-VM2:Win2016-VM2",
+    "itemName": "Win2016-VM2",
+    "classLevelUrl": "https://win2016-vm2/api/v2/enumsets/568/members/1",
+    "originApplicationUrl": "https://win2016-vm2/api/v2/enumsets/578/members/6",
+    "descriptionUrl": "https://win2016-vm2/api/v2/enumsets/580/members/41"
+    },
+    "Self": "https://win2016-vm2/api/v2/audits/aab3a269-8aec-4be1-b3a6-761853442d56"
+}
+*/
 ```
 
 To get the audits of a specific Object use the GetForObject method. The Guid of the parent object is required as input.
@@ -810,10 +1273,10 @@ objectAudits = objectAuditsPager.Items
 To get the annotations of an audit use the GetAuditAnnotations method, it takes the Guid of the audit and returns a list of AlarmAnnotation objects.
 
 ```vb
-Dim alarmId As String
-alarmId = "6c999f43-6007-5137-b6d3-c30b93fb70ec"
+Dim auditId As String
+auditId = "6c999f43-6007-5137-b6d3-c30b93fb70ec"
 Dim result() As Object
-result = client.GetAlarmAnnotations(alarmId)
+result = client.GetAuditAnnotations(auditId)
 ```
 ## License
 
