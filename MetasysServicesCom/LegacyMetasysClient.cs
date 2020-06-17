@@ -71,6 +71,8 @@ namespace JohnsonControls.Metasys.ComServices
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComProvideAuditItem[]>(src.Items)));
                 cfg.CreateMap<MetasysPoint, IComPoint>();
+                cfg.CreateMap<AlarmAnnotation, IComAlarmAnnotation>();
+                cfg.CreateMap<AuditAnnotation, IComAuditAnnotation>();
             }).CreateMapper();
         }
 

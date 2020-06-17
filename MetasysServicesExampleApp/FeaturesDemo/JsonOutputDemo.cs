@@ -814,39 +814,34 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 3: END */
         }
 
-        private void DiscardSingleAudit(Audit audit, string annotationText)
+        private void DiscardSingleAudit()
         {
-            client.Audits.Discard(audit.Id, annotationText);
 
             /* SNIPPET 4: START */
-            /*
-             * 
-             * 
-            */
+            Guid auditId = new Guid("9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf");
+            string annotationText = "Reason why the audit has been discarded";
+            client.Audits.Discard(auditId, annotationText);
             /* SNIPPET 4: END */
         }
 
         private void AddAuditAnnotation(Audit audit, string text)
         {
-            client.Audits.AddAnnotation(audit.Id, text);
-
             /* SNIPPET 5: START */
-            /*
-             * 
-             * 
-            */
+            Guid auditId = new Guid("9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf");
+            string annotationText = "This is the text of the annotation";
+            client.Audits.AddAnnotation(auditId, annotationText);
             /* SNIPPET 5: END */
         }
 
         private void AddAuditAnnotationMultiple()
         {
-            var requests = new List<BatchRequestParam>();
-            BatchRequestParam singleRequest1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST AUDIT ANNOTATION" };
-            requests.Add(singleRequest1);
-            BatchRequestParam singleRequest2 = new BatchRequestParam { ObjectId = new Guid("5ff1341e-dbf1-4eaf-b9a1-987f51dabefa"), Resource = "THIS IS THE SECOND AUDIT ANNOTATION" };
-            requests.Add(singleRequest2);
-
             /* SNIPPET 6: START */
+            var requests = new List<BatchRequestParam>();
+            BatchRequestParam request1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST AUDIT ANNOTATION" };
+            requests.Add(request1);
+            BatchRequestParam request2 = new BatchRequestParam { ObjectId = new Guid("5ff1341e-dbf1-4eaf-b9a1-987f51dabefa"), Resource = "THIS IS THE SECOND AUDIT ANNOTATION" };
+            requests.Add(request2);
+
             IEnumerable<Result> results = client.Audits.AddAnnotationMultiple(requests);
             Result resultItem = results.ElementAt(0);
             Console.WriteLine(resultItem);
@@ -861,13 +856,14 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         }
         private void DiscardAuditMultiple()
         {
-            var requests = new List<BatchRequestParam>();
-            BatchRequestParam singleRequest1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST DISCARD ANNOTATION" };
-            requests.Add(singleRequest1);
-            BatchRequestParam singleRequest2 = new BatchRequestParam { ObjectId = new Guid("5ff1341e-dbf1-4eaf-b9a1-987f51dabefa"), Resource = "THIS IS THE SECOND DISCARD ANNOTATION" };
-            requests.Add(singleRequest2);
 
             /* SNIPPET 7: START */
+            var requests = new List<BatchRequestParam>();
+            BatchRequestParam request1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST DISCARD ANNOTATION" };
+            requests.Add(request1);
+            BatchRequestParam request2 = new BatchRequestParam { ObjectId = new Guid("5ff1341e-dbf1-4eaf-b9a1-987f51dabefa"), Resource = "THIS IS THE SECOND DISCARD ANNOTATION" };
+            requests.Add(request2);
+
             IEnumerable<Result> results = client.Audits.DiscardMultiple(requests);
             Result resultItem = results.ElementAt(0);
             Console.WriteLine(resultItem);
@@ -1075,7 +1071,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                             GetAuditsAnnotation(audit);
                             break;
                         case "24":
-                            DiscardSingleAudit(audit, auditAnnotation);
+                            DiscardSingleAudit();
                             break;
                         case "25":
                             ChangeApiVersion();

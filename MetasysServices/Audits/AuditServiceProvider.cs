@@ -175,10 +175,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 return null;
             }
-            List<VariantMultiple> results = new List<VariantMultiple>();
-
             var response = await PostBatchRequestAsync("audits", requests, "annotations").ConfigureAwait(false);
-
             return ToResult(response);
         }
 
@@ -195,10 +192,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 return null;
             }
-            List<VariantMultiple> results = new List<VariantMultiple>();
-
             var response = await PutBatchRequestAsync("audits", requests, "discard").ConfigureAwait(false);
-
             return ToResult(response);
         }
 

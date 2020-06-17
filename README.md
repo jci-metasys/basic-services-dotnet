@@ -22,7 +22,7 @@ For versioning information see the [changelog](CHANGELOG.md).
   - [Get and Send Commands](#get-and-send-commands)
   - [Get Network Devices and other Objects](#get-network-devices-and-other-objects)
   - [Localization of Metasys Enumerations](#localization-of-metasys-enumerations)
-  - [Spaces and equipment](#spaces-and-equipment)
+  - [Spaces and Equipment](#spaces-and-equipment)
   - [Alarms](#alarms)
   - [Trends](#trends)
   - [Audits](#audits)
@@ -34,7 +34,7 @@ For versioning information see the [changelog](CHANGELOG.md).
   - [Write a Property](#write-a-property-1)
   - [Send Commands](#send-commands)
   - [Get Network Devices and other Objects](#get-network-devices-and-other-objects-1)
-  - [Spaces and equipment](#spaces-and-equipment-1)
+  - [Spaces and Equipment](#spaces-and-equipment-1)
   - [Alarms](#alarms-1)
   - [Trends](#trends-1)
   - [Audits](#audits-1)
@@ -119,7 +119,7 @@ There are four optional parameters when creating a new client:
   
   **WARNING: You should not ignore certificate errors on a production site. Doing so puts your server at risk of a man-in-the-middle attack.**  
 
-- apiVersion: If your server is not a current 10.1 Metasys server or later this SDK will not function correctly. The version parameter takes in an ApiVersion enumeration value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is V2.
+- apiVersion: If your server is not a current 10.1 Metasys server or later this SDK will not function correctly. The version parameter takes in an ApiVersion enumeration value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is v2, for Metasys 11 the api version is v3.
 - cultureInfo: To set the language for localization specify the target culture with a CultureInfo object. The default culture is en-US.
 - logClientErrors: Set this flag to false to disable logging of client errors. By default the library logs any communication error with the Metasys Server in this path: "C:\ProgramData\Johnson Controls\Metasys Services\Logs".
   
@@ -323,7 +323,7 @@ Enumerations returned from a Metasys server will be in a format similar to: "rel
 string translated = client.Localize("reliabilityEnumSet.reliable"); // Reliable
 
 // Access without instantiating a client
-string translated = MetasysClient.StaticLocalize("reliabilityEnumSet.reliable",
+string translated = ResourceManager.Localize("reliabilityEnumSet.reliable",
     new CultureInfo("it-IT"));  // Affidabile
 ```
 
@@ -356,7 +356,7 @@ var presentValue=point.PresentValue?.StringValue
 ### Alarms
 
 All services about alarms are provided by Alarms local instance of MetasysClient.
-To get all available alarms use the GetAlarms method. This method will return a PagedResult with a list of AlarmItemProvider. This accepts an AlarmFilter object to filter the response. To get a single alarm use the GetSingleAlarm method which returns an AlarmItemProvider object with all the details given the Guid.
+To get all available alarms use the Get method. This method will return a PagedResult with a list of Alarm objects. This accepts an AlarmFilter object to filter the response. To get a single alarm use the FindById method which returns an Alarm object with all the details given the Guid.
 
 ```csharp
 AlarmFilter alarmFilter = new AlarmFilter
@@ -365,24 +365,24 @@ AlarmFilter alarmFilter = new AlarmFilter
     EndTime = new DateTime(2020, 1, 12).ToString(),
     ExcludeAcknowledged=true
 };
-var alarms = client.Alarms.GetAlarms(alarmFilter);
+var alarms = client.Alarms.Get(alarmFilter);
 var alarmId = alarms.Items.ElementAt(0).Id;
-var alarm = client.Alarms.GetSingleAlarm(alarmId);
+var alarm = client.Alarms.FindById(alarmId);
 var message= alarm.Message;
 ```
-To get the alarms of a specific Object or NetworkDevice use the GetAlarmsForAnObject and GetAlarmsForNetworkDevice methods. The Guid of the parent object is required as input.
+To get the alarms of a specific Object or NetworkDevice use the GetForObject and GetForNetworkDevice methods. The Guid of the parent object is required as input.
 
 ```csharp
 AlarmFilter alarmFilter = new AlarmFilter{};
 var objectId="f5fe6054-d0b0-55b6-b03f-d4554f80d8e6";
-var objectAlarms = client.Alarms.GetAlarmsForAnObject(objectId, alarmFilter);
+var objectAlarms = client.Alarms.GetForObject(objectId, alarmFilter);
 var networkDeviceId="2aefbd18-9088-54ee-b6ef-6d9312da3c33";
-var networkDevicesAlarms = client.Alarms.GetAlarmsForNetworkDevice(networkDeviceId, alarmFilter);
+var networkDevicesAlarms = client.Alarms.GetForNetworkDevice(networkDeviceId, alarmFilter);
 ```
-To get the annotations of an alarm use the GetAlarmsAnnotation method, it takes the Guid of the alarm and returns a collection of AlarmAnnotation objects.
+To get the annotations of an alarm use the GetAnnotations method, it takes the Guid of the alarm and returns a collection of AlarmAnnotation objects.
 
 ```csharp
- IEnumerable<AlarmAnnotation> annotations = client.Alarms.GetAlarmAnnotations(alarm.Id);
+ IEnumerable<AlarmAnnotation> annotations = client.Alarms.GetAnnotations(alarm.Id);
  AlarmAnnotation firstAnnotation = annotations.FirstOrDefault();
  Console.WriteLine(firstAnnotation);
   /*
@@ -419,7 +419,7 @@ Keep in mind that the object must be properly configured with trended attributes
 ### Audits
 
 All services about audits are provided by Audits local instance of MetasysClient.
-To get all available audits use the GetAudits method. This method will return a PagedResult with a list of AuditItemProvider. This accepts an AuditFilter object to filter the response. To get a single audit use the GetSingleAudit method which returns an AuditItemProvider object with all the details given the Guid.
+To get all available audits use the Get method. This method will return a PagedResult with a list of Audit objects. This accepts an AuditFilter object to filter the response. To get a single audit use the FindById method which returns an Audit object with all the details given the Guid.
 
 ```csharp
 AuditFilter auditFilter = new AuditFilter
@@ -429,18 +429,85 @@ AuditFilter auditFilter = new AuditFilter
     OriginApplications="0,1",
     ActionTypes="1,2,4",
 };
-var audits = client.GetAudits(auditFilter);
+var audits = client.Get(auditFilter);
 var auditId = audits.Items.ElementAt(0).Id;
-var audit = client.GetSingleAudit(auditId);
+var audit = client.FindById(auditId);
 var message= audit.Message;
 ```
-To get the audits of a specific Object use the GetAuditsForAnObject method. The Guid of the parent object is required as input.
 
+To get the audits of a specific Object use the GetForObject method. The Guid of the parent object is required as input.
 ```csharp
 AuditFilter auditFilter = new AuditFilter{};
 var objectId="17ac1932-18d8-518c-8012-420c77bea86b";
-var objectAudits = client.Audits.GetAuditsForAnObject(objectId, auditFilter);
+var objectAudits = client.Audits.GetForObject(objectId, auditFilter);
 ```
+To get the annotations of an audit use the GetAnnotations method, it takes the Guid of the audit and returns a collection of AuditAnnotation objects.
+```csharp
+IEnumerable<AuditAnnotation> annotations = client.Audits.GetAnnotations(audit.Id);
+AuditAnnotation firstAnnotation = annotations.FirstOrDefault();
+Console.WriteLine(firstAnnotation);
+/*
+{
+    "auditUrl": "https://win-ervotujej94/api/v2/audits/40aff6ec-ecb2-4b65-a504-0ac659756956",
+    "creationTime": "2020-06-05T15:58:40.407Z",
+    "user": "MetasysSysAgent",
+    "text": "TEST AUDIT ANNOTATION 02",
+    "signature": null,
+    "action": "none"
+} 
+*/
+``` 
+To discard an Audit (only with API v3) use the Discard method, it takes the Guid of the audit and the text of an annotation to comment the reason of the discard. It doesn't return a value.
+```csharp
+Guid auditId = new Guid("9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf");
+string annotationText = "Reason why the audit has been discarded";
+client.Audits.Discard(auditId, annotationText);
+``` 
+To discard multiple Audits (only with API v3) use the DiscardMultiple method, it takes a list of BatchRequestParam objects (specifing the list of Audits Guid and annotations) and it returns a list of Result objects.
+```csharp
+var requests = new List<BatchRequestParam>();
+BatchRequestParam request1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST DISCARD ANNOTATION" };
+requests.Add(request1);
+BatchRequestParam request2 = new BatchRequestParam { ObjectId = new Guid("5ff1341e-dbf1-4eaf-b9a1-987f51dabefa"), Resource = "THIS IS THE SECOND DISCARD ANNOTATION" };
+requests.Add(request2);
+
+IEnumerable<Result> results = client.Audits.DiscardMultiple(requests);
+Result resultItem = results.ElementAt(0);
+Console.WriteLine(resultItem);
+/*
+{
+    "Id": "e0fb025a-d8a2-4258-91ea-c4026c1620d1",
+    "Status": 204,
+    "Annotation": "THIS IS THE FIRST DISCARD ANNOTATION"
+}  
+*/
+``` 
+To add an Annotation to an Audit (only with API v3) use the AddAnnotation method, it takes the Guid of the Audit and the text of the annotation you want to add. It doesn't return a value.
+```csharp
+Guid auditId = new Guid("9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf");
+string annotationText = "This is the text of the annotation";
+client.Audits.AddAnnotation(auditId, annotationText);
+``` 
+To add multiple Annotations to an Audit (only with API v3) use the AddAnnotationMultiple, it takes a list of BatchRequestParam objects (specifing the list of Audits Guid and annotations) and it returns a list of Result objects.
+```csharp
+var requests = new List<BatchRequestParam>();
+BatchRequestParam request1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST AUDIT ANNOTATION" };
+requests.Add(request1);
+BatchRequestParam request2 = new BatchRequestParam { ObjectId = new Guid("5ff1341e-dbf1-4eaf-b9a1-987f51dabefa"), Resource = "THIS IS THE SECOND AUDIT ANNOTATION" };
+requests.Add(request2);
+
+IEnumerable<Result> results = client.Audits.AddAnnotationMultiple(requests);
+Result resultItem = results.ElementAt(0);
+Console.WriteLine(resultItem);
+/*
+{
+    "Id": "e0fb025a-d8a2-4258-91ea-c4026c1620d1",
+    "Status": 201,
+    "Annotation": "THIS IS THE FIRST AUDIT ANNOTATION"
+}            /*
+*/
+``` 
+
 
 ## Usage (COM)
 
@@ -650,6 +717,16 @@ Dim deviceAlarms() As Object
 ReDim deviceAlarms(deviceAlarmsPager.Items)
 deviceAlarms = deviceAlarmsPager.Items
 ```
+To get the annotations of an alarm use the GetAlarmAnnotations method, it takes the Guid of the alarm and returns a list of AlarmAnnotation objects.
+
+```vb
+Dim alarmId As String
+alarmId = "6c999f43-6007-5137-b6d3-c30b93fb70ec"
+Dim result() As Object
+result = client.GetAlarmAnnotations(alarmId)
+```
+
+
 ### Trends
 
  To get all available samples given a time filter use the GetSamples method. This method will return a PagedResult with a list of Sample. This accepts the Guid of the object, the attribute ID and a TimeFilter object to filter the response. To get all of the available trended attributes of an object given the ID use the GetTrendedAttributes method. 
@@ -713,7 +790,14 @@ Dim objectAudits() As Object
 ReDim objectAudits(objectAuditsPager.Items)
 objectAudits = objectAuditsPager.Items
 ```
+To get the annotations of an audit use the GetAuditAnnotations method, it takes the Guid of the audit and returns a list of AlarmAnnotation objects.
 
+```vb
+Dim alarmId As String
+alarmId = "6c999f43-6007-5137-b6d3-c30b93fb70ec"
+Dim result() As Object
+result = client.GetAlarmAnnotations(alarmId)
+```
 ## License
 
 See [LICENSE](LICENSE).
