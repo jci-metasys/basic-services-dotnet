@@ -1,7 +1,9 @@
 ﻿using Flurl.Http;
+using JohnsonControls.Metasys.BasicServices.Utils;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,7 +61,7 @@ namespace JohnsonControls.Metasys.BasicServices
                         sample.Timestamp = s["result"]["timestamp"].Value<DateTime>();
                         sample.IsReliable = s["result"]["isReliable"].Value<Boolean>();
                         sample.Value = s["result"]["value"]["value"]["value"].Value<double>();
-                        sample.Unit = s["result"]["value"]["units"].Value<string>();
+                        sample.Unit = ResourceManager.Localize(s["result"]["value"]["units"].Value<string>(), CultureInfo.CurrentCulture);
                     }
                 }
                 catch (ArgumentNullException e)

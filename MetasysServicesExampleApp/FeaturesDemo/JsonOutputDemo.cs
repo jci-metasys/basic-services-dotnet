@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using JohnsonControls.Metasys.BasicServices;
-using MetasysAttribute = JohnsonControls.Metasys.BasicServices.MetasysAttribute;
 using JohnsonControls.Metasys.BasicServices.Utils;
 using Newtonsoft.Json;
+using MetasysAttribute = JohnsonControls.Metasys.BasicServices.MetasysAttribute;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
@@ -730,15 +730,40 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         #endregion
 
         #region AUDITS
+        private string OriginApplicationCsv(string enumOriginApplication)
+        {
+            var enumData = enumOriginApplication.Split(',');
+            string csvData = string.Empty;
+            foreach (var item in enumData)
+            {
+                csvData += (int)(OriginApplicationsEnum)Enum.Parse(typeof(OriginApplicationsEnum), item) + ","; 
+            }
+            return csvData;
+        }
+
+        private string ActionTypesCsv(string enumActionType)
+        {
+            var enumData = enumActionType.Split(',');
+            string csvData = string.Empty;
+            foreach (var item in enumData)
+            {
+                csvData += (int)(ActionTypeEnum)Enum.Parse(typeof(ActionTypeEnum), item) + ",";
+            }
+            return csvData;
+        }
+
         private void GetAudits()
         {
+            var originApplication = string.Join(",", OriginApplicationsEnum.DeviceManager, OriginApplicationsEnum.AuditTrails);
+            var actionTypes = string.Join(",", ActionTypeEnum.Command, ActionTypeEnum.Create);
+
             /* SNIPPET 1: START */
             AuditFilter auditFilter = new AuditFilter
             {
                 StartTime = new DateTime(2020, 5, 20),
                 EndTime = new DateTime(2020, 6, 3),
-                OriginApplications = "6,1",
-                ActionTypes = "5,0",
+                OriginApplications = OriginApplicationCsv(originApplication.ToString()), //"6,1",
+                ActionTypes = ActionTypesCsv(actionTypes.ToString()) //"5,0",
             };
             PagedResult<Audit> auditsPager = client.Audits.Get(auditFilter);
             // Prints the number of records fetched and paging information
