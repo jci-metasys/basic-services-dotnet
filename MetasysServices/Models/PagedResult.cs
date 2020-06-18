@@ -55,6 +55,11 @@ namespace JohnsonControls.Metasys.BasicServices
                     // Since API v3 response is wrapped in an item object
                     response = response["item"];
                 }
+                if (response["result"] != null)
+                {
+                    // Since API v3 response is wrapped in an result object
+                    response = response["result"];
+                }
                 Total = response["total"].Value<int>();
                 // Retrieve current page and page size from self url
                 Uri selfUri = new Uri(response["self"].Value<string>());
