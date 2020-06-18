@@ -206,9 +206,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         private void WriteProperty()
         {
             /* SNIPPET 1: START */
-            Guid id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1");
-            client.WriteProperty(id, "description", "This is an AV.");
-            client.WriteProperty(id, "description", "This is an AV.", "writePriorityEnumSet.priorityNone");
+            Guid id = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB.10FEC11 - V6 Unit.E4 Network Outdoor Temperature");
+            client.WriteProperty(id, "description", "This is an AV.");      
             /* SNIPPET 1: END */
         }
         private void WritePropertyMultiple(Guid id1, Guid id2)

@@ -84,7 +84,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
 
                 Console.WriteLine(string.Format("\nAlarm details found for this object {0}", objectId));
 
-                var alarmItemsForObject = legacyClient.GetAlarmsForAnObject(objectId, alarmFilterForObject);
+                var alarmItemsForObject = legacyClient.GetAlarmsForObject(objectId, alarmFilterForObject);
 
                 Console.WriteLine("\nEnter network device id to get alarm details: ");
                 string networkDeviceId = Console.ReadLine();

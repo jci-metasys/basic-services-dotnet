@@ -485,37 +485,37 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public void WriteProperty(Guid id, string attributeName, object newValue, string priority = null)
+        public void WriteProperty(Guid id, string attributeName, object newValue)
         {
-            WritePropertyAsync(id, attributeName, newValue, priority).GetAwaiter().GetResult();
+            WritePropertyAsync(id, attributeName, newValue).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task WritePropertyAsync(Guid id, string attributeName, object newValue, string priority = null)
+        public async Task WritePropertyAsync(Guid id, string attributeName, object newValue)
         {
             List<(string Attribute, object Value)> list = new List<(string Attribute, object Value)>();
             list.Add((Attribute: attributeName, Value: newValue));
-            var item = GetWritePropertyBody(list, priority);
+            var item = GetWritePropertyBody(list);
             await WritePropertyRequestAsync(id, item).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public void WritePropertyMultiple(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null)
+            IEnumerable<(string Attribute, object Value)> attributeValues)
         {
-            WritePropertyMultipleAsync(ids, attributeValues, priority).GetAwaiter().GetResult();
+            WritePropertyMultipleAsync(ids, attributeValues).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
         public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null)
+            IEnumerable<(string Attribute, object Value)> attributeValues)
         {
             if (ids == null || attributeValues == null)
             {
                 return;
             }
 
-            var item = GetWritePropertyBody(attributeValues, priority);
+            var item = GetWritePropertyBody(attributeValues);
             var taskList = new List<Task>();
 
             foreach (var id in ids)
@@ -528,23 +528,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Creates the body for the WriteProperty and WritePropertyMultiple requests as a dictionary.
         /// </summary>
-        /// <param name="attributeValues">The (attribute, value) pairs.</param>
-        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
+        /// <param name="attributeValues">The (attribute, value) pairs.</param>      
         /// <returns>Dictionary of the attribute, value pairs.</returns>
         private Dictionary<string, object> GetWritePropertyBody(
-            IEnumerable<(string Attribute, object Value)> attributeValues, string priority)
+            IEnumerable<(string Attribute, object Value)> attributeValues)
         {
             Dictionary<string, object> pairs = new Dictionary<string, object>();
             foreach (var attribute in attributeValues)
             {
                 pairs.Add(attribute.Attribute, attribute.Value);
-            }
-
-            if (priority != null)
-            {
-                pairs.Add("priority", priority);
-            }
-
+            }          
             return pairs;
         }
 
@@ -961,20 +954,20 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         ///<inheritdoc/>
-        public void WritePropertyMultiple(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues, string priority = null)
+        public void WritePropertyMultiple(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues)
         {
-            WritePropertyMultipleAsync(ids, attributeValues, priority).GetAwaiter().GetResult();
+            WritePropertyMultipleAsync(ids, attributeValues).GetAwaiter().GetResult();
         }
 
         ///<inheritdoc/>
-        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues, string priority = null)
+        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues)
         {
             if (ids == null || attributeValues == null)
             {
                 return;
             }
             // convert dictionary to a list of tuples and use existing overload
-            await WritePropertyMultipleAsync(ids, attributeValues.Select(x => (x.Key, x.Value)), priority);
-        }
+            await WritePropertyMultipleAsync(ids, attributeValues.Select(x => (x.Key, x.Value)));
+        }      
     }
 }

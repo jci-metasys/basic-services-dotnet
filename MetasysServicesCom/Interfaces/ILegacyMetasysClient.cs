@@ -71,20 +71,18 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
-        /// <param name="newValue"></param>
-        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
+        /// <param name="newValue"></param>       
         /// <exception cref="MetasysHttpException"></exception>
-        void WriteProperty(string id, string attributeName, string newValue, string priority = null);
+        void WriteProperty(string id, string attributeName, string newValue);
 
         /// <summary>
         /// Write to many attribute values given the Guids of the objects.
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="attributes"></param>
-        /// <param name="attributeValues">The (attribute, value) pairs split in a array.</param>
-        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
+        /// <param name="attributeValues">The (attribute, value) pairs split in a array.</param>       
         /// <exception cref="MetasysHttpException"></exception>
-        void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeValues, string priority = null);
+        void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeValues);
 
         /// <summary>
         /// Get all available commands given the Guid of the object.
@@ -207,7 +205,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="objectId">The identifier of the object.</param>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
-        IComPagedResult GetAlarmsForAnObject(string objectId, IComFilterAlarm alarmFilter);
+        IComPagedResult GetAlarmsForObject(string objectId, IComFilterAlarm alarmFilter);
 
         /// <summary>
         /// Retrieves a collection of alarms for the specified object.
@@ -276,7 +274,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="objectId">The identifier of the object.</param>
         /// <param name="auditFilter">The filter to be applied to audit list.</param>
         /// <returns>The list of audit with details.</returns>
-        IComPagedResult GetAuditsForAnObject(string objectId, IComAuditFilter auditFilter);
+        IComPagedResult GetAuditsForObject(string objectId, IComAuditFilter auditFilter);
 
         /// <summary>
         /// Localizes the specified resource key for the current MetasysClient locale or specified culture.

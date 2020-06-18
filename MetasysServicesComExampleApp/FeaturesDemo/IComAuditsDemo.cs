@@ -87,7 +87,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
 
                 Console.WriteLine(string.Format("\nAudit details found for this object {0}", objectId));
 
-                IComPagedResult PagedResultAuditForObject = (IComPagedResult)legacyClient.GetAuditsForAnObject(objectId, auditsForObject);
+                IComPagedResult PagedResultAuditForObject = (IComPagedResult)legacyClient.GetAuditsForObject(objectId, auditsForObject);
                 IComAudit[] auditItemsForObject = (IComAudit[])PagedResultAuditForObject.Items;
 
                 Console.WriteLine($"\n Total: {PagedResultAuditForObject.Total}");

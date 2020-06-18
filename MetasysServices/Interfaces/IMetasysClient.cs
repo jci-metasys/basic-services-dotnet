@@ -148,39 +148,37 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
-        /// <param name="newValue"></param>
-        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
+        /// <param name="newValue"></param>     
         /// <exception cref="MetasysHttpException"></exception>
-        void WriteProperty(Guid id, string attributeName, object newValue, string priority = null);
+        void WriteProperty(Guid id, string attributeName, object newValue);
 
         /// <inheritdoc cref="IMetasysClient.WriteProperty(Guid, string, object, string)"/>
-        Task WritePropertyAsync(Guid id, string attributeName, object newValue, string priority = null);
+        Task WritePropertyAsync(Guid id, string attributeName, object newValue);
 
         /// <summary>
         /// Write to many attribute values given the Guids of the objects.
         /// </summary>
         /// <param name="ids"></param>
-        /// <param name="attributeValues">The (attribute, value) pairs.</param>
-        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
+        /// <param name="attributeValues">The (attribute, value) pairs.</param>       
         /// <exception cref="MetasysHttpException"></exception>
         void WritePropertyMultiple(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null);
+            IEnumerable<(string Attribute, object Value)> attributeValues);
 
         /// <summary>
         /// Write to many attribute values given the Guids of the objects.
         /// </summary>
         void WritePropertyMultiple(IEnumerable<Guid> ids,
-            Dictionary<string, object> attributeValues, string priority = null);
+            Dictionary<string, object> attributeValues);
 
         /// <summary>
         /// Write asyncronously to many attribute values given the Guids of the objects.
         /// </summary>
         Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null);
+            IEnumerable<(string Attribute, object Value)> attributeValues);
 
-        /// <inheritdoc cref="IMetasysClient.WritePropertyMultiple(IEnumerable{Guid}, Dictionary{string, object}, string)"/>
+        /// <inheritdoc cref="IMetasysClient.WritePropertyMultiple(IEnumerable{Guid}, Dictionary{string, object})"/>
         Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
-            Dictionary<string, object> attributeValues, string priority = null);
+            Dictionary<string, object> attributeValues);
 
         /// <summary>
         /// Get all available commands given the Guid of the object.

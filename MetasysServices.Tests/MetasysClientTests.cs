@@ -808,20 +808,7 @@ namespace MetasysServices.Tests
                     .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                     .Times(1);
             });
-        }
-
-        [Test]
-        public void TestWritePropertyStringWithPriority()
-        {
-            httpTest.RespondWith("Accepted", 202);
-            
-            client.WriteProperty(mockid, mockAttributeName, "newValue", "writePriorityEnumSet.priorityDefault");
-            
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
-                .WithVerb(HttpMethod.Patch)
-                .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\",\"priority\":\"writePriorityEnumSet.priorityDefault\"}}}}")
-                .Times(1);
-        }
+        }      
 
         [Test]
         public void TestWritePropertyInteger()

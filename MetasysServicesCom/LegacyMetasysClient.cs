@@ -149,13 +149,13 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc/>
-        public void WriteProperty(string id, string attributeName, string newValue, string priority = null)
+        public void WriteProperty(string id, string attributeName, string newValue)
         {
-            Client.WriteProperty(new Guid(id), attributeName, newValue, priority);
+            Client.WriteProperty(new Guid(id), attributeName, newValue);
         }
 
         /// <inheritdoc/>
-        public void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributeValues, string priority = null)
+        public void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributeValues)
         {
             // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
             var guidList = new List<Guid>();
@@ -169,7 +169,7 @@ namespace JohnsonControls.Metasys.ComServices
             {
                 valueList.Add((attributes[i], attributeValues[i]));
             }
-            Client.WritePropertyMultiple(guidList, valueList, priority);
+            Client.WritePropertyMultiple(guidList, valueList);
         }
 
         /// <inheritdoc/>
@@ -281,6 +281,7 @@ namespace JohnsonControls.Metasys.ComServices
             PagedResult<Alarm> alarmItems = Client.Alarms.Get(mapAlarmFilter);
             return Mapper.Map<IComPagedResult>(alarmItems);
         }
+
         /// <inheritdoc />
         public object GetAlarmAnnotations(string alarmId)
         {
@@ -290,7 +291,7 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc />
-        public IComPagedResult GetAlarmsForAnObject(string objectId, IComFilterAlarm alarmFilter)
+        public IComPagedResult GetAlarmsForObject(string objectId, IComFilterAlarm alarmFilter)
         {
             Guid guidObjectId = Guid.Parse(objectId);
             var mapAlarmFilterForAnObject = Mapper.Map<AlarmFilter>(alarmFilter);
@@ -364,7 +365,7 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc/>
-        public IComPagedResult GetAuditsForAnObject(string objectId, IComAuditFilter auditFilter)
+        public IComPagedResult GetAuditsForObject(string objectId, IComAuditFilter auditFilter)
         {
             Guid guidObjectId = Guid.Parse(objectId);
             var mapAuditFilterForAnObject = Mapper.Map<AuditFilter>(auditFilter);
