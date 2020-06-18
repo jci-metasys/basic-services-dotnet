@@ -581,7 +581,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     .GetJsonAsync<JToken>()
                     .ConfigureAwait(false);
 
-                if (token["items"] != null)
+                if (!(token is JArray) && token["items"] != null)
                 {
                     // Since API v3 response is wrapped in items property
                     token = token["items"];
