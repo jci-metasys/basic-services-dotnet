@@ -27,8 +27,8 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 string object1 = Console.ReadLine();
                 string id1 = legacyClient.GetObjectIdentifier(object1);
                 Console.WriteLine($"{object1} id: {id1}");
-                IComAttribute[] trendedAttributes = (IComAttribute[])legacyClient.GetTrendedAttributes(id1);
-                foreach (IComAttribute trendedAttribute in trendedAttributes)
+                IComMetasysAttribute[] trendedAttributes = (IComMetasysAttribute[])legacyClient.GetTrendedAttributes(id1);
+                foreach (IComMetasysAttribute trendedAttribute in trendedAttributes)
                 {
                     Console.WriteLine($"ID: {trendedAttribute.Id} \nDescription: {trendedAttribute.Description}");
                 }
