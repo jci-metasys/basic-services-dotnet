@@ -659,8 +659,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 1: START */
             AlarmFilter alarmFilter = new AlarmFilter
             {
-                StartTime = new DateTime(2020, 5, 1),
-                EndTime = new DateTime(2020, 6, 2),
+                StartTime = new DateTime(2020, 6, 1),
+                EndTime = new DateTime(2020, 6, 18),
                 ExcludeAcknowledged = true
             };
             PagedResult<Alarm> alarmsPager = client.Alarms.Get(alarmFilter);
@@ -838,7 +838,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         private void GetAuditsAnnotation(Audit audit)
         {
             /* SNIPPET 3: START */
-            IEnumerable<AuditAnnotation> annotations = client.Audits.GetAnnotations(audit.Id);
+            Guid auditId = new Guid("f798591b-e6d6-441f-8f7b-596fc2e6c003");
+            IEnumerable<AuditAnnotation> annotations = client.Audits.GetAnnotations(auditId);
             AuditAnnotation firstAnnotation = annotations.FirstOrDefault();
             Console.WriteLine(firstAnnotation);
             /*
