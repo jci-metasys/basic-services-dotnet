@@ -730,40 +730,15 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         #endregion
 
         #region AUDITS
-        private string OriginApplicationCsv(string enumOriginApplication)
-        {
-            var enumData = enumOriginApplication.Split(',');
-            string csvData = string.Empty;
-            foreach (var item in enumData)
-            {
-                csvData += (int)(OriginApplicationsEnum)Enum.Parse(typeof(OriginApplicationsEnum), item) + ","; 
-            }
-            return csvData;
-        }
-
-        private string ActionTypesCsv(string enumActionType)
-        {
-            var enumData = enumActionType.Split(',');
-            string csvData = string.Empty;
-            foreach (var item in enumData)
-            {
-                csvData += (int)(ActionTypeEnum)Enum.Parse(typeof(ActionTypeEnum), item) + ",";
-            }
-            return csvData;
-        }
-
         private void GetAudits()
         {
-            var originApplication = string.Join(",", OriginApplicationsEnum.DeviceManager, OriginApplicationsEnum.AuditTrails);
-            var actionTypes = string.Join(",", ActionTypeEnum.Command, ActionTypeEnum.Create);
-
             /* SNIPPET 1: START */
             AuditFilter auditFilter = new AuditFilter
             {
                 StartTime = new DateTime(2020, 5, 20),
                 EndTime = new DateTime(2020, 6, 3),
-                OriginApplications = OriginApplicationCsv(originApplication.ToString()), //"6,1",
-                ActionTypes = ActionTypesCsv(actionTypes.ToString()) //"5,0",
+                OriginApplicationsEnum = GetOrgAppEnumItem(OriginApplicationsEnum.DeviceManager | OriginApplicationsEnum.AlarmEvent),//OriginApplicationCsv(originApplication.ToString()), //"6,1",
+                ActionTypesEnum = GetActionTypeItem(ActionTypeEnum.Command | ActionTypeEnum.Create) //"5,0",
             };
             PagedResult<Audit> auditsPager = client.Audits.Get(auditFilter);
             // Prints the number of records fetched and paging information
@@ -985,8 +960,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 {
                     StartTime = new DateTime(2019, 12, 12),
                     EndTime = new DateTime(2020, 1, 12),
-                    OriginApplications = "6,1",
-                    ActionTypes = "5,0",
+                    OriginApplicationsEnum = GetOrgAppEnumItem(OriginApplicationsEnum.DeviceManager | OriginApplicationsEnum.AlarmEvent),//"6,1",
+                    ActionTypesEnum = GetActionTypeItem(ActionTypeEnum.Command | ActionTypeEnum.Create) //"5,0",
                 };
                 string jsonAudit = @"{
                   ""Id"": ""9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf"",
@@ -1169,6 +1144,132 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("28) AddAuditAnnotationMultiple");
             Console.WriteLine("29) DiscardAuditMultiple");
             Console.WriteLine("99) Exit");
+        }
+
+        private static IEnumerable<OriginApplicationsEnum> GetOrgAppEnumItem(OriginApplicationsEnum enumerableItem)
+        {
+            IList<OriginApplicationsEnum> originApplications = new List<OriginApplicationsEnum>();
+
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.AlarmEvent))
+            {
+                originApplications.Add(OriginApplicationsEnum.AlarmEvent);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.AuditTrails))
+            {
+                originApplications.Add(OriginApplicationsEnum.AuditTrails);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.DeviceServices))
+            {
+                originApplications.Add(OriginApplicationsEnum.DeviceServices);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.MCE))
+            {
+                originApplications.Add(OriginApplicationsEnum.MCE);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.SiteServices))
+            {
+                originApplications.Add(OriginApplicationsEnum.SiteServices);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.Trend))
+            {
+                originApplications.Add(OriginApplicationsEnum.Trend);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.SystemSecurity))
+            {
+                originApplications.Add(OriginApplicationsEnum.SystemSecurity);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.N2))
+            {
+                originApplications.Add(OriginApplicationsEnum.N2);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.General))
+            {
+                originApplications.Add(OriginApplicationsEnum.General);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.DeviceManager))
+            {
+                originApplications.Add(OriginApplicationsEnum.DeviceManager);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.WebServices))
+            {
+                originApplications.Add(OriginApplicationsEnum.WebServices);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.EnergyManagement))
+            {
+                originApplications.Add(OriginApplicationsEnum.EnergyManagement);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.Interlock))
+            {
+                originApplications.Add(OriginApplicationsEnum.Interlock);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.MCO))
+            {
+                originApplications.Add(OriginApplicationsEnum.MCO);
+            }
+            if (enumerableItem.HasFlag(OriginApplicationsEnum.Schedule))
+            {
+                originApplications.Add(OriginApplicationsEnum.Schedule);
+            }
+
+            return originApplications;
+        }
+
+        private static IEnumerable<ActionTypeEnum> GetActionTypeItem(ActionTypeEnum enumerableItem)
+        {
+            IList<ActionTypeEnum> actionType = new List<ActionTypeEnum>();
+
+            if (enumerableItem.HasFlag(ActionTypeEnum.Command))
+            {
+                actionType.Add(ActionTypeEnum.Command);
+            }
+            if (enumerableItem.HasFlag(ActionTypeEnum.Create))
+            {
+                actionType.Add(ActionTypeEnum.Create);
+            }
+            if (enumerableItem.HasFlag(ActionTypeEnum.Delete))
+            {
+                actionType.Add(ActionTypeEnum.Delete);
+            }
+            if (enumerableItem.HasFlag(ActionTypeEnum.Error))
+            {
+                actionType.Add(ActionTypeEnum.Error);
+            }
+            if (enumerableItem.HasFlag(ActionTypeEnum.Subsystem))
+            {
+                actionType.Add(ActionTypeEnum.Subsystem);
+            }
+            if (enumerableItem.HasFlag(ActionTypeEnum.Write))
+            {
+                actionType.Add(ActionTypeEnum.Write);
+            }
+            return actionType;
+        }
+
+        private static IEnumerable<ClassLevelsEnum> GetClassLevelsItem(ClassLevelsEnum enumerableItem)
+        {
+            IList<ClassLevelsEnum> classLevel = new List<ClassLevelsEnum>();
+
+            if (enumerableItem.HasFlag(ClassLevelsEnum.Application))
+            {
+                classLevel.Add(ClassLevelsEnum.Application);
+            }
+            if (enumerableItem.HasFlag(ClassLevelsEnum.CriticalSystemEvent))
+            {
+                classLevel.Add(ClassLevelsEnum.CriticalSystemEvent);
+            }
+            if (enumerableItem.HasFlag(ClassLevelsEnum.Diagnostic))
+            {
+                classLevel.Add(ClassLevelsEnum.Diagnostic);
+            }
+            if (enumerableItem.HasFlag(ClassLevelsEnum.NonCriticalSystemEvent))
+            {
+                classLevel.Add(ClassLevelsEnum.NonCriticalSystemEvent);
+            }
+            if (enumerableItem.HasFlag(ClassLevelsEnum.UserAction))
+            {
+                classLevel.Add(ClassLevelsEnum.UserAction);
+            }
+            return classLevel;
         }
     }
 }
