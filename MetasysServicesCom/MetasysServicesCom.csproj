@@ -4,7 +4,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="Packaging.Targets" Version="0.1.155" />
+    <PackageReference Include="Packaging.Targets" Version="0.1.171" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>

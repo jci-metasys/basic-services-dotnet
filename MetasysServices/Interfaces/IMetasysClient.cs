@@ -152,7 +152,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         void WriteProperty(Guid id, string attributeName, object newValue);
 
-        /// <inheritdoc cref="IMetasysClient.WriteProperty(Guid, string, object, string)"/>
+        /// <inheritdoc cref="IMetasysClient.WriteProperty(Guid, string, object)"/>
         Task WritePropertyAsync(Guid id, string attributeName, object newValue);
 
         /// <summary>
