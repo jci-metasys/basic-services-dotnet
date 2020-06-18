@@ -1150,65 +1150,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             IList<OriginApplicationsEnum> originApplications = new List<OriginApplicationsEnum>();
 
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.AlarmEvent))
+            foreach (OriginApplicationsEnum item in Enum.GetValues(typeof(OriginApplicationsEnum)))
             {
-                originApplications.Add(OriginApplicationsEnum.AlarmEvent);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.AuditTrails))
-            {
-                originApplications.Add(OriginApplicationsEnum.AuditTrails);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.DeviceServices))
-            {
-                originApplications.Add(OriginApplicationsEnum.DeviceServices);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.MCE))
-            {
-                originApplications.Add(OriginApplicationsEnum.MCE);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.SiteServices))
-            {
-                originApplications.Add(OriginApplicationsEnum.SiteServices);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.Trend))
-            {
-                originApplications.Add(OriginApplicationsEnum.Trend);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.SystemSecurity))
-            {
-                originApplications.Add(OriginApplicationsEnum.SystemSecurity);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.N2))
-            {
-                originApplications.Add(OriginApplicationsEnum.N2);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.General))
-            {
-                originApplications.Add(OriginApplicationsEnum.General);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.DeviceManager))
-            {
-                originApplications.Add(OriginApplicationsEnum.DeviceManager);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.WebServices))
-            {
-                originApplications.Add(OriginApplicationsEnum.WebServices);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.EnergyManagement))
-            {
-                originApplications.Add(OriginApplicationsEnum.EnergyManagement);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.Interlock))
-            {
-                originApplications.Add(OriginApplicationsEnum.Interlock);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.MCO))
-            {
-                originApplications.Add(OriginApplicationsEnum.MCO);
-            }
-            if (enumerableItem.HasFlag(OriginApplicationsEnum.Schedule))
-            {
-                originApplications.Add(OriginApplicationsEnum.Schedule);
+                if (enumerableItem.HasFlag(item))
+                {
+                    originApplications.Add(item);
+                }
             }
 
             return originApplications;
@@ -1218,30 +1165,14 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             IList<ActionTypeEnum> actionType = new List<ActionTypeEnum>();
 
-            if (enumerableItem.HasFlag(ActionTypeEnum.Command))
+            foreach (ActionTypeEnum item in Enum.GetValues(typeof(ActionTypeEnum)))
             {
-                actionType.Add(ActionTypeEnum.Command);
+                if (enumerableItem.HasFlag(item))
+                {
+                    actionType.Add(item);
+                }
             }
-            if (enumerableItem.HasFlag(ActionTypeEnum.Create))
-            {
-                actionType.Add(ActionTypeEnum.Create);
-            }
-            if (enumerableItem.HasFlag(ActionTypeEnum.Delete))
-            {
-                actionType.Add(ActionTypeEnum.Delete);
-            }
-            if (enumerableItem.HasFlag(ActionTypeEnum.Error))
-            {
-                actionType.Add(ActionTypeEnum.Error);
-            }
-            if (enumerableItem.HasFlag(ActionTypeEnum.Subsystem))
-            {
-                actionType.Add(ActionTypeEnum.Subsystem);
-            }
-            if (enumerableItem.HasFlag(ActionTypeEnum.Write))
-            {
-                actionType.Add(ActionTypeEnum.Write);
-            }
+
             return actionType;
         }
 
@@ -1249,26 +1180,14 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             IList<ClassLevelsEnum> classLevel = new List<ClassLevelsEnum>();
 
-            if (enumerableItem.HasFlag(ClassLevelsEnum.Application))
+            foreach (ClassLevelsEnum item in Enum.GetValues(typeof(ClassLevelsEnum)))
             {
-                classLevel.Add(ClassLevelsEnum.Application);
+                if (enumerableItem.HasFlag(item))
+                {
+                    classLevel.Add(item);
+                }
             }
-            if (enumerableItem.HasFlag(ClassLevelsEnum.CriticalSystemEvent))
-            {
-                classLevel.Add(ClassLevelsEnum.CriticalSystemEvent);
-            }
-            if (enumerableItem.HasFlag(ClassLevelsEnum.Diagnostic))
-            {
-                classLevel.Add(ClassLevelsEnum.Diagnostic);
-            }
-            if (enumerableItem.HasFlag(ClassLevelsEnum.NonCriticalSystemEvent))
-            {
-                classLevel.Add(ClassLevelsEnum.NonCriticalSystemEvent);
-            }
-            if (enumerableItem.HasFlag(ClassLevelsEnum.UserAction))
-            {
-                classLevel.Add(ClassLevelsEnum.UserAction);
-            }
+
             return classLevel;
         }
     }
