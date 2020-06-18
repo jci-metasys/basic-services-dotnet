@@ -10,10 +10,11 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public static class VariantMultipleCollectionExtension
     {
-       
+
         /// <summary>
         /// Returns the Variant object of the collection with the given attribute name.
         /// </summary>
+        /// <param name="source"></param>
         /// <param name="name">The name of the attribute</param>
         /// <returns></returns>
         public static Variant FindAttributeByName(this VariantMultiple source, string name)

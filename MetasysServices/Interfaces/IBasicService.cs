@@ -15,6 +15,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         ApiVersion Version { get; set; }
 
+        /// <summary>
+        /// Value of the CultureInfo usaed to get the localization.
+        /// </summary>
         CultureInfo Culture { get; set; }
     }
 }

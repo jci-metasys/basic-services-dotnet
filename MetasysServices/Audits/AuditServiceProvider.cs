@@ -19,10 +19,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public sealed class AuditServiceProvider : BasicServiceProvider, IAuditService
     {
-
         private const string BaseParam = "audits";
-        private readonly IFlurlClient client;
-
 
         /// <summary>
         /// Initializes a new instance of <see cref="AuditServiceProvider"/> with supplied data.
@@ -201,7 +198,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        protected IEnumerable<Result> ToResult(JToken response)
+        private IEnumerable<Result> ToResult(JToken response)
         {
             List<Result> results = new List<Result>();
             foreach (var r in response["responses"])

@@ -13,6 +13,9 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public class Command
     {
+        /// <summary>
+        /// Class constructor
+        /// </summary>
         public Command() { }
 
         private CultureInfo _CultureInfo;

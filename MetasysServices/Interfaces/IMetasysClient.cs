@@ -172,7 +172,9 @@ namespace JohnsonControls.Metasys.BasicServices
         void WritePropertyMultiple(IEnumerable<Guid> ids,
             Dictionary<string, object> attributeValues, string priority = null);
 
-        /// <inheritdoc cref="IMetasysClient.WritePropertyMultiple(IEnumerable{Guid}, IEnumerable{(string Attribute, object Value)}, string)"/>
+        /// <summary>
+        /// Write asyncronously to many attribute values given the Guids of the objects.
+        /// </summary>
         Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null);
 
@@ -252,7 +254,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets children spaces of the given space.
         /// </summary>
-        /// <param name="id">The GUID of the parent space.</param>
+        /// <param name="spaceId">The GUID of the parent space.</param>
         IEnumerable<MetasysObject> GetSpaceChildren(Guid spaceId);
 
         /// <inheritdoc cref="IMetasysClient.GetSpaces(SpaceTypeEnum?)"/>
@@ -264,7 +266,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets all Equipment for the given space
         /// </summary>
-        /// <param name="spaceId"></param>
+        /// <param name="id"></param>
         IEnumerable<MetasysObject> GetSpaceEquipment(Guid id);
 
         /// <inheritdoc cref="IMetasysClient.GetSpaceEquipment(Guid)"/>

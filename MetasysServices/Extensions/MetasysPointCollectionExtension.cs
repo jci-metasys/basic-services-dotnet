@@ -14,7 +14,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Returns the first MetasysPoint in the collection with the given short name.
         /// </summary>
         /// <param name="source"></param>
-        /// <param name="name">The short name of the Metasys point.</param>
+        /// <param name="shortName">The short name of the Metasys point.</param>
         /// <returns></returns>
         public static MetasysPoint FindByShortName(this IEnumerable<MetasysPoint> source, string shortName)
         {

@@ -99,7 +99,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         private CultureInfo _CultureInfo;
 
-        public Variant() {
+        internal Variant() {
         }
 
         internal Variant(Guid id, JToken token, string attribute, CultureInfo cultureInfo, ApiVersion apiVersion)

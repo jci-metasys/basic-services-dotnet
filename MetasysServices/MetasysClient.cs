@@ -100,10 +100,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         protected bool IgnoreCertificateErrors { get; set; }
 
-
-        private CultureInfo culture;
         /// <summary>The current Culture Used for localization.</summary>
-        //public CultureInfo Culture { get; set; }
+        private CultureInfo culture;
+
         /// <summary>
         /// The current Culture Used for localization.
         /// </summary>
@@ -897,7 +896,7 @@ namespace JohnsonControls.Metasys.BasicServices
             return points;
         }
 
-        /// <inheritdoc cref="GetObjects(Guid, int)"/>
+        /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels, bool includeInternalObjects = false)
         {
             Dictionary<string, string> parameters = null;
@@ -917,7 +916,7 @@ namespace JohnsonControls.Metasys.BasicServices
             return TryLoginAsync(credManTarget, refresh).GetAwaiter().GetResult();
         }
 
-        /// <inheritdoc cref="TryLogin(Guid, int)"/>
+        /// <inheritdoc/>
         public virtual async Task<AccessToken> TryLoginAsync(string credManTarget, bool refresh = true)
         {
             // Retrieve credentials first

@@ -369,7 +369,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }       
 
         /// <summary>
-        /// Perform multiple requests to the Server with a single HTTP call asynchronously.
+        /// Perform multiple requests (GET) to the Server with a single HTTP call asynchronously.
         /// </summary>
         /// <param name="endpoint"></param>
         /// <param name="ids"></param>
@@ -412,7 +412,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Perform multiple requests to the Server with a single HTTP call asynchronously.
+        /// Perform multiple requests (POST) to the Server with a single HTTP call asynchronously.
         /// </summary>
         /// <param name="endpoint"></param>
         /// <param name="requests"></param>
@@ -467,6 +467,14 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return responseToken;
         }
+
+        /// <summary>
+        /// Perform multiple requests (PUT) to the Server with a single HTTP call asynchronously.
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="requests"></param>
+        /// <param name="paths"></param>
+        /// <returns></returns>
 
         protected async Task<JToken> PutBatchRequestAsync(string endpoint, IEnumerable<BatchRequestParam> requests, params string[] paths)
         {

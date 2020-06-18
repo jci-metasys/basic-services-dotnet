@@ -19,10 +19,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public sealed class AlarmServiceProvider : BasicServiceProvider, IAlarmsService
     {
-
         private const string BaseParam = "alarms";
-        private readonly IFlurlClient client;
-
 
         /// <summary>
         /// Initializes a new instance of <see cref="AlarmServiceProvider"/> with supplied data.
