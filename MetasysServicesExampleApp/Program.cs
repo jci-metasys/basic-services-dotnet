@@ -117,7 +117,7 @@ namespace MetasysServicesExampleApp
                     return true;
                 case "9":
                     new JsonOutputDemo(client).Run();
-                    return false;
+                    return true;
                 case "10":
                     return false;
                 default:

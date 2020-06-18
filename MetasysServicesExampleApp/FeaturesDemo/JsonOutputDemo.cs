@@ -121,7 +121,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         private void GetObjectIdentifier()
         {
             /* SNIPPET 1: START */
-            Guid objectId = client.GetObjectIdentifier("Win2016-VM2:vNAE2343996/Field Bus MSTP1.VAV-08.ZN-SP");
+            Guid objectId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB.10FEC11 - V6 Unit.E4 Network Outdoor Temperature");
             Console.WriteLine(objectId);
             /*        
             d5d96cd3-db4a-52e0-affd-8bc3393c30ec
@@ -229,7 +229,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             /* SNIPPET 1: START */
             List<Command> commands = client.GetCommands(objectId).ToList();
-            Command command = commands.FindById("Adjust");
+            Command command= commands.FindById("adjust");            
             Console.WriteLine(command);
             /*                        
                 {
@@ -252,9 +252,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         private void SendCommands(Guid objectId, List<Command> commands)
         {
             /* SNIPPET 2: START */
-            Command adjust = commands.FindById("Adjust");
-            Command operatorOverride = commands.FindById("OperatorOverride");
-            Command release = commands.FindById("Release"); 
+            Command adjust = commands.FindById("adjust");
+            Command operatorOverride = commands.FindById("operatorOverride");
+            Command release = commands.FindById("release"); 
             Console.WriteLine(release);
             /*                        
               {

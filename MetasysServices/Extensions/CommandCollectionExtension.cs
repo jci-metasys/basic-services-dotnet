@@ -18,7 +18,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public static Command FindById(this IEnumerable<Command> source, string id)
         {
-            var command = source.FirstOrDefault(f => f.CommandId == id);
+            // Do lowercase comparison to flatten naming conventions differences between v2 and v3
+            var command = source.FirstOrDefault(f => f.CommandId?.ToLower() == id?.ToLower());
             if (command == null)
             {
                 throw new Exception($"Metasys object not found in the collection ({id}).");
