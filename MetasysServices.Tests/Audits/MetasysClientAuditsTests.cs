@@ -24,7 +24,7 @@ namespace MetasysServices.Tests
             ""self"": ""https://hostname/api/v2/audits?page=1&pageSize=100&excludeDiscarded=false&sort=-creationTime""
             ";
             httpTest.RespondWith(response);
-            var audits = client.Audits.GetAudits(new AuditFilter { }); // No filter
+            var audits = client.Audits.Get(new AuditFilter { }); // No filter
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -43,11 +43,11 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            var audits = client.Audits.GetAudits(AuditFilter);
+            var audits = client.Audits.Get(AuditFilter);
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = JsonConvert.DeserializeObject<AuditItemProvider>(Audit);
+            var expected = JsonConvert.DeserializeObject<Audit>(Audit);
             Assert.AreEqual(expected, audits.Items.ElementAt(0));
         }
 
@@ -63,11 +63,11 @@ namespace MetasysServices.Tests
             ";
             httpTest
              .RespondWith(response);
-            var audits = client.Audits.GetAudits(AuditFilter);
+            var audits = client.Audits.Get(AuditFilter);
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = JsonConvert.DeserializeObject<AuditItemProvider>(Audit);
+            var expected = JsonConvert.DeserializeObject<Audit>(Audit);
             Assert.AreEqual(expected, audits.Items.ElementAt(0));
         }
 
@@ -82,7 +82,7 @@ namespace MetasysServices.Tests
             ""self"": ""https://hostname/api/v2/audits?page=1&pageSize=100&excludeDiscarded=false&sort=-creationTime""
             ";
             httpTest.RespondWith(response);
-            Assert.Throws<MetasysObjectException>(() => client.Audits.GetAudits(new AuditFilter { }));
+            Assert.Throws<MetasysObjectException>(() => client.Audits.Get(new AuditFilter { }));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -103,7 +103,7 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            var e = Assert.Throws<MetasysObjectException>(() => client.Audits.GetAudits(new AuditFilter { }));
+            var e = Assert.Throws<MetasysObjectException>(() => client.Audits.Get(new AuditFilter { }));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits")
                 .WithVerb(HttpMethod.Get)
@@ -116,7 +116,7 @@ namespace MetasysServices.Tests
         {
             httpTest.RespondWith("Unauthorized", 401);
 
-            var e = Assert.Throws<MetasysHttpException>(() => client.Audits.GetAudits(new AuditFilter { }));
+            var e = Assert.Throws<MetasysHttpException>(() => client.Audits.Get(new AuditFilter { }));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits")
                 .WithVerb(HttpMethod.Get)

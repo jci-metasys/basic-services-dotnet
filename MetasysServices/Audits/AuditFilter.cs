@@ -7,7 +7,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Filters to get audits
     /// </summary>
-    public class AuditFilter : TimeFilter, IFilterAudit
+    public class AuditFilter : TimeFilter
     {
         /// <summary>
         /// Filter by comma-separated list of origin applications.

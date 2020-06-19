@@ -9,28 +9,33 @@ using Newtonsoft.Json.Linq;
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
-    /// Command is a structure that holds information about a Metasys object command.
+    /// Command is a class that holds information about a Metasys object command.
     /// </summary>
-    public struct Command
+    public class Command
     {
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        public Command() { }
+
         private CultureInfo _CultureInfo;
 
         /// <summary>
         /// The translated title of the command.
         /// </summary>
         /// <value>The translated title of the command or the default en-US version.</value>
-        public string Title { private set; get; }
+        public string Title { set; get; }
 
         /// <summary>
         /// The title enumeration key of the command.
         /// </summary>
         /// <value>An enumeration key from the commandIdEnumSet or the default en-US title if not found .</value>
-        public string TitleEnumerationKey { private set; get; }
+        public string TitleEnumerationKey { set; get; }
 
         /// <summary>
         /// The command id used to send command requests.
         /// </summary>
-        public string CommandId { private set; get; }
+        public string CommandId { set; get; }
 
         /// <summary>
         /// The list of values that can be modified by the command.

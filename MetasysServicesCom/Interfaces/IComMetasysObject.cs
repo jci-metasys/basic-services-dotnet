@@ -30,7 +30,6 @@ namespace JohnsonControls.Metasys.ComServices
         /// The number of direct children objects.
         /// </summary>
         /// <value>The number of children or -1 if there is no children data.</value>
-        // The number of children, -1 if there is no children data
         int ChildrenCount { set; get; }
 
     }

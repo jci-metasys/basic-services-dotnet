@@ -24,7 +24,7 @@ namespace MetasysServices.Tests
             ""self"": ""https://hostname/api/v2/audits?page=1&pageSize=100&excludeDiscarded=false&sort=-creationTime""
             ";
             httpTest.RespondWith(response);
-            var audits = client.Audits.GetAuditsForAnObject(mockid, new AuditFilter { }); // No filter
+            var audits = client.Audits.GetForObject(mockid, new AuditFilter { }); // No filter
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -43,11 +43,11 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            var audits = client.Audits.GetAuditsForAnObject(mockid, AuditFilter);
+            var audits = client.Audits.GetForObject(mockid, AuditFilter);
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = JsonConvert.DeserializeObject<AuditItemProvider>(Audit);
+            var expected = JsonConvert.DeserializeObject<Audit>(Audit);
             Assert.AreEqual(expected, audits.Items.ElementAt(0));
         }
 
@@ -63,11 +63,11 @@ namespace MetasysServices.Tests
             ";
             httpTest
              .RespondWith(response);
-            var audits = client.Audits.GetAuditsForAnObject(mockid, AuditFilter);
+            var audits = client.Audits.GetForObject(mockid, AuditFilter);
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = JsonConvert.DeserializeObject<AuditItemProvider>(Audit);
+            var expected = JsonConvert.DeserializeObject<Audit>(Audit);
             Assert.AreEqual(expected, audits.Items.ElementAt(0));
         }
 
@@ -84,12 +84,12 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            var audits = client.Audits.GetAuditsForAnObject(mockid, new AuditFilter { });
+            var audits = client.Audits.GetForObject(mockid, new AuditFilter { });
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = JsonConvert.DeserializeObject<AuditItemProvider>(Audit);
+            var expected = JsonConvert.DeserializeObject<Audit>(Audit);
             Assert.AreEqual(expected, audits.Items.ElementAt(0));
         }
 
@@ -105,7 +105,7 @@ namespace MetasysServices.Tests
             ""self"": ""https://hostname/api/v2/audits?page=1&pageSize=100&excludeDiscarded=false&sort=-creationTime""
             ";
             httpTest.RespondWith(response);
-            Assert.Throws<MetasysObjectException>(() => client.Audits.GetAuditsForAnObject(mockid, new AuditFilter { }));
+            Assert.Throws<MetasysObjectException>(() => client.Audits.GetForObject(mockid, new AuditFilter { }));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -127,7 +127,7 @@ namespace MetasysServices.Tests
             httpTest.RespondWith(response);
 
             var e = Assert.Throws<MetasysObjectException>(() => // To do: Use Specific Exception for Audit Item Provider
-                client.Audits.GetAuditsForAnObject(mockid, new AuditFilter { }));
+                client.Audits.GetForObject(mockid, new AuditFilter { }));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/audits")
                 .WithVerb(HttpMethod.Get)
@@ -141,7 +141,7 @@ namespace MetasysServices.Tests
             httpTest.RespondWith("Unauthorized", 401);
 
             var e = Assert.Throws<MetasysHttpException>(() =>
-                client.Audits.GetAuditsForAnObject(mockid, new AuditFilter { }));
+                client.Audits.GetForObject(mockid, new AuditFilter { }));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/audits")
                 .WithVerb(HttpMethod.Get)

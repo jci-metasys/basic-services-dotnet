@@ -8,8 +8,8 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// 
     /// </summary>
-    public interface ITrendsService
-    {
+    public interface ITrendService:IBasicService
+    {       
         /// <summary>
         /// Get the list of trended attributes for the given object.
         /// </summary>    
@@ -21,10 +21,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         /// <exception cref="MetasysHttpNotFoundException"></exception>
         /// <exception cref="MetasysObjectException"></exception>
-        List<Attribute>GetTrendedAttributes(Guid id);
+        List<MetasysAttribute>GetTrendedAttributes(Guid id);
 
-        /// <inheritdoc cref="ITrendsService.GetTrendedAttributes(Guid)"/>
-        Task<List<Attribute>>GetTrendedAttributesAsync(Guid id);
+        /// <inheritdoc cref="ITrendService.GetTrendedAttributes(Guid)"/>
+        Task<List<MetasysAttribute>>GetTrendedAttributesAsync(Guid id);
 
         /// <summary>
         /// Retrieves available samples for the given object attribute, filtered by startTime and endTime.
@@ -42,7 +42,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysObjectException"></exception>
         PagedResult<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter);
 
-        /// <inheritdoc cref="ITrendsService.GetSamples(Guid, int, TimeFilter)"/>
+        /// <inheritdoc cref="ITrendService.GetSamples(Guid, int, TimeFilter)"/>
         Task<PagedResult<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter);
     }
 }

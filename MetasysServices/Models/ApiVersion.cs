@@ -10,6 +10,8 @@ namespace JohnsonControls.Metasys.BasicServices
     public enum ApiVersion
     {
         /// <summary>Metasys 10.1</summary>
-        v2
+        v2,
+        /// <summary>Metasys 11.0</summary>
+        v3
     }
 }

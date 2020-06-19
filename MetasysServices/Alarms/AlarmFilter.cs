@@ -7,7 +7,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Filters to get alarms
     /// </summary>
-    public class AlarmFilter : TimeFilter, IFilterAlarm
+    public class AlarmFilter : TimeFilter
     {       
         /// <summary>
         /// The inclusive priority range, from 0 to 255, of the alarm.

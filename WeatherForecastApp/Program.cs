@@ -33,8 +33,8 @@ namespace WeatherForecastApp
             Guid parentObjectId = metasysClient.GetObjectIdentifier(CredentialUtil.convertToUnSecureString(secureContainer.Password));
             IEnumerable<MetasysObject> weatherForecast = metasysClient.GetObjects(parentObjectId, 1);
             // Retrieve latitude and longitude to get weather forecast
-            MetasysObject latitudePoint = weatherForecast.Where(w => w.Name == "Latitude").FirstOrDefault();
-            MetasysObject longitudePoint = weatherForecast.Where(w => w.Name == "Longitude").FirstOrDefault();
+            MetasysObject latitudePoint = weatherForecast.FindByName("Latitude");
+            MetasysObject longitudePoint = weatherForecast.FindByName("Longitude");
             double latitude = metasysClient.ReadProperty(latitudePoint.Id, "presentValue").NumericValue;
             double longitude = metasysClient.ReadProperty(longitudePoint.Id, "presentValue").NumericValue;
             // Forecast API key is securely stored in Credential manager
@@ -46,17 +46,17 @@ namespace WeatherForecastApp
             // Get the closest forecast to be written
             Forecast forecast = forecastResult.list.First();
             // Read Metasys points to write the response back
-            MetasysObject Day = weatherForecast.Where(w => w.Name == "Day").FirstOrDefault();
-            MetasysObject Month = weatherForecast.Where(w => w.Name == "Month").FirstOrDefault();
-            MetasysObject Year = weatherForecast.Where(w => w.Name == "Year").FirstOrDefault();
-            MetasysObject Hour = weatherForecast.Where(w => w.Name == "Hour").FirstOrDefault();
-            MetasysObject Minute = weatherForecast.Where(w => w.Name == "Minute").FirstOrDefault();
-            MetasysObject Temperature = weatherForecast.Where(w => w.Name == "Temperature").FirstOrDefault();
-            MetasysObject Humidity = weatherForecast.Where(w => w.Name == "Humidity").FirstOrDefault();
-            MetasysObject Rain = weatherForecast.Where(w => w.Name == "Rain").FirstOrDefault();
-            MetasysObject Snow = weatherForecast.Where(w => w.Name == "Snow").FirstOrDefault();
+            MetasysObject Day = weatherForecast.FindByName("Day");
+            MetasysObject Month = weatherForecast.FindByName("Month");
+            MetasysObject Year = weatherForecast.FindByName("Year");
+            MetasysObject Hour = weatherForecast.FindByName("Hour");
+            MetasysObject Minute = weatherForecast.FindByName("Minute");
+            MetasysObject Temperature = weatherForecast.FindByName("Temperature");
+            MetasysObject Humidity = weatherForecast.FindByName("Humidity");
+            MetasysObject Rain = weatherForecast.FindByName("Rain");
+            MetasysObject Snow = weatherForecast.FindByName("Snow");
             // Use commands to write the results
-            string adjustCommand = "Adjust";
+            string adjustCommand = "Adjust"; 
             var date = OpenWeatherMapClient.UnixTimeStampToDateTime(forecast.dt);
             metasysClient.SendCommand(Day.Id, adjustCommand, new List<object> {date.Day});
             metasysClient.SendCommand(Month.Id, adjustCommand, new List<object> {date.Month});

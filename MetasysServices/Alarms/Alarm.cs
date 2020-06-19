@@ -9,7 +9,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Provides alarm Item
     /// </summary>
-    public class AlarmItemProvider : IProvideAlarmItem
+    public class Alarm 
     {
         /// <summary>
         /// URI that points back to this resource
@@ -48,7 +48,14 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm type route
         /// </summary>
+        /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
         public string TypeUrl { get; set; }
+
+        /// <summary>
+        /// Fully qualified enumeration for Alarm Type.
+        /// </summary>
+        /// <remarks> This is available since Metasys API v3. </remarks>
+        public string Type { get; set; }
 
         /// <summary>
         /// Alarm priority
@@ -58,7 +65,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm trigger value details
         /// </summary>
-        public dynamic TriggerValue { get; set; }
+        public Measurement TriggerValue { get; set; }
 
         /// <summary>
         /// Alarm creation time
@@ -78,7 +85,14 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm Category route
         /// </summary>
+        /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
         public string CategoryUrl { get; set; }
+
+        /// <summary>
+        /// Fully qualified enumeration for Alarm Category.
+        /// </summary>
+        /// <remarks> This is available since Metasys API v3. </remarks>
+        public string Category { get; set; }
 
         /// <summary>
         /// Link to Point
@@ -97,9 +111,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is AlarmItemProvider)
+            if (obj != null && obj is Alarm)
             {
-                var o = (AlarmItemProvider)obj;
+                var o = (Alarm)obj;
                 // Compare each properties one by one for better performance
                 return this.Id == o.Id && this.IsAcknowledged == o.IsAcknowledged && this.IsAckRequired == o.IsAckRequired && this.IsDiscarded == o.IsDiscarded
                        && this.ItemReference == o.ItemReference && this.Message == o.Message && this.Name == o.Name && this.ObjectUrl == o.ObjectUrl &&

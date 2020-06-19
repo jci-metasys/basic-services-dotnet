@@ -23,7 +23,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 string stringAlarmId = Console.ReadLine();
                 Guid alarmId = Guid.Parse(stringAlarmId);
 
-                AlarmItemProvider alarmItem = client.Alarms.GetSingleAlarm(alarmId);
+                Alarm alarmItem = client.Alarms.FindById(alarmId);
 
                 Console.WriteLine(string.Format("\n Alarm details found for {0}", alarmId));
                 Console.WriteLine($"\n Id: {alarmItem.Id}, Name: {alarmItem.Name}, ItemReference: {alarmItem.ItemReference}");
@@ -44,7 +44,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
                 Console.WriteLine("\n List of alarms with details");
 
-                var alarmItems = client.Alarms.GetAlarms(getAlarmsFilter);
+                var alarmItems = client.Alarms.Get(getAlarmsFilter);
 
                 Console.WriteLine($"\n Total: {alarmItems.Total}");
                 Console.WriteLine($"\n Page Count: {alarmItems.PageCount}");
@@ -75,7 +75,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
                 Console.WriteLine(string.Format("\nAlarm details found for this object {0}", objectId));
 
-                var alarmItemsForObject = client.Alarms.GetAlarmsForAnObject(Guid.Parse(objectId), alarmFilterForObject);
+                var alarmItemsForObject = client.Alarms.GetForObject(Guid.Parse(objectId), alarmFilterForObject);
 
                 Console.WriteLine("\nEnter network device id to get alarm details: ");
                 string networkDeviceId = Console.ReadLine();
@@ -95,7 +95,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
                     Console.WriteLine(string.Format("\nAlarm details found for this object {0}", objectId));
 
-                    var alarmItemsForNetworkDevice = client.Alarms.GetAlarmsForNetworkDevice(Guid.Parse(networkDeviceId), alarmFilterModelForNetworkDevice);
+                    var alarmItemsForNetworkDevice = client.Alarms.GetForNetworkDevice(Guid.Parse(networkDeviceId), alarmFilterModelForNetworkDevice);
                 }
                 else
                 {

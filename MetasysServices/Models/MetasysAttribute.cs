@@ -8,7 +8,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// DTO for the attribute of an Object.
     /// </summary>
-    public class Attribute
+    public class MetasysAttribute
     {
         /// <summary>
         /// The integer ID of the attribute.
@@ -26,9 +26,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is Attribute)
+            if (obj != null && obj is MetasysAttribute)
             {
-                var o = (Attribute)obj;
+                var o = (MetasysAttribute)obj;
                 // Compare each properties one by one for better performance
                 return this.Id == o.Id && this.Description == o.Description
                 ;
