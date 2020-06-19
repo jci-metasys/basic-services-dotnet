@@ -1,18 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Runtime.InteropServices;
 
-namespace JohnsonControls.Metasys.BasicServices
+namespace JohnsonControls.Metasys.ComServices
 {
     /// <summary>
-    /// Provides attribute for audits
+    /// A specialized DTO for COM tha provides attribute for audits
     /// </summary>
-    public interface IProvideAuditItem
+    [ComVisible(true)]
+    [Guid("8a1f6028-ad35-4cd6-a2f8-503ac1731779")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+    public interface IComAudit
     {
         /// <summary>
         /// The identifier of the audit(GUID).
         /// </summary>
-        Guid Id { get; set; }
+        string Id { get; set; }
 
         /// <summary>
         /// The dateTime representing the creation time when this audit message was created.
@@ -39,17 +41,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Data value prior to the Audit.
         /// </summary>
-        dynamic PreData { get; set; }
+        object PreData { get; set; }
 
         /// <summary>
         /// Data value after the Audit.
         /// </summary>
-        dynamic PostData { get; set; }
+        object PostData { get; set; }
 
         /// <summary>
         /// Parameters for the Audit.
         /// </summary>
-        dynamic Parameters { get; set; }
+        object Parameters { get; set; }
 
         /// <summary>
         /// The error that may have occurred during an audit.
@@ -79,6 +81,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Metasys specific data.
         /// </summary>
-        dynamic Legacy { get; set; }
+        object Legacy { get; set; }
     }
 }

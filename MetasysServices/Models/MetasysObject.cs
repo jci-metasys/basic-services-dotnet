@@ -37,7 +37,15 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The resource type detail reference. 
         /// </summary>
+        /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
         public string TypeUrl { get; set; }
+
+
+        /// <summary>
+        /// The resource type detail reference. 
+        /// </summary>
+        /// <remarks> This is available since Metasys API v3. </remarks>
+        public string ObjectType { get; set; }
 
         /// <summary>
         /// The specific category of the Metasys Object Type.
@@ -51,14 +59,14 @@ namespace JohnsonControls.Metasys.BasicServices
         /// The number of direct children objects.
         /// </summary>
         /// <value>The number of children or -1 if there is no children data.</value>
-        public int ChildrenCount { set; get; }
+        public int ChildrenCount { set; get; }      
 
         /// <summary>
         /// Default constructor for Metasys Object.
         /// </summary>
         public MetasysObject() { }
 
-        internal MetasysObject(JToken token, IEnumerable<MetasysObject> children = null, CultureInfo cultureInfo = null, MetasysObjectTypeEnum? type =null)
+        internal MetasysObject(JToken token, ApiVersion version, IEnumerable<MetasysObject> children = null, CultureInfo cultureInfo = null, MetasysObjectTypeEnum? type =null)
         {
             _CultureInfo = cultureInfo;           
             Children = children??new List<MetasysObject>(); // Return empty list by convention for null         
@@ -95,6 +103,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
             try
             {
+                // This applies for v2 and v1.
                 TypeUrl = token["typeUrl"].Value<string>();
                 if (Type == MetasysObjectTypeEnum.Space)
                 {
@@ -109,8 +118,20 @@ namespace JohnsonControls.Metasys.BasicServices
                 TypeUrl = null;
                 Category = null;
             }
-        }
 
+            if (version > ApiVersion.v2)
+            {
+                try
+                {                    
+                    // Object Type is available since API v3 only on object detail. 
+                    ObjectType= token["objectType"].Value<string>();                   
+                }
+                catch
+                {
+                    ObjectType = null;                   
+                }
+            }
+        }
 
         /// <summary>
         /// Return a pretty JSON string of the current object.

@@ -12,7 +12,7 @@ using System.Globalization;
 
 namespace MetasysServices.Tests
 {
-    public class MetasysClientTests:MetasysClientTestsBase
+    public class MetasysClientTests : MetasysClientTestsBase
     {
         // Update these en-US resources as needed
         private const string ArrayEnum = "dataTypeEnumSet.arrayDataType";
@@ -332,7 +332,7 @@ namespace MetasysServices.Tests
         public async Task TestReadPropertyIntegerAsync()
         {
             string json = "{\"item\": { \"" + mockAttributeName + "\": 1 }}";
-            var token = JToken.FromObject(1);
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = (await client.ReadPropertyAsync(mockid, mockAttributeName).ConfigureAwait(false));
@@ -340,7 +340,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, mockAttributeName, testCulture);
+            var expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -350,7 +350,7 @@ namespace MetasysServices.Tests
             AsyncContext.Run(() =>
             {
                 string json = "{\"item\": { \"" + mockAttributeName + "\": 1 }}";
-                var token = JToken.FromObject(1);
+                var token = JToken.Parse(json);
                 httpTest.RespondWith(json);
 
                 Variant result = client.ReadProperty(mockid, mockAttributeName);
@@ -358,7 +358,7 @@ namespace MetasysServices.Tests
                 httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
-                var expected = new Variant(mockid, token, mockAttributeName, testCulture);
+                var expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
                 Assert.AreEqual(expected, result);
             });
         }
@@ -367,7 +367,7 @@ namespace MetasysServices.Tests
         public void TestReadPropertyFloat()
         {
             string json = "{\"item\": { \"" + mockAttributeName + "\": 1.1 }}";
-            var token = JToken.FromObject(1.1);
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
@@ -375,7 +375,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, mockAttributeName, testCulture);
+            var expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -383,7 +383,7 @@ namespace MetasysServices.Tests
         public void TestReadPropertyString()
         {
             string json = "{\"item\": { \"" + mockAttributeName + "\": \"stringvalue\" }}";
-            var token = JToken.FromObject("stringvalue");
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
@@ -391,7 +391,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, mockAttributeName, testCulture);
+            var expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -399,7 +399,7 @@ namespace MetasysServices.Tests
         public void TestReadPropertyBooleanTrue()
         {
             string json = "{\"item\": { \"" + mockAttributeName + "\": true }}";
-            var token = JToken.FromObject(true);
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
@@ -407,7 +407,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, mockAttributeName, testCulture);
+            var expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -415,7 +415,7 @@ namespace MetasysServices.Tests
         public void TestReadPropertyBooleanFalse()
         {
             string json = "{\"item\": { \"" + mockAttributeName + "\": false }}";
-            var token = JToken.FromObject(false);
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
@@ -423,7 +423,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, mockAttributeName, testCulture);
+            var expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -432,7 +432,7 @@ namespace MetasysServices.Tests
         {
             string json = string.Concat("{ \"item\": { \"presentValue\": {", 
                 "\"value\": 60 } } }");
-            var token = JToken.Parse("{ \"value\": 60 }");
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = client.ReadProperty(mockid, "presentValue");
@@ -440,7 +440,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, "presentValue", testCulture);
+            var expected = new Variant(mockid, token, "presentValue", testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -449,7 +449,7 @@ namespace MetasysServices.Tests
         {
             string json = string.Concat("{ \"item\": { \"presentValue\": {",
                 "\"value\": \"stringvalue\" } } }");
-            var token = JToken.Parse("{ \"value\": \"stringvalue\" }");
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = client.ReadProperty(mockid, "presentValue");
@@ -457,7 +457,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, "presentValue", testCulture);
+            var expected = new Variant(mockid, token, "presentValue", testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -469,7 +469,7 @@ namespace MetasysServices.Tests
                 "\"reliability\": \"", ReliableHighEnum, "\",",
                 "\"priority\": \"", PriorityNoneEnum, "\"}");
             string json = string.Concat("{ \"item\": { \"presentValue\": ", body, " } }");
-            var token = JToken.Parse(body);
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = client.ReadProperty(mockid, "presentValue");
@@ -477,7 +477,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, "presentValue", testCulture);
+            var expected = new Variant(mockid, token, "presentValue", testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -489,7 +489,7 @@ namespace MetasysServices.Tests
                 "\"reliability\": \"", ReliableHighEnum, "\",",
                 "\"priority\": \"", PriorityNoneEnum, "\"}");
             string json = string.Concat("{ \"item\": { \"", mockAttributeName, "\": ", body, " } }");
-            var token = JToken.Parse(body);
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
@@ -497,7 +497,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, mockAttributeName, testCulture);
+            var expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -505,7 +505,7 @@ namespace MetasysServices.Tests
         public void TestReadPropertyArrayIntegers()
         {
             string json = "{ \"item\": { \"" + mockAttributeName + "\": [ 0, 1 ] } }";
-            var token = JArray.Parse("[ 0, 1 ]");
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
@@ -513,7 +513,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, mockAttributeName, testCulture);
+            var expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -522,7 +522,7 @@ namespace MetasysServices.Tests
         {
             string body = "[ \"stringvalue1\", \"stringvalue2\" ]";
             string json = string.Concat("{ \"item\": { \"", mockAttributeName, "\": ", body, " } }");
-            var token = JArray.Parse(body);
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
@@ -530,7 +530,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, mockAttributeName, testCulture);
+            var expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -541,7 +541,7 @@ namespace MetasysServices.Tests
             "{ \"item1\": \"stringvalue1\", \"item2\": \"stringvalue2\" },",
             "{ \"item1\": \"stringvalue3\", \"item2\": \"stringvalue4\" } ]");
             string json = string.Concat("{ \"item\": { \"", mockAttributeName, "\": ", body, " } }");
-            var token = JArray.Parse(body);
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
@@ -549,7 +549,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, mockAttributeName, testCulture);
+            var expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -557,7 +557,7 @@ namespace MetasysServices.Tests
         public void TestReadPropertyUnsupportedEmptyObject()
         {
             string json = string.Concat("{ \"item\": { \"", mockAttributeName, "\": { } } }");
-            var token = JToken.Parse("{ }");
+            var token = JToken.Parse(json);
             httpTest.RespondWith(json);
 
             Variant result = client.ReadProperty(mockid, mockAttributeName);
@@ -565,7 +565,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            var expected = new Variant(mockid, token, mockAttributeName, testCulture);
+            var expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, result);
         }
 
@@ -645,14 +645,15 @@ namespace MetasysServices.Tests
 
             httpTest.ShouldNotHaveCalled($"https://hostname/api/v2/objects/{mockid}");
             Assert.AreEqual(1, results.Count());
-            Assert.AreEqual(0, results.ElementAt(0).Variants.Count());
+            Assert.AreEqual(0, results.ElementAt(0).Values.Count());
         }
 
         [Test]
         public void TestReadPropertyMultipleOneIdOneAttribute()
         {
-            httpTest.RespondWith("{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }");
-            var token = JToken.FromObject("stringvalue");
+            var json = "{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }";
+            httpTest.RespondWith(json);
+            var token = JToken.Parse(json);
             List<Guid> ids = new List<Guid>() { mockid };
             List<string> attributes = new List<string>() { mockAttributeName };
             var results = client.ReadPropertyMultiple(ids, attributes);
@@ -660,10 +661,10 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            Variant expected = new Variant(mockid, token, mockAttributeName, testCulture);
+            Variant expected = new Variant(mockid, token, mockAttributeName, testCulture, ApiVersion.v2);
             Assert.AreEqual(1, results.Count());
-            Assert.AreEqual(1, results.ElementAt(0).Variants.Count());
-            Assert.AreEqual(expected, results.ElementAt(0).Variants.ElementAt(0));
+            Assert.AreEqual(1, results.ElementAt(0).Values.Count());
+            Assert.AreEqual(expected, results.ElementAt(0).Values.ElementAt(0));
         }
 
         [Test]
@@ -693,8 +694,8 @@ namespace MetasysServices.Tests
                 .WithVerb(HttpMethod.Get)
                 .Times(5);
             Assert.AreEqual(results.Count(), 2);
-            Assert.AreEqual(5, results.ElementAt(0).Variants.Count());
-            Assert.AreEqual(5, results.ElementAt(1).Variants.Count());
+            Assert.AreEqual(5, results.ElementAt(0).Values.Count());
+            Assert.AreEqual(5, results.ElementAt(1).Values.Count());
         }
 
         [Test]
@@ -725,8 +726,8 @@ namespace MetasysServices.Tests
                     .WithVerb(HttpMethod.Get)
                     .Times(5);
                 Assert.AreEqual(results.Count(), 2);
-                Assert.AreEqual(5, results.ElementAt(0).Variants.Count());
-                Assert.AreEqual(5, results.ElementAt(1).Variants.Count());
+                Assert.AreEqual(5, results.ElementAt(0).Values.Count());
+                Assert.AreEqual(5, results.ElementAt(1).Values.Count());
             });
         }
 
@@ -807,20 +808,7 @@ namespace MetasysServices.Tests
                     .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\"}}}}")
                     .Times(1);
             });
-        }
-
-        [Test]
-        public void TestWritePropertyStringWithPriority()
-        {
-            httpTest.RespondWith("Accepted", 202);
-            
-            client.WriteProperty(mockid, mockAttributeName, "newValue", "writePriorityEnumSet.priorityDefault");
-            
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}")
-                .WithVerb(HttpMethod.Patch)
-                .WithRequestBody($"{{\"item\":{{\"{mockAttributeName}\":\"newValue\",\"priority\":\"writePriorityEnumSet.priorityDefault\"}}}}")
-                .Times(1);
-        }
+        }      
 
         [Test]
         public void TestWritePropertyInteger()
@@ -1051,7 +1039,8 @@ namespace MetasysServices.Tests
         [Test]
         public void TestWritePropertyMultipleNullArguments()
         {
-            client.WritePropertyMultiple(null, null);
+            Dictionary<string, object> attributeValues = null;
+            client.WritePropertyMultiple(null, attributeValues);
             httpTest.ShouldNotHaveCalled($"https://hostname/api/v2/objects/{mockid}");
         }
 
@@ -1411,7 +1400,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            MetasysObject expected = new MetasysObject(JToken.Parse(device), null, testCulture);
+            MetasysObject expected = new MetasysObject(JToken.Parse(device), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected, devices.ElementAt(0));
         }
 
@@ -1453,8 +1442,8 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
-            MetasysObject expected1 = new MetasysObject(JToken.Parse(device1), null, testCulture);
-            MetasysObject expected2 = new MetasysObject(JToken.Parse(device2), null, testCulture);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(device1), ApiVersion.v2, null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(device2), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected1, devices.ElementAt(0));
             Assert.AreEqual(expected2, devices.ElementAt(1));
         }
@@ -1482,7 +1471,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            MetasysObject expected = new MetasysObject(JToken.Parse(device), null, testCulture);
+            MetasysObject expected = new MetasysObject(JToken.Parse(device), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected, devices.ElementAt(0));
         }
 
@@ -1712,7 +1701,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            MetasysObject expected = new MetasysObject(JToken.Parse(obj), null, testCulture);
+            MetasysObject expected = new MetasysObject(JToken.Parse(obj), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected, objects.ElementAt(0));
         }
 
@@ -1750,8 +1739,8 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
-            MetasysObject expected1 = new MetasysObject(JToken.Parse(obj1), null, testCulture);
-            MetasysObject expected2 = new MetasysObject(JToken.Parse(obj2), null, testCulture);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(obj1), ApiVersion.v2, null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(obj2), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected1, objects.ElementAt(0));
             Assert.AreEqual(expected2, objects.ElementAt(1));
         }
@@ -1802,9 +1791,9 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
               .WithVerb(HttpMethod.Get)
               .Times(1);
-            MetasysObject expected2 = new MetasysObject(JToken.Parse(obj2), null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(obj2), ApiVersion.v2, null, testCulture);
             List<MetasysObject> child = new List<MetasysObject>() { expected2 };
-            MetasysObject expected1 = new MetasysObject(JToken.Parse(obj1), child.AsEnumerable(), testCulture);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(obj1), ApiVersion.v2, child.AsEnumerable(), testCulture);
             Assert.AreEqual(expected1, objects.ElementAt(0));
         }
 
@@ -1912,7 +1901,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
+            MetasysObject expected = new MetasysObject(JToken.Parse(space), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected, devices.ElementAt(0));
         }
 
@@ -1950,8 +1939,8 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
-            MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), null, testCulture);
-            MetasysObject expected2 = new MetasysObject(JToken.Parse(space2), null, testCulture);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), ApiVersion.v2, null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(space2), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected1, spaces.ElementAt(0));
             Assert.AreEqual(expected2, spaces.ElementAt(1));
         }
@@ -1977,7 +1966,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
+            MetasysObject expected = new MetasysObject(JToken.Parse(space), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected, devices.ElementAt(0));
         }
 
@@ -2184,7 +2173,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/equipment")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            MetasysObject expected = new MetasysObject(JToken.Parse(space), null, testCulture);
+            MetasysObject expected = new MetasysObject(JToken.Parse(space), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected, devices.ElementAt(0));
         }
 
@@ -2222,8 +2211,8 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/equipment")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
-            MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), null, testCulture);
-            MetasysObject expected2 = new MetasysObject(JToken.Parse(space2), null, testCulture);
+            MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), ApiVersion.v2, null, testCulture);
+            MetasysObject expected2 = new MetasysObject(JToken.Parse(space2), ApiVersion.v2, null, testCulture);
             Assert.AreEqual(expected1, Equipment.ElementAt(0));
             Assert.AreEqual(expected2, Equipment.ElementAt(1));
         }

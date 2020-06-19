@@ -38,6 +38,14 @@ namespace MetasysServices.Tests
             EndTime = new DateTime(2020, 1, 21)
         };
 
+        protected string AlarmAnnotation = @"{
+                            ""text"": ""Test Annotation 00"",
+                            ""user"": ""metasyssysagent"",
+                            ""creationTime"": ""2020-05-27T06:21:31Z"",
+                            ""action"": ""none"",
+                            ""alarmUrl"": ""https://win-ervotujej94/api/v2/alarms/f0f64d5c-b70e-8754-836c-1ac99182f4e4""
+                         }";
+
         // Sample alarm response pasted from Postman response
         protected string Alarm = @"{
                 ""self"": ""https://hostname/api/v2/alarms/ddbd866f-687f-41ac-b484-aa52669e7381"",
@@ -91,7 +99,7 @@ namespace MetasysServices.Tests
             ""attributeUrl"": ""https://hostname/api/v2/enumSets/509/members/85""        
         }";
 
-        protected string AttributeDetail= @"
+        protected string AttributeDetail = @"
         {
             ""id"": 85,
             ""description"": ""Present Value"",
@@ -137,6 +145,14 @@ namespace MetasysServices.Tests
                 },
                 ""objectUrl"": ""https://hostname/api/v2/objects/28bed6b0-4a0f-5bb0-a16f-57a7200685bb""
             }";
+
+        protected string AuditAnnotation = @"{
+                            ""text"": ""Test Annotation 00"",
+                            ""user"": ""metasyssysagent"",
+                            ""creationTime"": ""2020-05-27T06:21:31Z"",
+                            ""action"": ""none"",
+                            ""auditUrl"": ""https://win-ervotujej94/api/v2/audits/f0f64d5c-b70e-8754-836c-1ac99182f4e4""
+                         }";
 
         [OneTimeSetUp]
         public void Init()

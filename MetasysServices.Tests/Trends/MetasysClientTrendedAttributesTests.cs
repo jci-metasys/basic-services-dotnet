@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using Attribute = JohnsonControls.Metasys.BasicServices.Attribute;
+using MetasysAttribute = JohnsonControls.Metasys.BasicServices.MetasysAttribute;
 
 namespace MetasysServices.Tests
 {
@@ -63,7 +63,7 @@ namespace MetasysServices.Tests
              .WithVerb(HttpMethod.Get)
              .Times(1);
             // SDK Object matching the responsee
-            var attribute = new Attribute
+            var attribute = new MetasysAttribute
             {
                 Id=85,
                 Description="Present Value"

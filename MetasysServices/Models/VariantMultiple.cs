@@ -9,19 +9,19 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// A structure for grouping Variant values with the same id.
     /// </summary>
-    public struct VariantMultiple
+    public class VariantMultiple
     {
         /// <summary>The object id.</summary>
         public Guid Id { private set; get; }
 
         /// <summary>The list of Variants.</summary>
-        public IEnumerable<Variant> Variants { private set; get; }
+        public IEnumerable<Variant> Values {set; get; }
 
-        internal VariantMultiple(Guid id, IEnumerable<Variant> variants)
+        internal VariantMultiple(Guid id, IEnumerable<Variant> values)
         {
             Id = id;
-            Variants = variants;
-        }
+            Values = values;
+        }       
 
         /// <summary>
         /// Returns a value indicating whither this instance has values equal to a specified object.
@@ -35,13 +35,13 @@ namespace JohnsonControls.Metasys.BasicServices
                 bool areEqual = this.Id.Equals(other.Id);
                 if (areEqual)
                 {
-                    if (this.Variants == null ^ other.Variants == null)
+                    if (this.Values == null ^ other.Values == null)
                     {
                         return false;
                     } 
-                    else if (this.Variants != null && other.Variants != null)
+                    else if (this.Values != null && other.Values != null)
                     {
-                        return Enumerable.SequenceEqual(this.Variants, other.Variants);
+                        return Enumerable.SequenceEqual(this.Values, other.Values);
                     }
                 }
                 return areEqual;                
@@ -54,10 +54,10 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var code = 13;
             code = (code * 7) + Id.GetHashCode();
-            if (Variants != null)
+            if (Values != null)
             {
                 var arrCode = 0;
-                foreach(var item in Variants)
+                foreach(var item in Values)
                 {
                     arrCode += item.GetHashCode();
                 }
@@ -65,7 +65,6 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return code;
         }
-
 
         /// <summary>
         /// Return a pretty JSON string of the current object.

@@ -24,7 +24,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 Console.WriteLine("Enter alarm id to get alarm details: ");
                 string alarmId = Console.ReadLine();
 
-                IComProvideAlarmItem alarmItem = (IComProvideAlarmItem)legacyClient.GetSingleAlarm(alarmId);
+                IComAlarm alarmItem = (IComAlarm)legacyClient.GetSingleAlarm(alarmId);
 
                 Console.WriteLine(string.Format("\n Alarm details found for {0}", alarmId));
                 Console.WriteLine($"\n Id: {alarmItem.Id}, Name: {alarmItem.Name}, ItemReference: {alarmItem.ItemReference}");
@@ -46,7 +46,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 Console.WriteLine("\n List of alarms with details");
 
                 IComPagedResult PagedResult = (IComPagedResult)legacyClient.GetAlarms(getAlarmsFilter);
-                IComProvideAlarmItem[] alarmItems = (IComProvideAlarmItem[])PagedResult.Items;
+                IComAlarm[] alarmItems = (IComAlarm[])PagedResult.Items;
 
                 Console.WriteLine($"\n Total: {PagedResult.Total}");
                 Console.WriteLine($"\n Page Count: {PagedResult.PageCount}");
@@ -84,7 +84,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
 
                 Console.WriteLine(string.Format("\nAlarm details found for this object {0}", objectId));
 
-                var alarmItemsForObject = legacyClient.GetAlarmsForAnObject(objectId, alarmFilterForObject);
+                var alarmItemsForObject = legacyClient.GetAlarmsForObject(objectId, alarmFilterForObject);
 
                 Console.WriteLine("\nEnter network device id to get alarm details: ");
                 string networkDeviceId = Console.ReadLine();

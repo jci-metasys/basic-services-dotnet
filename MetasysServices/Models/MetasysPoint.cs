@@ -10,7 +10,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Point is a structure that holds information about an object attribute mapped to a point.
     /// </summary>
-    public class Point
+    public class MetasysPoint
     {
         /// <summary>
         /// The name of the Equipment that contains the Point
@@ -43,16 +43,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Value of the attribute where the point is mapped
         /// </summary>
-        public Variant? PresentValue { get;  set; }
+        public Variant PresentValue { get;  set; }
         
         /// <summary>
         /// Default Constructor for Point.
         /// </summary>
-        public Point()
+        public MetasysPoint()
         {
         }
 
-        internal Point(JToken token)
+        internal MetasysPoint(JToken token)
         {                   
             try
             {          

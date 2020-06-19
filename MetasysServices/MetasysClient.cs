@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using JohnsonControls.Metasys.BasicServices.Utils;
 
+
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
@@ -19,52 +20,136 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public class MetasysClient : BasicServiceProvider, IMetasysClient
     {
-        /// <summary>The current session token.</summary>
-        protected AccessToken AccessToken;
 
         /// <summary>The flag used to control automatic session refreshing.</summary>
         protected bool RefreshToken;
-
-        /// <summary>Resource Manager to provide localized translations.</summary>
-        protected static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager("JohnsonControls.Metasys.BasicServices.Resources.MetasysResources", typeof(MetasysClient).Assembly);
-
-        /// <summary>Dictionary to provide keys from the commandIdEnumSet.</summary>
-        /// <value>Keys as en-US translations, values as the commandIdEnumSet Enumerations.</value>
-        protected static Dictionary<string, string> CommandEnumerations;
-
-        /// <summary>Dictionaries to provide keys from the objectTypeEnumSet since there are duplicate keys.</summary>
-        /// <value>Keys as en-US translations, values as the objectTypeEnumSet Enumerations.</value>
-        protected static List<Dictionary<string, string>> ObjectTypeEnumerations;
-
-        /// <summary>The current Culture Used for Metasys client localization.</summary>
-        public CultureInfo Culture { get; set; }
-
-        /// <summary>
-        /// The hostname of Metasys API server.
-        /// </summary>
-        protected string Hostname { get; private set; }
-
-        private static CultureInfo CultureEnUS = new CultureInfo(1033);
 
         /// <summary>
         /// Stores retrieved Ids and serves as an in-memory caching layer.
         /// </summary>
         protected Dictionary<string, Guid> IdentifiersDictionary = new Dictionary<string, Guid>();
 
-        /// <summary>
-        /// Local instance of Trends service.
-        /// </summary>
-        public ITrendsService Trends { get; set; }
+        /// <inheritdoc/>
+        public ITrendService Trends { get; set; }
+
+        /// <inheritdoc/>
+		public IAlarmsService Alarms { get; set; }
+
+        /// <inheritdoc/>
+        public IAuditService Audits { get; set; }
+
+        private string hostname;
+
+        /// <inheritdoc/>
+        public string Hostname
+        {
+            get
+            {
+                return hostname;
+            }
+            set
+            {
+                // No need to init base url on first call (already done on Version set)
+                if (hostname != null && hostname != value) // it's the same hostname: no changes
+                {                   
+                    // reset the base client according to settings
+                    InitFlurlClient(value);
+                }
+                hostname = value;
+            }
+        }
+
+        private ApiVersion? version;
+        /// <inheritdoc/>
+        public new ApiVersion Version
+        {
+            get
+            {
+                return version.Value;
+            }
+            set
+            {
+                // When version is null we need to do the first init
+                if (version != null && version == value)
+                {
+                    return; // it's the same version: no changes
+                }
+                version = value;
+                // set base url and all related services to the new value
+                InitFlurlClient(Hostname);
+                if (Trends != null)
+                {
+                    Trends.Version = version.Value;
+                }
+                if (Audits != null)
+                {
+                    Audits.Version = version.Value;
+                }
+                if (Alarms != null)
+                {
+                    Alarms.Version = version.Value;
+                }
+            }
+        }
+
+        /// <summary>The current session token.</summary>
+        protected AccessToken AccessToken;
 
         /// <summary>
-        /// Local instance of Alarms service.
+        /// An optional boolean flag for ignoring certificate errors by bypassing certificate verification steps.
         /// </summary>
-		public IProvideAlarmInfo Alarms { get; set; }
+        protected bool IgnoreCertificateErrors { get; set; }
+
+        /// <summary>The current Culture Used for localization.</summary>
+        private CultureInfo culture;
 
         /// <summary>
-        /// Local instance of Audits service.
+        /// The current Culture Used for localization.
         /// </summary>
-        public IProvideAuditInfo Audits { get; set; }
+        public new CultureInfo Culture
+        {
+            get
+            {
+                return culture;
+            }
+            set
+            {
+                // When version is null we need to do the first init
+                if (culture != null && culture == value)
+                {
+                    return; // it's the same version: no changes
+                }
+                culture = value;
+                // set all related services to the new value
+                if (Audits != null)
+                {
+                    Audits.Culture = culture;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initialize the HTTP client with a base URL.    
+        /// </summary>
+        protected void InitFlurlClient(string hostname)
+        {
+            if (IgnoreCertificateErrors)
+            {
+                HttpClientHandler httpClientHandler = new HttpClientHandler();
+                httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                HttpClient httpClient = new HttpClient(httpClientHandler);
+                httpClient.BaseAddress = new Uri($"https://{hostname}"
+                    .AppendPathSegments("api", Version));
+                Client = new FlurlClient(httpClient);
+            }
+            else
+            {
+                Client = new FlurlClient($"https://{hostname}"
+                    .AppendPathSegments("api", Version));
+            }
+            // reset Access Token
+            AccessToken = null;
+        }
 
         /// <summary>
         /// Creates a new MetasysClient.
@@ -85,79 +170,34 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
         public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v2, CultureInfo cultureInfo = null, bool logClientErrors = true)
         {
+            IgnoreCertificateErrors = ignoreCertificateErrors;
             Hostname = hostname;
             // Set Metasys culture if specified, otherwise use current machine Culture.
-            Culture = cultureInfo ?? CultureInfo.CurrentCulture;
-
-            // Initialize the HTTP client with a base URL    
-            if (ignoreCertificateErrors)
-            {
-                HttpClientHandler httpClientHandler = new HttpClientHandler();
-                httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
-                HttpClient httpClient = new HttpClient(httpClientHandler);
-                httpClient.BaseAddress = new Uri($"https://{hostname}"
-                    .AppendPathSegments("api", version));
-                Client = new FlurlClient(httpClient);
-            }
-            else
-            {
-                Client = new FlurlClient($"https://{hostname}"
-                    .AppendPathSegments("api", version));
-            }
+            Culture = cultureInfo ?? CultureInfo.CurrentCulture;                       
             // Set preferences about logging
             LogClientErrors = logClientErrors;
+            Version = version;
             // Init related services
-            Trends = new TrendsServiceProvider(Client, logClientErrors);
-            Alarms = new AlarmInfoProvider(Client, logClientErrors);
-            Audits = new AuditInfoProvider(Client, logClientErrors);
+            Trends = new TrendServiceProvider(Client, version, logClientErrors);
+            Alarms = new AlarmServiceProvider(Client, version, logClientErrors);
+            Audits = new AuditServiceProvider(Client, version, logClientErrors);           
         }
 
-        /// <summary>
-        /// Localizes the specified resource key for the current MetasysClient locale or specified culture.
-        /// </summary>
-        /// <remarks>
-        /// The resource parameter must be the key of a Metasys enumeration resource,
-        /// otherwise no translation will be found.
-        /// </remarks>
-        /// <param name="resource">The key for the localization resource.</param>
-        /// <param name="cultureInfo">Optional culture specification.</param>
-        /// <returns>
-        /// Localized string if the resource was found, the default en-US localized string if not found,
-        /// or the resource parameter value if neither resource is found.
-        /// </returns>
+        /// <inheritdoc/>
         public string Localize(string resource, CultureInfo cultureInfo = null)
         {
             // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
             return Utils.ResourceManager.Localize(resource, cultureInfo ?? Culture);
         }
-        /// <summary>
-        /// Attempts to get the enumeration key of a given en-US localized command.
-        /// </summary>
-        /// <remarks>
-        /// The resource parameter must be the value of a Metasys commandIdEnumSet en-US value,
-        /// otherwise no key will be found.
-        /// </remarks>
-        /// <param name="resource">The en-US value for the localization resource.</param>
-        /// <returns>
-        /// The enumeration key of the en-US command if found, original resource if not.
-        /// </returns>
+
+        /// <inheritdoc/>
         public string GetCommandEnumeration(string resource)
         {
             // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
             return Utils.ResourceManager.GetCommandEnumeration(resource);
         }
 
-        /// <summary>
-        /// Attempts to get the enumeration key of a given en-US localized objectType.
-        /// </summary>
-        /// <remarks>
-        /// The resource parameter must be the value of a Metasys objectTypeEnumSet en-US value,
-        /// otherwise no key will be found.
-        /// </remarks>
-        /// <param name="resource">The en-US value for the localization resource.</param>
-        /// <returns>
-        /// The enumeration key of the en-US objectType if found, original resource if not.
-        /// </returns>
+        /// <inheritdoc/>
         public string GetObjectTypeEnumeration(string resource)
         {
             // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
@@ -170,29 +210,13 @@ namespace JohnsonControls.Metasys.BasicServices
             await Console.Error.WriteLineAsync(message).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Attempts to login to the given host and retrieve an access token.
-        /// </summary>
-        /// <returns>Access Token.</returns>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysTokenException"></exception>
+        /// <inheritdoc/>
         public AccessToken TryLogin(string username, string password, bool refresh = true)
         {
             return TryLoginAsync(username, password, refresh).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Attempts to login to the given host and retrieve an access token asynchronously.
-        /// </summary>
-        /// <returns>Asynchronous Task Result as Access Token.</returns>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysTokenException"></exception>
+        /// <inheritdoc/>
         public async Task<AccessToken> TryLoginAsync(string username, string password, bool refresh = true)
         {
             this.RefreshToken = refresh;
@@ -213,23 +237,13 @@ namespace JohnsonControls.Metasys.BasicServices
             return this.AccessToken;
         }
 
-        /// <summary>
-        /// Requests a new access token from the server before the current token expires.
-        /// </summary>
-        /// <returns>Access Token.</returns>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysTokenException"></exception>
+        /// <inheritdoc/>
         public AccessToken Refresh()
         {
             return RefreshAsync().GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Requests a new access token from the server before the current token expires asynchronously.
-        /// </summary>
-        /// <returns>Asynchronous Task Result as Access Token.</returns>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysTokenException"></exception>
+        /// <inheritdoc/>
         public async Task<AccessToken> RefreshAsync()
         {
             try
@@ -309,52 +323,25 @@ namespace JohnsonControls.Metasys.BasicServices
             System.Threading.Tasks.Task.Delay(delayms).ContinueWith(_ => Refresh());
         }
 
-        /// <summary>
-        /// Returns the current session access token.
-        /// </summary>
-        /// <returns>Current session's Access Token.</returns>
+        /// <inheritdoc/>
         public AccessToken GetAccessToken()
         {
             return this.AccessToken;
         }
 
-        /// <summary>
-        /// Set the current session access token.
-        /// </summary>
-        /// <returns>Current session's Access Token.</returns>
+        /// <inheritdoc/>
         public void SetAccessToken(AccessToken accessToken)
         {
             this.AccessToken = accessToken;
         }
 
-        /// <summary>
-        /// Given the Item Reference of an object, returns the object identifier.
-        /// </summary>
-        /// <remarks>
-        /// The itemReference will be automatically URL encoded.
-        /// </remarks>
-        /// <returns>A Guid representing the id, or an empty Guid if errors occurred.</returns>
-        /// <param name="itemReference"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysGuidException"></exception>
+        /// <inheritdoc/>
         public Guid GetObjectIdentifier(string itemReference)
         {
             return GetObjectIdentifierAsync(itemReference).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Given the Item Reference of an object, returns the object identifier asynchronously.
-        /// </summary>
-        /// <remarks>
-        /// The itemReference will be automatically URL encoded. 
-        /// For repeated requests will be returned the in-line value.
-        /// </remarks>
-        /// <param name="itemReference"></param>
-        /// <returns>
-        /// Asynchronous Task Result as a Guid representing the id, or an empty Guid if errors occurred.
-        /// </returns>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysGuidException"></exception>
+        /// <inheritdoc/>
         public async Task<Guid> GetObjectIdentifierAsync(string itemReference)
         {
             // Sanitize given itemReference
@@ -386,37 +373,13 @@ namespace JohnsonControls.Metasys.BasicServices
             return IdentifiersDictionary[normalizedItemReference];
         }
 
-        /// <summary>
-        /// Read one attribute value given the Guid of the object.
-        /// </summary>
-        /// <returns>
-        /// Variant if the attribute exists, null if does not exist.
-        /// </returns>
-        /// <param name="id"></param>
-        /// <param name="attributeName"></param>        
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpTimeoutException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        /// <exception cref="MetasysHttpNotFoundException"></exception>
-        /// <exception cref="MetasysPropertyException"></exception>
+        /// <inheritdoc/>
         public Variant ReadProperty(Guid id, string attributeName)
         {
             return ReadPropertyAsync(id, attributeName).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Read one attribute value given the Guid of the object asynchronously.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="attributeName"></param>      
-        /// <returns>
-        /// Asynchronous Task Result as Variant if the attribute exists, null if does not exist.
-        /// </returns>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpTimeoutException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        /// <exception cref="MetasysHttpNotFoundException"></exception>
-        /// <exception cref="MetasysPropertyException"></exception>
+        /// <inheritdoc/>
         public async Task<Variant> ReadPropertyAsync(Guid id, string attributeName)
         {
             JToken response = null; Variant result = new Variant();
@@ -426,8 +389,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     .AppendPathSegments(id, "attributes", attributeName))
                     .GetJsonAsync<JToken>()
                     .ConfigureAwait(false);
-                var attribute = response["item"][attributeName];
-                result = new Variant(id, attribute, attributeName, Culture);
+                result = new Variant(id, response, attributeName, Culture, Version);
             }
             catch (FlurlHttpException e)
             {
@@ -447,7 +409,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeName"></param>
         /// <param name="suppressNotFoundException"></param>
         /// <returns></returns>
-        protected async Task<Variant?> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException = true)
+        protected async Task<Variant> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException = true)
         {
             try
             {
@@ -475,19 +437,7 @@ namespace JohnsonControls.Metasys.BasicServices
             return ReadPropertyMultipleAsync(ids, attributeNames).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Read many attribute values given the Guids of the objects asynchronously.
-        /// </summary>
-        /// <remarks>
-        /// In order to allow method to run to completion without error, this will ignore properties that do not exist on a given object.         
-        /// </remarks>
-        /// <returns>
-        /// Asynchronous Task Result as list of VariantMultiple with all the specified attributes (if existing).
-        /// </returns>
-        /// <param name="ids"></param>
-        /// <param name="attributeNames"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysPropertyException"></exception>
+        /// <inheritdoc/>
         public async Task<IEnumerable<VariantMultiple>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<string> attributeNames)
         {
@@ -496,7 +446,12 @@ namespace JohnsonControls.Metasys.BasicServices
                 return null;
             }
             List<VariantMultiple> results = new List<VariantMultiple>();
-            var taskList = new List<Task<Variant?>>();
+            if (Version > ApiVersion.v2)
+            {
+                var response = await GetBatchRequestAsync("objects", ids, attributeNames, "attributes").ConfigureAwait(false);
+                return ToVariantMultiples(response);
+            }
+            var taskList = new List<Task<Variant>>();
             // Prepare Tasks to Read attributes list. In Metasys 11 this will be implemented server side
             foreach (var id in ids)
             {
@@ -510,14 +465,14 @@ namespace JohnsonControls.Metasys.BasicServices
             foreach (var id in ids)
             {
                 // Get attributes of the specific Id
-                List<Task<Variant?>> attributeList = taskList.Where(w =>
-                    (w.Result != null && w.Result.Value.Id == id)).ToList();
+                List<Task<Variant>> attributeList = taskList.Where(w =>
+                    (w.Result != null && w.Result.Id == id)).ToList();
                 List<Variant> variants = new List<Variant>();
                 foreach (var t in attributeList)
                 {
                     if (t.Result != null) // Something went wrong if the result is unknown
                     {
-                        variants.Add(t.Result.Value); // Prepare variants list
+                        variants.Add(t.Result); // Prepare variants list
                     }
                 }
                 if (variants.Count > 0 || attributeNames.Count() == 0)
@@ -529,66 +484,38 @@ namespace JohnsonControls.Metasys.BasicServices
             return results.AsEnumerable();
         }
 
-        /// <summary>
-        /// Write a single attribute given the Guid of the object. 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="attributeName"></param>
-        /// <param name="newValue"></param>
-        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        public void WriteProperty(Guid id, string attributeName, object newValue, string priority = null)
+        /// <inheritdoc/>
+        public void WriteProperty(Guid id, string attributeName, object newValue)
         {
-            WritePropertyAsync(id, attributeName, newValue, priority).GetAwaiter().GetResult();
+            WritePropertyAsync(id, attributeName, newValue).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Write a single attribute given the Guid of the object asynchronously.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="attributeName"></param>
-        /// <param name="newValue"></param>
-        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <returns>Asynchronous Task Result.</returns>
-        public async Task WritePropertyAsync(Guid id, string attributeName, object newValue, string priority = null)
+        /// <inheritdoc/>
+        public async Task WritePropertyAsync(Guid id, string attributeName, object newValue)
         {
             List<(string Attribute, object Value)> list = new List<(string Attribute, object Value)>();
             list.Add((Attribute: attributeName, Value: newValue));
-            var item = GetWritePropertyBody(list, priority);
+            var item = GetWritePropertyBody(list);
             await WritePropertyRequestAsync(id, item).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Write to many attribute values given the Guids of the objects.
-        /// </summary>
-        /// <param name="ids"></param>
-        /// <param name="attributeValues">The (attribute, value) pairs.</param>
-        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
-        /// <exception cref="MetasysHttpException"></exception>
+        /// <inheritdoc/>
         public void WritePropertyMultiple(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null)
+            IEnumerable<(string Attribute, object Value)> attributeValues)
         {
-            WritePropertyMultipleAsync(ids, attributeValues, priority).GetAwaiter().GetResult();
+            WritePropertyMultipleAsync(ids, attributeValues).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Write to many attribute values given the Guids of the objects asynchronously.
-        /// </summary>
-        /// <param name="ids"></param>
-        /// <param name="attributeValues">The (attribute, value) pairs.</param>
-        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <returns>Asynchronous Task Result.</returns>
+        /// <inheritdoc/>
         public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues, string priority = null)
+            IEnumerable<(string Attribute, object Value)> attributeValues)
         {
             if (ids == null || attributeValues == null)
             {
                 return;
             }
 
-            var item = GetWritePropertyBody(attributeValues, priority);
+            var item = GetWritePropertyBody(attributeValues);
             var taskList = new List<Task>();
 
             foreach (var id in ids)
@@ -601,23 +528,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Creates the body for the WriteProperty and WritePropertyMultiple requests as a dictionary.
         /// </summary>
-        /// <param name="attributeValues">The (attribute, value) pairs.</param>
-        /// <param name="priority">Write priority as an enumeration from the writePriorityEnumSet.</param>
+        /// <param name="attributeValues">The (attribute, value) pairs.</param>      
         /// <returns>Dictionary of the attribute, value pairs.</returns>
         private Dictionary<string, object> GetWritePropertyBody(
-            IEnumerable<(string Attribute, object Value)> attributeValues, string priority)
+            IEnumerable<(string Attribute, object Value)> attributeValues)
         {
             Dictionary<string, object> pairs = new Dictionary<string, object>();
             foreach (var attribute in attributeValues)
             {
                 pairs.Add(attribute.Attribute, attribute.Value);
-            }
-
-            if (priority != null)
-            {
-                pairs.Add("priority", priority);
-            }
-
+            }          
             return pairs;
         }
 
@@ -645,22 +565,13 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        /// <summary>
-        /// Get all available commands given the Guid of the object.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>List of Commands.</returns>
+        /// <inheritdoc/>
         public IEnumerable<Command> GetCommands(Guid id)
         {
             return GetCommandsAsync(id).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Get all available commands given the Guid of the object asynchronously.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <returns>Asynchronous Task Result as list of Commands.</returns>
+        /// <inheritdoc/>
         public async Task<IEnumerable<Command>> GetCommandsAsync(Guid id)
         {
             try
@@ -670,6 +581,11 @@ namespace JohnsonControls.Metasys.BasicServices
                     .GetJsonAsync<JToken>()
                     .ConfigureAwait(false);
 
+                if (!(token is JArray) && token["items"] != null)
+                {
+                    // Since API v3 response is wrapped in items property
+                    token = token["items"];
+                }
                 List<Command> commands = new List<Command>();
                 var array = token as JArray;
 
@@ -698,26 +614,13 @@ namespace JohnsonControls.Metasys.BasicServices
             return null;
         }
 
-        /// <summary>
-        /// Send a command to an object.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="command"></param>
-        /// <param name="values"></param>
-        /// <exception cref="MetasysHttpException"></exception>
+        /// <inheritdoc/>
         public void SendCommand(Guid id, string command, IEnumerable<object> values = null)
         {
             SendCommandAsync(id, command, values).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Send a command to an object asynchronously.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="command"></param>
-        /// <param name="values"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <returns>Asynchronous Task Result.</returns>
+        /// <inheritdoc/>
         public async Task SendCommandAsync(Guid id, string command, IEnumerable<object> values = null)
         {
             if (values == null)
@@ -753,44 +656,26 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        /// <summary>
-        /// Gets all network devices.
-        /// </summary>
-        /// <param name="type">Optional type number as a string</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetNetworkDevices(string type = null)
         {
             return GetNetworkDevicesAsync(type).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Gets all network devices asynchronously by requesting each available page.
-        /// </summary>
-        /// <param name="type">Optional type number as a string</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
             var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } }).ConfigureAwait(false);
             return toMetasysObject(response);
         }
 
-
-        /// <summary>
-        /// Gets all available network device types.
-        /// </summary>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <inheritdoc/>
         public IEnumerable<MetasysObjectType> GetNetworkDeviceTypes()
         {
             return GetNetworkDeviceTypesAsync().GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Gets all available network device types asynchronously.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync()
         {
             return await GetResourceTypesAsync("networkDevices", "availableTypes").ConfigureAwait(false);
@@ -875,40 +760,19 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        /// <summary>
-        /// Gets all child objects given a parent Guid.
-        /// Level indicates how deep to retrieve objects.
-        /// </summary>
-        /// <remarks>
-        /// A level of 1 only retrieves immediate children of the parent object.
-        /// </remarks>
-        /// <param name="id"></param>
-        /// <param name="levels">The depth of the children to retrieve.</param>      
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1)
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false)
         {
-            return GetObjectsAsync(id, levels).GetAwaiter().GetResult();
+            return GetObjectsAsync(id, levels, includeInternalObjects).GetAwaiter().GetResult();
         }
 
-
-        /// <summary>
-        /// Gets all spaces by requesting each available page.
-        /// </summary>
-        /// <param name="type">Optional type ID belonging to SpaceTypeEnum.</param>            
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetSpaces(SpaceTypeEnum? type = null)
         {
             return GetSpacesAsync(type).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Gets all spaces asynchronously by requesting each available page.
-        /// </summary>
-        /// <param name="type">Optional type ID belonging to SpaceTypeEnum.</param>                
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetSpacesAsync(SpaceTypeEnum? type = null)
         {
             Dictionary<string, string> parameters = null;
@@ -921,19 +785,13 @@ namespace JohnsonControls.Metasys.BasicServices
             return toMetasysObject(spaces, type: MetasysObjectTypeEnum.Space);
         }
 
-        /// <summary>
-        /// Gets children spaces of the given space.
-        /// </summary>
-        /// <param name="id">The GUID of the parent space.</param>   
+        /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetSpaceChildren(Guid id)
         {
             return GetSpaceChildrenAsync(id).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Gets children spaces of the given space asynchronously.
-        /// </summary>
-        /// <param name="id">The GUID of the parent space.</param>      
+        /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid id)
         {
             var spaceChildren = await GetAllAvailablePagesAsync("spaces", null, id.ToString(), "spaces").ConfigureAwait(false);
@@ -941,94 +799,61 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
 
-        /// <summary>
-        /// Gets all equipment by requesting each available page.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetEquipment()
         {
             return GetEquipmentAsync().GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        ///  Gets all equipment asynchronously by requesting each available page.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
         {
             var equipment = await GetAllAvailablePagesAsync("equipment").ConfigureAwait(false);
             return toMetasysObject(equipment, MetasysObjectTypeEnum.Equipment);
         }
 
-        /// <summary>
-        /// Gets all space types.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<MetasysObjectType> GetSpaceTypes()
         {
             return GetSpaceTypesAsync().GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Gets all space types asynchronously.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObjectType>> GetSpaceTypesAsync()
         {
             return await GetResourceTypesAsync("enumSets", "1766/members").ConfigureAwait(false);
         }
 
-        /// <summary>
-        ///  Gets all Equipment for the given space
-        /// </summary>
-        /// <param name="spaceId"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetSpaceEquipment(Guid spaceId)
         {
             return GetSpaceEquipmentAsync(spaceId).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        ///  Gets all Equipment for the given space asynchronously
-        /// </summary>
-        /// <param name="spaceId"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
         {
             var spaceEquipment = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment").ConfigureAwait(false);
             return toMetasysObject(spaceEquipment, MetasysObjectTypeEnum.Equipment);
         }
 
-        /// <summary>
-        /// Gets all points for the given Equipment.
-        /// </summary>
-        /// <param name="equipmentId">The Guid of the equipment.</param>
-        /// <param name="readAttributeValue">Set to false if you would not read Points Attribute Value.</param>
-        /// <remarks> Reading the Attribute Value attribute could take time depending on the number of points. </remarks>
-        /// <returns></returns>
-        public IEnumerable<Point> GetEquipmentPoints(Guid equipmentId, bool readAttributeValue = true)
+        /// <inheritdoc/>
+        public IEnumerable<MetasysPoint> GetEquipmentPoints(Guid equipmentId, bool readAttributeValue = true)
         {
             return GetEquipmentPointsAsync(equipmentId, readAttributeValue).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Gets all points for the given Equipment asyncronously.
-        /// </summary>
-        /// <remarks> Returned Points List contains PresentValue when available. </remarks>
-        /// <param name="equipmentId">The Guid of the equipment.</param>
-        /// <param name="readAttributeValue">Set to false if you would not read Points Attribute Value.</param>
-        /// <remarks> Reading the Attribute Value could take time depending on the number of points. </remarks>
-        /// <returns></returns>
-        public async Task<IEnumerable<Point>> GetEquipmentPointsAsync(Guid equipmentId, bool readAttributeValue = true)
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysPoint>> GetEquipmentPointsAsync(Guid equipmentId, bool readAttributeValue = true)
         {
-            List<Point> points = new List<Point>() { }; List<Guid> guids = new List<Guid>();
-            List<Point> pointsWithAttribute = new List<Point>() { };
+            List<MetasysPoint> points = new List<MetasysPoint>() { }; List<Guid> guids = new List<Guid>();
+            List<MetasysPoint> pointsWithAttribute = new List<MetasysPoint>() { };
             var response = await GetAllAvailablePagesAsync("equipment", null, equipmentId.ToString(), "points").ConfigureAwait(false);
             try
             {
                 foreach (var item in response)
                 {
-                    Point point = new Point(item);
+                    MetasysPoint point = new MetasysPoint(item);
                     // Retrieve object Id from full URL 
                     string objectId = point.ObjectUrl.Split('/').Last();
                     point.ObjectId = ParseObjectIdentifier(objectId);
@@ -1061,7 +886,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     var point = pointsWithAttribute.SingleOrDefault(s => s.ObjectId == r.Id);
                     // Assign present values back from the attribute collection
-                    point.PresentValue = r.Variants?.SingleOrDefault(s => s.Attribute == "presentValue");
+                    point.PresentValue = r.Values?.SingleOrDefault(s => s.Attribute == "presentValue");
                     // Finally add the point back to the original list
                     points.Add(point);
                 }
@@ -1069,30 +894,27 @@ namespace JohnsonControls.Metasys.BasicServices
             return points;
         }
 
-        /// <inheritdoc cref="GetObjects(Guid, int)"/>
-        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels)
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels, bool includeInternalObjects = false)
         {
-            var objects = await GetObjectChildrenAsync(id, null, levels).ConfigureAwait(false);
+            Dictionary<string, string> parameters = null;
+            if (Version > ApiVersion.v2)
+            {
+                // Since API v3 we could use the includeInternalObjects parameter
+                parameters = new Dictionary<string, string>();
+                parameters.Add("includeInternalObjects", includeInternalObjects.ToString());
+            }
+            var objects = await GetObjectChildrenAsync(id, parameters, levels).ConfigureAwait(false);
             return toMetasysObject(objects);
         }
 
-        /// <summary>
-        /// Attempts to login to the given host using Credential Manager and retrieve an access token.
-        /// </summary>
-        /// <param name="credManTarget">The Credential Manager target where to pick the credentials.</param>
-        /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
-        /// <remarks> This method can be overridden by extended class with other Credential Manager implementations. </remarks>
+        /// <inheritdoc/>
         public virtual AccessToken TryLogin(string credManTarget, bool refresh = true)
         {
             return TryLoginAsync(credManTarget, refresh).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Attempts to login to the given host using Credential Manager and retrieve an access token asynchronously.
-        /// </summary>
-        /// <param name="credManTarget">The Credential Manager target where to pick the credentials.</param>
-        /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
-        /// <remarks> This method can be overridden by extended class with other Credential Manager implementations. </remarks>
+        /// <inheritdoc/>
         public virtual async Task<AccessToken> TryLoginAsync(string credManTarget, bool refresh = true)
         {
             // Retrieve credentials first
@@ -1100,5 +922,57 @@ namespace JohnsonControls.Metasys.BasicServices
             // Get the control back to TryLogin method
             return await TryLoginAsync(CredentialUtil.convertToUnSecureString(credentials.Username), CredentialUtil.convertToUnSecureString(credentials.Password), refresh).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Convert a JToken batch request response into VariantMultiple.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        protected IEnumerable<VariantMultiple> ToVariantMultiples(JToken response)
+        {
+            List<VariantMultiple> multiples = new List<VariantMultiple>();
+            foreach (var r in response["responses"])
+            {
+                var respIds = r["id"].Value<string>().Split('_');
+                var objId = new Guid(respIds[0]);
+                string attr = respIds[1];
+                List<Variant> values = new List<Variant>();
+                if (r["status"].Value<int>() == 200)
+                {
+                    values.Add(new Variant(objId, r["body"], attr, Culture, Version));
+                } // Don't add the variant to the list if the response is not successful
+                var m = multiples.SingleOrDefault(s => s.Id == objId);
+                if (m == null)
+                {
+                    // Add a new multiple for the current object                   
+                    multiples.Add(new VariantMultiple(objId, values));
+                }
+                else
+                {
+                    // Variant multiple already exists, just add Values
+                    var newList = m.Values.ToList();
+                    newList.AddRange(values);
+                    m.Values = newList;
+                }
+            }
+            return multiples;
+        }
+
+        ///<inheritdoc/>
+        public void WritePropertyMultiple(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues)
+        {
+            WritePropertyMultipleAsync(ids, attributeValues).GetAwaiter().GetResult();
+        }
+
+        ///<inheritdoc/>
+        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues)
+        {
+            if (ids == null || attributeValues == null)
+            {
+                return;
+            }
+            // convert dictionary to a list of tuples and use existing overload
+            await WritePropertyMultipleAsync(ids, attributeValues.Select(x => (x.Key, x.Value)));
+        }      
     }
 }

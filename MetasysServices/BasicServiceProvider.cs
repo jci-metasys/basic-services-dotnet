@@ -8,6 +8,9 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Net.Http;
+using System.Globalization;
+using System.IO;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -18,6 +21,15 @@ namespace JohnsonControls.Metasys.BasicServices
     {
         /// <summary>The http client.</summary>
         protected IFlurlClient Client;
+
+        /// <inheritdoc/>
+        public ApiVersion Version { get; set; }
+
+        /// <summary>
+        /// The current Culture Used for localization.
+        /// </summary>
+        public CultureInfo Culture { get; set; }
+
         /// <summary>
         /// The log initiliazer.
         /// </summary>
@@ -42,8 +54,9 @@ namespace JohnsonControls.Metasys.BasicServices
                     Log = new LogInitializer(typeof(BasicServiceProvider));
                 }
             }
-        }
+        }        
 
+       
         /// <summary>
         /// Empty constructor.
         /// </summary>
@@ -58,10 +71,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Constructor for dedicated services with Flurl client initialization already performed.
         /// </summary>
         /// <param name="client">The Flurl client.</param>
+        /// <param name="version">The server's Api version.</param>
         /// <param name="logErrors">Set this flag to false to disable logging of client errors.</param>
-        public BasicServiceProvider(IFlurlClient client, bool logErrors = true)
+        public BasicServiceProvider(IFlurlClient client, ApiVersion version, bool logErrors = true)
         {
-            Client = client;
+            Client = client ?? throw new ArgumentNullException(nameof(client),
+                                              "FlurlClient can not be null.");            
+            Version = version;                     
             LogClientErrors = logErrors;          
         }
 
@@ -79,7 +95,7 @@ namespace JohnsonControls.Metasys.BasicServices
             List<MetasysObject> metasysObjects = new List<MetasysObject>();
             foreach (var o in objects)
             {
-                metasysObjects.Add(new MetasysObject(o.Item, toMetasysObject(o.Children), type:objectType));
+                metasysObjects.Add(new MetasysObject(o.Item, Version, toMetasysObject(o.Children), type:objectType));
             }
             return metasysObjects;
         }
@@ -90,7 +106,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         protected MetasysObject toMetasysObject(JToken item, MetasysObjectTypeEnum? objectType = null)
         {
-            return new MetasysObject(item, null, type:objectType);
+            return new MetasysObject(item, Version, null, type:objectType);
         }
 
 
@@ -129,10 +145,16 @@ namespace JohnsonControls.Metasys.BasicServices
             List<TreeObject> objects = new List<TreeObject>() { }; // Contains the couple of parent/children JToken
             bool hasNext = true;
             int page = 1;
+            if (parameters == null)
+            {
+                // Init dictionary to add page parameter when not already initialized in input parameters.
+                parameters = new Dictionary<string, string>();
+            }
             while (hasNext)
             {
                 hasNext = false;
-                var response = await GetPagedResultsAsync<JToken>("objects", new Dictionary<string, string>() { { "page", page.ToString() } }, id, "objects").ConfigureAwait(false);
+                parameters["page"] = page.ToString();
+                var response = await GetPagedResultsAsync<JToken>("objects", parameters, id, "objects").ConfigureAwait(false);
                 foreach (var item in response.Items)
                 {
                     List<TreeObject> children = null;
@@ -344,6 +366,167 @@ namespace JohnsonControls.Metasys.BasicServices
             var json = JsonConvert.SerializeObject(obj);
             var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             return dictionary;
+        }       
+
+        /// <summary>
+        /// Perform multiple requests (GET) to the Server with a single HTTP call asynchronously.
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="ids"></param>
+        /// <param name="resources"></param>
+        /// <param name="paths"></param>
+        /// <returns></returns>
+        protected async Task<JToken> GetBatchRequestAsync(string endpoint, IEnumerable<Guid> ids, IEnumerable<string> resources, params string[] paths)
+        {         
+            // Create URL with base resource
+            Url url = new Url(endpoint);
+            // Concatenate batch segment to use batch request and prepare the list of requests
+            url.AppendPathSegments("batch");
+            var objectsRequests = new List<ObjectRequest>();          
+            // Concatenate batch segment to use batch request and prepare the list of requests  
+            foreach (var id in ids)
+            {
+                foreach (var r in resources)
+                {
+                    Url relativeUrl = new Url(id.ToString());
+                    relativeUrl.AppendPathSegments(paths); // e.g. "00000000-0000-0000-0000-000000000001/attributes"
+                    relativeUrl.AppendPathSegment(r); // e.g. "00000000-0000-0000-0000-000000000001/attributes/presentValue"                    
+                    // Use the object id concatenated to the resource to uniquely identify each request
+                    objectsRequests.Add(new ObjectRequest { Id = id.ToString() + '_' + r, RelativeUrl = relativeUrl });
+                }
+            }
+            JToken responseToken = null;
+            try
+            {
+                // Post the list of requests and return responses as JToken
+                var response= await Client.Request(url)
+                                            .PostJsonAsync(new BatchRequest {Method = "GET", Requests=objectsRequests})                
+                                            .ConfigureAwait(false);
+                responseToken= JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return responseToken;
+        }
+
+        /// <summary>
+        /// Perform multiple requests (POST) to the Server with a single HTTP call asynchronously.
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="requests"></param>
+        /// <param name="paths"></param>
+        /// <returns></returns>
+        protected async Task<JToken> PostBatchRequestAsync(string endpoint, IEnumerable<BatchRequestParam> requests, params string[] paths)
+        {
+            // Create URL with base resource
+            Url url = new Url(endpoint);
+            // Concatenate batch segment to use batch request and prepare the list of requests
+            url.AppendPathSegments("batch");
+            var objectsRequests = new List<ObjectRequest>();
+            // Concatenate batch segment to use batch request and prepare the list of requests  
+            foreach (var r in requests)
+            {
+                Url relativeUrl = new Url(r.ObjectId.ToString());
+                relativeUrl.AppendPathSegments(paths); // e.g. "00000000-0000-0000-0000-000000000001/annotations"
+
+                object body;
+                switch (paths[0])
+                {
+                    case "annotations":
+                        string text = r.Resource;
+                        body = new { text };
+                        break;
+                    default:
+                        body = null;
+                        break;
+                };
+                
+                // Use the object id concatenated to the resource to uniquely identify each request
+                objectsRequests.Add(new ObjectRequest { Id = r.ObjectId.ToString() + '_' + r.Resource, 
+                                                        RelativeUrl = relativeUrl, 
+                                                        Body = body});
+
+                //Body = new ObjectBody {Text = r.Resource }
+            }
+
+            JToken responseToken = null;
+            try
+            {
+                // Post the list of requests and return responses as JToken
+                var response = await Client.Request(url)
+                                            .PostJsonAsync(new BatchRequest { Method = "POST", Requests = objectsRequests })
+                                            .ConfigureAwait(false);
+                
+                responseToken = JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return responseToken;
+        }
+
+        /// <summary>
+        /// Perform multiple requests (PUT) to the Server with a single HTTP call asynchronously.
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="requests"></param>
+        /// <param name="paths"></param>
+        /// <returns></returns>
+
+        protected async Task<JToken> PutBatchRequestAsync(string endpoint, IEnumerable<BatchRequestParam> requests, params string[] paths)
+        {
+            // Create URL with base resource
+            Url url = new Url(endpoint);
+            // Concatenate batch segment to use batch request and prepare the list of requests
+            url.AppendPathSegments("batch");
+            var objectsRequests = new List<ObjectRequest>();
+            // Concatenate batch segment to use batch request and prepare the list of requests  
+            foreach (var r in requests)
+            {
+                Url relativeUrl = new Url(r.ObjectId.ToString());
+                relativeUrl.AppendPathSegments(paths); // e.g. "00000000-0000-0000-0000-000000000001/annotations"
+
+                object body;
+                switch (paths[0])
+                {
+                    case "discard":
+                        string annotationText = r.Resource;
+                        body = new { annotationText };
+                        break;
+                    default:
+                        body = null;
+                        break;
+                };
+
+                // Use the object id concatenated to the resource to uniquely identify each request
+                objectsRequests.Add(new ObjectRequest
+                {
+                    Id = r.ObjectId.ToString() + '_' + r.Resource,
+                    RelativeUrl = relativeUrl,
+                    Body = body
+                });
+
+                //Body = new ObjectBody {Text = r.Resource }
+            }
+
+            JToken responseToken = null;
+            try
+            {
+                // Post the list of requests and return responses as JToken
+                var response = await Client.Request(url)
+                                            .PostJsonAsync(new BatchRequest { Method = "PUT", Requests = objectsRequests })
+                                            .ConfigureAwait(false);
+
+                responseToken = JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return responseToken;
         }
 
     }

@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 
-namespace JohnsonControls.Metasys.BasicServices
+namespace JohnsonControls.Metasys.ComServices
 {
     /// <summary>
-    /// Provides attribute for alarms
+    /// A specialized DTO for COM that holds attribute for alarms type object.
     /// </summary>
-    public interface IProvideAlarmItem
+    [ComVisible(true)]
+    [Guid("3a3e722b-0c1a-4966-9653-9cb1f4bb43bc")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+    public interface IComAlarm
     {
         /// <summary>
         /// Alarm Unique Identifier (GUID)
         /// </summary>
-        Guid Id { get; set; }
+        string Id { get; set; }
 
         /// <summary>
         /// Item fully qualified reference
@@ -62,7 +63,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm trigger value details
         /// </summary>
-        dynamic TriggerValue { get; set; }
+        object TriggerValue { get; set; }
 
         /// <summary>
         /// Alarm Category route
@@ -78,6 +79,5 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Link to annotations
         /// </summary>
         string AnnotationsUrl { get; set; }
-
     }
 }

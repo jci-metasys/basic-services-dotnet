@@ -21,7 +21,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 // Select a point
                 Console.WriteLine("\nPlease enter the equipment ID to retrieve all related points:");
                 string equipmentID = Console.ReadLine();
-                IEnumerable<Point> equipmentPoints = client.GetEquipmentPoints(new Guid(equipmentID));
+                IEnumerable<MetasysPoint> equipmentPoints = client.GetEquipmentPoints(new Guid(equipmentID));
                 Console.WriteLine($"Points found: {equipmentPoints.Count()}");
                 foreach (var p in equipmentPoints)
                 {
