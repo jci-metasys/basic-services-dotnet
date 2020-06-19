@@ -363,7 +363,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public static Dictionary<string, string> ToDictionary(object obj)
         {
-            ConvertToCsv(obj);
             var json = JsonConvert.SerializeObject(obj);
             var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             return dictionary;
@@ -521,27 +520,5 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return responseToken;
         }
-
-        public static void ConvertToCsv(object values)
-        {
-            var enumData = values as AuditFilter;
-            string csvData = string.Empty;
-
-            foreach (var item in enumData.OriginApplicationsEnum)
-            {
-                csvData += (int)item + ",";
-            }
-            enumData.OriginApplicationsEnum = null;
-            enumData.OriginApplications = csvData;
-
-            csvData = string.Empty;
-            foreach (var item in enumData.ActionTypesEnum)
-            {
-                csvData += (int)item + ",";
-            }
-            enumData.ActionTypesEnum = null;
-            enumData.ActionTypes = csvData;
-        }
-
     }
 }

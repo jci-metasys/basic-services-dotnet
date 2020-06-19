@@ -44,12 +44,14 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<PagedResult<Audit>> GetAsync(AuditFilter auditFilter)
         {
+            ConvertToCsv(auditFilter);
             return await GetPagedResultsAsync<Audit>("audits", ToDictionary(auditFilter)).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public async Task<PagedResult<Audit>> GetForObjectAsync(Guid objectId, AuditFilter auditFilter)
         {
+            ConvertToCsv(auditFilter);
             return await GetPagedResultsAsync<Audit>("objects", ToDictionary(auditFilter), objectId, BaseParam).ConfigureAwait(false);
         }
 
@@ -224,6 +226,25 @@ namespace JohnsonControls.Metasys.BasicServices
             return results;
         }
 
+        private static void ConvertToCsv(AuditFilter auditFilter)
+        {
+            string csvData = string.Empty;
+
+            foreach (var item in auditFilter.OriginApplicationsEnum)
+            {
+                csvData += (int)item + ",";
+            }
+            auditFilter.OriginApplicationsEnum = null;
+            auditFilter.OriginApplications = csvData;
+
+            csvData = string.Empty;
+            foreach (var item in auditFilter.ActionTypesEnum)
+            {
+                csvData += (int)item + ",";
+            }
+            auditFilter.ActionTypesEnum = null;
+            auditFilter.ActionTypes = csvData;
+        }
     }
 
     /// <summary>
