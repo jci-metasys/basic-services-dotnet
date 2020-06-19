@@ -185,7 +185,25 @@ namespace JohnsonControls.Metasys.ComServices
         {
             // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
             Guid guid = new Guid(id);
-            Client.SendCommand(guid, command, values?.ToList());
+
+            List<Object> objValues = null;
+            if (values != null)
+            {
+                objValues = new List<object>();
+                foreach (string s in values)
+                {              
+                    double numericValue ;
+                    if (double.TryParse(s,  out numericValue))
+                    {
+                        objValues.Add (numericValue);
+                    }
+                    else
+                    {
+                        objValues.Add(s);
+                    }
+                }
+            }
+            Client.SendCommand(guid, command, objValues);
         }
 
         /// <inheritdoc/>
