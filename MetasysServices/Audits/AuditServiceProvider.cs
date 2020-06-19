@@ -35,6 +35,10 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<Audit> FindByIdAsync(Guid auditId)
         {
             var response = await GetRequestAsync("audits", null, auditId).ConfigureAwait(false);
+            if (response["item"]!=null)
+            {
+                response = response["item"];
+            }
             return JsonConvert.DeserializeObject<Audit>(response.ToString());
         }
 
@@ -168,12 +172,27 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<Result>> AddAnnotationMultipleAsync(IEnumerable<BatchRequestParam> requests)
         {
-            if (requests == null)
+            try
             {
+                if (Version >= ApiVersion.v3)
+                {
+                    if (requests == null)
+                    {
+                        return null;
+                    }
+                    var response = await PostBatchRequestAsync("audits", requests, "annotations").ConfigureAwait(false);
+                    return ToResult(response);
+                }
+                else
+                {
+                    throw new MetasysUnsupportedApiVersion(Version.ToString());
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
                 return null;
             }
-            var response = await PostBatchRequestAsync("audits", requests, "annotations").ConfigureAwait(false);
-            return ToResult(response);
         }
 
         /// <inheritdoc/>
@@ -185,12 +204,27 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<Result>> DiscardMultipleAsync(IEnumerable<BatchRequestParam> requests)
         {
-            if (requests == null)
+            try
             {
+                if (Version >= ApiVersion.v3)
+                {
+                    if (requests == null)
+                    {
+                        return null;
+                    }
+                    var response = await PutBatchRequestAsync("audits", requests, "discard").ConfigureAwait(false);
+                    return ToResult(response);
+                }
+                else
+                {
+                    throw new MetasysUnsupportedApiVersion(Version.ToString());
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
                 return null;
             }
-            var response = await PutBatchRequestAsync("audits", requests, "discard").ConfigureAwait(false);
-            return ToResult(response);
         }
 
         /// <summary>
@@ -210,11 +244,9 @@ namespace JohnsonControls.Metasys.BasicServices
                 resultItem.Status = r["status"].Value<int>();
                 resultItem.Annotation = respIds[1];
                 results.Add(resultItem);
-
             }
             return results;
         }
-
     }
 
     /// <summary>

@@ -620,7 +620,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             /* SNIPPET 5: START */
             IEnumerable<MetasysPoint> equipmentPoints = client.GetEquipmentPoints(sampleEquipment.Id);
-            MetasysPoint point = equipmentPoints.FindByShortName("CLG-O");
+            MetasysPoint point = equipmentPoints.FindByShortName("Analog Input-1");
             string presentValue = point.PresentValue?.StringValue;
             Console.WriteLine(point);
             /*                        
@@ -855,22 +855,20 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 3: END */
         }
 
-        private void DiscardSingleAudit()
+        private void DiscardSingleAudit(Audit audit)
         {
 
             /* SNIPPET 4: START */
-            Guid auditId = new Guid("9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf");
             string annotationText = "Reason why the audit has been discarded";
-            client.Audits.Discard(auditId, annotationText);
+            client.Audits.Discard(audit.Id, annotationText);
             /* SNIPPET 4: END */
         }
 
-        private void AddAuditAnnotation(Audit audit, string text)
+        private void AddAuditAnnotation(Audit audit)
         {
             /* SNIPPET 5: START */
-            Guid auditId = new Guid("9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf");
             string annotationText = "This is the text of the annotation";
-            client.Audits.AddAnnotation(auditId, annotationText);
+            client.Audits.AddAnnotation(audit.Id, annotationText);
             /* SNIPPET 5: END */
         }
 
@@ -878,9 +876,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             /* SNIPPET 6: START */
             var requests = new List<BatchRequestParam>();
-            BatchRequestParam request1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST AUDIT ANNOTATION" };
+            BatchRequestParam request1 = new BatchRequestParam { ObjectId = new Guid("f179a59c-ce36-47e1-afa6-f873b80259ed"), Resource = "THIS IS THE FIRST AUDIT ANNOTATION" };
             requests.Add(request1);
-            BatchRequestParam request2 = new BatchRequestParam { ObjectId = new Guid("5ff1341e-dbf1-4eaf-b9a1-987f51dabefa"), Resource = "THIS IS THE SECOND AUDIT ANNOTATION" };
+            BatchRequestParam request2 = new BatchRequestParam { ObjectId = new Guid("bccc567c-300b-4d38-894c-104cdd6e2836"), Resource = "THIS IS THE SECOND AUDIT ANNOTATION" };
             requests.Add(request2);
 
             IEnumerable<Result> results = client.Audits.AddAnnotationMultiple(requests);
@@ -900,9 +898,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
             /* SNIPPET 7: START */
             var requests = new List<BatchRequestParam>();
-            BatchRequestParam request1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST DISCARD ANNOTATION" };
+            BatchRequestParam request1 = new BatchRequestParam { ObjectId = new Guid("030d3998-3145-44d9-b378-886e52d373c1"), Resource = "THIS IS THE FIRST DISCARD ANNOTATION" };
             requests.Add(request1);
-            BatchRequestParam request2 = new BatchRequestParam { ObjectId = new Guid("5ff1341e-dbf1-4eaf-b9a1-987f51dabefa"), Resource = "THIS IS THE SECOND DISCARD ANNOTATION" };
+            BatchRequestParam request2 = new BatchRequestParam { ObjectId = new Guid("181a6677-ccbd-4b97-9438-5b331ffd38c2"), Resource = "THIS IS THE SECOND DISCARD ANNOTATION" };
             requests.Add(request2);
 
             IEnumerable<Result> results = client.Audits.DiscardMultiple(requests);
@@ -930,69 +928,22 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Guid id2 = new Guid("01e025e8-0fb3-59da-a9b8-2f238c6f011c");
                 // Common objects are mocked to do not waste precious roundtrip time on each snippet
                 List<Command> commands = new List<Command> { new Command { CommandId = "Adjust" }, new Command { CommandId = "OperatorOverride" }, new Command(), new Command(), new Command { CommandId = "Release" } };
-                string jsonSpace = @"{
-                  ""ItemReference"": ""Win2016-VM2:Win2016-VM2/JCI.Building1"",
-                  ""Id"": ""164aaba2-0fb3-5b5d-bfe9-49cf6b797c93"",
-                  ""Name"": ""North America (BACnet)"",
-                  ""Description"": null,
-                  ""Type"": 2,
-                  ""TypeUrl"": ""https://win2016-vm2/api/v2/enumSets/1766/members/1"",
-                  ""Category"": ""Building"",
-                  ""Children"": [],
-                  ""ChildrenCount"": 0
-                }";
-                MetasysObject building = JsonConvert.DeserializeObject<MetasysObject>(jsonSpace);
-                string jsonEquipment = @" {
-                  ""ItemReference"": ""Win2016-VM2:Win2016-VM2/equipment.vNAE2343947.FieldBusMSTP1.AHU-07"",
-                  ""Id"": ""6c6e18b8-015f-572a-814c-1e5d66142850"",
-                  ""Name"": ""AHU-07"",
-                  ""Description"": null,
-                  ""Type"": 3,
-                  ""TypeUrl"": null,
-                  ""Category"": null,
-                  ""Children"": [],
-                  ""ChildrenCount"": 0
-                }";
-                MetasysObject sampleEquipment = JsonConvert.DeserializeObject<MetasysObject>(jsonEquipment);
-                string jsonDevice = @"{
-                  ""ItemReference"": ""Win2016-VM2:vNAE2343996"",
-                  ""Id"": ""142558f8-c4c7-5f89-be97-d806adb72053"",
-                  ""Name"": ""vNAE2343996"",
-                  ""Description"": """",
-                  ""Type"": null,
-                  ""TypeUrl"": ""https://win2016-vm2/api/v2/enumSets/508/members/185"",
-                ""Category"": null,
-                  ""Children"": [],
-                  ""ChildrenCount"": 0
-                }";
-                MetasysObject device = JsonConvert.DeserializeObject<MetasysObject>(jsonDevice);
+
+                MetasysObject building = new MetasysObject { Id = new Guid("2f321415-35d9-5c48-b643-60c5132cc001") };
+
+                MetasysObject sampleEquipment = new MetasysObject { Id = new Guid("0e8c034b-1586-5ed9-8455-dd33e99c2c7e") };
+
+                MetasysObject device = new MetasysObject { Id = new Guid("21c605fb-4755-5d65-8e9f-4fc8283b0366") };
+
                 AlarmFilter alarmFilter = new AlarmFilter
                 {
                     StartTime = new DateTime(2019, 12, 12),
                     EndTime = new DateTime(2020, 1, 12),
                     ExcludeAcknowledged = true
                 };
-                string jsonAlarm = @" {
-                  ""Self"": ""https://win2016-vm2/api/v2/alarms/ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7"",
-                ""Id"": ""ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7"",
-                  ""ItemReference"": ""Win2016-VM2:Win2016-VM2"",
-                  ""Name"": ""WIN2016-VM2"",
-                  ""Message"": ""ActivityData queue's messages are not getting processed."",
-                  ""IsAckRequired"": true,
-                  ""TypeUrl"": ""https://win2016-vm2/api/v2/enumSets/108/members/68"",
-                  ""Priority"": 95,
-                  ""TriggerValue"": {
-                    ""value"": ""1233"",
-                    ""unitsUrl"": ""https://win2016-vm2/api/v2/enumSets/507/members/95""
-                  },
-                  ""CreationTime"": ""2020-01-12T11:54:30Z"",
-                  ""IsAcknowledged"": false,
-                  ""IsDiscarded"": false,
-                  ""CategoryUrl"": ""https://win2016-vm2/api/v2/enumSets/33/members/12"",
-                  ""ObjectUrl"": ""https://win2016-vm2/api/v2/objects/28bed6b0-4a0f-5bb0-a16f-57a7200685bb"",
-                  ""AnnotationsUrl"": ""https://win2016-vm2/api/v2/alarms/ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7/annotations""
-                }";
-                Alarm alarm = JsonConvert.DeserializeObject<Alarm>(jsonAlarm);
+
+                Alarm alarm = new Alarm { Id = new Guid("f1a17676-f421-4649-80a5-b13935ae7404") };
+
                 AuditFilter auditFilter = new AuditFilter
                 {
                     StartTime = new DateTime(2019, 12, 12),
@@ -1000,37 +951,10 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     OriginApplications = "6,1",
                     ActionTypes = "5,0",
                 };
-                string jsonAudit = @"{
-                  ""Id"": ""9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf"",
-                  ""CreationTime"": ""2020-01-10T13:52:53.547Z"",
-                  ""ActionTypeUrl"": ""https://win2016-vm2/api/v2/enumsets/577/members/5"",
-                  ""Discarded"": false,
-                  ""StatusUrl"": null,
-                  ""PreData"": null,
-                  ""PostData"": {
-                    ""unitUrl"": null,
-                    ""precisionUrl"": null,
-                    ""value"": ""::1"",
-                    ""typeUrl"": ""https://win2016-vm2/api/v2/enumsets/501/members/7""
-                  },
-                  ""Parameters"": [],
-                  ""ErrorString"": null,
-                  ""User"": ""MetasysSysAgent"",
-                  ""Signature"": null,
-                  ""ObjectUrl"": ""https://win2016-vm2/api/v2/objects/28bed6b0-4a0f-5bb0-a16f-57a7200685bb"",
-                  ""AnnotationsUrl"": ""https://win2016-vm2/api/v2/audits/aab3a269-8aec-4be1-b3a6-761853442d56/annotations"",
-                  ""Legacy"": {
-                    ""fullyQualifiedItemReference"": ""Win2016-VM2:Win2016-VM2"",
-                    ""itemName"": ""Win2016-VM2"",
-                    ""classLevelUrl"": ""https://win2016-vm2/api/v2/enumsets/568/members/1"",
-                    ""originApplicationUrl"": ""https://win2016-vm2/api/v2/enumsets/578/members/6"",
-                    ""descriptionUrl"": ""https://win2016-vm2/api/v2/enumsets/580/members/41""
-                  },
-                  ""Self"": ""https://win2016-vm2/api/v2/audits/aab3a269-8aec-4be1-b3a6-761853442d56""
-                }";
-                Audit audit = JsonConvert.DeserializeObject<Audit>(jsonAudit);
 
-                string auditAnnotation = "THIS IS A TEST AUDIT ANNOTATION";
+                Audit audit = new Audit { Id = new Guid("f798591b-e6d6-441f-8f7b-596fc2e6c003") };
+
+                Audit auditForAnnotation = new Audit { Id = new Guid("f179a59c-ce36-47e1-afa6-f873b80259ed") };
 
                 /********************************************************************************************************************/
                 var option = "";
@@ -1112,7 +1036,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                             GetAuditsAnnotation(audit);
                             break;
                         case "24":
-                            DiscardSingleAudit();
+                            DiscardSingleAudit(audit);
                             break;
                         case "25":
                             ChangeApiVersion();
@@ -1121,7 +1045,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                             ChangeHostname();
                             break;
                         case "27":
-                            AddAuditAnnotation(audit, auditAnnotation);
+                            AddAuditAnnotation(auditForAnnotation);
                             break;
                         case "28":
                             AddAuditAnnotationMultiple();
@@ -1144,7 +1068,6 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
                 Console.ReadLine();
             }
-
         }
 
         private static void PrintMenu()

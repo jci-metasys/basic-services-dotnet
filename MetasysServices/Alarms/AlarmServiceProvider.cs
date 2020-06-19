@@ -9,6 +9,7 @@ using System.Resources;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
+using log4net.Config;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -41,6 +42,10 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<Alarm> FindByIdAsync(Guid alarmId)
         {
             var response=await GetRequestAsync("alarms", null, alarmId).ConfigureAwait(false);
+            if (response["items"]!=null)
+                {
+                response = response["items"];
+                }
             return JsonConvert.DeserializeObject<Alarm>(response.ToString());
         }
 
