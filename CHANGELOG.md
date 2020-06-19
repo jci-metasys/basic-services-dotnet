@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2020-06-19
+
+### Added
+
+-  Support to API v3 (pre-release)
+-  GetBatchRequestAsync, PutBatchRequestAsync, PostBatchRequestAsync methods to support Objects batch endpoint of v3
+-  Support for Batch request on ReadPropertyMultiple
+-  Support for Batch request on AddAnnotationMultiple (for Audits)
+-  Support for Batch request on DiscardMultiple (for Audits)
+-  Public setter for ApiVersion and Hostname
+-  Overload for WritePropertyMultiple that takes a dictionary of key/value pairs
+-  Support to fully qualified enums of v3 (Sample, Alarm, Audit)
+-  Helpers FindByName, FindByID, FindByShortName to work with MetasysObject, MetasysPoint, Variant, VariantMultiple collections
+-  Support for the method GetAnnotations (for Alarms)
+-  Support for the methods GetAnnotations, AddAnnotation, Discard (for Audits)
+-  Added the new class ResourceManager to support the static methods: Localize, GetCommandEnumeration and GetObjectTypeEnumeration
+
+### Changed
+
+-  Simplified methods and models names of Alarm and Audit service
+-  PostBatchRequestAsync method to support Objects batch endpoint of v3
+-  Support for Batch request on ReadPropertyMultiple
+-  Renamed Point class in MetasysPoint
+-  Renamed Attribute class in MetasysClass
+-  Renamed Variants property of VariantMultiple in Values
+-  Modified the Localize method that now uses the new class ResourceManager
+
 ## [3.5.1] - 2020-05-18
 
 ### Fixed
