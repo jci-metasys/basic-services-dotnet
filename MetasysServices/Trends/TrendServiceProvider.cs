@@ -1,7 +1,9 @@
 ﻿using Flurl.Http;
+using JohnsonControls.Metasys.BasicServices.Utils;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +19,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Caching about read units.
         /// </summary>
         protected Dictionary<string, string> Units = new Dictionary<string, string>();
+
+        private CultureInfo _CultureInfo;
+
         /// <summary>
         /// Initialize a new instance given the Flurl client.
         /// </summary>
@@ -36,14 +41,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<PagedResult<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter)
         {
-            List<Sample> objectSamples = new List<Sample>();                   
+            List<Sample> objectSamples = new List<Sample>();
             // Perform a generic call using objects resource valid for Network Devices as well
             var response = await GetPagedResultsAsync<JToken>("objects", ToDictionary(filter), objectId, "attributes", attributeId,"samples").ConfigureAwait(false);
             // Read full attribute from url
             foreach (JToken s in response.Items)
             {
                 Sample sample = new Sample();
-                string unitsUrl=string.Empty;
+                string unitsUrl = string.Empty;
+                string UnitEnumerationKey = string.Empty;
+                string UnitKey = "unitEnumSet.degC";
                 try
                 {
                     if (Version < ApiVersion.v3)
@@ -52,6 +59,8 @@ namespace JohnsonControls.Metasys.BasicServices
                         sample.IsReliable = s["isReliable"].Value<Boolean>();
                         sample.Value = s["value"]["value"].Value<double>();
                         unitsUrl = s["value"]["units"].Value<string>();
+                        UnitEnumerationKey = UnitKey;
+                        sample.Unit = ResourceManager.Localize(UnitKey, _CultureInfo);
                     }
                     else
                     {
@@ -60,6 +69,8 @@ namespace JohnsonControls.Metasys.BasicServices
                         sample.IsReliable = s["result"]["isReliable"].Value<Boolean>();
                         sample.Value = s["result"]["value"]["value"]["value"].Value<double>();
                         sample.Unit = s["result"]["value"]["units"].Value<string>();
+                        UnitEnumerationKey = UnitKey;
+                        sample.Unit = ResourceManager.Localize(UnitKey, _CultureInfo);
                     }
                 }
                 catch (ArgumentNullException e)

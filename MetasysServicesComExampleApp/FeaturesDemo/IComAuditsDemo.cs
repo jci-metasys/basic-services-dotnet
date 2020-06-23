@@ -32,7 +32,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 string auditFilterInputItem;
                 ComAuditFilter auditFilterItem = new ComAuditFilter();
 
-                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Origin Applications," +
+                Console.WriteLine("\n Please enter these parameters separated by space: Start Time, End Time, Origin Applications," +
                                   "Class Levels, Action Type, Exclude discarded, Page, Page Size, Sort" +
                                   "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
 
@@ -68,12 +68,12 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                     Console.WriteLine("No audit found.");
                 }
 
-                Console.WriteLine("\nEnter object id to get audit details: ");
+                Console.WriteLine("\n Enter object id to get audit details: ");
                 string objectId = Console.ReadLine();
 
                 var auditsForObject = new ComAuditFilter();
 
-                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Origin Applications," +
+                Console.WriteLine("\n Please enter these parameters separated by space: Start Time, End Time, Origin Applications," +
                                   "Class Levels, Action Type, Exclude discarded, Page, Page Size, Sort" +
                                   "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
 

@@ -98,7 +98,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 getAlarmsForNetworkDevice = Console.ReadLine();
                 args = getAlarmsForNetworkDevice.Split(' ');
 
-                if (args == null || args.Length != 12)
+                if (args != null || args.Length != 12)
                 {
                     alarmFilterModelForNetworkDevice = ReadUserInput(args);
 

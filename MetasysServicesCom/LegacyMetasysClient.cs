@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using MetasysAttribute = JohnsonControls.Metasys.BasicServices.MetasysAttribute;
 using System.Globalization;
 
-
 namespace JohnsonControls.Metasys.ComServices
 {
     /// <summary>
@@ -279,6 +278,7 @@ namespace JohnsonControls.Metasys.ComServices
             PagedResult<Alarm> alarmItems = Client.Alarms.Get(mapAlarmFilter);
             return Mapper.Map<IComPagedResult>(alarmItems);
         }
+
         /// <inheritdoc />
         public object GetAlarmAnnotations(string alarmId)
         {

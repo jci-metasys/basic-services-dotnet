@@ -57,17 +57,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Data value prior to the Audit.
         /// </summary>
-        public dynamic PreData { get; set; }
+        public AuditData PreData { get; set; }
 
         /// <summary>
         /// Data value after the Audit.
         /// </summary>
-        public dynamic PostData { get; set; }
+        public AuditData PostData { get; set; }
 
         /// <summary>
         /// Parameters for the Audit.
         /// </summary>
-        public dynamic Parameters { get; set; }
+        public AuditData Parameters { get; set; }
 
         /// <summary>
         /// The error that may have occurred during an audit.
@@ -98,7 +98,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Metasys specific data.
         /// </summary>
-        public dynamic Legacy { get; set; }
+        public LegacyData Legacy { get; set; }
 
         /// <summary>
         /// URI that points back to this resource
@@ -134,7 +134,7 @@ namespace JohnsonControls.Metasys.BasicServices
             if (CreationTime != null)
                 code = (code * 7) + CreationTime.GetHashCode();
             if (this.ActionTypeUrl != null)
-                code = (code * 7) + ActionTypeUrl.GetHashCode();         
+                code = (code * 7) + ActionTypeUrl.GetHashCode();
             code = (code * 7) + Discarded.GetHashCode();
             if (this.StatusUrl != null)
                 code = (code * 7) + StatusUrl.GetHashCode();
@@ -148,6 +148,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 code = (code * 7) + AnnotationsUrl.GetHashCode();
             if (this.Self != null)
                 code = (code * 7) + Self.GetHashCode();
+
             return code;
         }
 

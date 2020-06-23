@@ -15,7 +15,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Attempts to login to the given host.
         /// </summary>
-        /// <returns>Access Token.</returns>  
+        /// <returns>Access Token.</returns>
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
@@ -26,8 +26,8 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Attempts to login to the given host, using Credential Manager target.
         /// </summary>
-        /// <param name="target"></param>       
-        /// <param name="refresh"></param>       
+        /// <param name="target"></param>
+        /// <param name="refresh"></param>
         /// <returns></returns>
         IComAccessToken TryLoginWithCredMan(string target, bool refresh = true);
 

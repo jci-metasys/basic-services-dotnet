@@ -613,7 +613,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         }
         #endregion
 
-        #region ALARMS      
+        #region ALARMS
         private void GetAlarms()
         {
             /* SNIPPET 1: START */
@@ -629,7 +629,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("Current page:" + alarmsPager.CurrentPage);
             Console.WriteLine("Page size:" + alarmsPager.PageSize);
             Console.WriteLine("Pages:" + alarmsPager.PageCount);
-            /* Console Output: Start                       
+            /* Console Output: Start
                 Total:4611
                 Current page:1
                 Page size:100
@@ -637,7 +637,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console Output: End */
             Alarm alarm = alarmsPager.Items.ElementAt(0);
             Console.WriteLine(alarm);
-            /* Console Output: Start                       
+            /* Console Output: Start
                 {
                   "Self": "https://win2016-vm2/api/v2/alarms/ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7",
                   "Id": "ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7",

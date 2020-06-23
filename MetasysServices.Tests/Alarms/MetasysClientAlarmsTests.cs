@@ -65,7 +65,7 @@ namespace MetasysServices.Tests
             ""self"": ""https://hostname/api/v2/alarms?pageSize=1&excludePending=false&excludeAcknowledged=false&excludeDiscarded=false&page=1&sort=creationTime""
             ";
             httpTest
-             .RespondWith(response);           
+             .RespondWith(response);
             var alarms = client.Alarms.Get(AlarmFilter);
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")
                 .WithVerb(HttpMethod.Get)
@@ -110,7 +110,7 @@ namespace MetasysServices.Tests
             Assert.Throws<MetasysObjectException>(()=>client.Alarms.Get(new AlarmFilter { }));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")
                 .WithVerb(HttpMethod.Get)
-                .Times(1);           
+                .Times(1);
         }
 
         [Test]
