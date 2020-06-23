@@ -49,13 +49,13 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var code = 13;
             // Calculate hash on each properties one by one
-            code = (code * 7) + this.Value.GetHashCode();          
+            code = (code * 7) + this.Value.GetHashCode();
             code = (code * 7) + IsReliable.GetHashCode();
             if (this.Unit != null)
                 code = (code * 7) + Unit.GetHashCode();
             if (this.Timestamp != null)
-                code = (code * 7) + Timestamp.GetHashCode();            
-            code = (code * 7) + Value.GetHashCode();           
+                code = (code * 7) + Timestamp.GetHashCode();
+            code = (code * 7) + Value.GetHashCode();
             return code;
         }
 

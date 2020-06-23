@@ -559,7 +559,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             {
                 Console.WriteLine(type);
             }
-            /*                        
+            /*
                 {
                   "Description": "Building",
                   "DescriptionEnumerationKey": "Building",
@@ -623,7 +623,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             MetasysPoint point = equipmentPoints.FindByShortName("Analog Input-1");
             string presentValue = point.PresentValue?.StringValue;
             Console.WriteLine(point);
-            /*                        
+            /*
                 {
                   "EquipmentName": "AHU-07",
                   "ShortName": "CLG-O",
@@ -653,7 +653,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         }
         #endregion
 
-        #region ALARMS      
+        #region ALARMS
         private void GetAlarms()
         {
             /* SNIPPET 1: START */
@@ -1054,7 +1054,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                             DiscardAuditMultiple();
                             break;
                         case "99":
-                            return; // Exit from JSON output demo                            
+                            return; // Exit from JSON output demo
                     }
                     Console.WriteLine();
                     Console.WriteLine("Press Enter to return to the JSON output menu...");

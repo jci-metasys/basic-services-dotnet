@@ -96,7 +96,6 @@ namespace MetasysServices.Tests
             Assert.AreEqual(expected, alarms.Items.ElementAt(0));
         }
 
-        
         [Test]
         public void TestGetNetworkDeviceAlarmsMissingItems()
         {
@@ -112,7 +111,7 @@ namespace MetasysServices.Tests
             Assert.Throws<MetasysObjectException>(()=>client.Alarms.GetForNetworkDevice(mockid, new AlarmFilter { }));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
-                .Times(1);          
+                .Times(1);
         }
 
         [Test]
