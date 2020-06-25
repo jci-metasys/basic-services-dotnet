@@ -115,10 +115,12 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 var o = (Alarm)obj;
                 // Compare each properties one by one for better performance
-                return this.Id == o.Id && this.IsAcknowledged == o.IsAcknowledged && this.IsAckRequired == o.IsAckRequired && this.IsDiscarded == o.IsDiscarded
-                       && this.ItemReference == o.ItemReference && this.Message == o.Message && this.Name == o.Name && this.ObjectUrl == o.ObjectUrl &&
-                       this.Priority == o.Priority && this.Self == o.Self && this.TypeUrl == o.TypeUrl
-                       && this.AnnotationsUrl==o.AnnotationsUrl && this.CategoryUrl==o.CategoryUrl && this.CreationTime==o.CreationTime;
+                return this.Id == o.Id && this.IsAcknowledged == o.IsAcknowledged && this.IsAckRequired == o.IsAckRequired
+                    && this.IsDiscarded == o.IsDiscarded && this.ItemReference == o.ItemReference && this.Message == o.Message
+                    && this.Name == o.Name && this.ObjectUrl == o.ObjectUrl && this.Priority == o.Priority
+                    && this.Self == o.Self && this.TypeUrl == o.TypeUrl && this.Type == o.Type && this.AnnotationsUrl == o.AnnotationsUrl
+                    && this.CategoryUrl == o.CategoryUrl && this.Category == o.Category && this.CreationTime == o.CreationTime
+                    && this.TriggerValue == o.TriggerValue;
             }
             return false;
         }
@@ -136,22 +138,27 @@ namespace JohnsonControls.Metasys.BasicServices
             if (this.CategoryUrl != null)
                 code = (code * 7) + CategoryUrl.GetHashCode();
             if (this.CreationTime != null)
-                code = (code * 7) + CreationTime.GetHashCode();          
-            code = (code * 7) + IsAckRequired.GetHashCode();          
-            code = (code * 7) + IsAcknowledged.GetHashCode();           
+                code = (code * 7) + CreationTime.GetHashCode();
+            code = (code * 7) + IsAckRequired.GetHashCode();
+            code = (code * 7) + IsAcknowledged.GetHashCode();
             code = (code * 7) + IsDiscarded.GetHashCode();
             if (this.Message != null)
                 code = (code * 7) + Message.GetHashCode();
             if (this.Name != null)
                 code = (code * 7) + Name.GetHashCode();
             if (this.ObjectUrl != null)
-                code = (code * 7) + ObjectUrl.GetHashCode();           
+                code = (code * 7) + ObjectUrl.GetHashCode();
             code = (code * 7) + Priority.GetHashCode();
             if (this.Self != null)
                 code = (code * 7) + Self.GetHashCode();
-            // to do: add compare on trigger value
             if (this.TypeUrl != null)
                 code = (code * 7) + TypeUrl.GetHashCode();
+            if (this.Type != null)
+                code = (code * 7) + Type.GetHashCode();
+            if (this.Category != null)
+                code = (code * 7) + Category.GetHashCode();
+            if (this.TriggerValue != null)
+                code = (code * 7) + TriggerValue.GetHashCode();
             return code;
         }
 
