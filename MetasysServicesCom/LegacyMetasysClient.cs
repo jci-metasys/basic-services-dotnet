@@ -67,6 +67,8 @@ namespace JohnsonControls.Metasys.ComServices
                     .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComSample[]>(src.Items)));
                 cfg.CreateMap<IComAuditFilter, AuditFilter>();
                 cfg.CreateMap<Audit, IComAudit>();
+                cfg.CreateMap<LegacyInfo, IComLegacyInfo>();
+                cfg.CreateMap<AuditSignature, IComAuditSignature>();
                 cfg.CreateMap<PagedResult<Audit>, IComPagedResult>()
                     // This is needed in order to correctly map to generic object reference to array, in order to correctly map to VBA
                     .ForMember(dest => dest.Items, opt => opt.MapFrom(src => Mapper.Map<IComAudit[]>(src.Items)));

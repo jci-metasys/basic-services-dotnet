@@ -512,7 +512,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (ids == null || attributeValues == null)
             {
-                return;
+                throw new ArgumentNullException("ids and/or attributeValues.");
             }
 
             var item = GetWritePropertyBody(attributeValues);
@@ -969,7 +969,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (ids == null || attributeValues == null)
             {
-                return;
+                throw new ArgumentNullException("ids and/or attributeValues.");
             }
             // convert dictionary to a list of tuples and use existing overload
             await WritePropertyMultipleAsync(ids, attributeValues.Select(x => (x.Key, x.Value)));
