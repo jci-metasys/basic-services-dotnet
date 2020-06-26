@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Resources;
 using System.Threading.Tasks;
 using Flurl;
@@ -45,13 +47,19 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<PagedResult<Audit>> GetAsync(AuditFilter auditFilter)
         {
-            return await GetPagedResultsAsync<Audit>("audits", ToDictionary(auditFilter)).ConfigureAwait(false);
+            var dictionary = ToDictionary(auditFilter);
+            dictionary["OriginApplications"] = GetEnumCsv<OriginApplicationsEnum>(auditFilter.OriginApplications);
+            dictionary["ActionTypes"] = GetEnumCsv<ActionTypeEnum>(auditFilter.ActionTypes);
+            return await GetPagedResultsAsync<Audit>("audits", dictionary).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public async Task<PagedResult<Audit>> GetForObjectAsync(Guid objectId, AuditFilter auditFilter)
         {
-            return await GetPagedResultsAsync<Audit>("objects", ToDictionary(auditFilter), objectId, BaseParam).ConfigureAwait(false);
+            var dictionary = ToDictionary(auditFilter);
+            dictionary["OriginApplications"] = GetEnumCsv<OriginApplicationsEnum>(auditFilter.OriginApplications);
+            dictionary["ActionTypes"] = GetEnumCsv<ActionTypeEnum>(auditFilter.ActionTypes);
+            return await GetPagedResultsAsync<Audit>("objects", dictionary, objectId, BaseParam).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -246,6 +254,40 @@ namespace JohnsonControls.Metasys.BasicServices
                 results.Add(resultItem);
             }
             return results;
+        }
+
+        private string GetEnumCsv<T>(Enum enumerableItem)
+        {
+            var csvString = string.Empty;
+            Type enumList = typeof(T);
+
+            foreach (Enum item in Enum.GetValues(enumList))
+            {
+                if (enumerableItem.HasFlag(item))
+                {
+                    if (!string.IsNullOrEmpty(csvString))
+                    {
+                        csvString += ",";
+                    }
+                    csvString += GetEnumDescription(item);
+                }
+            }
+
+            return csvString;
+        }
+
+        private static string GetEnumDescription(Enum value)
+        {
+            FieldInfo fi = value.GetType().GetField(value.ToString());
+
+            DescriptionAttribute[] attributes = fi.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
+
+            if (attributes != null && attributes.Any())
+            {
+                return attributes.First().Description;
+            }
+
+            return value.ToString();
         }
     }
 
