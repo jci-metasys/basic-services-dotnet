@@ -239,7 +239,7 @@ namespace JohnsonControls.Metasys.BasicServices
         IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false);
 
         /// <inheritdoc cref="IMetasysClient.GetObjects(Guid, int, bool)"/>
-        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, bool includeInternalObjects=false);
+        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, bool includeInternalObjects = false);
 
         /// <summary>
         /// Gets all spaces.
@@ -323,5 +323,15 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <inheritdoc cref="IMetasysClient.TryLogin(string, bool)"/>
         Task<AccessToken> TryLoginAsync(string credManTarget, bool refresh = true);
+
+        /// <summary>
+        /// Returns the current server time in UTC format.
+        /// </summary>
+        /// <returns>The current Server time.</returns>
+        /// <exception cref="MetasysHttpException">Occurs when it's not possible to read date time from HTTP response.</exception>
+        DateTime GetServerTime();
+
+        /// <inheritdoc cref="IMetasysClient.GetServerTime()"/>
+        Task<DateTime> GetServerTimeAsync();
     }
 }

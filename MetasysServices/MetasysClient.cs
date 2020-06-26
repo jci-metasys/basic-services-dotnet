@@ -973,6 +973,34 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             // convert dictionary to a list of tuples and use existing overload
             await WritePropertyMultipleAsync(ids, attributeValues.Select(x => (x.Key, x.Value)));
-        }      
+        }
+
+        ///<inheritdoc/>
+        public DateTime GetServerTime()
+        {
+            return GetServerTimeAsync().GetAwaiter().GetResult();
+        }
+
+        ///<inheritdoc/>
+        public async Task<DateTime> GetServerTimeAsync()
+        {
+            // Using the RefreshToken call to read the HTTP header
+            DateTime? serverTime = null;
+            try
+            {
+                HttpResponseMessage response = await Client.Request("refreshToken").GetAsync().ConfigureAwait(false);
+                var date = response.Headers.Date;
+                if (date == null)
+                {
+                    throw new MetasysHttpException("Cannot read date time from HTTP response of Metasys Server.", response.ToString());
+                }  
+                serverTime= date.Value.UtcDateTime;
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return serverTime.Value;
+        }
     }
 }
