@@ -775,10 +775,10 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 1: START */
             AuditFilter auditFilter = new AuditFilter
             {
-                StartTime = new DateTime(2020, 6, 23),
-                EndTime = new DateTime(2020, 6, 24),
-                OriginApplications = "6,1",
-                ActionTypes = "5,0",
+                StartTime = new DateTime(2020, 06, 01),
+                EndTime = new DateTime(2020, 06, 24),
+                OriginApplications = OriginApplicationsEnum.SystemSecurity | OriginApplicationsEnum.AuditTrails,
+                ActionTypes = ActionTypeEnum.Subsystem | ActionTypeEnum.Command
             };
             PagedResult<Audit> auditsPager = client.Audits.Get(auditFilter);
             // Prints the number of records fetched and paging information
@@ -923,7 +923,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             try
             {
                 /**** Common vars shared between different snippets: modify the following input according to your testing server *****/
-                Guid objectId = new Guid("3a6cac5e-5578-55da-b74e-ca43548ab3a8");
+                Guid objectId = new Guid("8e3b3738-2f5f-494d-bde1-fac15da28c86");
                 Guid id1 = objectId;
                 Guid id2 = new Guid("01e025e8-0fb3-59da-a9b8-2f238c6f011c");
                 // Common objects are mocked to do not waste precious roundtrip time on each snippet
@@ -946,10 +946,10 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
                 AuditFilter auditFilter = new AuditFilter
                 {
-                    StartTime = new DateTime(2019, 12, 12),
-                    EndTime = new DateTime(2020, 1, 12),
-                    OriginApplications = "6,1",
-                    ActionTypes = "5,0",
+                    StartTime = new DateTime(2020, 06, 01),
+                    EndTime = new DateTime(2020, 06, 24),
+                    OriginApplications = OriginApplicationsEnum.SystemSecurity | OriginApplicationsEnum.AuditTrails,
+                    ActionTypes = ActionTypeEnum.Subsystem | ActionTypeEnum.Command
                 };
 
                 Audit audit = new Audit { Id = new Guid("f798591b-e6d6-441f-8f7b-596fc2e6c003") };
