@@ -107,11 +107,11 @@ namespace JohnsonControls.Metasys.BasicServices
                 TypeUrl = token["typeUrl"].Value<string>();
                 if (Type == MetasysObjectTypeEnum.Space)
                 {
-                    // Set the specific category for Space                
+                    // Set the specific category for Space
                     var typeId = TypeUrl.Split('/').Last();
-                    // Convert space type to enum                
+                    // Convert space type to enum
                     Category = ((SpaceTypeEnum)int.Parse(typeId)).ToString();
-                }                
+                }
             }
             catch
             {
@@ -122,13 +122,13 @@ namespace JohnsonControls.Metasys.BasicServices
             if (version > ApiVersion.v2)
             {
                 try
-                {                    
+                {
                     // Object Type is available since API v3 only on object detail. 
-                    ObjectType= token["objectType"].Value<string>();                   
+                    ObjectType= token["objectType"].Value<string>();
                 }
                 catch
                 {
-                    ObjectType = null;                   
+                    ObjectType = null;
                 }
             }
         }
