@@ -46,5 +46,25 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <remarks> This is available since Metasys API v3. </remarks>
         public string Type { get; set; }
+
+        /// <summary>
+        /// Returns a value indicating whether this instance has values equal to a specified object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj is AuditData)
+            {
+                var o = (AuditData)obj;
+                // Compare each properties one by one for better performance
+                return this.UnitsUrl == o.UnitsUrl && this.Unit == o.Unit
+                    && this.PrecisionUrl == o.PrecisionUrl && this.Precision == o.Precision
+                    && this.Value == o.Value && this.TypeUrl == o.TypeUrl
+                    && this.Type == o.Type;
+            }
+            return false;
+        }
+
     }
 }

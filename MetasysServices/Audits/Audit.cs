@@ -117,7 +117,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 var o = (Audit)obj;
                 // Compare each properties one by one for better performance
                 return this.Id == o.Id && this.CreationTime == o.CreationTime && this.ActionTypeUrl == o.ActionTypeUrl
-                                  && this.Discarded == o.Discarded && this.StatusUrl == o.StatusUrl
+                                  && this.ActionType == o.ActionType && this.Discarded == o.Discarded
+                                  && this.StatusUrl == o.StatusUrl && this.Status == o.Status
                                   && this.ErrorString == o.ErrorString && this.User == o.User
                                   && this.ObjectUrl == o.ObjectUrl && this.AnnotationsUrl == o.AnnotationsUrl
                                   && this.Self == o.Self;
@@ -135,9 +136,13 @@ namespace JohnsonControls.Metasys.BasicServices
                 code = (code * 7) + CreationTime.GetHashCode();
             if (this.ActionTypeUrl != null)
                 code = (code * 7) + ActionTypeUrl.GetHashCode();
+            if (this.ActionType != null)
+                code = (code * 7) + ActionType.GetHashCode();
             code = (code * 7) + Discarded.GetHashCode();
             if (this.StatusUrl != null)
                 code = (code * 7) + StatusUrl.GetHashCode();
+            if (this.Status != null)
+                code = (code * 7) + Status.GetHashCode();
             if (this.ErrorString != null)
                 code = (code * 7) + ErrorString.GetHashCode();
             if (this.User != null)

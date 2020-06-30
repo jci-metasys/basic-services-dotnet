@@ -49,8 +49,6 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 Sample sample = new Sample();
                 string unitsUrl=string.Empty;
-                string UnitEnumerationKey = string.Empty;
-                string UnitKey = "unitEnumSet.degC";
                 try
                 {
                     if (Version < ApiVersion.v3)
@@ -59,8 +57,7 @@ namespace JohnsonControls.Metasys.BasicServices
                         sample.IsReliable = s["isReliable"].Value<Boolean>();
                         sample.Value = s["value"]["value"].Value<double>();
                         unitsUrl = s["value"]["units"].Value<string>();
-                        UnitEnumerationKey = UnitKey;
-                        sample.Unit = ResourceManager.Localize(UnitKey, _CultureInfo);
+                        sample.Unit = ResourceManager.Localize(unitsUrl, _CultureInfo);
                     }
                     else
                     {
@@ -69,15 +66,14 @@ namespace JohnsonControls.Metasys.BasicServices
                         sample.IsReliable = s["result"]["isReliable"].Value<Boolean>();
                         sample.Value = s["result"]["value"]["value"]["value"].Value<double>();
                         sample.Unit = s["result"]["value"]["units"].Value<string>();
-                        UnitEnumerationKey = UnitKey;
-                        sample.Unit = ResourceManager.Localize(UnitKey, _CultureInfo);
+                        sample.Unit = ResourceManager.Localize(sample.Unit, _CultureInfo);
                     }
                 }
                 catch (ArgumentNullException e)
                 {
                     // Something went wrong on object parsing
                     throw new MetasysObjectException(e);
-                }               
+                }
                 if (Version < ApiVersion.v3)
                 {
                     // On Api v2 and v1 there was the url endpoint of the enum instead of the fully qualified enumeration string
@@ -154,6 +150,6 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
             }
             return objectAttributes;
-        }     
+        }
     }
 }

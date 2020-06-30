@@ -119,8 +119,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     && this.IsDiscarded == o.IsDiscarded && this.ItemReference == o.ItemReference && this.Message == o.Message
                     && this.Name == o.Name && this.ObjectUrl == o.ObjectUrl && this.Priority == o.Priority
                     && this.Self == o.Self && this.TypeUrl == o.TypeUrl && this.Type == o.Type && this.AnnotationsUrl == o.AnnotationsUrl
-                    && this.CategoryUrl == o.CategoryUrl && this.Category == o.Category && this.CreationTime == o.CreationTime
-                    && this.TriggerValue == o.TriggerValue;
+                    && this.CategoryUrl == o.CategoryUrl && this.Category == o.Category && this.CreationTime == o.CreationTime;
             }
             return false;
         }
@@ -157,8 +156,6 @@ namespace JohnsonControls.Metasys.BasicServices
                 code = (code * 7) + Type.GetHashCode();
             if (this.Category != null)
                 code = (code * 7) + Category.GetHashCode();
-            if (this.TriggerValue != null)
-                code = (code * 7) + TriggerValue.GetHashCode();
             return code;
         }
 

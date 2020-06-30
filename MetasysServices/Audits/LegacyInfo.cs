@@ -49,5 +49,24 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <remarks>Available up to Metasys API v2.</remarks>
         public string DescriptionUrl { get; set; }
 
-    }           
+        /// <summary>
+        /// Returns a value indicating whether this instance has values equal to a specified object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj is LegacyInfo)
+            {
+                var o = (LegacyInfo)obj;
+                // Compare each properties one by one for better performance
+                return this.FullyQualifiedItemReference == o.FullyQualifiedItemReference && this.ItemName == o.ItemName
+                    && this.ClassLevel == o.ClassLevel && this.ClassLevelUrl == o.ClassLevelUrl
+                    && this.OriginApplication == o.OriginApplication && this.OriginApplicationUrl == o.OriginApplicationUrl
+                    && this.Description == o.Description && this.DescriptionUrl == o.DescriptionUrl;
+            }
+            return false;
+        }
+
+    }
 }

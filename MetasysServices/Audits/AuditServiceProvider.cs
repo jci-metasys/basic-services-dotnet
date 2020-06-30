@@ -50,7 +50,7 @@ namespace JohnsonControls.Metasys.BasicServices
             var dictionary = ToDictionary(auditFilter);
             dictionary["OriginApplications"] = GetEnumCsv<OriginApplicationsEnum>(auditFilter.OriginApplications);
             dictionary["ActionTypes"] = GetEnumCsv<ActionTypeEnum>(auditFilter.ActionTypes);
-            var response = await GetPagedResultsAsync<Audit>("audits", dictionary).ConfigureAwait(false);
+            var response = await GetPagedResultsAsync<JToken>("audits", dictionary).ConfigureAwait(false);
             List<Audit> audits = new List<Audit>();
             foreach (var item in response.Items)
             {
@@ -64,7 +64,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 PageCount = response.PageCount,
                 PageSize = response.PageSize,
                 Total = response.Total
-            };        }
+            };
+        }
 
         /// <inheritdoc/>
         public async Task<PagedResult<Audit>> GetForObjectAsync(Guid objectId, AuditFilter auditFilter)
@@ -72,7 +73,7 @@ namespace JohnsonControls.Metasys.BasicServices
             var dictionary = ToDictionary(auditFilter);
             dictionary["OriginApplications"] = GetEnumCsv<OriginApplicationsEnum>(auditFilter.OriginApplications);
             dictionary["ActionTypes"] = GetEnumCsv<ActionTypeEnum>(auditFilter.ActionTypes);
-            var response = await GetPagedResultsAsync<Audit>("objects", dictionary, objectId, BaseParam).ConfigureAwait(false);
+            var response = await GetPagedResultsAsync<JToken>("objects", dictionary, objectId, BaseParam).ConfigureAwait(false);
             List<Audit> audits = new List<Audit>();
             foreach (var item in response.Items)
             {
@@ -85,7 +86,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 PageCount = response.PageCount,
                 PageSize = response.PageSize,
                 Total = response.Total
-            };        }
+            };
+        }
 
         /// <inheritdoc/>
         public Audit FindById(Guid auditId)
@@ -281,7 +283,11 @@ namespace JohnsonControls.Metasys.BasicServices
                 audit.Discarded = item["discarded"].Value<bool>();
                 audit.ErrorString = item["errorString"].Value<string>();
                 audit.User = item["user"].Value<string>();
-                audit.Signature = item["signature"].Value<string>();
+                new AuditSignature
+                {
+                    FullName = item["signature"].Contains("fullName") ? item["signature"]["fullName"].Value<string>() : null,
+                    Reason = item["signature"].Contains("reason") ? item["signature"]["reason"].Value<string>() : null
+                };
                 audit.ObjectUrl = item["objectUrl"].Value<string>();
                 audit.AnnotationsUrl = item["annotationsUrl"].Value<string>();
                 audit.Self = item["self"].Value<string>();
@@ -322,7 +328,7 @@ namespace JohnsonControls.Metasys.BasicServices
                         Value = item["preData"].Contains("precision") ? item["preData"]["value"].Value<string>() : null,
                         Type = item["parameters"].Contains("type") ? item["parameters"]["type"].Value<string>() : null
                     };
-                    var legacyData = new LegacyData
+                    var legacyInfo = new LegacyInfo
                     {
                         FullyQualifiedItemReference = item["legacy"].Contains("FullyQualifiedItemReference") ? item["legacy"]["fullyQualifiedItemReference"].Value<string>() : null,
                         ItemName = item["legacy"].Contains("itemName") ? item["legacy"]["itemName"].Value<string>() : null,
@@ -334,7 +340,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     audit.PreData = preData;
                     audit.PostData = postData;
                     audit.Parameters = parameters;
-                    audit.Legacy = legacyData;
+                    audit.Legacy = legacyInfo;
                 }
             }
             catch (ArgumentNullException e)
@@ -345,7 +351,7 @@ namespace JohnsonControls.Metasys.BasicServices
             if (Version < ApiVersion.v3)
             {
                 // On Api v2 and v1 there was the url endpoint of the enum instead of the fully qualified enumeration string
-                var legacyData = new LegacyData
+                var legacyInfo = new LegacyInfo
                 {
                     FullyQualifiedItemReference = item["legacy"]["fullyQualifiedItemReference"].Value<string>(),
                     ItemName = item["legacy"]["itemName"].Value<string>(),
@@ -381,7 +387,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 audit.PreData = preData;
                 audit.PostData = postData;
                 audit.Parameters = parameters;
-                audit.Legacy = legacyData;
+                audit.Legacy = legacyInfo;
                 audit.ActionType = !string.IsNullOrEmpty(actionTypeUrl) ? await GetEnumValue(actionTypeUrl) : null;
                 audit.Status = !string.IsNullOrEmpty(statusUrl) ? await GetEnumValue(statusUrl) : null;
             }
