@@ -32,7 +32,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 string getAlarms;
                 ComAlarmFilter getAlarmsFilter = new ComAlarmFilter();
 
-                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Priority range, Type, Exclude pending, Exclude acknowledged, Exclude discarded, Attribute, Category, Page, Page Size, Sort" +
+                Console.WriteLine("\nPlease enter these parameters separated by space: Start Time, End Time, Priority range, Type, Exclude pending, Exclude acknowledged, Exclude discarded, Attribute, Category, Page, Page Size, Sort" +
                     "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
                 getAlarms = Console.ReadLine();
                 string[] args;

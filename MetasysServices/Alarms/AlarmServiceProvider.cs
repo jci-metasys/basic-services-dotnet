@@ -38,72 +38,79 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<PagedResult<Alarm>> GetAsync(AlarmFilter alarmFilter)
         {
             List<Alarm> alarms = new List<Alarm>();
-            var response = await GetPagedResultsAsync<JToken>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);
+            var response = await GetPagedResultsAsync<Alarm>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);
+            if (Version >= ApiVersion.v3) {
+                foreach (var item in response.Items) {
+                    alarms.Add(await CreateItem(item));
+                }
 
-            foreach (var item in response.Items)
-            {
-                alarms.Add(await CreateItem(item));
+                response = new PagedResult<Alarm> {
+                    Items = alarms,
+                    CurrentPage = response.CurrentPage,
+                    PageCount = response.PageCount,
+                    PageSize = response.PageSize,
+                    Total = response.Total
+                };
             }
-
-            return new PagedResult<Alarm>
-            {
-                Items = alarms,
-                CurrentPage = response.CurrentPage,
-                PageCount = response.PageCount,
-                PageSize = response.PageSize,
-                Total = response.Total
-            };
+            return response;
         }
 
         /// <inheritdoc/>
         public async Task<Alarm> FindByIdAsync(Guid alarmId)
         {
-            var response=await GetRequestAsync("alarms", null, alarmId).ConfigureAwait(false);
-            if (response["items"]!=null)
-                {
-                response = response["items"];
+            var response = await GetRequestAsync("alarms", null, alarmId).ConfigureAwait(false);
+            var output = new Alarm();
+            if (Version < ApiVersion.v3) {
+                if (response["item"] != null) {
+                    response = response["item"];
                 }
-            return await CreateItem(response);
+                output = JsonConvert.DeserializeObject<Alarm>(response.ToString());
+            }
+            else {
+                output = await CreateItem(JsonConvert.DeserializeObject<Alarm>(response.ToString()));
+            }
+            return output;
         }
 
         /// <inheritdoc/>
         public async Task<PagedResult<Alarm>> GetForObjectAsync(Guid objectId, AlarmFilter alarmFilter)
         {
             List<Alarm> alarms = new List<Alarm>();
-            var response = await GetPagedResultsAsync<JToken>("objects", ToDictionary(alarmFilter), objectId, "alarms").ConfigureAwait(false);
-            foreach (var item in response.Items)
-            {
-                alarms.Add(await CreateItem(item));
+            var response = await GetPagedResultsAsync<Alarm>("objects", ToDictionary(alarmFilter), objectId, "alarms").ConfigureAwait(false);
+            if (Version >= ApiVersion.v3) {
+                foreach (var item in response.Items) {
+                    alarms.Add(await CreateItem(item));
+                }
+                response = new PagedResult<Alarm> {
+                    Items = alarms,
+                    CurrentPage = response.CurrentPage,
+                    PageCount = response.PageCount,
+                    PageSize = response.PageSize,
+                    Total = response.Total
+                };
             }
-            return new PagedResult<Alarm>
-            {
-                Items = alarms,
-                CurrentPage = response.CurrentPage,
-                PageCount = response.PageCount,
-                PageSize = response.PageSize,
-                Total = response.Total
-            };
+            return response;
         }
 
         /// <inheritdoc/>
         public async Task<PagedResult<Alarm>> GetForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter alarmFilter)
         {
             List<Alarm> alarms = new List<Alarm>();
-            var response = await GetPagedResultsAsync<JToken>("networkDevices", ToDictionary(alarmFilter), networkDeviceId, "alarms").ConfigureAwait(false);
+            var response = await GetPagedResultsAsync<Alarm>("networkDevices", ToDictionary(alarmFilter), networkDeviceId, "alarms").ConfigureAwait(false);
+            if (Version >= ApiVersion.v3) {
+                foreach (var item in response.Items) {
+                    alarms.Add(await CreateItem(item));
+                }
 
-            foreach (var item in response.Items)
-            {
-                alarms.Add(await CreateItem(item));
+                response = new PagedResult<Alarm> {
+                    Items = alarms,
+                    CurrentPage = response.CurrentPage,
+                    PageCount = response.PageCount,
+                    PageSize = response.PageSize,
+                    Total = response.Total
+                };
             }
-
-            return new PagedResult<Alarm>
-            {
-                Items = alarms,
-                CurrentPage = response.CurrentPage,
-                PageCount = response.PageCount,
-                PageSize = response.PageSize,
-                Total = response.Total
-            };
+            return response;
         }
 
         /// <inheritdoc/>
@@ -165,83 +172,23 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
 
-        private async Task<Alarm> CreateItem(JToken item)
+        private async Task<Alarm> CreateItem(Alarm item)
         {
-            Alarm alarm = new Alarm();
-            string unitsUrl = string.Empty;
-            string typeUrl = string.Empty;
-            string categoryUrl = string.Empty;
-
-            try
-            {
-                alarm.Id = (Guid)item["id"];
-                alarm.Self = item["self"].Value<string>();
-                alarm.ItemReference = item["itemReference"].Value<string>();
-                alarm.Name = item["name"].Value<string>();
-                alarm.Message = item["message"].Value<string>();
-                alarm.IsAckRequired = item["isAckRequired"].Value<bool>();
-                alarm.Priority = item["priority"].Value<int>();
-                alarm.CreationTime = item["creationTime"].Value<string>();
-                alarm.IsAcknowledged = item["isAcknowledged"].Value<bool>();
-                alarm.IsDiscarded = item["isDiscarded"].Value<bool>();
-                alarm.ObjectUrl = item["objectUrl"].Value<string>();
-                alarm.AnnotationsUrl = item["annotationsUrl"].Value<string>();
-
-                if (Version < ApiVersion.v3)
-                {
-                    typeUrl = item["typeUrl"].Value<string>();
-                    categoryUrl = item["categoryUrl"].Value<string>();
-                    var unitValue = item["triggerValue"]["unitsUrl"] ?? item["triggerValue"]["valueEnumMemberUrl"];
-                    unitsUrl = unitValue.Value<string>();
-                }
-                else
-                {
-                    alarm.Type = item["type"].Value<string>();
-                    alarm.Category = item["category"].Value<string>();
-                    var unitVar = item["triggerValue"].Contains("units") ? item["triggerValue"]["units"].Value<string>() : null;
-                    var measurement = new Measurement
-                    {
-                        Units = ResourceManager.Localize(unitVar, _CultureInfo),
-                        Value = item["triggerValue"]["value"].Value<string>()
+            try {
+                    var measurement = new Measurement {
+                        Units = ResourceManager.Localize(item.TriggerValue.Units, _CultureInfo),
+                        Value = item.TriggerValue.Value
                     };
 
-                    alarm.TriggerValue = measurement;
-                }
+                    item.TriggerValue = measurement;
+
             }
-            catch (ArgumentNullException e)
-            {
+            catch (ArgumentNullException e) {
                 // Something went wrong on object parsing
                 throw new MetasysObjectException(e);
             }
-            if (Version < ApiVersion.v3)
-            {
-                // On Api v2 and v1 there was the url endpoint of the enum instead of the fully qualified enumeration string
-                var measurement = new Measurement
-                {
-                    Units = await GetEnumValue(unitsUrl),
-                    Value = item["triggerValue"]["value"].Value<string>()
-                };
 
-                alarm.TriggerValue = measurement;
-                alarm.Type = await GetEnumValue(typeUrl);
-                alarm.Category = await GetEnumValue(categoryUrl);
-            }
-
-            return alarm;
-        }
-
-        private async Task<string> GetEnumValue(string url)
-        {
-            Dictionary<string, string> Type = new Dictionary<string, string>();
-
-            var typeId = url.Split('/').Last();
-            if (!Type.ContainsKey(typeId))
-            {
-                var urlValue = await GetWithFullUrl(url).ConfigureAwait(false);
-                Type.Add(typeId, urlValue["description"].Value<string>());
-            }
-
-            return Type[typeId];
+            return item;
         }
 
     }

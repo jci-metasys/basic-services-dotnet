@@ -27,7 +27,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 IComAudit auditItem = (IComAudit)legacyClient.GetSingleAudit(inputAuditId);
 
                 Console.WriteLine(string.Format("\n Audit details found for {0}", inputAuditId));
-                Console.WriteLine($"\n Id: {auditItem.Id}, User: {auditItem.User}, PreData: {auditItem.PreData}, PostDate: {auditItem.PostData}");
+                Console.WriteLine($"\n Id: {auditItem.Id}, User: {auditItem.User}, PreData: {auditItem.PreData}, PostData: {auditItem.PostData}");
 
                 string auditFilterInputItem;
                 ComAuditFilter auditFilterItem = new ComAuditFilter();
@@ -97,7 +97,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
 
                 foreach (var item in auditItemsForObject)
                 {
-                    Console.WriteLine($"\n Id: {item.Id}, User: {item.User}, PreData: {item.PreData}, PostDate: {item.PostData}");
+                    Console.WriteLine($"\n Id: {item.Id}, User: {item.User}, PreData: {item.PreData}, PostData: {item.PostData}");
                 }
             }
             catch (Exception exception)

@@ -57,17 +57,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Data value prior to the Audit.
         /// </summary>
-        public AuditData PreData { get; set; }
+        public dynamic PreData { get; set; }
 
         /// <summary>
         /// Data value after the Audit.
         /// </summary>
-        public AuditData PostData { get; set; }
+        public dynamic PostData { get; set; }
 
         /// <summary>
         /// Parameters for the Audit.
         /// </summary>
-        public AuditData Parameters { get; set; }
+        public dynamic Parameters { get; set; }
 
         /// <summary>
         /// The error that may have occurred during an audit.
@@ -82,7 +82,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The user who created this audit.
         /// </summary>
-        public AuditSignature Signature { get; set; }
+        public dynamic Signature { get; set; }
 
         /// <summary>
         /// A link to the object on which the activity was generated.
@@ -98,7 +98,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Metasys specific data.
         /// </summary>
-        public LegacyInfo Legacy { get; set; }
+        public dynamic Legacy { get; set; }
 
         /// <summary>
         /// URI that points back to this resource

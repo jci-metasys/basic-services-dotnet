@@ -29,7 +29,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="client">The FlurlClient to get response from URL.</param>
         /// <param name="version">The server's Api version.</param>
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
-        public AuditServiceProvider(IFlurlClient client, ApiVersion version, bool logClientErrors = true) :base(client, version, logClientErrors)
+        public AuditServiceProvider(IFlurlClient client, ApiVersion version, bool logClientErrors = true) : base(client, version, logClientErrors)
         {
         }
 
@@ -37,11 +37,15 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<Audit> FindByIdAsync(Guid auditId)
         {
             var response = await GetRequestAsync("audits", null, auditId).ConfigureAwait(false);
-            if (response["item"]!=null)
-            {
+            if (response["item"] != null) {
                 response = response["item"];
             }
-            return await CreateItem(response);
+            var auditData = JsonConvert.DeserializeObject<Audit>(response.ToString());
+            if (Version >= ApiVersion.v3) {
+                auditData = CreateItem(auditData);
+            }
+
+            return auditData;
         }
 
         /// <inheritdoc/>
@@ -50,21 +54,22 @@ namespace JohnsonControls.Metasys.BasicServices
             var dictionary = ToDictionary(auditFilter);
             dictionary["OriginApplications"] = GetEnumCsv<OriginApplicationsEnum>(auditFilter.OriginApplications);
             dictionary["ActionTypes"] = GetEnumCsv<ActionTypeEnum>(auditFilter.ActionTypes);
-            var response = await GetPagedResultsAsync<JToken>("audits", dictionary).ConfigureAwait(false);
-            List<Audit> audits = new List<Audit>();
-            foreach (var item in response.Items)
-            {
-                audits.Add(await CreateItem(item));
-            }
+            var response = await GetPagedResultsAsync<Audit>("audits", dictionary).ConfigureAwait(false);
+            if (Version >= ApiVersion.v3) {
+                List<Audit> audits = new List<Audit>();
+                foreach (var item in response.Items) {
+                    audits.Add(CreateItem(item));
+                }
 
-            return new PagedResult<Audit>
-            {
-                Items = audits,
-                CurrentPage = response.CurrentPage,
-                PageCount = response.PageCount,
-                PageSize = response.PageSize,
-                Total = response.Total
-            };
+                response = new PagedResult<Audit> {
+                    Items = audits,
+                    CurrentPage = response.CurrentPage,
+                    PageCount = response.PageCount,
+                    PageSize = response.PageSize,
+                    Total = response.Total
+                };
+            }
+            return response;
         }
 
         /// <inheritdoc/>
@@ -73,20 +78,21 @@ namespace JohnsonControls.Metasys.BasicServices
             var dictionary = ToDictionary(auditFilter);
             dictionary["OriginApplications"] = GetEnumCsv<OriginApplicationsEnum>(auditFilter.OriginApplications);
             dictionary["ActionTypes"] = GetEnumCsv<ActionTypeEnum>(auditFilter.ActionTypes);
-            var response = await GetPagedResultsAsync<JToken>("objects", dictionary, objectId, BaseParam).ConfigureAwait(false);
-            List<Audit> audits = new List<Audit>();
-            foreach (var item in response.Items)
-            {
-                audits.Add(await CreateItem(item));
+            var response = await GetPagedResultsAsync<Audit>("objects", dictionary, objectId, BaseParam).ConfigureAwait(false);
+            if (Version >= ApiVersion.v3) {
+                List<Audit> audits = new List<Audit>();
+                foreach (var item in response.Items) {
+                    audits.Add(CreateItem(item));
+                }
+                response = new PagedResult<Audit> {
+                    Items = audits,
+                    CurrentPage = response.CurrentPage,
+                    PageCount = response.PageCount,
+                    PageSize = response.PageSize,
+                    Total = response.Total
+                };
             }
-            return new PagedResult<Audit>
-            {
-                Items = audits,
-                CurrentPage = response.CurrentPage,
-                PageCount = response.PageCount,
-                PageSize = response.PageSize,
-                Total = response.Total
-            };
+            return response;
         }
 
         /// <inheritdoc/>
@@ -262,151 +268,62 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-
-        private async Task<Audit> CreateItem(JToken item)
+        private Audit CreateItem(Audit item)
         {
             Audit audit = new Audit();
-            string actionTypeUrl = string.Empty;
-            string statusUrl = string.Empty;
-            string classLevelUrl = string.Empty;
-            string originApplicationUrl = string.Empty;
-            string descriptionUrl = string.Empty;
-            string unitUrl = string.Empty;
-            string precisionUrl = string.Empty;
-            string value = string.Empty;
-            string typeUrl = string.Empty;
 
-            try
-            {
-                audit.Id = (Guid)item["id"];
-                audit.CreationTime = item["creationTime"].Value<string>();
-                audit.Discarded = item["discarded"].Value<bool>();
-                audit.ErrorString = item["errorString"].Value<string>();
-                audit.User = item["user"].Value<string>();
-                new AuditSignature
-                {
-                    FullName = item["signature"].Contains("fullName") ? item["signature"]["fullName"].Value<string>() : null,
-                    Reason = item["signature"].Contains("reason") ? item["signature"]["reason"].Value<string>() : null
-                };
-                audit.ObjectUrl = item["objectUrl"].Value<string>();
-                audit.AnnotationsUrl = item["annotationsUrl"].Value<string>();
-                audit.Self = item["self"].Value<string>();
+            try {
+                var stringAuditData = item.ToString();
+                var data = JObject.Parse(stringAuditData);
+                audit.ActionType = data["ActionType"].Value<string>();
+                audit.Status = data["Status"].Value<string>();
 
-                if (Version < ApiVersion.v3)
-                {
-                    actionTypeUrl = item["actionTypeUrl"].Value<string>();
-                    statusUrl = item["statusUrl"].Value<string>();
-                    unitUrl = item["postData"].Contains("unitUrl") ? item["postData"]["unitUrl"].Value<string>() : null;
-                    precisionUrl = item["postData"].Contains("precisionUrl") ? item["postData"]["precisionUrl"].Value<string>() : null;
-                    typeUrl = item["postData"].Contains("typeUrl") ? item["postData"]["typeUrl"].Value<string>() : null;
-                    classLevelUrl = item["legacy"]["classLevelUrl"].Value<string>();
-                    originApplicationUrl = item["legacy"]["originApplicationUrl"].Value<string>();
-                    descriptionUrl = item["legacy"]["descriptionUrl"].Value<string>();
+                if (data["PostData"].ToString() != null) {
+                    audit.PostData = new AuditData {
+                        Unit = data["PostData"]["unit"].Value<string>(),
+                        Precision = data["PostData"]["precision"].Value<string>(),
+                        Value = data["PostData"]["value"].Value<string>(),
+                        Type = data["PostData"]["type"].Value<string>()
+                    };
                 }
-                else
-                {
-                    audit.ActionType = item["actionType"].Value<string>();
-                    audit.Status = item["status"].Value<string>();
-                    var preData = new AuditData
-                    {
-                        Unit = item["preData"].Contains("unit") ? item["preData"]["unit"].Value<string>() : null,
-                        Precision = item["preData"].Contains("precision") ? item["preData"]["precision"].Value<string>() : null,
-                        Value = item["preData"].Contains("precision") ? item["preData"]["value"].Value<string>() : null,
-                        Type = item["preData"].Contains("type") ? item["preData"]["type"].Value<string>() : null
-                    };
-                    var postData = new AuditData
-                    {
-                        Unit = item["postData"].Contains("unit") ? item["postData"]["unit"].Value<string>() : null,
-                        Precision = item["postData"].Contains("precision") ? item["postData"]["precision"].Value<string>() : null,
-                        Value = item["preData"].Contains("precision") ? item["preData"]["value"].Value<string>() : null,
-                        Type = item["postData"].Contains("type") ? item["postData"]["type"].Value<string>() : null
-                    };
-                    var parameters = new AuditData
-                    {
-                        Unit = item["parameters"].Contains("unit") ? item["parameters"]["unit"].Value<string>() : null,
-                        Precision = item["parameters"].Contains("precision") ? item["parameters"]["precision"].Value<string>() : null,
-                        Value = item["preData"].Contains("precision") ? item["preData"]["value"].Value<string>() : null,
-                        Type = item["parameters"].Contains("type") ? item["parameters"]["type"].Value<string>() : null
-                    };
-                    var legacyInfo = new LegacyInfo
-                    {
-                        FullyQualifiedItemReference = item["legacy"].Contains("FullyQualifiedItemReference") ? item["legacy"]["fullyQualifiedItemReference"].Value<string>() : null,
-                        ItemName = item["legacy"].Contains("itemName") ? item["legacy"]["itemName"].Value<string>() : null,
-                        ClassLevel = item["legacy"].Contains("classLevel") ? item["legacy"]["classLevel"].Value<string>() : null,
-                        OriginApplication = item["legacy"].Contains("originApplication") ? item["legacy"]["originApplication"].Value<string>() : null,
-                        Description = item["legacy"].Contains("description") ? item["legacy"]["description"].Value<string>() : null,
-                    };
 
-                    audit.PreData = preData;
-                    audit.PostData = postData;
-                    audit.Parameters = parameters;
-                    audit.Legacy = legacyInfo;
+                if (data["PreData"].ToString() != null) {
+                    audit.PreData = new AuditData {
+                        Unit = data["PreData"]["unit"].Value<string>(),
+                        Precision = data["PreData"]["precision"].Value<string>(),
+                        Value = data["PreData"]["value"].Value<string>(),
+                        Type = data["PreData"]["type"].Value<string>()
+                    };
+                }
+
+                if (data["Parameters"].ToString() == "[]") {
+                    audit.Parameters = data["Parameters"].ToString();
+                } else {
+                    audit.Parameters = new AuditData {
+                        Unit = data["Parameters"]["unit"].Value<string>(),
+                        Precision = data["Parameters"]["precision"].Value<string>(),
+                        Value = data["Parameters"]["value"].Value<string>(),
+                        Type = data["Parameters"]["type"].Value<string>()
+                    };
+                }
+
+                if (data["Legacy"].ToString() != null) {
+                    audit.Legacy = new LegacyInfo {
+                        FullyQualifiedItemReference = data["Legacy"]["fullyQualifiedItemReference"].Value<string>(),
+                        ItemName = data["Legacy"]["itemName"].Value<string>(),
+                        ClassLevel = data["Legacy"]["classLevel"].Value<string>(),
+                        OriginApplication = data["Legacy"]["originApplication"].Value<string>(),
+                        Description = data["Legacy"]["description"].Value<string>()
+                    };
                 }
             }
-            catch (ArgumentNullException e)
-            {
+
+            catch (ArgumentNullException e) {
                 // Something went wrong on object parsing
                 throw new MetasysObjectException(e);
             }
-            if (Version < ApiVersion.v3)
-            {
-                // On Api v2 and v1 there was the url endpoint of the enum instead of the fully qualified enumeration string
-                var legacyInfo = new LegacyInfo
-                {
-                    FullyQualifiedItemReference = item["legacy"]["fullyQualifiedItemReference"].Value<string>(),
-                    ItemName = item["legacy"]["itemName"].Value<string>(),
-                    ClassLevel = await GetEnumValue(classLevelUrl),
-                    OriginApplication = await GetEnumValue(originApplicationUrl),
-                    Description = await GetEnumValue(descriptionUrl)
-                };
-
-                var preData = new AuditData
-                {
-                    Unit = !string.IsNullOrEmpty(unitUrl) ? await GetEnumValue(unitUrl) : null,
-                    Precision = !string.IsNullOrEmpty(precisionUrl) ? await GetEnumValue(precisionUrl) : null,
-                    Value = !string.IsNullOrEmpty(value) ? item["postData"]["value"].Value<string>() : null,
-                    Type = !string.IsNullOrEmpty(typeUrl) ? await GetEnumValue(typeUrl) : null
-                };
-
-                var postData = new AuditData
-                {
-                    Unit = !string.IsNullOrEmpty(unitUrl) ? await GetEnumValue(unitUrl) : null,
-                    Precision = !string.IsNullOrEmpty(precisionUrl) ? await GetEnumValue(precisionUrl) : null,
-                    Value = !string.IsNullOrEmpty(value) ? item["postData"]["value"].Value<string>() : null,
-                    Type = !string.IsNullOrEmpty(typeUrl) ? await GetEnumValue(typeUrl) : null
-                };
-
-                var parameters = new AuditData
-                {
-                    Unit = !string.IsNullOrEmpty(unitUrl) ? await GetEnumValue(unitUrl) : null,
-                    Precision = !string.IsNullOrEmpty(precisionUrl) ? await GetEnumValue(precisionUrl) : null,
-                    Value = !string.IsNullOrEmpty(value) ? item["postData"]["value"].Value<string>() : null,
-                    Type = !string.IsNullOrEmpty(typeUrl) ? await GetEnumValue(typeUrl) : null
-                };
-
-                audit.PreData = preData;
-                audit.PostData = postData;
-                audit.Parameters = parameters;
-                audit.Legacy = legacyInfo;
-                audit.ActionType = !string.IsNullOrEmpty(actionTypeUrl) ? await GetEnumValue(actionTypeUrl) : null;
-                audit.Status = !string.IsNullOrEmpty(statusUrl) ? await GetEnumValue(statusUrl) : null;
-            }
 
             return audit;
-        }
-
-        private async Task<string> GetEnumValue(string url)
-        {
-            Dictionary<string, string> Type = new Dictionary<string, string>();
-
-            var typeId = url.Split('/').Last();
-            if (!Type.ContainsKey(typeId))
-            {
-                var urlValue = await GetWithFullUrl(url).ConfigureAwait(false);
-                Type.Add(typeId, urlValue["description"].Value<string>());
-            }
-
-            return Type[typeId];
         }
 
         /// <summary>
@@ -420,7 +337,7 @@ namespace JohnsonControls.Metasys.BasicServices
             foreach (var r in response["responses"])
             {
                 var respIds = r["id"].Value<string>().Split('_');
-                
+
                 Result resultItem = new Result();
                 resultItem.Id = new Guid(respIds[0]); ;
                 resultItem.Status = r["status"].Value<int>();
@@ -471,13 +388,13 @@ namespace JohnsonControls.Metasys.BasicServices
     public class Result
     {
         /// <summary>The id of the Audit affected by the call.</summary>
-        public Guid Id {  set; get; }
+        public Guid Id { set; get; }
 
         /// <summary>The Status of the call.</summary>
-        public int Status {  set; get; }
+        public int Status { set; get; }
 
         /// <summary>Text of the Audit Annotation set according to the call.</summary>
-        public string Annotation {  set; get; }
+        public string Annotation { set; get; }
 
         /// <summary>
         /// Return a pretty JSON string of the current object.

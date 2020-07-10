@@ -129,7 +129,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Initialize the HTTP client with a base URL.    
+        /// Initialize the HTTP client with a base URL.
         /// </summary>
         protected void InitFlurlClient(string hostname)
         {
@@ -173,14 +173,14 @@ namespace JohnsonControls.Metasys.BasicServices
             IgnoreCertificateErrors = ignoreCertificateErrors;
             Hostname = hostname;
             // Set Metasys culture if specified, otherwise use current machine Culture.
-            Culture = cultureInfo ?? CultureInfo.CurrentCulture;                       
+            Culture = cultureInfo ?? CultureInfo.CurrentCulture;
             // Set preferences about logging
             LogClientErrors = logClientErrors;
             Version = version;
             // Init related services
             Trends = new TrendServiceProvider(Client, version, logClientErrors);
             Alarms = new AlarmServiceProvider(Client, version, logClientErrors);
-            Audits = new AuditServiceProvider(Client, version, logClientErrors);           
+            Audits = new AuditServiceProvider(Client, version, logClientErrors);
         }
 
         /// <inheritdoc/>
