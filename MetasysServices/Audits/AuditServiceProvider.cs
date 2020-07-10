@@ -278,43 +278,61 @@ namespace JohnsonControls.Metasys.BasicServices
                 audit.ActionType = data["ActionType"].Value<string>();
                 audit.Status = data["Status"].Value<string>();
 
-                if (data["PostData"].ToString() != null) {
-                    audit.PostData = new AuditData {
-                        Unit = data["PostData"]["unit"].Value<string>(),
-                        Precision = data["PostData"]["precision"].Value<string>(),
-                        Value = data["PostData"]["value"].Value<string>(),
-                        Type = data["PostData"]["type"].Value<string>()
-                    };
+                if (data["PreData"].ToString() != null) {
+                    if (data["PreData"].HasValues) {
+                        audit.PreData = new AuditData {
+                            Unit = data["PreData"]["unit"].Value<string>(),
+                            Precision = data["PreData"]["precision"].Value<string>(),
+                            Value = data["PreData"]["value"].Value<string>(),
+                            Type = data["PreData"]["type"].Value<string>()
+                        };
+                    } else {
+                        audit.PreData = data["PreData"].Value<string>() != null ? data["PreData"].ToString() : null;
+                    }
                 }
 
-                if (data["PreData"].ToString() != null) {
-                    audit.PreData = new AuditData {
-                        Unit = data["PreData"]["unit"].Value<string>(),
-                        Precision = data["PreData"]["precision"].Value<string>(),
-                        Value = data["PreData"]["value"].Value<string>(),
-                        Type = data["PreData"]["type"].Value<string>()
-                    };
+                if (data["PostData"].ToString() != null) {
+                    if (data["PostData"].HasValues) {
+                        audit.PostData = new AuditData {
+                            Unit = data["PostData"]["unit"].Value<string>(),
+                            Precision = data["PostData"]["precision"].Value<string>(),
+                            Value = data["PostData"]["value"].Value<string>(),
+                            Type = data["PostData"]["type"].Value<string>()
+                        };
+                    } else {
+                        audit.PostData = data["PostData"].Value<string>() != null ? data["PostData"].ToString() : null;
+                    }
                 }
 
                 if (data["Parameters"].ToString() == "[]") {
                     audit.Parameters = data["Parameters"].ToString();
                 } else {
-                    audit.Parameters = new AuditData {
-                        Unit = data["Parameters"]["unit"].Value<string>(),
-                        Precision = data["Parameters"]["precision"].Value<string>(),
-                        Value = data["Parameters"]["value"].Value<string>(),
-                        Type = data["Parameters"]["type"].Value<string>()
-                    };
+                    if (data["Parameters"].ToString() != null) {
+                        if (data["Parameters"].HasValues) {
+                            audit.Parameters = new AuditData {
+                                Unit = data["Parameters"]["unit"].Value<string>(),
+                                Precision = data["Parameters"]["precision"].Value<string>(),
+                                Value = data["Parameters"]["value"].Value<string>(),
+                                Type = data["Parameters"]["type"].Value<string>()
+                            };
+                        } else {
+                            audit.Parameters = data["Parameters"].Value<string>() != null ? data["Parameters"].ToString() : null;
+                        }
+                    }
                 }
 
                 if (data["Legacy"].ToString() != null) {
-                    audit.Legacy = new LegacyInfo {
-                        FullyQualifiedItemReference = data["Legacy"]["fullyQualifiedItemReference"].Value<string>(),
-                        ItemName = data["Legacy"]["itemName"].Value<string>(),
-                        ClassLevel = data["Legacy"]["classLevel"].Value<string>(),
-                        OriginApplication = data["Legacy"]["originApplication"].Value<string>(),
-                        Description = data["Legacy"]["description"].Value<string>()
-                    };
+                    if (data["Legacy"].HasValues) {
+                        audit.Legacy = new LegacyInfo {
+                            FullyQualifiedItemReference = data["Legacy"]["fullyQualifiedItemReference"].Value<string>(),
+                            ItemName = data["Legacy"]["itemName"].Value<string>(),
+                            ClassLevel = data["Legacy"]["classLevel"].Value<string>(),
+                            OriginApplication = data["Legacy"]["originApplication"].Value<string>(),
+                            Description = data["Legacy"]["description"].Value<string>()
+                        };
+                    } else {
+                        audit.Legacy = data["Legacy"].Value<string>() != null ? data["Legacy"].ToString() : null;
+                    }
                 }
             }
 
