@@ -21,7 +21,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The dateTime representing the creation time when this audit message was created.
         /// </summary>
-        [JsonProperty(Required = Required.AllowNull)]
+        [JsonProperty(Required = Required.Always)]
         public string CreationTime { get; set; }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// A link to the object on which the activity was generated.
         /// </summary>
-        [JsonProperty(Required = Required.AllowNull)]
+        [JsonProperty(Required = Required.Always)]
         public string ObjectUrl { get; set; }
 
         /// <summary>
