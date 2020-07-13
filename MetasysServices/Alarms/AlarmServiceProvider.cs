@@ -176,7 +176,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             try {
                     var measurement = new Measurement {
-                        Units = ResourceManager.Localize(item.TriggerValue.Units, _CultureInfo),
+                        Units = item.TriggerValue.Units != null ? ResourceManager.Localize(item.TriggerValue.Units, _CultureInfo) : null,
                         Value = item.TriggerValue.Value
                     };
 
