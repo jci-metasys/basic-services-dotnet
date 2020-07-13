@@ -6,6 +6,7 @@
 #define MyAppShortName "MetasysServicesCOM"
 #define MyAppVersion "4.0.0"
 #define MyAppPublisher "Johnson Controls"
+#define APPID '{15BD2431-783C-431B-ADFE-9B775EA5CCAD}';
 
 [Setup]
 AppName={#MyAppName}
@@ -46,3 +47,17 @@ Filename: {app}\Scripts\UnregCom.bat; Flags: runhidden
 [UninstallDelete]
 ; remove registered DLL tlb file outside Setup
 Type: files; Name: {app}\MetasysServicesCom.tlb
+
+[Code]
+//# Uninstall an old version before you install a new one
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  intRes: Integer;
+  strUninstall: String;
+begin
+	if (CurStep = ssInstall) then begin
+		if RegQueryStringValue(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{#APPID}_is1', 'UninstallString', strUninstall) then begin
+			Exec(RemoveQuotes(strUninstall), ' /SILENT ', '', SW_SHOWNORMAL, ewWaitUntilTerminated, intRes);
+		end;
+	end;
+end;
