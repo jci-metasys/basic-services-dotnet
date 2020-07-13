@@ -59,17 +59,15 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<Alarm> FindByIdAsync(Guid alarmId)
         {
             var response = await GetRequestAsync("alarms", null, alarmId).ConfigureAwait(false);
-            var output = new Alarm();
-            if (Version < ApiVersion.v3) {
-                if (response["item"] != null) {
-                    response = response["item"];
-                }
-                output = JsonConvert.DeserializeObject<Alarm>(response.ToString());
+            if (response["items"] != null) {
+                response = response["items"];
             }
-            else {
-                output = await CreateItem(JsonConvert.DeserializeObject<Alarm>(response.ToString()));
+            var alarmData = JsonConvert.DeserializeObject<Alarm>(response.ToString());
+            if (Version >= ApiVersion.v3) {
+                alarmData = await CreateItem(alarmData);
             }
-            return output;
+
+            return alarmData;
         }
 
         /// <inheritdoc/>

@@ -19,7 +19,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm Unique Identifier (GUID)
         /// </summary>
-        /// 
         [JsonProperty(Required = Required.Always)]
         public Guid Id { get; set; }
 
