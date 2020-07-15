@@ -15,7 +15,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Attempts to login to the given host.
         /// </summary>
-        /// <returns>Access Token.</returns>  
+        /// <returns>Access Token.</returns>
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
@@ -26,8 +26,8 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Attempts to login to the given host, using Credential Manager target.
         /// </summary>
-        /// <param name="target"></param>       
-        /// <param name="refresh"></param>       
+        /// <param name="target"></param>
+        /// <param name="refresh"></param>
         /// <returns></returns>
         IComAccessToken TryLoginWithCredMan(string target, bool refresh = true);
 
@@ -67,7 +67,7 @@ namespace JohnsonControls.Metasys.ComServices
         object ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeNames);
 
         /// <summary>
-        /// Write a single attribute given the Guid of the object. 
+        /// Write a single attribute given the Guid of the object.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
@@ -80,7 +80,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="attributes"></param>
-        /// <param name="attributeValues">The (attribute, value) pairs split in a array.</param>       
+        /// <param name="attributeValues">The (attribute, value) pairs split in a array.</param>
         /// <exception cref="MetasysHttpException"></exception>
         void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeValues);
 
@@ -144,7 +144,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Gets children spaces of the given space.
         /// </summary>
-        /// <param name="id">The GUID of the parent space.</param> 
+        /// <param name="id">The GUID of the parent space.</param>
         object GetSpaceChildren(string id);
 
         /// <summary>

@@ -27,12 +27,12 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                 IComAudit auditItem = (IComAudit)legacyClient.GetSingleAudit(inputAuditId);
 
                 Console.WriteLine(string.Format("\n Audit details found for {0}", inputAuditId));
-                Console.WriteLine($"\n Id: {auditItem.Id}, User: {auditItem.User}, PreData: {auditItem.PreData}, PostDate: {auditItem.PostData}");
+                Console.WriteLine($"\n Id: {auditItem.Id}, User: {auditItem.User}, PreData: {auditItem.PreData}, PostData: {auditItem.PostData}");
 
                 string auditFilterInputItem;
                 ComAuditFilter auditFilterItem = new ComAuditFilter();
 
-                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Origin Applications," +
+                Console.WriteLine("\n Please enter these parameters separated by space: Start Time, End Time, Origin Applications," +
                                   "Class Levels, Action Type, Exclude discarded, Page, Page Size, Sort" +
                                   "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
 
@@ -68,12 +68,12 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                     Console.WriteLine("No audit found.");
                 }
 
-                Console.WriteLine("\nEnter object id to get audit details: ");
+                Console.WriteLine("\n Enter object id to get audit details: ");
                 string objectId = Console.ReadLine();
 
                 var auditsForObject = new ComAuditFilter();
 
-                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Origin Applications," +
+                Console.WriteLine("\n Please enter these parameters separated by space: Start Time, End Time, Origin Applications," +
                                   "Class Levels, Action Type, Exclude discarded, Page, Page Size, Sort" +
                                   "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
 
@@ -85,7 +85,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                     auditsForObject = ReadUserInput(args);
                 }
 
-                Console.WriteLine(string.Format("\nAudit details found for this object {0}", objectId));
+                Console.WriteLine(string.Format("\n Audit details found for this object {0}", objectId));
 
                 IComPagedResult PagedResultAuditForObject = (IComPagedResult)legacyClient.GetAuditsForObject(objectId, auditsForObject);
                 IComAudit[] auditItemsForObject = (IComAudit[])PagedResultAuditForObject.Items;
@@ -97,7 +97,7 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
 
                 foreach (var item in auditItemsForObject)
                 {
-                    Console.WriteLine($"\n Id: {item.Id}, User: {item.User}, PreData: {item.PreData}, PostDate: {item.PostData}");
+                    Console.WriteLine($"\n Id: {item.Id}, User: {item.User}, PreData: {item.PreData}, PostData: {item.PostData}");
                 }
             }
             catch (Exception exception)
