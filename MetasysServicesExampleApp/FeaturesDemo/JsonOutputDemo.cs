@@ -377,7 +377,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             }
             */
             int type1 = types[0].Id;
-            List<MetasysObject> devices = client.GetNetworkDevices(type1.ToString()).ToList();
+            //List<MetasysObject> devices = client.GetNetworkDevices(type1.ToString()).ToList();
+            List<MetasysObject> devices = client.GetNetworkDevices(NetworkDeviceTypeEnum.NAE55NIE59).ToList();
             MetasysObject device = devices.LastOrDefault();
             Console.WriteLine(device);
             /*                        

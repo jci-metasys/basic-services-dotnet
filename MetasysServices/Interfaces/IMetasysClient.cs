@@ -214,6 +214,17 @@ namespace JohnsonControls.Metasys.BasicServices
         Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null);
 
         /// <summary>
+        /// Gets all network devices.
+        /// </summary>
+        /// <param name="networkDevicetype">Network Device Type enum</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        IEnumerable<MetasysObject> GetNetworkDevices(NetworkDeviceTypeEnum networkDevicetype);
+
+        /// <inheritdoc cref="IMetasysClient.GetNetworkDevices(NetworkDeviceTypeEnum)"/>
+        Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(NetworkDeviceTypeEnum networkDevicetype);
+
+        /// <summary>
         /// Gets all available network device types.
         /// </summary>
         /// <exception cref="MetasysHttpException"></exception>

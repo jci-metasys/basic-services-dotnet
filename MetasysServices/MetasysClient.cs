@@ -663,10 +663,25 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetNetworkDevices(NetworkDeviceTypeEnum networkDevicetype)
+        {
+            //string type = Convert.ToString((int)networkDevicetype);
+            //return GetNetworkDevices(type);
+            return GetNetworkDevicesAsync(networkDevicetype).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
             var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } }).ConfigureAwait(false);
             return toMetasysObject(response);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(NetworkDeviceTypeEnum networkDevicetype)
+        {
+            string type = Convert.ToString((int)networkDevicetype);
+            return await GetNetworkDevicesAsync(type);
         }
 
         /// <inheritdoc/>
