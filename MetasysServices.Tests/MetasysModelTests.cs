@@ -80,38 +80,34 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestMetasysObjectEqual(ApiVersion version)
-        {
+        public void TestMetasysObjectEqual(ApiVersion version) {
             string obj, obj2;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 obj = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555555\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
                     "\"description\": \"description\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
                 obj2 = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555556\",",
                     "\"itemReference\": \"fully:qualified/reference2\",",
                     "\"name\": \"name2\",",
                     "\"description\": \"description2\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
-            }
-            else
-            {
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+            } else {
                 obj = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555555\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
                     "\"description\": \"description\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
                 obj2 = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555556\",",
                     "\"itemReference\": \"fully:qualified/reference2\",",
                     "\"name\": \"name2\",",
                     "\"description\": \"description2\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
             }
             string objCopy = obj.Clone().ToString();
             MetasysObject child = new MetasysObject(JToken.Parse(obj2), version, null, testCulture);
@@ -140,18 +136,14 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestVariantArrayEqual(ApiVersion version)
-        {
+        public void TestVariantArrayEqual(ApiVersion version) {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid idCopy = new Guid("11111111-2222-3333-4444-555555555555");
             string json1, json2;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
                 json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
-            }
-            else
-            {
+            } else {
                 json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
                 json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
             }
@@ -163,13 +155,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestVariantEqual(ApiVersion version)
-        {
+        public void TestVariantEqual(ApiVersion version) {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid idCopy = new Guid("11111111-2222-3333-4444-555555555555");
             string data;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 data = @"{
                     ""item"": {
                         ""presentValue"": {
@@ -179,9 +169,7 @@ namespace MetasysServices.Tests
                         }
                         }
                     }";
-            }
-            else
-            {
+            } else {
                 data = @"{
                     ""item"": {
                         ""presentValue"": {
@@ -202,21 +190,17 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestVariantMultipleEqual(ApiVersion version)
-        {
+        public void TestVariantMultipleEqual(ApiVersion version) {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid idCopy = new Guid("11111111-2222-3333-4444-555555555555");
             string json;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json = @"{
                     ""item"": {
                         ""attr"": ""stringvalue""
                         }
                     }";
-            }
-            else
-            {
+            } else {
                 json = @"{
                     ""item"": {
                         ""attr"": ""stringvalue""
@@ -298,50 +282,46 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestMetasysObjectDoesNotEqual(ApiVersion version)
-        {
+        public void TestMetasysObjectDoesNotEqual(ApiVersion version) {
             string obj, obj2, obj3;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 obj = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555555\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
                     "\"description\": \"description\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
                 obj2 = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555556\",",
                     "\"itemReference\": \"fully:qualified/reference2\",",
                     "\"name\": \"name2\",",
                     "\"description\": \"description2\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
                 obj3 = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555557\",",
                     "\"itemReference\": \"fully:qualified/reference3\",",
                     "\"name\": \"name3\",",
                     "\"description\": \"description3\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
-            }
-            else
-            {
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+            } else {
                 obj = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555555\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
                     "\"description\": \"description\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
                 obj2 = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555556\",",
                     "\"itemReference\": \"fully:qualified/reference2\",",
                     "\"name\": \"name2\",",
                     "\"description\": \"description2\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
                 obj3 = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555557\",",
                     "\"itemReference\": \"fully:qualified/reference3\",",
                     "\"name\": \"name3\",",
                     "\"description\": \"description3\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
             }
             MetasysObject child = new MetasysObject(JToken.Parse(obj3), version, null, testCulture);
             MetasysObject child2 = new MetasysObject(JToken.Parse(obj3), version, null, testCulture);
@@ -372,19 +352,15 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestVariantArrayDoesNotEqual(ApiVersion version)
-        {
+        public void TestVariantArrayDoesNotEqual(ApiVersion version) {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid id2 = new Guid("11111111-2222-3333-4444-555555555555");
 
             string json1, json2;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
                 json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 3 ] }}";
-            }
-            else
-            {
+            } else {
                 json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
                 json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 3 ] }}";
             }
@@ -396,12 +372,10 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestVariantDoesNotEqual(ApiVersion version)
-        {
+        public void TestVariantDoesNotEqual(ApiVersion version) {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             string data, data2, data3;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 data = @"{
                 ""item"": {
                     ""presentValue"": {
@@ -428,9 +402,7 @@ namespace MetasysServices.Tests
                         }
                         }
                     }";
-            }
-            else
-            {
+            } else {
                 data = @"{
                 ""item"": {
                     ""presentValue"": {
@@ -470,13 +442,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestVariantMultipleDoesNotEqual(ApiVersion version)
-        {
+        public void TestVariantMultipleDoesNotEqual(ApiVersion version) {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid id2 = new Guid("11111111-2222-3333-4444-555555555555");
             string json1, json2;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json1 = @"{
                     ""item"": {
                         ""attr"": ""stringvalue""
@@ -487,9 +457,7 @@ namespace MetasysServices.Tests
                         ""attr"": ""stringvalwe""
                         }
                     }";
-            }
-            else
-            {
+            } else {
                 json1 = @"{
                     ""item"": {
                         ""attr"": ""stringvalue""
