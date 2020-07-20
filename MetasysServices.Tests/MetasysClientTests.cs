@@ -31,7 +31,7 @@ namespace MetasysServices.Tests
         private const string mockAttributeName2 = "property2";
         private const string mockAttributeName3 = "property3";
         private const string mockAttributeName4 = "property4";
-        private const string mockAttributeName5 = "property5";               
+        private const string mockAttributeName5 = "property5";
 
         #region Login Tests
 
@@ -330,15 +330,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public async Task TestReadPropertyIntegerAsync(ApiVersion version)
-        {
+        public async Task TestReadPropertyIntegerAsync(ApiVersion version) {
             string json;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json = "{\"item\": { \"" + mockAttributeName + "\": 1 }}";
-            }
-            else
-            {
+            } else {
                 json = "{\"item\": { \"" + mockAttributeName + "\": 1 }}";
             }
             var token = JToken.Parse(json);
@@ -347,7 +343,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = (await client.ReadPropertyAsync(mockid, mockAttributeName).ConfigureAwait(false));
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture, version);
@@ -356,17 +352,12 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyIntegerAsyncContext(ApiVersion version)
-        {
-            AsyncContext.Run(() =>
-            {
+        public void TestReadPropertyIntegerAsyncContext(ApiVersion version) {
+            AsyncContext.Run(() => {
                 string json;
-                if (version < ApiVersion.v3)
-                {
+                if (version < ApiVersion.v3) {
                     json = "{\"item\": { \"" + mockAttributeName + "\": 1 }}";
-                }
-                else
-                {
+                } else {
                     json = "{\"item\": { \"" + mockAttributeName + "\": 1 }}";
                 }
                 var token = JToken.Parse(json);
@@ -375,7 +366,7 @@ namespace MetasysServices.Tests
                 client = new MetasysClient("hostname", false, version, testCulture);
                 Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-                httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+                httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/{mockAttributeName}")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
                 var expected = new Variant(mockid, token, mockAttributeName, testCulture, version);
@@ -385,14 +376,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyFloat(ApiVersion version)
-        {
+        public void TestReadPropertyFloat(ApiVersion version) {
             string json;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json = "{\"item\": { \"" + mockAttributeName + "\": 1.1 }}";
-            }
-            else
+            } else
             {
                 json = "{\"item\": { \"" + mockAttributeName + "\": 1.1 }}";
             }
@@ -402,7 +390,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture, version);
@@ -411,14 +399,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyString(ApiVersion version)
-        {
+        public void TestReadPropertyString(ApiVersion version) {
             string json;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json = "{\"item\": { \"" + mockAttributeName + "\": \"stringvalue\" }}";
-            }
-            else
+            } else
             {
                 json = "{\"item\": { \"" + mockAttributeName + "\": \"stringvalue\" }}";
             }
@@ -428,7 +413,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture, version);
@@ -437,14 +422,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyBooleanTrue(ApiVersion version)
-        {
+        public void TestReadPropertyBooleanTrue(ApiVersion version) {
             string json;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json = "{\"item\": { \"" + mockAttributeName + "\": true }}";
-            }
-            else
+            } else
             {
                 json = "{\"item\": { \"" + mockAttributeName + "\": true }}";
             }
@@ -454,7 +436,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture, version);
@@ -463,15 +445,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyBooleanFalse(ApiVersion version)
-        {
+        public void TestReadPropertyBooleanFalse(ApiVersion version) {
             string json;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json = "{\"item\": { \"" + mockAttributeName + "\": false }}";
-            }
-            else
-            {
+            } else {
                 json = "{\"item\": { \"" + mockAttributeName + "\": false }}";
             }
             var token = JToken.Parse(json);
@@ -480,7 +458,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture, version);
@@ -489,16 +467,12 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyPresentValueInteger(ApiVersion version)
-        {
+        public void TestReadPropertyPresentValueInteger(ApiVersion version) {
             string json;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json = string.Concat("{ \"item\": { \"presentValue\": {",
                     "\"value\": 60 } } }");
-            }
-            else
-            {
+            } else {
                 json = string.Concat("{ \"item\": { \"presentValue\": {",
                     "\"value\": 60 } } }");
             }
@@ -508,7 +482,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = client.ReadProperty(mockid, "presentValue");
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/presentValue")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, "presentValue", testCulture, version);
@@ -517,16 +491,12 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyPresentValueString(ApiVersion version)
-        {
+        public void TestReadPropertyPresentValueString(ApiVersion version) {
             string json;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json = string.Concat("{ \"item\": { \"presentValue\": {",
                 "\"value\": \"stringvalue\" } } }");
-            }
-            else
-            {
+            } else {
                 json = string.Concat("{ \"item\": { \"presentValue\": {",
                 "\"value\": \"stringvalue\" } } }");
             }
@@ -536,7 +506,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = client.ReadProperty(mockid, "presentValue");
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/presentValue")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, "presentValue", testCulture, version);
@@ -545,18 +515,14 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyPresentValueNoValue(ApiVersion version)
-        {
+        public void TestReadPropertyPresentValueNoValue(ApiVersion version) {
             string body;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 body = string.Concat("{",
                     "\"property\": \"stringvalue\",",
                     "\"reliability\": \"", ReliableHighEnum, "\",",
                     "\"priority\": \"", PriorityNoneEnum, "\"}");
-            }
-            else
-            {
+            } else {
                 body = string.Concat("{",
                     "\"property\": \"stringvalue\",",
                     "\"reliability\": \"", ReliableHighEnum, "\",",
@@ -569,7 +535,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = client.ReadProperty(mockid, "presentValue");
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/presentValue")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/presentValue")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, "presentValue", testCulture, version);
@@ -578,18 +544,14 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyObjectNotPresentValue(ApiVersion version)
-        {
+        public void TestReadPropertyObjectNotPresentValue(ApiVersion version) {
             string body;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 body = string.Concat("{ ",
                     "\"property\": \"stringvalue\",",
                     "\"reliability\": \"", ReliableHighEnum, "\",",
                     "\"priority\": \"", PriorityNoneEnum, "\"}");
-            }
-            else
-            {
+            } else {
                 body = string.Concat("{ ",
                     "\"property\": \"stringvalue\",",
                     "\"reliability\": \"", ReliableHighEnum, "\",",
@@ -602,7 +564,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture, version);
@@ -611,15 +573,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyArrayIntegers(ApiVersion version)
-        {
+        public void TestReadPropertyArrayIntegers(ApiVersion version) {
             string json;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json = "{ \"item\": { \"" + mockAttributeName + "\": [ 0, 1 ] } }";
-            }
-            else
-            {
+            } else {
                 json = "{ \"item\": { \"" + mockAttributeName + "\": [ 0, 1 ] } }";
             }
             var token = JToken.Parse(json);
@@ -628,7 +586,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture, version);
@@ -637,15 +595,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyArrayStrings(ApiVersion version)
-        {
+        public void TestReadPropertyArrayStrings(ApiVersion version) {
             string body;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 body = "[ \"stringvalue1\", \"stringvalue2\" ]";
-            }
-            else
-            {
+            } else {
                 body = "[ \"stringvalue1\", \"stringvalue2\" ]";
             }
             string json = string.Concat("{ \"item\": { \"", mockAttributeName, "\": ", body, " } }");
@@ -655,7 +609,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture, version);
@@ -664,17 +618,13 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyUnsupportedArrayObjects(ApiVersion version)
-        {
+        public void TestReadPropertyUnsupportedArrayObjects(ApiVersion version) {
             string body;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 body = string.Concat("[ ",
                     "{ \"item1\": \"stringvalue1\", \"item2\": \"stringvalue2\" },",
                     "{ \"item1\": \"stringvalue3\", \"item2\": \"stringvalue4\" } ]");
-            }
-            else
-            {
+            } else {
                 body = string.Concat("[ ",
                     "{ \"item1\": \"stringvalue1\", \"item2\": \"stringvalue2\" },",
                     "{ \"item1\": \"stringvalue3\", \"item2\": \"stringvalue4\" } ]");
@@ -686,7 +636,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture, version);
@@ -695,15 +645,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyUnsupportedEmptyObject(ApiVersion version)
-        {
+        public void TestReadPropertyUnsupportedEmptyObject(ApiVersion version) {
             string json;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json = string.Concat("{ \"item\": { \"", mockAttributeName, "\": { } } }");
-            }
-            else
-            {
+            } else {
                 json = string.Concat("{ \"item\": { \"", mockAttributeName, "\": { } } }");
             }
             var token = JToken.Parse(json);
@@ -712,7 +658,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             Variant result = client.ReadProperty(mockid, mockAttributeName);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             var expected = new Variant(mockid, token, mockAttributeName, testCulture, version);
@@ -729,8 +675,8 @@ namespace MetasysServices.Tests
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
-                .Times(1);          
-            PrintMessage($"TestReadPropertyDoesNotExistThrowsException: {e.Message}", true);            
+                .Times(1);
+            PrintMessage($"TestReadPropertyDoesNotExistThrowsException: {e.Message}", true);
         }
 
         [Test]
@@ -800,15 +746,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestReadPropertyMultipleOneIdOneAttribute(ApiVersion version)
-        {
+        public void TestReadPropertyMultipleOneIdOneAttribute(ApiVersion version) {
             string json;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 json = "{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }";
-            }
-            else
-            {
+            } else {
                 json = "{ \"item\": { \"" + mockAttributeName + "\": \"stringvalue\" } }";
             }
             httpTest.RespondWith(json);
@@ -819,7 +761,7 @@ namespace MetasysServices.Tests
             client = new MetasysClient("hostname", false, version, testCulture);
             var results = client.ReadPropertyMultiple(ids, attributes);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/{mockAttributeName}")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/attributes/{mockAttributeName}")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Variant expected = new Variant(mockid, token, mockAttributeName, testCulture, version);
@@ -1416,7 +1358,7 @@ namespace MetasysServices.Tests
                 "\"minItems\": 1,",
                 "\"maxItems\": 1 }");
             httpTest.RespondWith(string.Concat("[", command1, "]"));
-                
+
             var commands = client.GetCommands(mockid);
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
@@ -1540,27 +1482,23 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestGetNetworkDevicesOnePage(ApiVersion version)
-        {
+        public void TestGetNetworkDevicesOnePage(ApiVersion version) {
             string device;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 device = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\",",
                     "\"description\": \"none\",",
                     "\"firmwareVersion\": \"4.0.0.1105\",",
                     "\"ipAddress\": \"\"}");
-            }
-            else
-            {
+            } else {
                 device = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                    "\"type\": \"https://hostname/api/v3/enumSets/508/members/197\",",
                     "\"description\": \"none\",",
                     "\"firmwareVersion\": \"4.0.0.1105\",",
                     "\"ipAddress\": \"\"}");
@@ -1570,13 +1508,13 @@ namespace MetasysServices.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", device, "],",
-                "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=200&sort=name\"}"));
+                $"\"self\": \"https://hostname/api/{version}/networkDevices?page=1&pageSize=200&sort=name\"}}"));
 
 
             client = new MetasysClient("hostname", false, version, testCulture);
             var devices = client.GetNetworkDevices();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected = new MetasysObject(JToken.Parse(device), version, null, testCulture);
@@ -1586,16 +1524,14 @@ namespace MetasysServices.Tests
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
         [Test]
-        public void TestGetNetworkDevicesManyPages(ApiVersion version)
-        {
+        public void TestGetNetworkDevicesManyPages(ApiVersion version) {
             string device1, device2;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 device1 = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\",",
                     "\"description\": \"none\",",
                     "\"firmwareVersion\": \"4.0.0.1105\",",
                     "\"ipAddress\": \"\"}");
@@ -1603,18 +1539,16 @@ namespace MetasysServices.Tests
                     "\"id\": \"", mockid2, "\",",
                     "\"itemReference\": \"fully:qualified/reference2\",",
                     "\"name\": \"name\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\",",
                     "\"description\": \"none\",",
                     "\"firmwareVersion\": \"4.0.0.1105\",",
                     "\"ipAddress\": \"\"}");
-            }
-            else
-            {
+            } else {
                 device1 = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                    "\"type\": \"https://hostname/api/v3/enumSets/508/members/197\",",
                     "\"description\": \"none\",",
                     "\"firmwareVersion\": \"4.0.0.1105\",",
                     "\"ipAddress\": \"\"}");
@@ -1622,7 +1556,7 @@ namespace MetasysServices.Tests
                     "\"id\": \"", mockid2, "\",",
                     "\"itemReference\": \"fully:qualified/reference2\",",
                     "\"name\": \"name\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                    "\"type\": \"https://hostname/api/v3/enumSets/508/members/197\",",
                     "\"description\": \"none\",",
                     "\"firmwareVersion\": \"4.0.0.1105\",",
                     "\"ipAddress\": \"\"}");
@@ -1630,21 +1564,21 @@ namespace MetasysServices.Tests
             httpTest
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
-                    "\"next\": \"https://hostname/api/v2/networkDevices?page=2&pageSize=1&sort=name\",",
+                    $"\"next\": \"https://hostname/api/{version}/networkDevices?page=2&pageSize=1&sort=name\",",
                     "\"previous\": null,",
                     "\"items\": [", device1, "],",
-                    "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=1&sort=name\"}"))
+                    $"\"self\": \"https://hostname/api/{version}/networkDevices?page=1&pageSize=1&sort=name\"}}"))
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", device2, "],",
-                    "\"self\": \"https://hostname/api/v2/networkDevices?page=2&pageSize=1&sort=name\"}"));
+                    $"\"self\": \"https://hostname/api/{version}/networkDevices?page=2&pageSize=1&sort=name\"}}"));
 
             client = new MetasysClient("hostname", false, version, testCulture);
             var devices = client.GetNetworkDevices();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
             MetasysObject expected1 = new MetasysObject(JToken.Parse(device1), version, null, testCulture);
@@ -1655,27 +1589,23 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestGetNetworkDevicesWithType(ApiVersion version)
-        {
+        public void TestGetNetworkDevicesWithType(ApiVersion version) {
             string device;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 device = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\",",
                     "\"description\": \"none\",",
                     "\"firmwareVersion\": \"4.0.0.1105\",",
                     "\"ipAddress\": \"\"}");
-            }
-            else
-            {
+            } else {
                 device = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\",",
                     "\"description\": \"none\",",
                     "\"firmwareVersion\": \"4.0.0.1105\",",
                     "\"ipAddress\": \"\"}");
@@ -1685,13 +1615,13 @@ namespace MetasysServices.Tests
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", device, "],",
-                "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=200&sort=name\"}"));
+                $"\"self\": \"https://hostname/api/{version}/networkDevices?page=1&pageSize=200&sort=name\"}}"));
 
 
             client = new MetasysClient("hostname", false, version, testCulture);
             var devices = client.GetNetworkDevices("197");
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/networkDevices")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected = new MetasysObject(JToken.Parse(device), version, null, testCulture);
@@ -1905,38 +1835,34 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestGetObjectsOnePage(ApiVersion version)
-        {
+        public void TestGetObjectsOnePage(ApiVersion version) {
             string obj;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 obj = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
                     "\"description\": \"description\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
-            }
-            else
-            {
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+            } else {
                 obj = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
                     "\"description\": \"description\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
             }
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", obj, "],",
-                $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
+                $"\"self\": \"https://hostname/api/{version}/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
 
             client = new MetasysClient("hostname", false, version, testCulture);
             var objects = client.GetObjects(mockid);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected = new MetasysObject(JToken.Parse(obj), version, null, testCulture);
@@ -1945,57 +1871,53 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestGetObjectsManyPages(ApiVersion version)
-        {
+        public void TestGetObjectsManyPages(ApiVersion version) {
             string obj1, obj2;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 obj1 = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
                 obj2 = string.Concat("{",
                 "\"id\": \"", mockid2, "\",",
                 "\"itemReference\": \"fully:qualified/reference2\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
-            }
-            else
-            {
+                $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+            } else {
                 obj1 = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
                 obj2 = string.Concat("{",
                 "\"id\": \"", mockid2, "\",",
                 "\"itemReference\": \"fully:qualified/reference2\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\"}"); ;
+                $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}"); ;
             }
             httpTest
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
-                    $"\"next\": \"https://hostname/api/v2/objects/{mockid}/objects?page=2&pageSize=1&sort=name\",",
+                    $"\"next\": \"https://hostname/api/{version}/objects/{mockid}/objects?page=2&pageSize=1&sort=name\",",
                     "\"previous\": null,",
                     "\"items\": [", obj1, "],",
-                    $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=1&pageSize=1&sort=name\"}}"))
+                    $"\"self\": \"https://hostname/api/{version}/objects/{mockid}/objects?page=1&pageSize=1&sort=name\"}}"))
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", obj2, "],",
-                    $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=2&pageSize=1&sort=name\"}}"));
+                    $"\"self\": \"https://hostname/api/{version}/objects/{mockid}/objects?page=2&pageSize=1&sort=name\"}}"));
 
             client = new MetasysClient("hostname", false, version, testCulture);
             var objects = client.GetObjects(mockid);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
             MetasysObject expected1 = new MetasysObject(JToken.Parse(obj1), version, null, testCulture);
@@ -2006,38 +1928,34 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestGetObjectsManyLevels(ApiVersion version)
-        {
+        public void TestGetObjectsManyLevels(ApiVersion version) {
             string obj1, obj2;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 obj1 = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
                 obj2 = string.Concat("{",
                 "\"id\": \"", mockid2, "\",",
                 "\"itemReference\": \"fully:qualified/reference2\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
-            }
-            else
-            {
+                $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+            } else {
                 obj1 = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
                 obj2 = string.Concat("{",
                 "\"id\": \"", mockid2, "\",",
                 "\"itemReference\": \"fully:qualified/reference2\",",
                 "\"name\": \"name\",",
                 "\"description\": \"description\",",
-                "\"type\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+                $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
             }
             httpTest
                 .RespondWith(string.Concat("{",
@@ -2045,31 +1963,31 @@ namespace MetasysServices.Tests
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", obj1, "],",
-                    $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"))
+                    $"\"self\": \"https://hostname/api/{version}/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"))
                 .RespondWith(string.Concat("{",
                     "\"total\": 1,",
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", obj2, "],",
-                    $"\"self\": \"https://hostname/api/v2/objects/{mockid2}/objects?page=1&pageSize=200&sort=name\"}}"))
+                    $"\"self\": \"https://hostname/api/{version}/objects/{mockid2}/objects?page=1&pageSize=200&sort=name\"}}"))
                 // Third level will be empty
                 .RespondWith(string.Concat("{",
                     "\"total\": 0,",
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [],",
-                    $"\"self\": \"https://hostname/api/v2/objects/{mockid2}/objects?page=1&pageSize=200&sort=name\"}}"));
+                    $"\"self\": \"https://hostname/api/{version}/objects/{mockid2}/objects?page=1&pageSize=200&sort=name\"}}"));
 
             client = new MetasysClient("hostname", false, version, testCulture);
             var objects = client.GetObjects(mockid3, 3).ToList();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid3}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid3}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/objects/{mockid}/objects")
               .WithVerb(HttpMethod.Get)
               .Times(1);
             MetasysObject expected2 = new MetasysObject(JToken.Parse(obj2), version, null, testCulture);
@@ -2091,7 +2009,7 @@ namespace MetasysServices.Tests
             Assert.Throws<MetasysObjectException>(()=>client.GetObjects(mockid));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
                 .WithVerb(HttpMethod.Get)
-                .Times(1);           
+                .Times(1);
         }
 
         [Test]
@@ -2163,38 +2081,34 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestGetSpacesOnePage(ApiVersion version)
-        {
+        public void TestGetSpacesOnePage(ApiVersion version) {
             string space;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 space = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                    $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
-            }
-            else
-            {
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                    $"\"self\": \"https://hostname/api/{version}/spaces/{mockid}\"}}");
+            } else {
                 space = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
                     "\"name\": \"name\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                    $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                    $"\"self\": \"https://hostname/api/{version}/spaces/{mockid}\"}}");
             }
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", space, "],",
-                "\"self\": \"https://hostname/api/v2/spaces?page=1&pageSize=200&sort=name\"}"));
+                $"\"self\": \"https://hostname/api/{version}/spaces?page=1&pageSize=200&sort=name\"}}"));
 
             client = new MetasysClient("hostname", false, version, testCulture);
             var devices = client.GetSpaces();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected = new MetasysObject(JToken.Parse(space), version, null, testCulture);
@@ -2203,57 +2117,53 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestGetSpacesManyPages(ApiVersion version)
-        {
+        public void TestGetSpacesManyPages(ApiVersion version) {
             string space1, space2;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 space1 = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference1\",",
                     "\"name\": \"name\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                    $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                    $"\"self\": \"https://hostname/api/{version}/spaces/{mockid}\"}}");
                 space2 = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference2\",",
                     "\"name\": \"name\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                    $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
-            }
-            else
-            {
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                    $"\"self\": \"https://hostname/api/{version}/spaces/{mockid}\"}}");
+            } else {
                 space1 = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference1\",",
                     "\"name\": \"name\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                    $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                    $"\"self\": \"https://hostname/api/{version}/spaces/{mockid}\"}}");
                 space2 = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference2\",",
                     "\"name\": \"name\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                    $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                    $"\"self\": \"https://hostname/api/{version}/spaces/{mockid}\"}}");
             }
             httpTest
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
-                    "\"next\": \"https://hostname/api/v2/spaces?page=2&pageSize=1&sort=name\",",
+                    $"\"next\": \"https://hostname/api/{version}/spaces?page=2&pageSize=1&sort=name\",",
                     "\"previous\": null,",
                     "\"items\": [", space1, "],",
-                    "\"self\": \"https://hostname/api/v2/spaces?page=1&pageSize=1&sort=name\"}"))
+                    $"\"self\": \"https://hostname/api/{version}/spaces?page=1&pageSize=1&sort=name\"}}"))
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", space2, "],",
-                    "\"self\": \"https://hostname/api/v2/spaces?page=2&pageSize=1&sort=name\"}"));
+                    $"\"self\": \"https://hostname/api/{version}/spaces?page=2&pageSize=1&sort=name\"}}"));
 
             client = new MetasysClient("hostname", false, version, testCulture);
             var spaces = client.GetSpaces();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
             MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), version, null, testCulture);
@@ -2264,38 +2174,34 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestGetSpacesWithType(ApiVersion version)
-        {
+        public void TestGetSpacesWithType(ApiVersion version) {
             string space;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 space = string.Concat("{",
                    "\"id\": \"", mockid, "\",",
                    "\"itemReference\": \"fully:qualified/reference\",",
                    "\"name\": \"name\",",
-                   "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                   $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
-            }
-            else
-            {
+                   $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                   $"\"self\": \"https://hostname/api/{version}/spaces/{mockid}\"}}");
+            } else {
                 space = string.Concat("{",
                    "\"id\": \"", mockid, "\",",
                    "\"itemReference\": \"fully:qualified/reference\",",
                    "\"name\": \"name\",",
-                   "\"type\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                   $"\"self\": \"https://hostname/api/v2/spaces/{mockid}\"}}");
+                   $"\"type\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                   $"\"self\": \"https://hostname/api/{version}/spaces/{mockid}\"}}");
             }
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", space, "],",
-                "\"self\": \"https://hostname/api/v2/spaces?page=1&pageSize=200&sort=name\"}"));
+                "\"self\": \"https://hostname/api/{version}/spaces?page=1&pageSize=200&sort=name\"}"));
 
             client = new MetasysClient("hostname", false, version, testCulture);
             var devices = client.GetSpaces(SpaceTypeEnum.Room);
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/spaces")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/spaces")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected = new MetasysObject(JToken.Parse(space), version, null, testCulture);
@@ -2486,38 +2392,34 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestGetEquipmentOnePage(ApiVersion version)
-        {
+        public void TestGetEquipmentOnePage(ApiVersion version) {
             string space;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 space = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                $"\"self\": \"https://hostname/api/v2/equipment/{mockid}\"}}");
-            }
-            else
-            {
+                $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/{version}/equipment/{mockid}\"}}");
+            } else {
                 space = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
-                "\"type\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                $"\"self\": \"https://hostname/api/v2/equipment/{mockid}\"}}");
+                $"\"type\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                $"\"self\": \"https://hostname/api/{version}/equipment/{mockid}\"}}");
             }
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
                 "\"previous\": null,",
                 "\"items\": [", space, "],",
-                "\"self\": \"https://hostname/api/v2/equipment?page=1&pageSize=200&sort=name\"}"));
+                $"\"self\": \"https://hostname/api/{version}/equipment?page=1&pageSize=200&sort=name\"}}"));
 
             client = new MetasysClient("hostname", false, version, testCulture);
             var devices = client.GetEquipment();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/equipment")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/equipment")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             MetasysObject expected = new MetasysObject(JToken.Parse(space), version, null, testCulture);
@@ -2526,23 +2428,21 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestGetEquipmentManyPages(ApiVersion version)
-        {
+        public void TestGetEquipmentManyPages(ApiVersion version) {
             string space1, space2;
-            if (version < ApiVersion.v3)
-            {
+            if (version < ApiVersion.v3) {
                 space1 = string.Concat("{",
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference1\",",
                     "\"name\": \"name\",",
-                    "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                    $"\"self\": \"https://hostname/api/v2/equipment/{mockid}\"}}");
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                    $"\"self\": \"https://hostname/api/{version}/equipment/{mockid}\"}}");
                 space2 = string.Concat("{",
                    "\"id\": \"", mockid, "\",",
                    "\"itemReference\": \"fully:qualified/reference2\",",
                    "\"name\": \"name\",",
-                   "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                   $"\"self\": \"https://hostname/api/v2/equipment/{mockid}\"}}");
+                   $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                   $"\"self\": \"https://hostname/api/{version}/equipment/{mockid}\"}}");
             }
             else
             {
@@ -2550,33 +2450,33 @@ namespace MetasysServices.Tests
                     "\"id\": \"", mockid, "\",",
                     "\"itemReference\": \"fully:qualified/reference1\",",
                     "\"name\": \"name\",",
-                    "\"type\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                    $"\"self\": \"https://hostname/api/v2/equipment/{mockid}\"}}");
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                    $"\"self\": \"https://hostname/api/{version}/equipment/{mockid}\"}}");
                 space2 = string.Concat("{",
                    "\"id\": \"", mockid, "\",",
                    "\"itemReference\": \"fully:qualified/reference2\",",
                    "\"name\": \"name\",",
-                   "\"type\": \"https://hostname/api/v2/enumSets/1766/members/3\",",
-                   $"\"self\": \"https://hostname/api/v2/equipment/{mockid}\"}}");
+                   $"\"type\": \"https://hostname/api/{version}/enumSets/1766/members/3\",",
+                   $"\"self\": \"https://hostname/api/{version}/equipment/{mockid}\"}}");
             }
             httpTest
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
-                    "\"next\": \"https://hostname/api/v2/equipment?page=2&pageSize=1&sort=name\",",
+                    $"\"next\": \"https://hostname/api/{version}/equipment?page=2&pageSize=1&sort=name\",",
                     "\"previous\": null,",
                     "\"items\": [", space1, "],",
-                    "\"self\": \"https://hostname/api/v2/equipment?page=1&pageSize=1&sort=name\"}"))
+                    $"\"self\": \"https://hostname/api/{version}/equipment?page=1&pageSize=1&sort=name\"}}"))
                 .RespondWith(string.Concat("{",
                     "\"total\": 2,",
                     "\"next\": null,",
                     "\"previous\": null,",
                     "\"items\": [", space2, "],",
-                    "\"self\": \"https://hostname/api/v2/equipment?page=2&pageSize=1&sort=name\"}"));
+                    $"\"self\": \"https://hostname/api/{version}/equipment?page=2&pageSize=1&sort=name\"}}"));
 
             client = new MetasysClient("hostname", false, version, testCulture);
             var Equipment = client.GetEquipment();
 
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/equipment")
+            httpTest.ShouldHaveCalled($"https://hostname/api/{version}/equipment")
                 .WithVerb(HttpMethod.Get)
                 .Times(2);
             MetasysObject expected1 = new MetasysObject(JToken.Parse(space1), version, null, testCulture);
@@ -2584,7 +2484,6 @@ namespace MetasysServices.Tests
             Assert.AreEqual(expected1, Equipment.ElementAt(0));
             Assert.AreEqual(expected2, Equipment.ElementAt(1));
         }
-     
 
         [Test]
         public void TestGetEquipmentMissingItems()

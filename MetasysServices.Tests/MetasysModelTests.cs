@@ -413,7 +413,7 @@ namespace MetasysServices.Tests
                 }";
                 data2 = @"{
                     ""item"": {
-                        ""presentValue"": {
+                        ""presentValwe"": {
                                 ""value"": 23,
                             ""reliability"": ""reliabilityEnumSet.reliable""
                         }
@@ -421,7 +421,7 @@ namespace MetasysServices.Tests
                     }";
                 data3 = @"{
                     ""item"": {
-                        ""presentValue"": {
+                        ""presentValwe"": {
                                 ""value"": 24,
                             ""reliability"": ""reliabilityEnumSet.reliable"",
                             ""priority"": ""writePriorityEnumSet.priorityDefault""
@@ -442,7 +442,7 @@ namespace MetasysServices.Tests
                 }";
                 data2 = @"{
                     ""item"": {
-                        ""presentValue"": {
+                        ""presentValwe"": {
                                 ""value"": 23,
                             ""reliability"": ""reliabilityEnumSet.reliable""
                         }
@@ -450,7 +450,7 @@ namespace MetasysServices.Tests
                     }";
                 data3 = @"{
                     ""item"": {
-                        ""presentValue"": {
+                        ""presentValwe"": {
                                 ""value"": 24,
                             ""reliability"": ""reliabilityEnumSet.reliable"",
                             ""priority"": ""writePriorityEnumSet.priorityDefault""
