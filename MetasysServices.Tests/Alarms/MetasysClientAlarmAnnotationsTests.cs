@@ -25,7 +25,7 @@ namespace MetasysServices.Tests
                     ""self"": ""https://win-ervotujej94/api/v2/audits/f0f64d5c-b70e-8754-836c-1ac99182f4e4/annotations?pageSize=100&page=1""
                 }";
             httpTest.RespondWith(response);
-            var annotations = client.Audits.GetAnnotations(mockid); 
+            var annotations = client.Audits.GetAnnotations(mockid);
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits/{mockid}/annotations")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -40,7 +40,7 @@ namespace MetasysServices.Tests
                     ""total"": 1,
                     ""next"": null,
                     ""previous"": null,
-                    ""items"": [" + AlarmAnnotation + @"],                                         
+                    ""items"": [" + AlarmAnnotation + @"],
                     ""self"": ""https://win-ervotujej94/api/v2/alarms/f0f64d5c-b70e-8754-836c-1ac99182f4e4/annotations?pageSize=100&page=1""
                 }
             ";
@@ -65,7 +65,7 @@ namespace MetasysServices.Tests
                     ""total"": 1,
                     ""next"": null,
                     ""previous"": null,
-                    ""items"": [" + AlarmAnnotation + @"],                                         
+                    ""items"": [" + AlarmAnnotation + @"],
                     ""self"": ""https://win-ervotujej94/api/v2/alarms/f0f64d5c-b70e-8754-836c-1ac99182f4e4/annotations?pageSize=100&page=1""
                 }
             ";
@@ -91,7 +91,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms/{mockid}/annotations")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            PrintMessage($"TestGetAlarmAnnotationsUnauthorizedThrowsException: {e.Message}", true);    
+            PrintMessage($"TestGetAlarmAnnotationsUnauthorizedThrowsException: {e.Message}", true);
         }
     }
 }
