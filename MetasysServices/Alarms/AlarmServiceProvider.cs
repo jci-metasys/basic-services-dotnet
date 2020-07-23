@@ -20,9 +20,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public sealed class AlarmServiceProvider : BasicServiceProvider, IAlarmsService
     {
-        private const string BaseParam = "alarms";
-
-        private CultureInfo _CultureInfo;
+        private CultureInfo _CultureInfo = new CultureInfo("en-US");
 
         /// <summary>
         /// Initializes a new instance of <see cref="AlarmServiceProvider"/> with supplied data.

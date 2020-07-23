@@ -674,7 +674,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
             var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } }).ConfigureAwait(false);
-            return toMetasysObject(response);
+            return ToMetasysObject(response);
         }
 
         /// <inheritdoc/>
@@ -797,7 +797,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 parameters = new Dictionary<string, string>() { { "type", ((int)type).ToString() } };
             }
             var spaces = await GetAllAvailablePagesAsync("spaces", parameters).ConfigureAwait(false);
-            return toMetasysObject(spaces, type: MetasysObjectTypeEnum.Space);
+            return ToMetasysObject(spaces, type: MetasysObjectTypeEnum.Space);
         }
 
         /// <inheritdoc/>
@@ -810,7 +810,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid id)
         {
             var spaceChildren = await GetAllAvailablePagesAsync("spaces", null, id.ToString(), "spaces").ConfigureAwait(false);
-            return toMetasysObject(spaceChildren, MetasysObjectTypeEnum.Space);
+            return ToMetasysObject(spaceChildren, MetasysObjectTypeEnum.Space);
         }
 
 
@@ -824,7 +824,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
         {
             var equipment = await GetAllAvailablePagesAsync("equipment").ConfigureAwait(false);
-            return toMetasysObject(equipment, MetasysObjectTypeEnum.Equipment);
+            return ToMetasysObject(equipment, MetasysObjectTypeEnum.Equipment);
         }
 
         /// <inheritdoc/>
@@ -849,7 +849,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
         {
             var spaceEquipment = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment").ConfigureAwait(false);
-            return toMetasysObject(spaceEquipment, MetasysObjectTypeEnum.Equipment);
+            return ToMetasysObject(spaceEquipment, MetasysObjectTypeEnum.Equipment);
         }
 
         /// <inheritdoc/>
@@ -920,7 +920,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 parameters.Add("includeInternalObjects", includeInternalObjects.ToString());
             }
             var objects = await GetObjectChildrenAsync(id, parameters, levels).ConfigureAwait(false);
-            return toMetasysObject(objects);
+            return ToMetasysObject(objects);
         }
 
         /// <inheritdoc/>

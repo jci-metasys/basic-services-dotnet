@@ -11,8 +11,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 {
     public class JsonOutputDemo
     {
-        private MetasysClient client;
-        private LogInitializer log;
+        private readonly MetasysClient client;
+        private readonly LogInitializer log;
 
         public JsonOutputDemo(MetasysClient client)
         {
@@ -377,8 +377,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             }
             */
             int type1 = types[0].Id;
-            //List<MetasysObject> devices = client.GetNetworkDevices(type1.ToString()).ToList();
-            List<MetasysObject> devices = client.GetNetworkDevices(NetworkDeviceTypeEnum.NAE55NIE59).ToList();
+            List<MetasysObject> devices = client.GetNetworkDevices(type1.ToString()).ToList();
             MetasysObject device = devices.LastOrDefault();
             Console.WriteLine(device);
             /*                        
@@ -394,6 +393,26 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                   "ChildrenCount": 0
                 }
             */
+
+            List<MetasysObject> devices2 = client.GetNetworkDevices(NetworkDeviceTypeEnum.SNC).ToList();
+            MetasysObject device2 = devices2.LastOrDefault();
+            Console.WriteLine(device2);
+            /*                        
+                {
+                  "ItemReference": "WIN-21DJ9JV9QH6:EECMI-SNC-KNX",
+                  "Id": "69b3c2a5-1090-5418-afd9-5efc7186e42f",
+                  "Name": "EECMI-SNC-KNX",
+                  "Description": "",
+                  "Type": null,
+                  "TypeUrl": "https://win-21dj9jv9qh6/api/v3/enumSets/508/members/448",
+                  "ObjectType": null,
+                  "Category": null,
+                  "Children": [],
+                  "ChildrenCount": 0
+                }            
+            */
+
+
             /* SNIPPET 1: END */
         }
 
@@ -679,27 +698,30 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Alarm alarm = alarmsPager.Items.ElementAt(0);
             Console.WriteLine(alarm);
             /* Console Output: Start                       
-                {
-                  "Self": "https://win2016-vm2/api/v2/alarms/ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7",
-                  "Id": "ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7",
-                  "ItemReference": "Win2016-VM2:Win2016-VM2",
-                  "Name": "WIN2016-VM2",
-                  "Message": "ActivityData queue's messages are not getting processed.",
-                  "IsAckRequired": true,
-                  "TypeUrl": "https://win2016-vm2/api/v2/enumSets/108/members/68",
-                  "Priority": 95,
-                  "TriggerValue": {
-                    "value": "1233",
-                    "unitsUrl": "https://win2016-vm2/api/v2/enumSets/507/members/95"
-                  },
-                  "CreationTime": "2020-01-12T11:54:30Z",
-                  "IsAcknowledged": false,
-                  "IsDiscarded": false,
-                  "CategoryUrl": "https://win2016-vm2/api/v2/enumSets/33/members/12",
-                  "ObjectUrl": "https://win2016-vm2/api/v2/objects/28bed6b0-4a0f-5bb0-a16f-57a7200685bb",
-                  "AnnotationsUrl": "https://win2016-vm2/api/v2/alarms/ee7bc537-6b31-44b1-9feb-e4d0dc36f6e7/annotations"
-                }
-             Console Output: End */
+            {
+              "Self": "https://win-21dj9jv9qh6/api/v3/alarms/e03d81f9-69de-48e8-92d7-81167df19f6c",
+              "Id": "e03d81f9-69de-48e8-92d7-81167df19f6c",
+              "ItemReference": "WIN-21DJ9JV9QH6:EECMI-NCE25-3",
+              "Name": "EECMI-NCE25-3",
+              "Message": "WIN-21DJ9JV9QH6:EECMI-NCE25-3 is offline",
+              "IsAckRequired": true,
+              "TypeUrl": null,
+              "Type": "alarmValueEnumSet.avOffline",
+              "Priority": 106,
+              "TriggerValue": {
+                "Value": "",
+                "UnitsUrl": null,
+                "Units": "unitEnumSet.noUnits"
+              },
+              "CreationTime": "2020-06-17T11:22:30Z",
+              "IsAcknowledged": false,
+              "IsDiscarded": false,
+              "CategoryUrl": null,
+              "Category": "objectCategoryEnumSet.systemCategory",
+              "ObjectUrl": "https://win-21dj9jv9qh6/api/v3/objects/e03d81f9-69de-48e8-92d7-81167df19f6c",
+              "AnnotationsUrl": "https://win-21dj9jv9qh6/api/v3/alarms/e03d81f9-69de-48e8-92d7-81167df19f6c/annotations"
+            }             
+            Console Output: End */
             /* SNIPPET 1: END */
         }
 
@@ -796,34 +818,31 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Audit audit = auditsPager.Items.FirstOrDefault();
             Console.WriteLine(audit);
             /*                        
-                 {
-                  "Id": "aab3a269-8aec-4be1-b3a6-761853442d56",
-                  "CreationTime": "2020-01-10T13:52:53.547Z",
-                  "ActionTypeUrl": "https://win2016-vm2/api/v2/enumsets/577/members/5",
-                  "Discarded": false,
-                  "StatusUrl": null,
-                  "PreData": null,
-                  "PostData": {
-                    "unitUrl": null,
-                    "precisionUrl": null,
-                    "value": "::1",
-                    "typeUrl": "https://win2016-vm2/api/v2/enumsets/501/members/7"
-                  },
-                  "Parameters": [],
-                  "ErrorString": null,
-                  "User": "MetasysSysAgent",
-                  "Signature": null,
-                  "ObjectUrl": "https://win2016-vm2/api/v2/objects/28bed6b0-4a0f-5bb0-a16f-57a7200685bb",
-                  "AnnotationsUrl": "https://win2016-vm2/api/v2/audits/aab3a269-8aec-4be1-b3a6-761853442d56/annotations",
-                  "Legacy": {
-                    "fullyQualifiedItemReference": "Win2016-VM2:Win2016-VM2",
-                    "itemName": "Win2016-VM2",
-                    "classLevelUrl": "https://win2016-vm2/api/v2/enumsets/568/members/1",
-                    "originApplicationUrl": "https://win2016-vm2/api/v2/enumsets/578/members/6",
-                    "descriptionUrl": "https://win2016-vm2/api/v2/enumsets/580/members/41"
-                  },
-                  "Self": "https://win2016-vm2/api/v2/audits/aab3a269-8aec-4be1-b3a6-761853442d56"
-                }
+            {
+              "Id": "8e3b3738-2f5f-494d-bde1-fac15da28c86",
+              "CreationTime": "2020-06-23T16:45:54.697Z",
+              "ActionTypeUrl": null,
+              "ActionType": "auditActionTypeEnumSet.subsystemAuditActionType",
+              "Discarded": false,
+              "StatusUrl": null,
+              "Status": null,
+              "PreData": null,
+              "PostData": "::1",
+              "Parameters": "[]",
+              "ErrorString": null,
+              "User": "testuser",
+              "Signature": null,
+              "ObjectUrl": "https://win-21dj9jv9qh6/api/v3/objects/1949c631-7823-5230-b951-aae3f8c9d64a",
+              "AnnotationsUrl": null,
+              "Legacy": {
+                "FullyQualifiedItemReference": "WIN-21DJ9JV9QH6:WIN-21DJ9JV9QH6",
+                "ItemName": "EECMI-ADS11",
+                "ClassLevel": "auditClassesEnumSet.userActionAuditClass",
+                "OriginApplication": "auditOriginAppEnumSet.systemSecurityAuditOriginApp",
+                "Description": "auditTrailStringsEnumSet.atstrSecurityUserLoginSuccessful"
+              },
+              "Self": "https://win-21dj9jv9qh6/api/v3/audits/8e3b3738-2f5f-494d-bde1-fac15da28c86"
+            }
              */
             /* SNIPPET 1: END */
         }
@@ -916,6 +935,16 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             */
             /* SNIPPET 7: END */
         }
+        private void GetServerTime()
+        {
+            /* SNIPPET 8: START */
+            DateTime dateTime = client.GetServerTime();
+            Console.WriteLine(dateTime.ToString());
+            /*
+             23/07/2020 17:06:33
+            */
+            /* SNIPPET 8: END */
+        }
 
         #endregion
 
@@ -938,8 +967,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
                 AlarmFilter alarmFilter = new AlarmFilter
                 {
-                    StartTime = new DateTime(2019, 12, 12),
-                    EndTime = new DateTime(2020, 1, 12),
+                    StartTime = new DateTime(2020, 06, 01),
+                    EndTime = new DateTime(2020, 07, 10),
                     ExcludeAcknowledged = true
                 };
 
@@ -1054,6 +1083,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                         case "29":
                             DiscardAuditMultiple();
                             break;
+                        case "30":
+                            GetServerTime();
+                            break;
                         case "99":
                             return; // Exit from JSON output demo
                     }
@@ -1104,6 +1136,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("27) AddAuditAnnotation");
             Console.WriteLine("28) AddAuditAnnotationMultiple");
             Console.WriteLine("29) DiscardAuditMultiple");
+            Console.WriteLine("30) GetServerTime");
             Console.WriteLine("99) Exit");
         }
     }

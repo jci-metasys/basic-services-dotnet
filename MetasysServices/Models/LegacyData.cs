@@ -4,6 +4,10 @@ using System.Text;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
+    /// <summary>
+    /// LegacyData is a structure that holds information about Legacy Information.
+    /// </summary>
+
     public class LegacyData
     {
         /// <summary>

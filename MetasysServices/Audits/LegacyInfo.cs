@@ -58,5 +58,22 @@ namespace JohnsonControls.Metasys.BasicServices
             return false;
         }
 
+        /// <summary></summary>
+        public override int GetHashCode()
+        {
+            var code = 13;
+            // Calculate hash on each properties one by one
+            code = (code * 7) + FullyQualifiedItemReference.GetHashCode();
+            if (ItemName != null)
+                code = (code * 7) + ItemName.GetHashCode();
+            if (this.ClassLevel != null)
+                code = (code * 7) + ClassLevel.GetHashCode();
+            if (this.OriginApplication != null)
+                code = (code * 7) + OriginApplication.GetHashCode();
+            if (this.Description != null)
+                code = (code * 7) + Description.GetHashCode();
+            return code;
+        }
+
     }
 }

@@ -15,7 +15,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public class TrendServiceProvider : BasicServiceProvider, ITrendService
     {
-        private CultureInfo _CultureInfo;
+        private CultureInfo _CultureInfo = new CultureInfo("en-US");
 
         /// <summary>
         /// Caching about read units.

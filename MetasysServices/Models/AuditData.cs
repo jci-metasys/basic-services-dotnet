@@ -4,6 +4,10 @@ using System.Text;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
+    /// <summary>
+    /// AuditData is a structure that holds information about Audit Information.
+    /// </summary>
+
     public class AuditData
     {
         /// <summary>
@@ -47,6 +51,22 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return false;
         }
+
+        /// <summary></summary>
+        public override int GetHashCode()
+        {
+            var code = 13;
+            // Calculate hash on each properties one by one
+            code = (code * 7) + Unit.GetHashCode();
+            if (Precision != null)
+                code = (code * 7) + Precision.GetHashCode();
+            if (this.Value != null)
+                code = (code * 7) + Value.GetHashCode();
+            if (this.Type != null)
+                code = (code * 7) + Type.GetHashCode();
+            return code;
+        }
+
 
     }
 }
