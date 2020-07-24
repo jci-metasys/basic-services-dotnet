@@ -956,6 +956,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Guid objectId = new Guid("8e3b3738-2f5f-494d-bde1-fac15da28c86");
                 Guid id1 = objectId;
                 Guid id2 = new Guid("01e025e8-0fb3-59da-a9b8-2f238c6f011c");
+
                 // Common objects are mocked to do not waste precious roundtrip time on each snippet
                 List<Command> commands = new List<Command> { new Command { CommandId = "Adjust" }, new Command { CommandId = "OperatorOverride" }, new Command(), new Command(), new Command { CommandId = "Release" } };
 

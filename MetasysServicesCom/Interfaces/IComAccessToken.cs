@@ -9,6 +9,7 @@ namespace JohnsonControls.Metasys.ComServices
     [ComVisible(true)]
     [Guid("9bcbc14f-b7a9-45a9-bb1f-cd31d12f214e")]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+
     public interface IComAccessToken
     {
         /// <summary>The session access token for bearer authentication.</summary>

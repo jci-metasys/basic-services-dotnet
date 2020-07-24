@@ -4,7 +4,7 @@
 
 #define MyAppName "Metasys Services COM"
 #define MyAppShortName "MetasysServicesCOM"
-#define MyAppVersion "4.0.0"
+#define MyAppVersion "4.1.0"
 #define MyAppPublisher "Johnson Controls"
 
 
@@ -44,17 +44,15 @@ Name: {group}\Uninstall; Filename: {uninstallexe}; IconFilename: {app}\Icons\Uni
 
 [Run]
 ; postinstall launch: registering COM DLL
-;Filename: {app}\Scripts\RegCom.bat; Flags: runhidden
 Filename: {app}\Scripts\CheckDotNetFramework.bat; Flags: runhidden
-Filename: {win}\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe; Parameters: /codebase MetasysServicesCom.dll /tlb MetasysServicesCom.tlb; WorkingDir: {app}; Flags: waituntilterminated runhidden
+Filename: {app}\Scripts\RegCom.bat; Flags: runhidden
+
+;Filename: {win}\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe; Parameters: /codebase MetasysServicesCom.dll /tlb MetasysServicesCom.tlb; WorkingDir: {app}; Flags: waituntilterminated runhidden
 
 [UninstallRun]
 ; postinstall launch: unregistering COM DLL
-;Filename: {app}\Scripts\UnregCom.bat; Flags: runhidden
-Filename: {win}\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe; Parameters: /unregister /codebase MetasysServicesCom.dll /tlb MetasysServicesCom.tlb; WorkingDir: {app}; Flags: waituntilterminated runhidden
-;Filename: {dotnet4064}\RegAsm.exe; Parameters: /unregister /codebase {app}\MetasysServicesCom.dll /tlb {app}\MetasysServicesCom.tlb; Flags: waituntilterminated
-;Filename: {dotnet40}\regasm.exe; Parameters: /u MetasysServicesCom.dll; WorkingDir: {app}; Flags: runhidden
-;Filename: {dotnet4064}\regasm.exe; Parameters: /u MetasysServicesCom.dll; WorkingDir: {app}; Flags: runhidden; Check: IsWin64;
+Filename: {app}\Scripts\UnregCom.bat; Flags: runhidden
+;Filename: {win}\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe; Parameters: /unregister /codebase MetasysServicesCom.dll /tlb MetasysServicesCom.tlb; WorkingDir: {app}; Flags: waituntilterminated runhidden
 
 [UninstallDelete]
 ; remove registered DLL tlb file outside Setup

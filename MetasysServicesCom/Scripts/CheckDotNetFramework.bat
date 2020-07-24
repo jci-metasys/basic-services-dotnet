@@ -16,5 +16,3 @@ IF "%Key_Value%"=="4.8.03761" (
 ) ELSE (
    dotnetfx472_full_x86_x64-4.7.3081.0.exe \q \norestart
 )
-
-

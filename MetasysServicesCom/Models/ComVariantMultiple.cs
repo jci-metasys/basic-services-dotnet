@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace JohnsonControls.Metasys.ComServices
 {
-
     /// <summary>
     /// A specialized COM structure for grouping Variant values with the same id.
     /// </summary>    
