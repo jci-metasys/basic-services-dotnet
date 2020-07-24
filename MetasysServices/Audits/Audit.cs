@@ -11,6 +11,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public class Audit 
     {
+
         /// <summary>
         /// The identifier of the audit(GUID).
         /// </summary>
@@ -81,7 +82,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The user who created this audit.
         /// </summary>
-        public dynamic Signature { get; set; }
+        public AuditSignature Signature { get; set; }
 
         /// <summary>
         /// A link to the object on which the activity was generated.
@@ -97,7 +98,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Metasys specific data.
         /// </summary>
-        public dynamic Legacy { get; set; }
+        public LegacyInfo Legacy { get; set; }
 
         /// <summary>
         /// URI that points back to this resource
