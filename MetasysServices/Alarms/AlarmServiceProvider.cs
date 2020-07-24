@@ -5,13 +5,13 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Resources;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
 using log4net.Config;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using JohnsonControls.Metasys.BasicServices.Utils;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -20,7 +20,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public sealed class AlarmServiceProvider : BasicServiceProvider, IAlarmsService
     {
-        private const string BaseParam = "alarms";
+        private CultureInfo _CultureInfo = new CultureInfo("en-US");
 
         /// <summary>
         /// Initializes a new instance of <see cref="AlarmServiceProvider"/> with supplied data.
@@ -29,36 +29,84 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="version">The server's Api version.</param>
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
         public AlarmServiceProvider(IFlurlClient client, ApiVersion version, bool logClientErrors=true):base(client, version, logClientErrors)
-        {           
+        {
         }
 
         /// <inheritdoc/>
         public async Task<PagedResult<Alarm>> GetAsync(AlarmFilter alarmFilter)
-        {                
-            return await GetPagedResultsAsync<Alarm>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);            
+        {
+            List<Alarm> alarms = new List<Alarm>();
+            var response = await GetPagedResultsAsync<Alarm>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);
+            if (Version >= ApiVersion.v3) {
+                foreach (var item in response.Items) {
+                    alarms.Add(await CreateItem(item));
+                }
+
+                response = new PagedResult<Alarm> {
+                    Items = alarms,
+                    CurrentPage = response.CurrentPage,
+                    PageCount = response.PageCount,
+                    PageSize = response.PageSize,
+                    Total = response.Total
+                };
+            }
+            return response;
         }
 
         /// <inheritdoc/>
         public async Task<Alarm> FindByIdAsync(Guid alarmId)
         {
-            var response=await GetRequestAsync("alarms", null, alarmId).ConfigureAwait(false);
-            if (response["items"]!=null)
-                {
+            var response = await GetRequestAsync("alarms", null, alarmId).ConfigureAwait(false);
+            if (response["items"] != null) {
                 response = response["items"];
-                }
-            return JsonConvert.DeserializeObject<Alarm>(response.ToString());
+            }
+            var alarmData = JsonConvert.DeserializeObject<Alarm>(response.ToString());
+            if (Version >= ApiVersion.v3) {
+                alarmData = await CreateItem(alarmData);
+            }
+
+            return alarmData;
         }
 
         /// <inheritdoc/>
         public async Task<PagedResult<Alarm>> GetForObjectAsync(Guid objectId, AlarmFilter alarmFilter)
         {
-            return await GetPagedResultsAsync<Alarm>("objects", ToDictionary(alarmFilter), objectId, "alarms").ConfigureAwait(false);
+            List<Alarm> alarms = new List<Alarm>();
+            var response = await GetPagedResultsAsync<Alarm>("objects", ToDictionary(alarmFilter), objectId, "alarms").ConfigureAwait(false);
+            if (Version >= ApiVersion.v3) {
+                foreach (var item in response.Items) {
+                    alarms.Add(await CreateItem(item));
+                }
+                response = new PagedResult<Alarm> {
+                    Items = alarms,
+                    CurrentPage = response.CurrentPage,
+                    PageCount = response.PageCount,
+                    PageSize = response.PageSize,
+                    Total = response.Total
+                };
+            }
+            return response;
         }
 
         /// <inheritdoc/>
         public async Task<PagedResult<Alarm>> GetForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter alarmFilter)
         {
-            return await GetPagedResultsAsync<Alarm>("networkDevices", ToDictionary(alarmFilter), networkDeviceId, "alarms").ConfigureAwait(false);
+            List<Alarm> alarms = new List<Alarm>();
+            var response = await GetPagedResultsAsync<Alarm>("networkDevices", ToDictionary(alarmFilter), networkDeviceId, "alarms").ConfigureAwait(false);
+            if (Version >= ApiVersion.v3) {
+                foreach (var item in response.Items) {
+                    alarms.Add(await CreateItem(item));
+                }
+
+                response = new PagedResult<Alarm> {
+                    Items = alarms,
+                    CurrentPage = response.CurrentPage,
+                    PageCount = response.PageCount,
+                    PageSize = response.PageSize,
+                    Total = response.Total
+                };
+            }
+            return response;
         }
 
         /// <inheritdoc/>
@@ -97,7 +145,7 @@ namespace JohnsonControls.Metasys.BasicServices
             // Retrieve JSON collection of Annotation
             var annotations= await GetAllAvailablePagesAsync("alarms",null,alarmId.ToString(),"annotations");
             List<AlarmAnnotation> annotationsList = new List<AlarmAnnotation>();
-            // Convert to a collection of AlarmAnnotation          
+            // Convert to a collection of AlarmAnnotation
             foreach (var token in annotations)
             {
                 AlarmAnnotation alarmAnnotation = new AlarmAnnotation();
@@ -114,9 +162,30 @@ namespace JohnsonControls.Metasys.BasicServices
                 catch (Exception e)
                 {
                     throw new MetasysObjectException(token.ToString(), e);
-                }              
+                }
             }
             return annotationsList;
         }
+
+
+        private async Task<Alarm> CreateItem(Alarm item)
+        {
+            try {
+                    var measurement = new Measurement {
+                        Units = item.TriggerValue.Units != null ? ResourceManager.Localize(item.TriggerValue.Units, _CultureInfo) : null,
+                        Value = item.TriggerValue.Value
+                    };
+
+                    item.TriggerValue = measurement;
+
+            }
+            catch (ArgumentNullException e) {
+                // Something went wrong on object parsing
+                throw new MetasysObjectException(e);
+            }
+
+            return item;
+        }
+
     }
 }

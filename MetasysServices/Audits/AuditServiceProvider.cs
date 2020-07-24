@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Resources;
 using System.Threading.Tasks;
 using Flurl;
@@ -27,31 +29,70 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="client">The FlurlClient to get response from URL.</param>
         /// <param name="version">The server's Api version.</param>
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
-        public AuditServiceProvider(IFlurlClient client, ApiVersion version, bool logClientErrors = true) :base(client, version, logClientErrors)
-        {           
+        public AuditServiceProvider(IFlurlClient client, ApiVersion version, bool logClientErrors = true) : base(client, version, logClientErrors)
+        {
         }
 
         /// <inheritdoc/>
         public async Task<Audit> FindByIdAsync(Guid auditId)
         {
             var response = await GetRequestAsync("audits", null, auditId).ConfigureAwait(false);
-            if (response["item"]!=null)
-            {
+            if (response["item"] != null) {
                 response = response["item"];
             }
-            return JsonConvert.DeserializeObject<Audit>(response.ToString());
+            var auditData = JsonConvert.DeserializeObject<Audit>(response.ToString());
+            if (Version >= ApiVersion.v3) {
+                auditData = CreateItem(auditData);
+            }
+
+            return auditData;
         }
 
         /// <inheritdoc/>
         public async Task<PagedResult<Audit>> GetAsync(AuditFilter auditFilter)
         {
-            return await GetPagedResultsAsync<Audit>("audits", ToDictionary(auditFilter)).ConfigureAwait(false);
+            var dictionary = ToDictionary(auditFilter);
+            dictionary["OriginApplications"] = GetEnumCsv<OriginApplicationsEnum>(auditFilter.OriginApplications);
+            dictionary["ActionTypes"] = GetEnumCsv<ActionTypeEnum>(auditFilter.ActionTypes);
+            var response = await GetPagedResultsAsync<Audit>("audits", dictionary).ConfigureAwait(false);
+            if (Version >= ApiVersion.v3) {
+                List<Audit> audits = new List<Audit>();
+                foreach (var item in response.Items) {
+                    audits.Add(CreateItem(item));
+                }
+
+                response = new PagedResult<Audit> {
+                    Items = audits,
+                    CurrentPage = response.CurrentPage,
+                    PageCount = response.PageCount,
+                    PageSize = response.PageSize,
+                    Total = response.Total
+                };
+            }
+            return response;
         }
 
         /// <inheritdoc/>
         public async Task<PagedResult<Audit>> GetForObjectAsync(Guid objectId, AuditFilter auditFilter)
         {
-            return await GetPagedResultsAsync<Audit>("objects", ToDictionary(auditFilter), objectId, BaseParam).ConfigureAwait(false);
+            var dictionary = ToDictionary(auditFilter);
+            dictionary["OriginApplications"] = GetEnumCsv<OriginApplicationsEnum>(auditFilter.OriginApplications);
+            dictionary["ActionTypes"] = GetEnumCsv<ActionTypeEnum>(auditFilter.ActionTypes);
+            var response = await GetPagedResultsAsync<Audit>("objects", dictionary, objectId, BaseParam).ConfigureAwait(false);
+            if (Version >= ApiVersion.v3) {
+                List<Audit> audits = new List<Audit>();
+                foreach (var item in response.Items) {
+                    audits.Add(CreateItem(item));
+                }
+                response = new PagedResult<Audit> {
+                    Items = audits,
+                    CurrentPage = response.CurrentPage,
+                    PageCount = response.PageCount,
+                    PageSize = response.PageSize,
+                    Total = response.Total
+                };
+            }
+            return response;
         }
 
         /// <inheritdoc/>
@@ -83,7 +124,7 @@ namespace JohnsonControls.Metasys.BasicServices
             // Retrieve JSON collection of Annotation
             var annotations = await GetAllAvailablePagesAsync("audits", null, auditId.ToString(), "annotations");
             List<AuditAnnotation> annotationsList = new List<AuditAnnotation>();
-            // Convert to a collection of AuditAnnotation          
+            // Convert to a collection of AuditAnnotation
             foreach (var token in annotations)
             {
                 AuditAnnotation auditAnnotation = new AuditAnnotation();
@@ -227,6 +268,80 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+        private Audit CreateItem(Audit item)
+        {
+            try {
+                var stringAuditData = item.ToString();
+                var data = JObject.Parse(stringAuditData);
+                item.ActionType = data["ActionType"].Value<string>();
+                item.Status = data["Status"].Value<string>();
+
+                if (data["PreData"].ToString() != null) {
+                    if (data["PreData"].HasValues) {
+                        item.PreData = new AuditData {
+                            Unit = data["PreData"]["unit"].Value<string>(),
+                            Precision = data["PreData"]["precision"].Value<string>(),
+                            Value = data["PreData"]["value"].Value<string>(),
+                            Type = data["PreData"]["type"].Value<string>()
+                        };
+                    } else {
+                        item.PreData = data["PreData"].Value<string>() != null ? data["PreData"].ToString() : null;
+                    }
+                }
+
+                if (data["PostData"].ToString() != null) {
+                    if (data["PostData"].HasValues) {
+                        item.PostData = new AuditData {
+                            Unit = data["PostData"]["unit"].Value<string>(),
+                            Precision = data["PostData"]["precision"].Value<string>(),
+                            Value = data["PostData"]["value"].Value<string>(),
+                            Type = data["PostData"]["type"].Value<string>()
+                        };
+                    } else {
+                        item.PostData = data["PostData"].Value<string>() != null ? data["PostData"].ToString() : null;
+                    }
+                }
+
+                if (data["Parameters"].ToString() == "[]") {
+                    item.Parameters = data["Parameters"].ToString();
+                } else {
+                    if (data["Parameters"].ToString() != null) {
+                        if (data["Parameters"].HasValues) {
+                            item.Parameters = new AuditData {
+                                Unit = data["Parameters"]["unit"].Value<string>(),
+                                Precision = data["Parameters"]["precision"].Value<string>(),
+                                Value = data["Parameters"]["value"].Value<string>(),
+                                Type = data["Parameters"]["type"].Value<string>()
+                            };
+                        } else {
+                            item.Parameters = data["Parameters"].Value<string>() != null ? data["Parameters"].ToString() : null;
+                        }
+                    }
+                }
+
+                if (data["Legacy"].ToString() != null) {
+                    if (data["Legacy"].HasValues) {
+                        item.Legacy = new LegacyInfo {
+                            FullyQualifiedItemReference = data["Legacy"]["fullyQualifiedItemReference"].Value<string>(),
+                            ItemName = data["Legacy"]["itemName"].Value<string>(),
+                            ClassLevel = data["Legacy"]["classLevel"].Value<string>(),
+                            OriginApplication = data["Legacy"]["originApplication"].Value<string>(),
+                            Description = data["Legacy"]["description"].Value<string>()
+                        };
+                    } else {
+                        item.Legacy = data["Legacy"].Value<string>() != null ? data["Legacy"].ToString() : null;
+                    }
+                }
+            }
+
+            catch (ArgumentNullException e) {
+                // Something went wrong on object parsing
+                throw new MetasysObjectException(e);
+            }
+
+            return item;
+        }
+
         /// <summary>
         /// Convert a JToken batch request response into VariantMultiple.
         /// </summary>
@@ -238,7 +353,7 @@ namespace JohnsonControls.Metasys.BasicServices
             foreach (var r in response["responses"])
             {
                 var respIds = r["id"].Value<string>().Split('_');
-                
+
                 Result resultItem = new Result();
                 resultItem.Id = new Guid(respIds[0]); ;
                 resultItem.Status = r["status"].Value<int>();
@@ -246,6 +361,40 @@ namespace JohnsonControls.Metasys.BasicServices
                 results.Add(resultItem);
             }
             return results;
+        }
+
+        private string GetEnumCsv<T>(Enum enumerableItem)
+        {
+            var csvString = string.Empty;
+            Type enumList = typeof(T);
+
+            foreach (Enum item in Enum.GetValues(enumList))
+            {
+                if (enumerableItem.HasFlag(item))
+                {
+                    if (!string.IsNullOrEmpty(csvString))
+                    {
+                        csvString += ",";
+                    }
+                    csvString += GetEnumDescription(item);
+                }
+            }
+
+            return csvString;
+        }
+
+        private static string GetEnumDescription(Enum value)
+        {
+            FieldInfo fi = value.GetType().GetField(value.ToString());
+
+            DescriptionAttribute[] attributes = fi.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
+
+            if (attributes != null && attributes.Any())
+            {
+                return attributes.First().Description;
+            }
+
+            return value.ToString();
         }
     }
 
@@ -255,13 +404,13 @@ namespace JohnsonControls.Metasys.BasicServices
     public class Result
     {
         /// <summary>The id of the Audit affected by the call.</summary>
-        public Guid Id {  set; get; }
+        public Guid Id { set; get; }
 
         /// <summary>The Status of the call.</summary>
-        public int Status {  set; get; }
+        public int Status { set; get; }
 
         /// <summary>Text of the Audit Annotation set according to the call.</summary>
-        public string Annotation {  set; get; }
+        public string Annotation { set; get; }
 
         /// <summary>
         /// Return a pretty JSON string of the current object.

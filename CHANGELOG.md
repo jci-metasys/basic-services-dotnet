@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.1.0] - 2020-07-24
+
+### Added
+
+- Translations for Fully Qualified Enum Attributes returned by API v3 (for Alarms and Audits)
+- The new method GetServerTime
+- A new enumeration set for ActionType
+- A new enumeration set for OriginApplication
+- A new enumeration set for ClassLevel
+- A new enumeration set for NetworkDeviceType
+- Added AuditSignature and LegacyInfo strong typed objects for Audits (.Net and COM)
+- Added a few new Test Cases (mainly for v3)
+
+### Changed
+
+- Handled single values scenario for PreData and PostData (for Audits)
+- Modified the method GetnetworkDevices to accept the new NetworkDeviceType enumeration as parameter
+- Modified the AuditFilter object to accept the new enumeration sets as paramenters
+- Modified Equals and GetHashCode methods in a few class as Alarm, Audit, AuditData and LegacyData
+- Removed priority from write methods in Excel app
+- Updated Id for Equipment and Space examples
+
+### Fixed
+
+- Issue in the parameters passed to the SendCommands method (due to v3 changes)
+- Issue in FindById method (for Alarms and Audits) due to difference in the object structure of v3
+- Issue is the response parsing of GetCommands method (when using v3)
+
 ## [4.0.0] - 2020-06-19
 
 ### Added

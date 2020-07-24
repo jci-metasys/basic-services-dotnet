@@ -29,7 +29,7 @@ namespace JohnsonControls.Metasys.BasicServices
         PagedResult<Audit> Get(AuditFilter auditFilter);
 
         /// <inheritdoc cref="IAuditService.Get(AuditFilter)"/>
-		Task<PagedResult<Audit>> GetAsync(AuditFilter auditFilter);
+        Task<PagedResult<Audit>> GetAsync(AuditFilter auditFilter);
 
         /// <summary>
         /// Retrieve a collection of Audit Annotations.

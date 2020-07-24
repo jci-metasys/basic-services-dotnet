@@ -78,29 +78,45 @@ namespace MetasysServices.Tests
             Assert.NotNull(cmd.ToString());
         }
 
-        [Test]
-        public void TestMetasysObjectEqual()
-        {
-            string obj = string.Concat("{",
-                "\"id\": \"11111111-2222-3333-4444-555555555555\",",
-                "\"itemReference\": \"fully:qualified/reference\",",
-                "\"name\": \"name\",",
-                "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
-            string obj2 = string.Concat("{",
-                "\"id\": \"11111111-2222-3333-4444-555555555556\",",
-                "\"itemReference\": \"fully:qualified/reference2\",",
-                "\"name\": \"name2\",",
-                "\"description\": \"description2\",",
-                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+        [TestCase(ApiVersion.v2)]
+        [TestCase(ApiVersion.v3)]
+        public void TestMetasysObjectEqual(ApiVersion version) {
+            string obj, obj2;
+            if (version < ApiVersion.v3) {
+                obj = string.Concat("{",
+                    "\"id\": \"11111111-2222-3333-4444-555555555555\",",
+                    "\"itemReference\": \"fully:qualified/reference\",",
+                    "\"name\": \"name\",",
+                    "\"description\": \"description\",",
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+                obj2 = string.Concat("{",
+                    "\"id\": \"11111111-2222-3333-4444-555555555556\",",
+                    "\"itemReference\": \"fully:qualified/reference2\",",
+                    "\"name\": \"name2\",",
+                    "\"description\": \"description2\",",
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+            } else {
+                obj = string.Concat("{",
+                    "\"id\": \"11111111-2222-3333-4444-555555555555\",",
+                    "\"itemReference\": \"fully:qualified/reference\",",
+                    "\"name\": \"name\",",
+                    "\"description\": \"description\",",
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+                obj2 = string.Concat("{",
+                    "\"id\": \"11111111-2222-3333-4444-555555555556\",",
+                    "\"itemReference\": \"fully:qualified/reference2\",",
+                    "\"name\": \"name2\",",
+                    "\"description\": \"description2\",",
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+            }
             string objCopy = obj.Clone().ToString();
-            MetasysObject child = new MetasysObject(JToken.Parse(obj2), ApiVersion.v2, null, testCulture);
-            MetasysObject childCopy = new MetasysObject(JToken.Parse(obj2), ApiVersion.v2, null, testCulture);
+            MetasysObject child = new MetasysObject(JToken.Parse(obj2), version, null, testCulture);
+            MetasysObject childCopy = new MetasysObject(JToken.Parse(obj2), version, null, testCulture);
             List<MetasysObject> childlist = new List<MetasysObject>() { child };
             List<MetasysObject> childlistCopy = new List<MetasysObject>() { childCopy };
 
-            MetasysObject metObj = new MetasysObject(JToken.Parse(obj), ApiVersion.v2, childlist, testCulture);
-            MetasysObject metObjCopy = new MetasysObject(JToken.Parse(objCopy), ApiVersion.v2, childlistCopy, testCulture);
+            MetasysObject metObj = new MetasysObject(JToken.Parse(obj), version, childlist, testCulture);
+            MetasysObject metObjCopy = new MetasysObject(JToken.Parse(objCopy), version, childlistCopy, testCulture);
 
             Assert.AreEqual(metObj.GetHashCode(), metObjCopy.GetHashCode());
             Assert.AreEqual(metObj, metObjCopy);
@@ -118,53 +134,81 @@ namespace MetasysServices.Tests
             Assert.AreEqual(type, typeCopy);
         }
 
-        [Test]
-        public void TestVariantArrayEqual()
-        {
+        [TestCase(ApiVersion.v2)]
+        [TestCase(ApiVersion.v3)]
+        public void TestVariantArrayEqual(ApiVersion version) {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid idCopy = new Guid("11111111-2222-3333-4444-555555555555");
-            string json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
-            string json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
-            Variant v = new Variant(id, JToken.Parse(json1), "attr", testCulture, ApiVersion.v2);
-            Variant vCopy = new Variant(idCopy, JToken.Parse(json2), "attr", testCulture, ApiVersion.v2);
+            string json1, json2;
+            if (version < ApiVersion.v3) {
+                json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
+                json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
+            } else {
+                json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
+                json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
+            }
+            Variant v = new Variant(id, JToken.Parse(json1), "attr", testCulture, version);
+            Variant vCopy = new Variant(idCopy, JToken.Parse(json2), "attr", testCulture, version);
             Assert.AreEqual(v.GetHashCode(), vCopy.GetHashCode());
             Assert.AreEqual(v, vCopy);
         }
 
-        [Test]
-        public void TestVariantEqual()
-        {
+        [TestCase(ApiVersion.v2)]
+        [TestCase(ApiVersion.v3)]
+        public void TestVariantEqual(ApiVersion version) {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid idCopy = new Guid("11111111-2222-3333-4444-555555555555");
-            string data = @"{
-                ""item"": {
-                    ""presentValue"": {
-                            ""value"": 23,
-                        ""reliability"": ""reliabilityEnumSet.reliable"",
-                        ""priority"": ""writePriorityEnumSet.priorityDefault""
-                    }
-                    }
-                }";
+            string data;
+            if (version < ApiVersion.v3) {
+                data = @"{
+                    ""item"": {
+                        ""presentValue"": {
+                                ""value"": 23,
+                            ""reliability"": ""reliabilityEnumSet.reliable"",
+                            ""priority"": ""writePriorityEnumSet.priorityDefault""
+                        }
+                        }
+                    }";
+            } else {
+                data = @"{
+                    ""item"": {
+                        ""presentValue"": {
+                                ""value"": 23,
+                            ""reliability"": ""reliabilityEnumSet.reliable"",
+                            ""priority"": ""writePriorityEnumSet.priorityDefault""
+                        }
+                        }
+                    }";
+            }
             string dataCopy = data.Clone().ToString();
 
-            Variant v = new Variant(id, JToken.Parse(data), "presentValue", testCulture, ApiVersion.v2);
-            Variant vCopy = new Variant(idCopy, JToken.Parse(dataCopy), "presentValue", testCulture, ApiVersion.v2);
+            Variant v = new Variant(id, JToken.Parse(data), "presentValue", testCulture, version);
+            Variant vCopy = new Variant(idCopy, JToken.Parse(dataCopy), "presentValue", testCulture, version);
             Assert.AreEqual(v.GetHashCode(), vCopy.GetHashCode());
             Assert.AreEqual(v, vCopy);
         }
 
-        [Test]
-        public void TestVariantMultipleEqual()
-        {
+        [TestCase(ApiVersion.v2)]
+        [TestCase(ApiVersion.v3)]
+        public void TestVariantMultipleEqual(ApiVersion version) {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid idCopy = new Guid("11111111-2222-3333-4444-555555555555");
-            var json= @"{
-                ""item"": {
-                    ""attr"": ""stringvalue""
-                    }
-                }";
-            Variant v = new Variant(id, JToken.Parse(json), "attr", testCulture, ApiVersion.v2);
-            Variant vCopy = new Variant(idCopy, JToken.Parse(json), "attr", testCulture, ApiVersion.v2);
+            string json;
+            if (version < ApiVersion.v3) {
+                json = @"{
+                    ""item"": {
+                        ""attr"": ""stringvalue""
+                        }
+                    }";
+            } else {
+                json = @"{
+                    ""item"": {
+                        ""attr"": ""stringvalue""
+                        }
+                    }";
+            }
+            Variant v = new Variant(id, JToken.Parse(json), "attr", testCulture, version);
+            Variant vCopy = new Variant(idCopy, JToken.Parse(json), "attr", testCulture, version);
             List<Variant> vlist = new List<Variant>() { v };
             List<Variant> vlistCopy = new List<Variant>() { vCopy };
 
@@ -236,37 +280,58 @@ namespace MetasysServices.Tests
             Assert.AreNotEqual(cmd2, cmd1);
         }
 
-        [Test]
-        public void TestMetasysObjectDoesNotEqual()
-        {
-            string obj = string.Concat("{",
-                "\"id\": \"11111111-2222-3333-4444-555555555555\",",
-                "\"itemReference\": \"fully:qualified/reference\",",
-                "\"name\": \"name\",",
-                "\"description\": \"description\",",
-                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
-            string obj2 = string.Concat("{",
-                "\"id\": \"11111111-2222-3333-4444-555555555556\",",
-                "\"itemReference\": \"fully:qualified/reference2\",",
-                "\"name\": \"name2\",",
-                "\"description\": \"description2\",",
-                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
-            string obj3 = string.Concat("{",
-                "\"id\": \"11111111-2222-3333-4444-555555555557\",",
-                "\"itemReference\": \"fully:qualified/reference3\",",
-                "\"name\": \"name3\",",
-                "\"description\": \"description3\",",
-                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
-
-            MetasysObject child = new MetasysObject(JToken.Parse(obj3), ApiVersion.v2, null, testCulture);
-            MetasysObject child2 = new MetasysObject(JToken.Parse(obj3), ApiVersion.v2, null, testCulture);
+        [TestCase(ApiVersion.v2)]
+        [TestCase(ApiVersion.v3)]
+        public void TestMetasysObjectDoesNotEqual(ApiVersion version) {
+            string obj, obj2, obj3;
+            if (version < ApiVersion.v3) {
+                obj = string.Concat("{",
+                    "\"id\": \"11111111-2222-3333-4444-555555555555\",",
+                    "\"itemReference\": \"fully:qualified/reference\",",
+                    "\"name\": \"name\",",
+                    "\"description\": \"description\",",
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+                obj2 = string.Concat("{",
+                    "\"id\": \"11111111-2222-3333-4444-555555555556\",",
+                    "\"itemReference\": \"fully:qualified/reference2\",",
+                    "\"name\": \"name2\",",
+                    "\"description\": \"description2\",",
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+                obj3 = string.Concat("{",
+                    "\"id\": \"11111111-2222-3333-4444-555555555557\",",
+                    "\"itemReference\": \"fully:qualified/reference3\",",
+                    "\"name\": \"name3\",",
+                    "\"description\": \"description3\",",
+                    $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+            } else {
+                obj = string.Concat("{",
+                    "\"id\": \"11111111-2222-3333-4444-555555555555\",",
+                    "\"itemReference\": \"fully:qualified/reference\",",
+                    "\"name\": \"name\",",
+                    "\"description\": \"description\",",
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+                obj2 = string.Concat("{",
+                    "\"id\": \"11111111-2222-3333-4444-555555555556\",",
+                    "\"itemReference\": \"fully:qualified/reference2\",",
+                    "\"name\": \"name2\",",
+                    "\"description\": \"description2\",",
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+                obj3 = string.Concat("{",
+                    "\"id\": \"11111111-2222-3333-4444-555555555557\",",
+                    "\"itemReference\": \"fully:qualified/reference3\",",
+                    "\"name\": \"name3\",",
+                    "\"description\": \"description3\",",
+                    $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
+            }
+            MetasysObject child = new MetasysObject(JToken.Parse(obj3), version, null, testCulture);
+            MetasysObject child2 = new MetasysObject(JToken.Parse(obj3), version, null, testCulture);
             List<MetasysObject> childlist = new List<MetasysObject>() { child };
             List<MetasysObject> childlist2 = new List<MetasysObject>() { child2 };
 
-            MetasysObject metObj = new MetasysObject(JToken.Parse(obj), ApiVersion.v2, childlist, testCulture);
-            MetasysObject metObj2 = new MetasysObject(JToken.Parse(obj2), ApiVersion.v2, childlist2, testCulture);
-            MetasysObject metObj3 = new MetasysObject(JToken.Parse(obj), ApiVersion.v2, null, testCulture);
-            MetasysObject metObj4 = new MetasysObject(JToken.Parse(obj2), ApiVersion.v2, null, testCulture);
+            MetasysObject metObj = new MetasysObject(JToken.Parse(obj), version, childlist, testCulture);
+            MetasysObject metObj2 = new MetasysObject(JToken.Parse(obj2), version, childlist2, testCulture);
+            MetasysObject metObj3 = new MetasysObject(JToken.Parse(obj), version, null, testCulture);
+            MetasysObject metObj4 = new MetasysObject(JToken.Parse(obj2), version, null, testCulture);
 
             Assert.AreNotEqual(metObj.GetHashCode(), metObj2.GetHashCode());
             Assert.AreNotEqual(metObj, metObj2);
@@ -285,25 +350,33 @@ namespace MetasysServices.Tests
             Assert.AreNotEqual(type, type2);
         }
 
-        [Test]
-        public void TestVariantArrayDoesNotEqual()
-        {
+        [TestCase(ApiVersion.v2)]
+        [TestCase(ApiVersion.v3)]
+        public void TestVariantArrayDoesNotEqual(ApiVersion version) {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid id2 = new Guid("11111111-2222-3333-4444-555555555555");
 
-            string json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
-            string json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 3 ] }}";
-            Variant v = new Variant(id, JToken.Parse(json1), "attr", testCulture, ApiVersion.v2);
-            Variant v2 = new Variant(id2, JToken.Parse(json2), "attr", testCulture, ApiVersion.v2);
+            string json1, json2;
+            if (version < ApiVersion.v3) {
+                json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
+                json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 3 ] }}";
+            } else {
+                json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
+                json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 3 ] }}";
+            }
+            Variant v = new Variant(id, JToken.Parse(json1), "attr", testCulture, version);
+            Variant v2 = new Variant(id2, JToken.Parse(json2), "attr", testCulture, version);
             Assert.AreNotEqual(v.GetHashCode(), v2.GetHashCode());
             Assert.AreNotEqual(v, v2);
         }
 
-        [Test]
-        public void TestVariantDoesNotEqual()
-        {
+        [TestCase(ApiVersion.v2)]
+        [TestCase(ApiVersion.v3)]
+        public void TestVariantDoesNotEqual(ApiVersion version) {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
-            string data = @"{
+            string data, data2, data3;
+            if (version < ApiVersion.v3) {
+                data = @"{
                 ""item"": {
                     ""presentValue"": {
                             ""value"": 23,
@@ -312,50 +385,92 @@ namespace MetasysServices.Tests
                     }
                     }
                 }";
-            string data2 = @"{
+                data2 = @"{
+                    ""item"": {
+                        ""presentValwe"": {
+                                ""value"": 23,
+                            ""reliability"": ""reliabilityEnumSet.reliable""
+                        }
+                        }
+                    }";
+                data3 = @"{
+                    ""item"": {
+                        ""presentValwe"": {
+                                ""value"": 24,
+                            ""reliability"": ""reliabilityEnumSet.reliable"",
+                            ""priority"": ""writePriorityEnumSet.priorityDefault""
+                        }
+                        }
+                    }";
+            } else {
+                data = @"{
                 ""item"": {
                     ""presentValue"": {
                             ""value"": 23,
-                        ""reliability"": ""reliabilityEnumSet.reliable""                      
-                    }
-                    }
-                }";
-            string data3 = @"{
-                ""item"": {
-                    ""presentValue"": {
-                            ""value"": 24,
                         ""reliability"": ""reliabilityEnumSet.reliable"",
                         ""priority"": ""writePriorityEnumSet.priorityDefault""
                     }
                     }
                 }";
+                data2 = @"{
+                    ""item"": {
+                        ""presentValwe"": {
+                                ""value"": 23,
+                            ""reliability"": ""reliabilityEnumSet.reliable""
+                        }
+                        }
+                    }";
+                data3 = @"{
+                    ""item"": {
+                        ""presentValwe"": {
+                                ""value"": 24,
+                            ""reliability"": ""reliabilityEnumSet.reliable"",
+                            ""priority"": ""writePriorityEnumSet.priorityDefault""
+                        }
+                        }
+                    }";
+            }
 
-            Variant v = new Variant(id, JToken.Parse(data), "presentValue", testCulture, ApiVersion.v2);
-            Variant v2 = new Variant(id, JToken.Parse(data2), "presentValue", testCulture, ApiVersion.v2);
-            Variant v3 = new Variant(id, JToken.Parse(data3), "presentValue", testCulture, ApiVersion.v2);
+            Variant v = new Variant(id, JToken.Parse(data), "presentValue", testCulture, version);
+            Variant v2 = new Variant(id, JToken.Parse(data2), "presentValue", testCulture, version);
+            Variant v3 = new Variant(id, JToken.Parse(data3), "presentValue", testCulture, version);
             Assert.AreNotEqual(v.GetHashCode(), v2.GetHashCode());
             Assert.AreNotEqual(v, v2);
             Assert.AreNotEqual(v.GetHashCode(), v3.GetHashCode());
             Assert.AreNotEqual(v, v3);
         }
 
-        [Test]
-        public void TestVariantMultipleDoesNotEqual()
-        {
+        [TestCase(ApiVersion.v2)]
+        [TestCase(ApiVersion.v3)]
+        public void TestVariantMultipleDoesNotEqual(ApiVersion version) {
             Guid id = new Guid("11111111-2222-3333-4444-555555555555");
             Guid id2 = new Guid("11111111-2222-3333-4444-555555555555");
-            string json1 = @"{
-                ""item"": {
-                    ""attr"": ""stringvalue""
-                    }
-                }";
-            string json2 = @"{
-                ""item"": {
-                    ""attr"": ""stringvalwe""
-                    }
-                }";
-            Variant v = new Variant(id, JToken.Parse(json1), "attr", testCulture, ApiVersion.v2);
-            Variant v2 = new Variant(id2, JToken.Parse(json2), "attr", testCulture, ApiVersion.v2);
+            string json1, json2;
+            if (version < ApiVersion.v3) {
+                json1 = @"{
+                    ""item"": {
+                        ""attr"": ""stringvalue""
+                        }
+                    }";
+                json2 = @"{
+                    ""item"": {
+                        ""attr"": ""stringvalwe""
+                        }
+                    }";
+            } else {
+                json1 = @"{
+                    ""item"": {
+                        ""attr"": ""stringvalue""
+                        }
+                    }";
+                json2 = @"{
+                    ""item"": {
+                        ""attr"": ""stringvalwe""
+                        }
+                    }";
+            }
+            Variant v = new Variant(id, JToken.Parse(json1), "attr", testCulture, version);
+            Variant v2 = new Variant(id2, JToken.Parse(json2), "attr", testCulture, version);
             List<Variant> vlist = new List<Variant>() { v };
             List<Variant> vlist2 = new List<Variant>() { v2 };
 

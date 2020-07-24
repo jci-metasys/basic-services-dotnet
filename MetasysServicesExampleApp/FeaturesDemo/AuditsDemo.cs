@@ -26,12 +26,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 var auditItem = client.Audits.FindById(auditId);
 
                 Console.WriteLine(string.Format("\n Audit details found for {0}", auditId));
-                Console.WriteLine($"\n Id: {auditItem.Id}, User: {auditItem.User}, PreData: {auditItem.PreData}, PostDate: {auditItem.PostData}");
+                Console.WriteLine($"\n Id: {auditItem.Id}, User: {auditItem.User}, PreData: {auditItem.PreData}, PostData: {auditItem.PostData}");
 
                 string auditFilterInputItem;
                 var auditFilterItem = new AuditFilter();
 
-                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Origin Applications," +
+                Console.WriteLine("\nPlease enter these parameters separated by space: Start Time, End Time, Origin Applications," +
                                   "Class Levels, Action Type, Exclude discarded, Page, Page Size, Sort" +
                                   "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
 
@@ -64,7 +64,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
                 var auditsForObject = new AuditFilter();
 
-                Console.WriteLine("Please enter these parameters separated by space: Start Time, End Time, Origin Applications," +
+                Console.WriteLine("\nPlease enter these parameters separated by space: Start Time, End Time, Origin Applications," +
                                   "Class Levels, Action Type, Exclude discarded, Page, Page Size, Sort" +
                                   "\nRefer to the metasys-server/basic-services-dotnet README if you need help getting started.");
 
@@ -104,9 +104,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             {
                 StartTime = DateTime.Parse(args[0], null, DateTimeStyles.RoundtripKind),
                 EndTime = DateTime.Parse(args[1], null, DateTimeStyles.RoundtripKind),
-                OriginApplications = args[2].ToLower() != "null" ? args[2] : "1,2",
-                ClassLevels = args[3].ToLower() != "null" ? args[3] : "1,2",
-                ActionTypes = args[4].ToLower() != "null" ? args[4] : "1,2",
+                //OriginApplications = args[2].ToLower() != "null" ? args[2] : "1,2",
+               // ClassLevels = args[3].ToLower() != "null" ? args[3] : "1,2",
+               // ActionTypes = args[4].ToLower() != "null" ? args[4] : "1,2",
                 ExcludeDiscarded = !string.IsNullOrEmpty(args[5]) ? Convert.ToBoolean(args[5]) : false,
                 Page = args[6].ToLower() != "null" ? Convert.ToInt32(args[6]) : 0,
                 PageSize = args[7].ToLower() != "null" ? Convert.ToInt32(args[7]) : 0,

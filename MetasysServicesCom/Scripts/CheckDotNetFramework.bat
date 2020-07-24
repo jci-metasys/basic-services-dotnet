@@ -10,10 +10,9 @@ FOR /f "tokens=2,*" %%a IN ('reg query "%newPath%" /v %Key_Name% ^| findstr %Key
 )
 REM extract Home drive from Win Dir path
 SET Home_Drive=%windir:~0,2%
-
-REM set base path for DLL
-SET JCI_APP=%Home_Drive%\Program Files (x86)\Johnson Controls\Metasys Services
-REM Register using x86 .NET Framework according to the client lib
-cd %windir%\Microsoft.NET\Framework\v4.0.30319
-regasm "%JCI_APP%\MetasysServicesCom.dll" /codebase /tlb:"%JCI_APP%\MetasysServicesCom.tlb"
-
+REM check registry .NET Version that required version is installed
+IF "%Key_Value%"=="4.8.03761" ( 
+    echo .NET Framework 4.7.2 or higher is Installed
+) ELSE (
+   dotnetfx472_full_x86_x64-4.7.3081.0.exe \q \norestart
+)

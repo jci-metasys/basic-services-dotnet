@@ -9,9 +9,8 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Provides audit Item
     /// </summary>
-    public class Audit 
+    public class Audit
     {
-
         /// <summary>
         /// The identifier of the audit(GUID).
         /// </summary>
@@ -82,7 +81,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The user who created this audit.
         /// </summary>
-        public AuditSignature Signature { get; set; }
+        public dynamic Signature { get; set; }
 
         /// <summary>
         /// A link to the object on which the activity was generated.
@@ -98,7 +97,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Metasys specific data.
         /// </summary>
-        public LegacyInfo Legacy { get; set; }
+        public dynamic Legacy { get; set; }
 
         /// <summary>
         /// URI that points back to this resource
@@ -117,7 +116,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 var o = (Audit)obj;
                 // Compare each properties one by one for better performance
                 return this.Id == o.Id && this.CreationTime == o.CreationTime && this.ActionTypeUrl == o.ActionTypeUrl
-                                  && this.Discarded == o.Discarded && this.StatusUrl == o.StatusUrl
+                                  && this.ActionType == o.ActionType && this.Discarded == o.Discarded
+                                  && this.StatusUrl == o.StatusUrl && this.Status == o.Status
                                   && this.ErrorString == o.ErrorString && this.User == o.User
                                   && this.ObjectUrl == o.ObjectUrl && this.AnnotationsUrl == o.AnnotationsUrl
                                   && this.Self == o.Self;
@@ -134,10 +134,14 @@ namespace JohnsonControls.Metasys.BasicServices
             if (CreationTime != null)
                 code = (code * 7) + CreationTime.GetHashCode();
             if (this.ActionTypeUrl != null)
-                code = (code * 7) + ActionTypeUrl.GetHashCode();         
+                code = (code * 7) + ActionTypeUrl.GetHashCode();
+            if (this.ActionType != null)
+                code = (code * 7) + ActionType.GetHashCode();
             code = (code * 7) + Discarded.GetHashCode();
             if (this.StatusUrl != null)
                 code = (code * 7) + StatusUrl.GetHashCode();
+            if (this.Status != null)
+                code = (code * 7) + Status.GetHashCode();
             if (this.ErrorString != null)
                 code = (code * 7) + ErrorString.GetHashCode();
             if (this.User != null)

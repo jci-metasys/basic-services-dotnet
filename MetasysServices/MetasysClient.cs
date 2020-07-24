@@ -129,7 +129,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Initialize the HTTP client with a base URL.    
+        /// Initialize the HTTP client with a base URL.
         /// </summary>
         protected void InitFlurlClient(string hostname)
         {
@@ -173,14 +173,14 @@ namespace JohnsonControls.Metasys.BasicServices
             IgnoreCertificateErrors = ignoreCertificateErrors;
             Hostname = hostname;
             // Set Metasys culture if specified, otherwise use current machine Culture.
-            Culture = cultureInfo ?? CultureInfo.CurrentCulture;                       
+            Culture = cultureInfo ?? CultureInfo.CurrentCulture;
             // Set preferences about logging
             LogClientErrors = logClientErrors;
             Version = version;
             // Init related services
             Trends = new TrendServiceProvider(Client, version, logClientErrors);
             Alarms = new AlarmServiceProvider(Client, version, logClientErrors);
-            Audits = new AuditServiceProvider(Client, version, logClientErrors);           
+            Audits = new AuditServiceProvider(Client, version, logClientErrors);
         }
 
         /// <inheritdoc/>
@@ -663,10 +663,25 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetNetworkDevices(NetworkDeviceTypeEnum networkDevicetype)
+        {
+            //string type = Convert.ToString((int)networkDevicetype);
+            //return GetNetworkDevices(type);
+            return GetNetworkDevicesAsync(networkDevicetype).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
             var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } }).ConfigureAwait(false);
-            return toMetasysObject(response);
+            return ToMetasysObject(response);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(NetworkDeviceTypeEnum networkDevicetype)
+        {
+            string type = Convert.ToString((int)networkDevicetype);
+            return await GetNetworkDevicesAsync(type);
         }
 
         /// <inheritdoc/>
@@ -782,7 +797,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 parameters = new Dictionary<string, string>() { { "type", ((int)type).ToString() } };
             }
             var spaces = await GetAllAvailablePagesAsync("spaces", parameters).ConfigureAwait(false);
-            return toMetasysObject(spaces, type: MetasysObjectTypeEnum.Space);
+            return ToMetasysObject(spaces, type: MetasysObjectTypeEnum.Space);
         }
 
         /// <inheritdoc/>
@@ -795,7 +810,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid id)
         {
             var spaceChildren = await GetAllAvailablePagesAsync("spaces", null, id.ToString(), "spaces").ConfigureAwait(false);
-            return toMetasysObject(spaceChildren, MetasysObjectTypeEnum.Space);
+            return ToMetasysObject(spaceChildren, MetasysObjectTypeEnum.Space);
         }
 
 
@@ -809,7 +824,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
         {
             var equipment = await GetAllAvailablePagesAsync("equipment").ConfigureAwait(false);
-            return toMetasysObject(equipment, MetasysObjectTypeEnum.Equipment);
+            return ToMetasysObject(equipment, MetasysObjectTypeEnum.Equipment);
         }
 
         /// <inheritdoc/>
@@ -834,7 +849,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
         {
             var spaceEquipment = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment").ConfigureAwait(false);
-            return toMetasysObject(spaceEquipment, MetasysObjectTypeEnum.Equipment);
+            return ToMetasysObject(spaceEquipment, MetasysObjectTypeEnum.Equipment);
         }
 
         /// <inheritdoc/>
@@ -905,7 +920,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 parameters.Add("includeInternalObjects", includeInternalObjects.ToString());
             }
             var objects = await GetObjectChildrenAsync(id, parameters, levels).ConfigureAwait(false);
-            return toMetasysObject(objects);
+            return ToMetasysObject(objects);
         }
 
         /// <inheritdoc/>
@@ -973,6 +988,34 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             // convert dictionary to a list of tuples and use existing overload
             await WritePropertyMultipleAsync(ids, attributeValues.Select(x => (x.Key, x.Value)));
-        }      
+        }
+
+        ///<inheritdoc/>
+        public DateTime GetServerTime()
+        {
+            return GetServerTimeAsync().GetAwaiter().GetResult();
+        }
+
+        ///<inheritdoc/>
+        public async Task<DateTime> GetServerTimeAsync()
+        {
+            // Using the RefreshToken call to read the HTTP header
+            DateTime? serverTime = null;
+            try
+            {
+                HttpResponseMessage response = await Client.Request("refreshToken").GetAsync().ConfigureAwait(false);
+                var date = response.Headers.Date;
+                if (date == null)
+                {
+                    throw new MetasysHttpException("Cannot read date time from HTTP response of Metasys Server.", response.ToString());
+                }  
+                serverTime= date.Value.UtcDateTime;
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return serverTime.Value;
+        }
     }
 }
