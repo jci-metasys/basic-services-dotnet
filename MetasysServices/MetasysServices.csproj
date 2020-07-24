@@ -13,25 +13,24 @@
     <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
-    <PackageReleaseNotes>-  Support to API v3 (pre-release)
--  GetBatchRequestAsync, PutBatchRequestAsync, PostBatchRequestAsync methods to support Objects batch endpoint of v3
--  Support for Batch request on ReadPropertyMultiple
--  Support for Batch request on AddAnnotationMultiple (for Audits)
--  Support for Batch request on DiscardMultiple (for Audits)
--  Public setter for ApiVersion and Hostname
--  Overload for WritePropertyMultiple that takes a dictionary of key/value pairs
--  Support to fully qualified enums of v3 (Sample, Alarm, Audit)
--  Helpers FindByName, FindByID, FindByShortName to work with MetasysObject, MetasysPoint, Variant, VariantMultiple collections
--  Support for the method GetAnnotations (for Alarms)
--  Support for the methods GetAnnotations, AddAnnotation, Discard (for Audits)
--  Added the new class ResourceManager to support the static methods: Localize, GetCommandEnumeration and GetObjectTypeEnumeration
--  Simplified methods and models names of Alarm and Audit service
--  PostBatchRequestAsync method to support Objects batch endpoint of v3
--  Support for Batch request on ReadPropertyMultiple
--  Renamed Point class in MetasysPoint
--  Renamed Attribute class in MetasysClass
--  Renamed Variants property of VariantMultiple in Values
--  Modified the Localize method that now uses the new class ResourceManager</PackageReleaseNotes>
+    <PackageReleaseNotes>- Added translations for Fully Qualified Enum Attributes returned by API v3 (for Alarms and Audits)
+- Added the new method GetServerTime
+- Added a new enumeration set for ActionType
+- Added a new enumeration set for OriginApplication
+- Added a new enumeration set for ClassLevel
+- Added a new enumeration set for NetworkDeviceType
+- Added AuditSignature and LegacyInfo strong typed objects for Audits (.Net and COM)
+- Added a few new Test Cases (mainly for v3)
+- Modified the single values scenario for PreData and PostData (for Audits)
+- Modified the method GetnetworkDevices to accept the new NetworkDeviceType enumeration as parameter
+- Modified the AuditFilter object to accept the new enumeration sets as paramenters
+- Modified Equals and GetHashCode methods in a few class as Alarm, Audit, AuditData and LegacyData
+- Removed priority from write methods in Excel app
+- Updated Id for Equipment and Space examples
+- Fixed issue in the parameters passed to the SendCommands method (due to v3 changes)
+- Fixed issue in FindById method (for Alarms and Audits) due to difference in the object structure of v3
+- Fixed issue is the response parsing of GetCommands method (when using v3)
+</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Version>4.1.0</Version>    
   </PropertyGroup>
