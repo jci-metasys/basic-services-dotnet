@@ -7,7 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using MetasysAttribute = JohnsonControls.Metasys.BasicServices.MetasysAttribute;
 using System.Globalization;
-
+using System.Net.Security;
 
 namespace JohnsonControls.Metasys.ComServices
 {
@@ -355,8 +355,15 @@ namespace JohnsonControls.Metasys.ComServices
         /// <inheritdoc />
         public IComPagedResult GetAudits(IComAuditFilter auditFilter)
         {
-            var mapAuditFilter = Mapper.Map<AuditFilter>(auditFilter);
-            PagedResult<Audit> auditItems = Client.Audits.Get(mapAuditFilter);
+            AuditFilter auditF = new AuditFilter();
+            auditF.StartTime = DateTime.Parse(auditFilter.StartTime);
+            auditF.EndTime = DateTime.Parse(auditFilter.EndTime);
+            if (!(auditFilter.Page is null)) auditF.Page = int.Parse(auditFilter.Page);
+            if (!(auditFilter.PageSize is null)) auditF.PageSize = int.Parse(auditFilter.PageSize);
+            auditF.Sort = auditFilter.Sort;
+            auditF.ExcludeDiscarded = auditFilter.ExcludeDiscarded;
+
+            PagedResult<Audit> auditItems = Client.Audits.Get(auditF);
             return Mapper.Map<IComPagedResult>(auditItems);
         }
 
