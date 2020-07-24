@@ -11,7 +11,6 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public class Audit 
     {
-
         /// <summary>
         /// The identifier of the audit(GUID).
         /// </summary>
