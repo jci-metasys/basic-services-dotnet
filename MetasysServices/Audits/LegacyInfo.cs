@@ -4,7 +4,7 @@ using System.Text;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
-   
+
     /// <summary>
     /// Legacy information for the audit.
     /// </summary>
