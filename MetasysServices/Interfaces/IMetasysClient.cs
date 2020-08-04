@@ -144,11 +144,11 @@ namespace JohnsonControls.Metasys.BasicServices
             IEnumerable<string> attributeNames);
 
         /// <summary>
-        /// Write a single attribute given the Guid of the object. 
+        /// Write a single attribute given the Guid of the object.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="attributeName"></param>
-        /// <param name="newValue"></param>
+        /// <param name="id">The id of the attribute</param>
+        /// <param name="attributeName">The name of the attribute</param>
+        /// <param name="newValue">The new value of the attribute</param>
         /// <exception cref="MetasysHttpException"></exception>
         void WriteProperty(Guid id, string attributeName, object newValue);
 
