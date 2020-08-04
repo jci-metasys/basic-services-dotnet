@@ -384,11 +384,23 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc />
+        public IEnumerable<Result> DiscardAuditMultiple(IEnumerable<BatchRequestParam> requests)
+        {
+            return Client.Audits.DiscardMultiple(requests);
+        }
+
+        /// <inheritdoc />
         public void AddAuditAnnotation(string id, string text)
         {
             // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
             Guid guid = new Guid(id);
             Client.Audits.AddAnnotation(guid, text);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<Result> AddAuditAnnotationMultiple(IEnumerable<BatchRequestParam> requests)
+        {
+            return Client.Audits.AddAnnotationMultiple(requests);
         }
 
         /// <inheritdoc/>
