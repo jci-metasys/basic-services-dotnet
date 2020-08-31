@@ -78,7 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set AccessToken method
 - Issuer and IssuedTo properties for AccessToken
 - TypeUrl property for MetasysObject
-- Category property for MetasysObject 
+- Category property for MetasysObject
 - ToString with JSON format for output objects
 
 ## [3.4.0] - 2020-03-26
@@ -100,7 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support to Credential Manager for TryLogin method of MetasysClient. 
+- Added support to Credential Manager for TryLogin method of MetasysClient.
 - Added support to Credential Manager for TryLoginWithCredMan method of LegacyMetasysClient.
 - Added CredentialUtil to retrieve/set user and passwords from the secure vault.
 - Added Log4Net support in MetasysClient and LegacyMetasysClient.
@@ -172,3 +172,17 @@ First Release.
 - MetasysClient to perform basic Http requests on a Metasys server.
 - LegacyMetasysClient for compatibility with COM services.
 - Automatic enumeration translations for supported languages.
+
+[Unreleased]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.1.0...HEAD
+[4.1.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.0.0...v4.1.0
+[4.0.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v3.5.1...v4.0.0
+[3.5.1]: https://github.com/metasys-server/basic-services-dotnet/compare/v3.5.0...v3.5.1
+[3.5.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v3.4.0...v3.5.0
+[3.4.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v3.3.0...v3.4.0
+[3.3.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v3.2.0...v3.3.0
+[3.2.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v3.1.0...v3.2.0
+[3.1.0]: https://github.com/metasys-server/basic-services-dotnet/compare/3.0.0...v3.1.0
+[3.0.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v2.3.0...3.0.0
+[2.3.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v2.0.0...v2.3.0
+[2.0.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v1.0.0...v2.0.0
+[1.0.0]: https://github.com/metasys-server/basic-services-dotnet/releases/tag/v1.0.0
