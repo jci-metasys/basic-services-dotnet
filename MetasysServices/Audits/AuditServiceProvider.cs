@@ -36,12 +36,15 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<Audit> FindByIdAsync(Guid auditId)
         {
+            if (Version > ApiVersion.v3) {
+                throw new MetasysUnsupportedApiVersion(Version.ToString());
+            }
             var response = await GetRequestAsync("audits", null, auditId).ConfigureAwait(false);
             if (response["item"] != null) {
                 response = response["item"];
             }
             var auditData = JsonConvert.DeserializeObject<Audit>(response.ToString());
-            if (Version >= ApiVersion.v3) {
+            if (Version == ApiVersion.v3) {
                 auditData = CreateItem(auditData);
             }
 
@@ -51,11 +54,14 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<PagedResult<Audit>> GetAsync(AuditFilter auditFilter)
         {
+            if (Version > ApiVersion.v3) {
+                throw new MetasysUnsupportedApiVersion(Version.ToString());
+            }
             var dictionary = ToDictionary(auditFilter);
             dictionary["OriginApplications"] = GetEnumCsv<OriginApplicationsEnum>(auditFilter.OriginApplications);
             dictionary["ActionTypes"] = GetEnumCsv<ActionTypeEnum>(auditFilter.ActionTypes);
             var response = await GetPagedResultsAsync<Audit>("audits", dictionary).ConfigureAwait(false);
-            if (Version >= ApiVersion.v3) {
+            if (Version == ApiVersion.v3) {
                 List<Audit> audits = new List<Audit>();
                 foreach (var item in response.Items) {
                     audits.Add(CreateItem(item));
@@ -75,11 +81,14 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<PagedResult<Audit>> GetForObjectAsync(Guid objectId, AuditFilter auditFilter)
         {
+            if (Version > ApiVersion.v3) {
+                throw new MetasysUnsupportedApiVersion(Version.ToString());
+            }
             var dictionary = ToDictionary(auditFilter);
             dictionary["OriginApplications"] = GetEnumCsv<OriginApplicationsEnum>(auditFilter.OriginApplications);
             dictionary["ActionTypes"] = GetEnumCsv<ActionTypeEnum>(auditFilter.ActionTypes);
             var response = await GetPagedResultsAsync<Audit>("objects", dictionary, objectId, BaseParam).ConfigureAwait(false);
-            if (Version >= ApiVersion.v3) {
+            if (Version == ApiVersion.v3) {
                 List<Audit> audits = new List<Audit>();
                 foreach (var item in response.Items) {
                     audits.Add(CreateItem(item));
@@ -155,21 +164,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task DiscardAsync(Guid id, string annotationText)
         {
-            try
-            {
-                if (Version >= ApiVersion.v3)
-                {
+            try {
+                if (Version == ApiVersion.v3) {
                     var response = await Client.Request(new Url("audits")
                     .AppendPathSegments(id, "discard"))
                     .PutJsonAsync(new { annotationText })
                     .ConfigureAwait(false);
                 }
-                else
-                {
+                else {
                     throw new MetasysUnsupportedApiVersion(Version.ToString());
                 }
-            }
-            catch (FlurlHttpException e)
+            } catch (FlurlHttpException e)
             {
                 ThrowHttpException(e);
             }
@@ -184,22 +189,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task AddAnnotationAsync(Guid id, string text)
         {
-            try
-            {
-                if (Version >= ApiVersion.v3)
-                {
+            try {
+                if (Version == ApiVersion.v3) {
                     var response = await Client.Request(new Url("audits")
                     .AppendPathSegments(id, "annotations"))
                     .PostJsonAsync(new { text })
                     .ConfigureAwait(false);
-                }
-                else
-                {
+                } else {
                     throw new MetasysUnsupportedApiVersion(Version.ToString());
                 }
-            }
-            catch (FlurlHttpException e)
-            {
+            } catch (FlurlHttpException e) {
                 ThrowHttpException(e);
             }
         }
@@ -215,7 +214,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             try
             {
-                if (Version >= ApiVersion.v3)
+                if (Version == ApiVersion.v3)
                 {
                     if (requests == null)
                     {
@@ -245,24 +244,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<Result>> DiscardMultipleAsync(IEnumerable<BatchRequestParam> requests)
         {
-            try
-            {
-                if (Version >= ApiVersion.v3)
-                {
-                    if (requests == null)
-                    {
+            try {
+                if (Version == ApiVersion.v3) {
+                    if (requests == null) {
                         return null;
                     }
                     var response = await PutBatchRequestAsync("audits", requests, "discard").ConfigureAwait(false);
                     return ToResult(response);
-                }
-                else
-                {
+                } else {
                     throw new MetasysUnsupportedApiVersion(Version.ToString());
                 }
-            }
-            catch (FlurlHttpException e)
-            {
+            } catch (FlurlHttpException e) {
                 ThrowHttpException(e);
                 return null;
             }
@@ -350,8 +342,7 @@ namespace JohnsonControls.Metasys.BasicServices
         private IEnumerable<Result> ToResult(JToken response)
         {
             List<Result> results = new List<Result>();
-            foreach (var r in response["responses"])
-            {
+            foreach (var r in response["responses"]) {
                 var respIds = r["id"].Value<string>().Split('_');
 
                 Result resultItem = new Result();
@@ -368,12 +359,9 @@ namespace JohnsonControls.Metasys.BasicServices
             var csvString = string.Empty;
             Type enumList = typeof(T);
 
-            foreach (Enum item in Enum.GetValues(enumList))
-            {
-                if (enumerableItem.HasFlag(item))
-                {
-                    if (!string.IsNullOrEmpty(csvString))
-                    {
+            foreach (Enum item in Enum.GetValues(enumList)) {
+                if (enumerableItem.HasFlag(item)) {
+                    if (!string.IsNullOrEmpty(csvString)) {
                         csvString += ",";
                     }
                     csvString += GetEnumDescription(item);
@@ -389,8 +377,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
             DescriptionAttribute[] attributes = fi.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
 
-            if (attributes != null && attributes.Any())
-            {
+            if (attributes != null && attributes.Any()) {
                 return attributes.First().Description;
             }
 

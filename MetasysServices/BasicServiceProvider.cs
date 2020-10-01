@@ -54,9 +54,8 @@ namespace JohnsonControls.Metasys.BasicServices
                     Log = new LogInitializer(typeof(BasicServiceProvider));
                 }
             }
-        }        
+        }
 
-       
         /// <summary>
         /// Empty constructor.
         /// </summary>
@@ -64,7 +63,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <remarks> Assume Client is initialized by extended class.</remarks>
         public BasicServiceProvider(bool logErrors = true)
         {
-            LogClientErrors = logErrors;         
+            LogClientErrors = logErrors;
         }
 
         /// <summary>
@@ -76,9 +75,9 @@ namespace JohnsonControls.Metasys.BasicServices
         public BasicServiceProvider(IFlurlClient client, ApiVersion version, bool logErrors = true)
         {
             Client = client ?? throw new ArgumentNullException(nameof(client),
-                                              "FlurlClient can not be null.");            
-            Version = version;                     
-            LogClientErrors = logErrors;          
+                                              "FlurlClient can not be null.");
+            Version = version;
+            LogClientErrors = logErrors;
         }
 
         /// <summary>
@@ -132,8 +131,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// A level of 1 only retrieves immediate children of the parent object.
         /// </remarks>
         /// <param name="id">The id of the object.</param>
-        /// <param name="parameters">Query string parameters in Key/Value format.</param>    
-        /// <param name="levels">The number of levels to retrieve children.</param>         
+        /// <param name="parameters">Query string parameters in Key/Value format.</param>
+        /// <param name="levels">The number of levels to retrieve children.</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         protected async Task<List<TreeObject>> GetObjectChildrenAsync(Guid id, Dictionary<string, string> parameters = null, int levels = 1)
@@ -307,7 +306,7 @@ namespace JohnsonControls.Metasys.BasicServices
             while (hasNext)
             {
                 hasNext = false;
-                // Just overwrite page parameter                 
+                // Just overwrite page parameter
                 parameters["page"] = page.ToString();
                 var response = await GetPagedResultsAsync<JToken>(resource, parameters, pathSegments).ConfigureAwait(false);
                 var total = response.Total;
@@ -358,7 +357,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <summary>
         /// Convert a generic object to a dictionary
-        /// </summary>        
+        /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
         public static Dictionary<string, string> ToDictionary(object obj)
@@ -366,7 +365,7 @@ namespace JohnsonControls.Metasys.BasicServices
             var json = JsonConvert.SerializeObject(obj);
             var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             return dictionary;
-        }       
+        }
 
         /// <summary>
         /// Perform multiple requests (GET) to the Server with a single HTTP call asynchronously.
@@ -382,7 +381,7 @@ namespace JohnsonControls.Metasys.BasicServices
             Url url = new Url(endpoint);
             // Concatenate batch segment to use batch request and prepare the list of requests
             url.AppendPathSegments("batch");
-            var objectsRequests = new List<ObjectRequest>();          
+            var objectsRequests = new List<ObjectRequest>();
             // Concatenate batch segment to use batch request and prepare the list of requests  
             foreach (var id in ids)
             {
@@ -390,7 +389,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     Url relativeUrl = new Url(id.ToString());
                     relativeUrl.AppendPathSegments(paths); // e.g. "00000000-0000-0000-0000-000000000001/attributes"
-                    relativeUrl.AppendPathSegment(r); // e.g. "00000000-0000-0000-0000-000000000001/attributes/presentValue"                    
+                    relativeUrl.AppendPathSegment(r); // e.g. "00000000-0000-0000-0000-000000000001/attributes/presentValue"
                     // Use the object id concatenated to the resource to uniquely identify each request
                     objectsRequests.Add(new ObjectRequest { Id = id.ToString() + '_' + r, RelativeUrl = relativeUrl });
                 }
@@ -400,7 +399,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 // Post the list of requests and return responses as JToken
                 var response= await Client.Request(url)
-                                            .PostJsonAsync(new BatchRequest {Method = "GET", Requests=objectsRequests})                
+                                            .PostJsonAsync(new BatchRequest {Method = "GET", Requests=objectsRequests})
                                             .ConfigureAwait(false);
                 responseToken= JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
             }
@@ -458,7 +457,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var response = await Client.Request(url)
                                             .PostJsonAsync(new BatchRequest { Method = "POST", Requests = objectsRequests })
                                             .ConfigureAwait(false);
-                
+
                 responseToken = JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
             }
             catch (FlurlHttpException e)
