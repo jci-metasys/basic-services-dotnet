@@ -387,10 +387,9 @@ namespace JohnsonControls.Metasys.ComServices
         {
             // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
             var requests = new List<BatchRequestParam>();
-            foreach (var param in requestParams)
-            {
-                string[] p = param.Split('|');
-                requests.Add(new BatchRequestParam { ObjectId = new Guid(p[0]), Resource = p[1] });
+            foreach (var request in requestParams) {
+                string[] param = request.Split('|');
+                requests.Add(new BatchRequestParam { ObjectId = new Guid(param[0]), Resource = param[1] });
             }
             var response = Client.Audits.DiscardMultiple(requests);
 
@@ -424,7 +423,8 @@ namespace JohnsonControls.Metasys.ComServices
 
             string[] result = new string[response.Count()];
             int i = 0;
-            foreach (var res in response) {
+            foreach (var res in response)
+            {
                 result[i] = res.Id.ToString() + "|" + res.Status.ToString() + "|" + res.Annotation;
                 i++;
             }
