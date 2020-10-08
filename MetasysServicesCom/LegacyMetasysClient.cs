@@ -378,29 +378,57 @@ namespace JohnsonControls.Metasys.ComServices
         /// <inheritdoc />
         public void DiscardAudit(string id, string annotationText)
         {
-            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
             Guid guid = new Guid(id);
             Client.Audits.Discard(guid, annotationText);
         }
 
         /// <inheritdoc />
-        public IEnumerable<Result> DiscardAuditMultiple(IEnumerable<BatchRequestParam> requests)
+        public string[] DiscardAuditMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requestParams)
         {
-            return Client.Audits.DiscardMultiple(requests);
+            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
+            var requests = new List<BatchRequestParam>();
+            foreach (var param in requestParams)
+            {
+                string[] p = param.Split('|');
+                requests.Add(new BatchRequestParam { ObjectId = new Guid(p[0]), Resource = p[1] });
+            }
+            var response = Client.Audits.DiscardMultiple(requests);
+
+            string[] result = new string[response.Count()];
+            int i = 0;
+            foreach (var res in response)
+            {
+                result[i] = res.Id.ToString() + "|" + res.Status.ToString() + "|" + res.Annotation;
+                i++;
+            }
+            return result;
         }
 
         /// <inheritdoc />
         public void AddAuditAnnotation(string id, string text)
         {
-            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
             Guid guid = new Guid(id);
             Client.Audits.AddAnnotation(guid, text);
         }
 
         /// <inheritdoc />
-        public IEnumerable<Result> AddAuditAnnotationMultiple(IEnumerable<BatchRequestParam> requests)
+        public string[] AddAuditAnnotationMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requestParams)
         {
-            return Client.Audits.AddAnnotationMultiple(requests);
+            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
+            var requests = new List<BatchRequestParam>();
+            foreach (var request in requestParams) {
+                string[] param = request.Split('|');
+                requests.Add(new BatchRequestParam { ObjectId = new Guid(param[0]), Resource = param[1] });
+            }
+            var response = Client.Audits.AddAnnotationMultiple(requests);
+
+            string[] result = new string[response.Count()];
+            int i = 0;
+            foreach (var res in response) {
+                result[i] = res.Id.ToString() + "|" + res.Status.ToString() + "|" + res.Annotation;
+                i++;
+            }
+            return result;
         }
 
         /// <inheritdoc/>

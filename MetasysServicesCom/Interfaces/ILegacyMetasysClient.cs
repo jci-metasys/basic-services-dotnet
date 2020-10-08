@@ -266,7 +266,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to discard.</param>
         /// <returns>A list of BatchRequestParam with all the specified attributes.</returns>
-        IEnumerable<Result> DiscardAuditMultiple(IEnumerable<BatchRequestParam> requests);
+        string[] DiscardAuditMultiple(string[] requests);
 
         /// <summary>
         /// Add an Audit Annotation.
@@ -281,7 +281,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to add.</param>
         /// <returns>A list of BatchRequestParam with all the specified attributes.</returns>
-        IEnumerable<Result> AddAuditAnnotationMultiple(IEnumerable<BatchRequestParam> requests);
+        string[] AddAuditAnnotationMultiple(string[] requests);
 
         /// <summary>
         /// Retrieves a collection of audits for the specified object.
