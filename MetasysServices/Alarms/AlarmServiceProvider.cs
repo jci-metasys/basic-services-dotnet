@@ -35,9 +35,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<PagedResult<Alarm>> GetAsync(AlarmFilter alarmFilter)
         {
+            if (Version > ApiVersion.v3) {
+                throw new MetasysUnsupportedApiVersion(Version.ToString());
+            }
             List<Alarm> alarms = new List<Alarm>();
             var response = await GetPagedResultsAsync<Alarm>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);
-            if (Version >= ApiVersion.v3) {
+            if (Version == ApiVersion.v3) {
                 foreach (var item in response.Items) {
                     alarms.Add(await CreateItem(item));
                 }
@@ -56,12 +59,15 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<Alarm> FindByIdAsync(Guid alarmId)
         {
+            if (Version > ApiVersion.v3) {
+                throw new MetasysUnsupportedApiVersion(Version.ToString());
+            }
             var response = await GetRequestAsync("alarms", null, alarmId).ConfigureAwait(false);
             if (response["items"] != null) {
                 response = response["items"];
             }
             var alarmData = JsonConvert.DeserializeObject<Alarm>(response.ToString());
-            if (Version >= ApiVersion.v3) {
+            if (Version == ApiVersion.v3) {
                 alarmData = await CreateItem(alarmData);
             }
 
@@ -71,9 +77,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<PagedResult<Alarm>> GetForObjectAsync(Guid objectId, AlarmFilter alarmFilter)
         {
+            if (Version > ApiVersion.v3) {
+                throw new MetasysUnsupportedApiVersion(Version.ToString());
+            }
             List<Alarm> alarms = new List<Alarm>();
             var response = await GetPagedResultsAsync<Alarm>("objects", ToDictionary(alarmFilter), objectId, "alarms").ConfigureAwait(false);
-            if (Version >= ApiVersion.v3) {
+            if (Version == ApiVersion.v3) {
                 foreach (var item in response.Items) {
                     alarms.Add(await CreateItem(item));
                 }
@@ -91,9 +100,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<PagedResult<Alarm>> GetForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter alarmFilter)
         {
+            if (Version > ApiVersion.v3) {
+                throw new MetasysUnsupportedApiVersion(Version.ToString());
+            }
             List<Alarm> alarms = new List<Alarm>();
             var response = await GetPagedResultsAsync<Alarm>("networkDevices", ToDictionary(alarmFilter), networkDeviceId, "alarms").ConfigureAwait(false);
-            if (Version >= ApiVersion.v3) {
+            if (Version == ApiVersion.v3) {
                 foreach (var item in response.Items) {
                     alarms.Add(await CreateItem(item));
                 }
@@ -146,21 +158,17 @@ namespace JohnsonControls.Metasys.BasicServices
             var annotations= await GetAllAvailablePagesAsync("alarms",null,alarmId.ToString(),"annotations");
             List<AlarmAnnotation> annotationsList = new List<AlarmAnnotation>();
             // Convert to a collection of AlarmAnnotation
-            foreach (var token in annotations)
-            {
+            foreach (var token in annotations) {
                 AlarmAnnotation alarmAnnotation = new AlarmAnnotation();
                 // Build AlarmAnnotation object
-                try
-                {
+                try {
                     alarmAnnotation.Text = token["text"].Value<string>();
                     alarmAnnotation.User = token["user"].Value<string>();
                     alarmAnnotation.CreationTime = token["creationTime"].Value<DateTime>();
                     alarmAnnotation.Action = token["action"].Value<string>();
                     alarmAnnotation.AlarmUrl = token["alarmUrl"].Value<string>();
                     annotationsList.Add(alarmAnnotation);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     throw new MetasysObjectException(token.ToString(), e);
                 }
             }
@@ -178,8 +186,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
                     item.TriggerValue = measurement;
 
-            }
-            catch (ArgumentNullException e) {
+            } catch (ArgumentNullException e) {
                 // Something went wrong on object parsing
                 throw new MetasysObjectException(e);
             }

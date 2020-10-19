@@ -49,7 +49,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             /* SNIPPET 4: START */
             // Initialize Logger with your context Class
-            var log = new LogInitializer(typeof(Program));            
+            var log = new LogInitializer(typeof(Program));
             try
             {
                 // Your Try logic here...
@@ -80,7 +80,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
         #endregion
 
-        #region LOGIN AND ACCESS TOKENS        
+        #region LOGIN AND ACCESS TOKENS
         private void TryLogin_Refresh()
         {
 
@@ -207,7 +207,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             /* SNIPPET 1: START */
             Guid id = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB.10FEC11 - V6 Unit.E4 Network Outdoor Temperature");
-            client.WriteProperty(id, "description", "This is an AV.");      
+            client.WriteProperty(id, "description", "This is an AV.");
             /* SNIPPET 1: END */
         }
         private void WritePropertyMultiple(Guid id1, Guid id2)
@@ -229,9 +229,9 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             /* SNIPPET 1: START */
             List<Command> commands = client.GetCommands(objectId).ToList();
-            Command command= commands.FindById("adjust");            
+            Command command= commands.FindById("adjust");
             Console.WriteLine(command);
-            /*                        
+            /*
                 {
                   "Title": "Adjust",
                   "TitleEnumerationKey": "commandIdEnumSet.adjustCommand",
@@ -369,7 +369,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 1: START */
             List<MetasysObjectType> types = client.GetNetworkDeviceTypes().ToList();
             Console.WriteLine(types[0]);
-            /*                        
+            /*
             {
               "Description": "NAE55-NIE59",
               "DescriptionEnumerationKey": "objectTypeEnumSet.n50Class",
@@ -380,7 +380,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             List<MetasysObject> devices = client.GetNetworkDevices(type1.ToString()).ToList();
             MetasysObject device = devices.LastOrDefault();
             Console.WriteLine(device);
-            /*                        
+            /*
                 {
                   "ItemReference": "Win2016-VM2:vNAE2343996",
                   "Id": "142558f8-c4c7-5f89-be97-d806adb72053",
@@ -409,7 +409,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                   "Category": null,
                   "Children": [],
                   "ChildrenCount": 0
-                }            
+                }
             */
 
 
@@ -424,7 +424,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             List<MetasysObject> directChildren = client.GetObjects(parentId).ToList();
             MetasysObject lastChild = directChildren.LastOrDefault();
             Console.WriteLine(lastChild);
-            /*                        
+            /*
                 {
                   "ItemReference": "Win2016-VM2:vNAE2343996/Field Bus MSTP1.VAV-08.ZN-T",
                   "Id": "d5d96cd3-db4a-52e0-affd-8bc3393c30ec",
@@ -516,14 +516,14 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             // Access from the client object (uses client.Culture as input)
             string translated = client.Localize("reliabilityEnumSet.reliable");
             Console.WriteLine(translated);
-            /*                        
+            /*
                 Reliable
               */
             // Access without instantiating a client
             translated = ResourceManager.Localize("reliabilityEnumSet.reliable",
                 new CultureInfo("it-IT"));
             Console.WriteLine(translated);
-            /*                        
+            /*
                 Affidabile
               */
             /* SNIPPET 2: END */
@@ -689,7 +689,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("Current page:" + alarmsPager.CurrentPage);
             Console.WriteLine("Page size:" + alarmsPager.PageSize);
             Console.WriteLine("Pages:" + alarmsPager.PageCount);
-            /* Console Output: Start                       
+            /* Console Output: Start
                 Total:4611
                 Current page:1
                 Page size:100
@@ -697,7 +697,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console Output: End */
             Alarm alarm = alarmsPager.Items.ElementAt(0);
             Console.WriteLine(alarm);
-            /* Console Output: Start                       
+            /* Console Output: Start
             {
               "Self": "https://win-21dj9jv9qh6/api/v3/alarms/e03d81f9-69de-48e8-92d7-81167df19f6c",
               "Id": "e03d81f9-69de-48e8-92d7-81167df19f6c",
@@ -772,7 +772,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("Current page:" + samplesPager.CurrentPage);
             Console.WriteLine("Page size:" + samplesPager.PageSize);
             Console.WriteLine("Pages:" + samplesPager.PageCount);
-            /*                        
+            /*
                 Total:145
                 Current page:1
                 Page size:100
@@ -780,7 +780,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
              */
             Sample firstSample = samplesPager.Items.FirstOrDefault();
             Console.WriteLine(firstSample);
-            /*                        
+            /*
                 {
                   "Value": 82.0,
                   "Unit": "deg F",
@@ -809,7 +809,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             Console.WriteLine("Current page:" + auditsPager.CurrentPage);
             Console.WriteLine("Page size:" + auditsPager.PageSize);
             Console.WriteLine("Pages:" + auditsPager.PageCount);
-            /*                        
+            /*
                 Total:323
                 Current page:1
                 Page size:100
@@ -817,7 +817,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
              */
             Audit audit = auditsPager.Items.FirstOrDefault();
             Console.WriteLine(audit);
-            /*                        
+            /*
             {
               "Id": "8e3b3738-2f5f-494d-bde1-fac15da28c86",
               "CreationTime": "2020-06-23T16:45:54.697Z",

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using JohnsonControls.Metasys.BasicServices;
 
@@ -71,7 +72,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
-        /// <param name="newValue"></param>       
+        /// <param name="newValue"></param>
         /// <exception cref="MetasysHttpException"></exception>
         void WriteProperty(string id, string attributeName, string newValue);
 
@@ -261,12 +262,26 @@ namespace JohnsonControls.Metasys.ComServices
         void DiscardAudit(string id, string annontationText);
 
         /// <summary>
+        /// Discard many Audit given a list of requests containing the Id of the Audits and the text for the Annotations.
+        /// </summary>
+        /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to discard.</param>
+        /// <returns>A list of BatchRequestParam with all the specified attributes.</returns>
+        string[] DiscardAuditMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requests);
+
+        /// <summary>
         /// Add an Audit Annotation.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="text"></param>
         /// <returns></returns>
         void AddAuditAnnotation(string id, string text);
+
+        /// <summary>
+        /// Add many Annotations given a list of requests containing the Id of the Audits and the text of the Annotations.
+        /// </summary>
+        /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to add.</param>
+        /// <returns>A list of BatchRequestParam with all the specified attributes.</returns>
+        string[] AddAuditAnnotationMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requests);
 
         /// <summary>
         /// Retrieves a collection of audits for the specified object.

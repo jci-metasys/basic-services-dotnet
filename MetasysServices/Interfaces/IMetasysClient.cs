@@ -144,11 +144,11 @@ namespace JohnsonControls.Metasys.BasicServices
             IEnumerable<string> attributeNames);
 
         /// <summary>
-        /// Write a single attribute given the Guid of the object. 
+        /// Write a single attribute given the Guid of the object.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="attributeName"></param>
-        /// <param name="newValue"></param>     
+        /// <param name="id">The id of the attribute</param>
+        /// <param name="attributeName">The name of the attribute</param>
+        /// <param name="newValue">The new value of the attribute</param>
         /// <exception cref="MetasysHttpException"></exception>
         void WriteProperty(Guid id, string attributeName, object newValue);
 
@@ -159,7 +159,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Write to many attribute values given the Guids of the objects.
         /// </summary>
         /// <param name="ids"></param>
-        /// <param name="attributeValues">The (attribute, value) pairs.</param>       
+        /// <param name="attributeValues">The (attribute, value) pairs.</param>
         /// <exception cref="MetasysHttpException"></exception>
         void WritePropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<(string Attribute, object Value)> attributeValues);

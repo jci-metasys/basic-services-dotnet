@@ -79,17 +79,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to add.</param>
         /// <returns>
-        /// A list of BatchRequestParam with all the specified attributes.        
+        /// A list of BatchRequestParam with all the specified attributes.
         /// </returns>
         IEnumerable<Result> AddAnnotationMultiple(IEnumerable<BatchRequestParam> requests);
 
-        /// <summary>
-        /// Add asynchronously many Annotations given a list of requests containing the Id of the Audits and the text of the Annotations.
-        /// </summary>
-        /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to add.</param>
-        /// <returns>
-        /// A list of BatchRequestParam with all the specified attributes.        
-        /// </returns>
+        /// <inheritdoc cref="IAuditService.AddAnnotationMultiple(IEnumerable)"/>
         Task<IEnumerable<Result>> AddAnnotationMultipleAsync(IEnumerable<BatchRequestParam> requests);
 
         /// <summary>
@@ -97,17 +91,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to discard.</param>
         /// <returns>
-        /// A list of BatchRequestParam with all the specified attributes.        
+        /// A list of BatchRequestParam with all the specified attributes.
         /// </returns>
         IEnumerable<Result> DiscardMultiple(IEnumerable<BatchRequestParam> requests);
 
-        /// <summary>
-        /// Discard asynchronously many Audit given a list of requests containing the Id of the Audits and the text for the Annotations.
-        /// </summary>
-        /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to discard.</param>
-        /// <returns>
-        /// A list of BatchRequestParam with all the specified attributes.        
-        /// </returns>
+        /// <inheritdoc cref="IAuditService.DiscardMultiple(IEnumerable)"/>
         Task<IEnumerable<Result>> DiscardMultipleAsync(IEnumerable<BatchRequestParam> requests);
 
     }
