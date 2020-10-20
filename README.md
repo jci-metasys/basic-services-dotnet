@@ -1297,6 +1297,52 @@ auditId = "6c999f43-6007-5137-b6d3-c30b93fb70ec"
 Dim result() As Object
 result = client.GetAuditAnnotations(auditId)
 ```
+To add many annotations to one or many audits use the AddAuditAnnotationMultiple method, it takes an array of strings 
+as parameter and returns an array of strings as well.
+Each string of the array used as parameter must contains the audit ID 
+and the text of the annotation separated by the character | (vertical bar).
+
+```vb
+Dim auditId As String
+auditId = "6c999f43-6007-5137-b6d3-c30b93fb70ec"
+
+Dim annotation1 as String
+annotation1 = "TEXT OF ANNOTATION #1"
+Dim annotation2 as String
+annotation2 = "TEXT OF ANNOTATION #2"
+
+Dim requestParams(1) As String
+requestParams(0) = auditId & "|" & annotation1
+requestParams(1) = auditId & "|" & annotation2
+
+Dim result() As String
+result = client.AddAuditAnnotationMultiple(auditId)
+```
+
+To discard many audits using one call please use the DiscardAuditMultiple method, it takes an array of strings 
+as parameter and returns an array of strings as well.
+Each string of the array used as parameter must contains the audit ID 
+and the text of the discard annotation separated by the character | (vertical bar).
+
+```vb
+Dim auditId1 As String
+auditId1 = "1b3b3127-a703-42b7-bb9a-7527331e329d"
+Dim auditId2 As String
+auditId2 = "e3b6cbcf-cf05-43ed-b845-7321c8b86c38"
+
+Dim annotation1 as String
+annotation1 = "DISCARD ANNOTATION AUDIT #1"
+Dim annotation2 as String
+annotation2 = "DISCARD ANNOTATION AUDIT #2"
+
+Dim requestParams(1) As String
+requestParams(0) = auditId1 & "|" & annotation1
+requestParams(1) = auditId2 & "|" & annotation2
+
+Dim result() As String
+result = client.DiscardAuditMultiple(auditId)
+```
+
 ## License
 
 See [LICENSE](LICENSE).

@@ -193,11 +193,10 @@ namespace JohnsonControls.Metasys.ComServices
             {
                 objValues = new List<object>();
                 foreach (string s in values)
-                {              
-                    double numericValue ;
-                    if (double.TryParse(s,  out numericValue))
+                {
+                    if (double.TryParse(s, out double numericValue))
                     {
-                        objValues.Add (numericValue);
+                        objValues.Add(numericValue);
                     }
                     else
                     {
@@ -355,9 +354,11 @@ namespace JohnsonControls.Metasys.ComServices
         /// <inheritdoc />
         public IComPagedResult GetAudits(IComAuditFilter auditFilter)
         {
-            AuditFilter auditF = new AuditFilter();
-            auditF.StartTime = DateTime.Parse(auditFilter.StartTime);
-            auditF.EndTime = DateTime.Parse(auditFilter.EndTime);
+            AuditFilter auditF = new AuditFilter
+            {
+                StartTime = DateTime.Parse(auditFilter.StartTime),
+                EndTime = DateTime.Parse(auditFilter.EndTime)
+            };
             if (!(auditFilter.Page is null)) auditF.Page = int.Parse(auditFilter.Page);
             if (!(auditFilter.PageSize is null)) auditF.PageSize = int.Parse(auditFilter.PageSize);
             auditF.Sort = auditFilter.Sort;

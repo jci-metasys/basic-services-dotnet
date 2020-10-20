@@ -20,7 +20,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public sealed class AlarmServiceProvider : BasicServiceProvider, IAlarmsService
     {
-        private CultureInfo _CultureInfo = new CultureInfo("en-US");
+        private readonly CultureInfo _CultureInfo = new CultureInfo("en-US");
 
         /// <summary>
         /// Initializes a new instance of <see cref="AlarmServiceProvider"/> with supplied data.
@@ -42,7 +42,7 @@ namespace JohnsonControls.Metasys.BasicServices
             var response = await GetPagedResultsAsync<Alarm>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);
             if (Version == ApiVersion.v3) {
                 foreach (var item in response.Items) {
-                    alarms.Add(await CreateItem(item));
+                    alarms.Add(CreateItem(item));
                 }
 
                 response = new PagedResult<Alarm> {
@@ -68,7 +68,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             var alarmData = JsonConvert.DeserializeObject<Alarm>(response.ToString());
             if (Version == ApiVersion.v3) {
-                alarmData = await CreateItem(alarmData);
+                alarmData = CreateItem(alarmData);
             }
 
             return alarmData;
@@ -84,7 +84,7 @@ namespace JohnsonControls.Metasys.BasicServices
             var response = await GetPagedResultsAsync<Alarm>("objects", ToDictionary(alarmFilter), objectId, "alarms").ConfigureAwait(false);
             if (Version == ApiVersion.v3) {
                 foreach (var item in response.Items) {
-                    alarms.Add(await CreateItem(item));
+                    alarms.Add(CreateItem(item));
                 }
                 response = new PagedResult<Alarm> {
                     Items = alarms,
@@ -107,7 +107,7 @@ namespace JohnsonControls.Metasys.BasicServices
             var response = await GetPagedResultsAsync<Alarm>("networkDevices", ToDictionary(alarmFilter), networkDeviceId, "alarms").ConfigureAwait(false);
             if (Version == ApiVersion.v3) {
                 foreach (var item in response.Items) {
-                    alarms.Add(await CreateItem(item));
+                    alarms.Add(CreateItem(item));
                 }
 
                 response = new PagedResult<Alarm> {
@@ -176,17 +176,21 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
 
-        private async Task<Alarm> CreateItem(Alarm item)
+        private Alarm CreateItem(Alarm item)
         {
-            try {
-                    var measurement = new Measurement {
-                        Units = item.TriggerValue.Units != null ? ResourceManager.Localize(item.TriggerValue.Units, _CultureInfo) : null,
-                        Value = item.TriggerValue.Value
-                    };
+            try
+            {
+                var measurement = new Measurement
+                {
+                    Units = item.TriggerValue.Units != null ? ResourceManager.Localize(item.TriggerValue.Units, _CultureInfo) : null,
+                    Value = item.TriggerValue.Value
+                };
 
-                    item.TriggerValue = measurement;
+                item.TriggerValue = measurement;
 
-            } catch (ArgumentNullException e) {
+            }
+            catch (ArgumentNullException e)
+            {
                 // Something went wrong on object parsing
                 throw new MetasysObjectException(e);
             }

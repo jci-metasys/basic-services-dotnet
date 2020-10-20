@@ -52,20 +52,26 @@ namespace JohnsonControls.Metasys.BasicServices
                 Sample sample = new Sample();
                 string unitsUrl=string.Empty;
                 try {
-                    if (Version < ApiVersion.v3) {
-                        sample.Timestamp = s["timestamp"].Value<DateTime>();
-                        sample.IsReliable = s["isReliable"].Value<Boolean>();
-                        sample.Value = s["value"]["value"].Value<double>();
-                        unitsUrl = s["value"]["units"].Value<string>();
-                        sample.Unit = ResourceManager.Localize(unitsUrl, _CultureInfo);
-                    } else {
-                        // Since Api v3 the schema has changed
-                        sample.Timestamp = s["result"]["timestamp"].Value<DateTime>();
-                        sample.IsReliable = s["result"]["isReliable"].Value<Boolean>();
-                        sample.Value = s["result"]["value"]["value"]["value"].Value<double>();
-                        sample.Unit = s["result"]["value"]["units"].Value<string>();
-                        sample.Unit = ResourceManager.Localize(sample.Unit, _CultureInfo);
-                    }
+                    sample.Timestamp = s["timestamp"].Value<DateTime>();
+                    sample.IsReliable = s["isReliable"].Value<Boolean>();
+                    sample.Value = s["value"]["value"].Value<double>();
+                    unitsUrl = s["value"]["units"].Value<string>();
+                    sample.Unit = ResourceManager.Localize(unitsUrl, _CultureInfo);
+
+                    //if (Version < ApiVersion.v3) {
+                    //    sample.Timestamp = s["timestamp"].Value<DateTime>();
+                    //    sample.IsReliable = s["isReliable"].Value<Boolean>();
+                    //    sample.Value = s["value"]["value"].Value<double>();
+                    //    unitsUrl = s["value"]["units"].Value<string>();
+                    //    sample.Unit = ResourceManager.Localize(unitsUrl, _CultureInfo);
+                    //} else {
+                    //    // Note: for Api v3 the schema was changed then it came back to the same as previous versions.
+                    //    sample.Timestamp = s["result"]["timestamp"].Value<DateTime>();
+                    //    sample.IsReliable = s["result"]["isReliable"].Value<Boolean>();
+                    //    sample.Value = s["result"]["value"]["value"]["value"].Value<double>();
+                    //    sample.Unit = s["result"]["value"]["units"].Value<string>();
+                    //    sample.Unit = ResourceManager.Localize(sample.Unit, _CultureInfo);
+                    //}
                 } catch (ArgumentNullException e) {
                     // Something went wrong on object parsing
                     throw new MetasysObjectException(e);

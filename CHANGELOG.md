@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.2.0] - 2020-10-20
+
+### Added
+
+- Added new method AddAuditAnnotationMultiple (COM) to add many audit annotations in one call.
+- Added the new method DiscardAuditMultiple (COM) to discard many audits in one call.
+- Added a new specific exception to report when a method is not supported by the specified API version.
+
+### Changed
+
+- Updated the file 'MetasysApiTest.xlsm' to shown examples of the new methods.
+- Updated Id for Equipment and Space examples
+
+### Fixed
+
+- Issue in the method GetSampleAsync (due to v3 changes)
+
+
 ## [4.1.0] - 2020-07-24
 
 ### Added
@@ -174,6 +192,7 @@ First Release.
 - Automatic enumeration translations for supported languages.
 
 [Unreleased]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.1.0...HEAD
+[4.2.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.1.0...v4.2.0
 [4.1.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v3.5.1...v4.0.0
 [3.5.1]: https://github.com/metasys-server/basic-services-dotnet/compare/v3.5.0...v3.5.1

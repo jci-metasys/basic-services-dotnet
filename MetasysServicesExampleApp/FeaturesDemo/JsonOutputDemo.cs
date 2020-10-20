@@ -627,11 +627,12 @@ namespace MetasysServicesExampleApp.FeaturesDemo
 
         }
 
-        private void GetSpaceEquipment_GetSpaceChildren(MetasysObject building)
+        private void GetSpaceEquipment_GetSpaceChildren(Guid spaceId)
         {
             /* SNIPPET 4: START */
-            IEnumerable<MetasysObject> spaceEquipment = client.GetSpaceEquipment(building.Id);
-            IEnumerable<MetasysObject> spaceChildren = client.GetSpaceChildren(building.Id);
+            IEnumerable<MetasysObject> spaceEquipment = client.GetSpaceEquipment(spaceId);
+
+            IEnumerable<MetasysObject> spaceChildren = client.GetSpaceChildren(spaceId);
             MetasysObject sampleSpaceEquipment = spaceEquipment.FirstOrDefault();
             /* SNIPPET 4: END */
         }
@@ -960,6 +961,10 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 // Common objects are mocked to do not waste precious roundtrip time on each snippet
                 List<Command> commands = new List<Command> { new Command { CommandId = "Adjust" }, new Command { CommandId = "OperatorOverride" }, new Command(), new Command(), new Command { CommandId = "Release" } };
 
+                Guid equipmentId = new Guid("2f321415-35d9-5c48-b643-60c5132cc001");
+
+                Guid spaceId = new Guid("78c022db-f109-5a0c-86e7-d0d7d3210ea7");
+
                 MetasysObject building = new MetasysObject { Id = new Guid("2f321415-35d9-5c48-b643-60c5132cc001") };
 
                 MetasysObject sampleEquipment = new MetasysObject { Id = new Guid("0e8c034b-1586-5ed9-8455-dd33e99c2c7e") };
@@ -969,7 +974,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 AlarmFilter alarmFilter = new AlarmFilter
                 {
                     StartTime = new DateTime(2020, 06, 01),
-                    EndTime = new DateTime(2020, 07, 10),
+                    EndTime = new DateTime(2020, 09, 30),
                     ExcludeAcknowledged = true
                 };
 
@@ -1040,7 +1045,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                             GetEquipment();
                             break;
                         case "15":
-                            GetSpaceEquipment_GetSpaceChildren(building);
+                            GetSpaceEquipment_GetSpaceChildren(spaceId);
                             break;
                         case "16":
                             GetEquipmentPoints(sampleEquipment);

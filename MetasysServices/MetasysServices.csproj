@@ -13,26 +13,13 @@
     <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
-    <PackageReleaseNotes>- Added translations for Fully Qualified Enum Attributes returned by API v3 (for Alarms and Audits)
-- Added the new method GetServerTime
-- Added a new enumeration set for ActionType
-- Added a new enumeration set for OriginApplication
-- Added a new enumeration set for ClassLevel
-- Added a new enumeration set for NetworkDeviceType
-- Added AuditSignature and LegacyInfo strong typed objects for Audits (.Net and COM)
-- Added a few new Test Cases (mainly for v3)
-- Modified the single values scenario for PreData and PostData (for Audits)
-- Modified the method GetnetworkDevices to accept the new NetworkDeviceType enumeration as parameter
-- Modified the AuditFilter object to accept the new enumeration sets as paramenters
-- Modified Equals and GetHashCode methods in a few class as Alarm, Audit, AuditData and LegacyData
-- Removed priority from write methods in Excel app
-- Updated Id for Equipment and Space examples
-- Fixed issue in the parameters passed to the SendCommands method (due to v3 changes)
-- Fixed issue in FindById method (for Alarms and Audits) due to difference in the object structure of v3
-- Fixed issue is the response parsing of GetCommands method (when using v3)
-</PackageReleaseNotes>
+    <PackageReleaseNotes>- Added new method AddAuditAnnotationMultiple (COM) to add many audit annotations in one call.
+- Added the new method DiscardAuditMultiple (COM) to discard many audits in one call.
+- Added a new specific exception to report when a method is not supported by the specified API version.
+- Updated the file 'MetasysApiTest.xlsm' to shown examples of the new methods.
+- Updated Id for Equipment and Space examples</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>4.1.0</Version>    
+    <Version>4.2.0</Version>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

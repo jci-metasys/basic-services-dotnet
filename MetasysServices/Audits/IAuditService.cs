@@ -83,7 +83,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </returns>
         IEnumerable<Result> AddAnnotationMultiple(IEnumerable<BatchRequestParam> requests);
 
-        /// <inheritdoc cref="IAuditService.AddAnnotationMultiple(IEnumerable)"/>
+        /// <summary>
+        /// Add many Annotations given a list of requests containing the Id of the Audits and the text of the Annotations.
+        /// </summary>
+        /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to add.</param>
+        /// <returns>
+        /// A list of BatchRequestParam with all the specified attributes.
+        /// </returns>
         Task<IEnumerable<Result>> AddAnnotationMultipleAsync(IEnumerable<BatchRequestParam> requests);
 
         /// <summary>
@@ -95,7 +101,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </returns>
         IEnumerable<Result> DiscardMultiple(IEnumerable<BatchRequestParam> requests);
 
-        /// <inheritdoc cref="IAuditService.DiscardMultiple(IEnumerable)"/>
+        /// <summary>
+        /// Discard many Audit given a list of requests containing the Id of the Audits and the text for the Annotations.
+        /// </summary>
+        /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to discard.</param>
+        /// <returns>
+        /// A list of BatchRequestParam with all the specified attributes.
+        /// </returns>
         Task<IEnumerable<Result>> DiscardMultipleAsync(IEnumerable<BatchRequestParam> requests);
 
     }
