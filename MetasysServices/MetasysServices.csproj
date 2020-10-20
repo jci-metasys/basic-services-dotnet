@@ -17,7 +17,8 @@
 - Added the new method DiscardAuditMultiple (COM) to discard many audits in one call.
 - Added a new specific exception to report when a method is not supported by the specified API version.
 - Updated the file 'MetasysApiTest.xlsm' to shown examples of the new methods.
-- Updated Id for Equipment and Space examples</PackageReleaseNotes>
+- Updated Id for Equipment and Space examples.
+- Fixed an issue in the method GetSampleAsync (due to v3 changes).</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Version>4.2.0</Version>    
   </PropertyGroup>
