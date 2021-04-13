@@ -42,6 +42,7 @@ For versioning information see the [changelog](CHANGELOG.md).
 - [Contributing](#contributing)
 - [Additional Information](#additional-information)
   - [Supported Localization Languages](#supported-localization-languages)
+  - [Customizing Windows IIS for Metasys API](#customizing-windows-iis-for-metasys-api)
 
 ## Installation
 
@@ -1375,3 +1376,7 @@ See [CONTRIBUTING](CONTRIBUTING).
 - zh-Hans-CN
 - zh-Hant-TW
 - zh-TW
+### Customizing Windows IIS for Metasys API
+To get further information about customizing Windows IIS for Metasys API click [here](https://docs.johnsoncontrols.com/bas/r/Metasys-Server/11.0/Metasys-Server-Installation-and-Upgrade-Instructions/Customizing-Windows-IIS-for-Metasys-API)
+
+
