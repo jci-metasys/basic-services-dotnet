@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using JohnsonControls.Metasys.BasicServices.Stream;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -344,5 +345,57 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <inheritdoc cref="IMetasysClient.GetServerTime()"/>
         Task<DateTime> GetServerTimeAsync();
+
+        IStreamService StreamingClient { get; set; }
+
+        /// <summary>
+        /// Connect the Stream Client.
+        /// </summary>
+        bool StreamConnect();
+
+        /// <inheritdoc cref="IMetasysClient.StreamConnect()"/>
+        Task<bool> StreamConnectAsync();
+
+        void GetCOVStream(Guid requestId, Guid id);
+
+        /// <summary>
+        /// GetCOVStreamAsync.
+        /// </summary>
+        Task GetCOVStreamAsync(Guid requestId, Guid id);
+
+        /// <summary>
+        /// GetSingleStreamingChannel.
+        /// </summary>
+        StreamMessage GetSingleStreamingChannel();
+
+        /// <summary>
+        /// GetSingleStreamingChannelAsync.
+        /// </summary>
+        Task<StreamMessage> GetSingleStreamingChannelAsync();
+
+        /// <summary>
+        /// Start Collecting COV Stream Value.
+        /// </summary>
+        void StartReadingCOVStreamValue(Guid requestId, Guid id);
+
+        /// <summary>
+        /// Stop Collecting COV Stream Value.
+        /// </summary>
+        void StopReadingCOVStreamValue(Guid requestId);
+
+        /// <summary>
+        /// GetCOVStreamValue.
+        /// </summary>
+        StreamMessage GetCOVStreamValue();
+
+        /// <summary>
+        /// GetCOVStreamValues.
+        /// </summary>
+        List<StreamMessage> GetCOVStreamValues();
+
+        /// <summary>
+        /// Event fired when a COV Stream value has changed
+        /// </summary>
+        event EventHandler<StreamEventArgs> COVStreamValueChanged;
     }
 }

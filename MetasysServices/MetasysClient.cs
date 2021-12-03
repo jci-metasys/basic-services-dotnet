@@ -11,7 +11,7 @@ using Flurl.Http;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using JohnsonControls.Metasys.BasicServices.Utils;
-
+using JohnsonControls.Metasys.BasicServices.Stream;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -38,7 +38,26 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public IAuditService Audits { get; set; }
 
+        /// <inheritdoc/>
+        public IStreamService StreamingClient { get; set; }
+
         private string hostname;
+
+        /// <summary>
+        /// Variable to keep the current COV stream message
+        /// </summary>
+        private StreamMessage COVStreamValue;
+
+        /// <summary>
+        /// Variable to keep the list of current COV stream messages
+        /// </summary>
+        private List<StreamMessage> COVStreamValues = new List<StreamMessage>();
+
+        /// <summary>
+        /// Variable to keep the loop that updated the list of COV Stream values
+        /// </summary>
+        private bool KeepCOVStreamAlive = true;
+
 
         /// <inheritdoc/>
         public string Hostname
@@ -89,6 +108,11 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     Alarms.Version = version.Value;
                 }
+                if (StreamingClient != null)
+                {
+                    StreamingClient.Version = version.Value;
+                }
+
             }
         }
 
@@ -170,17 +194,28 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
         public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v2, CultureInfo cultureInfo = null, bool logClientErrors = true)
         {
-            IgnoreCertificateErrors = ignoreCertificateErrors;
-            Hostname = hostname;
-            // Set Metasys culture if specified, otherwise use current machine Culture.
-            Culture = cultureInfo ?? CultureInfo.CurrentCulture;
-            // Set preferences about logging
-            LogClientErrors = logClientErrors;
-            Version = version;
-            // Init related services
-            Trends = new TrendServiceProvider(Client, version, logClientErrors);
-            Alarms = new AlarmServiceProvider(Client, version, logClientErrors);
-            Audits = new AuditServiceProvider(Client, version, logClientErrors);
+            try
+            {
+                IgnoreCertificateErrors = ignoreCertificateErrors;
+                Hostname = hostname;
+                // Set Metasys culture if specified, otherwise use current machine Culture.
+                Culture = cultureInfo ?? CultureInfo.CurrentCulture;
+                // Set preferences about logging
+                LogClientErrors = logClientErrors;
+                Version = version;
+                // Init related services
+                Trends = new TrendServiceProvider(Client, version, logClientErrors);
+                Alarms = new AlarmServiceProvider(Client, version, logClientErrors);
+                Audits = new AuditServiceProvider(Client, version, logClientErrors);
+                if (Version > ApiVersion.v3)
+                {
+                    StreamingClient = new StreamingClient(Client, hostname, version);
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
         }
 
         /// <inheritdoc/>
@@ -229,6 +264,10 @@ namespace JohnsonControls.Metasys.BasicServices
                     .ConfigureAwait(false);
 
                 CreateAccessToken(Hostname, username, response);
+                if (StreamingClient != null)
+                {
+                    StreamingClient.AccessToken = this.AccessToken; ;
+                }
             }
             catch (FlurlHttpException e)
             {
@@ -253,6 +292,11 @@ namespace JohnsonControls.Metasys.BasicServices
                     .ConfigureAwait(false);
                 // Since it's a refresh, get issue info from the current token                
                 CreateAccessToken(AccessToken.Issuer, AccessToken.IssuedTo, response);
+                // Set the new value of the Token to the StreamClient
+                if (StreamingClient != null)
+                {
+                    StreamingClient.AccessToken = this.AccessToken; ;
+                }
             }
             catch (FlurlHttpException e)
             {
@@ -646,9 +690,9 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 var response = await Client.Request(new Url("objects")
-                    .AppendPathSegments(id, "commands", command))
-                    .PutJsonAsync(values)
-                    .ConfigureAwait(false);
+                                                            .AppendPathSegments(id, "commands", command))
+                                                            .PutJsonAsync(values)
+                                                            .ConfigureAwait(false);
             }
             catch (FlurlHttpException e)
             {
@@ -823,6 +867,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
         {
+            CheckVersion(Version);
             var equipment = await GetAllAvailablePagesAsync("equipment").ConfigureAwait(false);
             return ToMetasysObject(equipment, MetasysObjectTypeEnum.Equipment);
         }
@@ -1017,5 +1062,108 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return serverTime.Value;
         }
+
+
+
+
+        public bool StreamConnect()
+        {
+            // Connect the Stream Client
+            return StreamConnectAsync().GetAwaiter().GetResult();
+        }
+
+        public async Task<bool> StreamConnectAsync()
+        {
+            // Connect the Stream Client
+            return await StreamingClient.ConnectAsync(); 
+        }
+
+        public void GetCOVStream(Guid requestId, Guid id)
+        {
+            GetCOVStreamAsync(requestId, id).GetAwaiter().GetResult();
+        }
+
+        public async Task GetCOVStreamAsync(Guid requestId, Guid id)
+        {
+            try
+            {
+                await StreamingClient.ConnectAsync();
+                string idStr = id.ToString();
+                string relativeUrl = "api/" + Version.ToString() + "/objects/" + idStr + "/attributes/presentValue";
+                _ = await StreamingClient.SubscribeAsync(requestId, "GET", relativeUrl);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\n \nAn Error occurred. Press Enter to return to exit - {0}", e.Message);
+            }
+        }
+
+        /// <inheritdoc />
+        public StreamMessage GetSingleStreamingChannel()
+        {
+            return GetSingleStreamingChannelAsync().GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public async Task<StreamMessage> GetSingleStreamingChannelAsync()
+        {
+            var result = await StreamingClient.ResultChannel.ReadAsync();
+            return result;
+        }
+
+        /// <inheritdoc />
+        public void StartReadingCOVStreamValue(Guid requestId, Guid id)
+        {
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                COVStreamValues.Clear();
+                KeepCOVStreamAlive = true;
+                GetCOVStream(requestId, id);
+                UpdateCOVStreamValue();
+            });
+        }
+
+        /// <inheritdoc />
+        public void StopReadingCOVStreamValue(Guid requestId)
+        {
+            KeepCOVStreamAlive = false;
+            StreamingClient.UnsubscribeAsync(requestId);
+        }
+
+        public StreamMessage GetCOVStreamValue()
+        {
+            return COVStreamValue;
+        }
+        public List<StreamMessage> GetCOVStreamValues()
+        {
+            return COVStreamValues;
+        }
+
+        private async void UpdateCOVStreamValue()
+        {
+            while (KeepCOVStreamAlive)
+            {
+                StreamMessage streamMsg = await GetSingleStreamingChannelAsync();
+                COVStreamValues = StreamingClient.UpdateCOVStremValuesList(COVStreamValues, streamMsg);
+
+                //Raise the event
+                StreamEventArgs arg = new StreamEventArgs();
+                arg.Value = streamMsg;
+                OnCOVStreamValueChanged(arg);
+            }
+        }
+
+
+        /// <inheritdoc />
+        public event EventHandler<StreamEventArgs> COVStreamValueChanged;
+
+        protected virtual void OnCOVStreamValueChanged(StreamEventArgs e)
+        {
+            COVStreamValueChanged?.Invoke(this, e);
+        }
+
+
     }
+
 }
+

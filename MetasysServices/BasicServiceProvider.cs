@@ -26,6 +26,11 @@ namespace JohnsonControls.Metasys.BasicServices
         public ApiVersion Version { get; set; }
 
         /// <summary>
+        /// Max API version supported by this SDK.
+        /// </summary>
+        public ApiVersion MaxVersionSupported { get; } = ApiVersion.v4;
+
+        /// <summary>
         /// The current Culture Used for localization.
         /// </summary>
         public CultureInfo Culture { get; set; }
@@ -477,6 +482,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         protected async Task<JToken> PutBatchRequestAsync(string endpoint, IEnumerable<BatchRequestParam> requests, params string[] paths)
         {
+            Boolean isDiscard = false;
             // Create URL with base resource
             Url url = new Url(endpoint);
             // Concatenate batch segment to use batch request and prepare the list of requests
@@ -494,6 +500,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     case "discard":
                         string annotationText = r.Resource;
                         body = new { annotationText };
+                        isDiscard = true;
                         break;
                     default:
                         body = null;
@@ -514,12 +521,25 @@ namespace JohnsonControls.Metasys.BasicServices
             JToken responseToken = null;
             try
             {
-                // Post the list of requests and return responses as JToken
-                var response = await Client.Request(url)
-                                            .PostJsonAsync(new BatchRequest { Method = "PUT", Requests = objectsRequests })
-                                            .ConfigureAwait(false);
+                if (isDiscard && Version == ApiVersion.v4)
+                {
+                    // Post the list of requests and return responses as JToken
+                    var response = await Client.Request(url)
+                                                .PostJsonAsync(new BatchRequest { Method = "PATCH", Requests = objectsRequests })
+                                                .ConfigureAwait(false);
 
-                responseToken = JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+                    responseToken = JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+
+                }
+                else
+                {
+                    // Post the list of requests and return responses as JToken
+                    var response = await Client.Request(url)
+                                                .PostJsonAsync(new BatchRequest { Method = "PUT", Requests = objectsRequests })
+                                                .ConfigureAwait(false);
+
+                    responseToken = JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+                }
             }
             catch (FlurlHttpException e)
             {
@@ -528,5 +548,10 @@ namespace JohnsonControls.Metasys.BasicServices
             return responseToken;
         }
 
+        protected void CheckVersion(ApiVersion version)
+        {
+            if (version > MaxVersionSupported)
+            { throw new MetasysUnsupportedApiVersion(version.ToString()); }
+        }
     }
 }
