@@ -353,15 +353,31 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         bool StreamConnect();
 
-        /// <inheritdoc cref="IMetasysClient.StreamConnect()"/>
+        /// <summary>
+        /// Connect the Stream Client (Async).
+        /// </summary>
         Task<bool> StreamConnectAsync();
 
-        void GetCOVStream(Guid requestId, Guid id);
+        /// <summary>
+        /// GetCOVStream.
+        /// </summary>
+        void GetCOVStream(Guid id);
 
         /// <summary>
         /// GetCOVStreamAsync.
         /// </summary>
-        Task GetCOVStreamAsync(Guid requestId, Guid id);
+        Task GetCOVStreamAsync(Guid id);
+
+        /// <summary>
+        /// GetCOVStreamMultiple.
+        /// </summary>
+        void GetCOVStreamMultiple(IEnumerable<Guid> ids);
+
+        /// <summary>
+        /// GetCOVStreamMultipleAsync.
+        /// </summary>
+        Task GetCOVStreamMultipleAsync(IEnumerable<Guid> ids);
+
 
         /// <summary>
         /// GetSingleStreamingChannel.
@@ -376,12 +392,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Start Collecting COV Stream Value.
         /// </summary>
-        void StartReadingCOVStreamValue(Guid requestId, Guid id);
+        void StartReadingCOVStreamValue(Guid id);
 
         /// <summary>
         /// Stop Collecting COV Stream Value.
         /// </summary>
         void StopReadingCOVStreamValue(Guid requestId);
+
+        /// <summary>
+        /// Start Collecting COV Stream Value for Multiple objects.
+        /// </summary>
+        void StartReadingCOVStreamValueMultiple(IEnumerable<Guid> ids);
 
         /// <summary>
         /// GetCOVStreamValue.

@@ -475,15 +475,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeNames"></param>        
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysPropertyException"></exception>
-        public IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids,
-        IEnumerable<string> attributeNames)
+        public IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids, IEnumerable<string> attributeNames)
         {
             return ReadPropertyMultipleAsync(ids, attributeNames).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<VariantMultiple>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
-            IEnumerable<string> attributeNames)
+        public async Task<IEnumerable<VariantMultiple>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids, IEnumerable<string> attributeNames)
         {
             if (ids == null || attributeNames == null)
             {
@@ -1078,19 +1076,68 @@ namespace JohnsonControls.Metasys.BasicServices
             return await StreamingClient.ConnectAsync(); 
         }
 
-        public void GetCOVStream(Guid requestId, Guid id)
+        /// <inheritdoc />
+        public void GetCOVStream(Guid id)
         {
-            GetCOVStreamAsync(requestId, id).GetAwaiter().GetResult();
+            GetCOVStreamAsync(id).GetAwaiter().GetResult();
         }
 
-        public async Task GetCOVStreamAsync(Guid requestId, Guid id)
+        /// <inheritdoc />
+        public async Task GetCOVStreamAsync(Guid id)
         {
             try
             {
+                StreamingClient.LoadCOVSubscriptions(id);
+
                 await StreamingClient.ConnectAsync();
-                string idStr = id.ToString();
-                string relativeUrl = "api/" + Version.ToString() + "/objects/" + idStr + "/attributes/presentValue";
-                _ = await StreamingClient.SubscribeAsync(requestId, "GET", relativeUrl);
+
+                //await StreamingClient.ConnectAsync();
+                //string idStr = id.ToString();
+                //string relativeUrl = "api/" + Version.ToString() + "/objects/" + idStr + "/attributes/presentValue";
+                //_ = await StreamingClient.SubscribeAsync(requestId, "GET", relativeUrl);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\n \nAn Error occurred. Press Enter to return to exit - {0}", e.Message);
+            }
+        }
+
+
+        /// <inheritdoc />
+        public void GetCOVStreamMultiple(IEnumerable<Guid> ids)
+        {
+            GetCOVStreamMultipleAsync(ids).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public async Task GetCOVStreamMultipleAsync(IEnumerable<Guid> ids)
+        {
+            try
+            {
+                StreamingClient.LoadCOVSubscriptions(ids);
+
+                await StreamingClient.ConnectAsync();
+
+                //var relativeUrl = "api/" + Version.ToString() + "/objects/batch";
+
+                //var body = new Newtonsoft.Json.Linq.JObject();
+                //body.Add("method", "GET");
+                //var requests = new Newtonsoft.Json.Linq.JArray();
+
+                //// Concatenate batch segment to use batch request and prepare the list of requests  
+                //int index = 1;
+                //foreach (var i in ids)
+                //{
+                //    var request = new Newtonsoft.Json.Linq.JObject();
+                //    request.Add("id", index.ToString());
+                //    request.Add("relativeUrl", i.ToString() + "/attributes/presentValue");
+
+                //    requests.Add(request);
+                //    index += 1;
+                //}
+                //body.Add("requests", requests);
+
+                //_ = await StreamingClient.SubscribeAsync(requestId, "POST", relativeUrl, body: body);
             }
             catch (Exception e)
             {
@@ -1112,13 +1159,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc />
-        public void StartReadingCOVStreamValue(Guid requestId, Guid id)
+        public void StartReadingCOVStreamValue(Guid id)
         {
             System.Threading.Tasks.Task.Run(() =>
             {
                 COVStreamValues.Clear();
                 KeepCOVStreamAlive = true;
-                GetCOVStream(requestId, id);
+                GetCOVStream(id);
                 UpdateCOVStreamValue();
             });
         }
@@ -1130,6 +1177,22 @@ namespace JohnsonControls.Metasys.BasicServices
             StreamingClient.UnsubscribeAsync(requestId);
         }
 
+        /// <inheritdoc />
+        public void StartReadingCOVStreamValueMultiple(IEnumerable<Guid> ids)
+        {
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                COVStreamValues.Clear();
+                KeepCOVStreamAlive = true;
+                GetCOVStreamMultiple(ids);
+                UpdateCOVStreamValue();
+            });
+        }
+
+
+
+
+
         public StreamMessage GetCOVStreamValue()
         {
             return COVStreamValue;
@@ -1138,6 +1201,10 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             return COVStreamValues;
         }
+
+        /// <inheritdoc />
+        public event EventHandler<StreamEventArgs> COVStreamValueChanged;
+
 
         private async void UpdateCOVStreamValue()
         {
@@ -1154,8 +1221,6 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
 
-        /// <inheritdoc />
-        public event EventHandler<StreamEventArgs> COVStreamValueChanged;
 
         protected virtual void OnCOVStreamValueChanged(StreamEventArgs e)
         {

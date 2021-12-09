@@ -3,8 +3,10 @@ using Flurl;
 using Flurl.Http;
 using JohnsonControls.Metasys.BasicServices.Stream.Token;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Globalization;
 using System.IO;
@@ -35,6 +37,7 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
         private readonly Dictionary<Guid, SubscriptionInfo> _requestIdToSubscriptionMap = new Dictionary<Guid, SubscriptionInfo>();
         private readonly Dictionary<string, Guid> _subscriptionIdToRequestIdMap = new Dictionary<string, Guid>();
         private readonly Dictionary<string, List<Guid>> _objectAndAttrToRequestIdsMap = new Dictionary<string, List<Guid>>();
+        private  List<Subscription> _subscriptionRequest = new List<Subscription>();
 
         private readonly List<Guid> _requestIds = new List<Guid>();
         private TaskCompletionSource<bool> _initializeStreamTaskSource = new TaskCompletionSource<bool>();
@@ -50,7 +53,15 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
         public CultureInfo Culture { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public AccessToken AccessToken { get; set; }
+
         public string _token { get; set; }
+
+        public List<Subscription> Subscriptions
+        {
+            get { return _subscriptionRequest; }
+            set { _subscriptionRequest = value; }
+        }
+
 
         private EventSourceReader _source;
         private string _streamId;
@@ -69,6 +80,57 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
             httpClientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
             _handler = httpClientHandler;
+            //_subscriptionRequest = LoadSubscriptions();
+        }
+
+        public void LoadCOVSubscriptions(Guid id)
+        {
+            if (id != null)
+            {
+                var subscription = new Subscription();
+                subscription.RelativeUrl = "api/" + Version.ToString() + "/objects/" + id.ToString() + "/attributes/presentValue";
+                subscription.Method = "GET";
+                subscription.Body = null;
+
+                _subscriptionRequest.Clear();
+                _subscriptionRequest.Add(subscription);
+            }
+        }
+
+        public void LoadCOVSubscriptions(IEnumerable<Guid> ids)
+        {
+            if ((ids != null) && (ids.Count() > 0)) 
+            {
+                var body = new Newtonsoft.Json.Linq.JObject();
+                body.Add("method", "GET");
+                var requests = new Newtonsoft.Json.Linq.JArray();
+
+                // Concatenate batch segment to use batch request and prepare the list of requests  
+                int index = 1;
+                foreach (var i in ids)
+                {
+                    var request = new Newtonsoft.Json.Linq.JObject();
+                    request.Add("id", index.ToString());
+                    request.Add("relativeUrl", i.ToString() + "/attributes/presentValue");
+
+                    requests.Add(request);
+                    index += 1;
+                }
+                body.Add("requests", requests);
+
+                var subscription = new Subscription();
+                subscription.RelativeUrl = "api/" + Version.ToString() + "/objects/batch";
+                subscription.Method = "POST";
+                subscription.Body = body;
+
+                _subscriptionRequest.Clear();
+                _subscriptionRequest.Add(subscription);
+            }
+        }
+
+        public List<Guid> GetRequestIds()
+        {
+            return _requestIds;
         }
 
         public void Dispose()
@@ -143,61 +205,70 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
             return await initializeStreamTask;
         }
 
-        public async Task<string> SubscribeAsync(Guid requestId, string method, string relativeUrl,
-           Dictionary<string, string> query = null, dynamic body= null)
+        public async Task<string> SubscribeAsync(Guid requestId, string method, string relativeUrl, Dictionary<string, string> query = null, dynamic body= null)
         {
             string bodyContent = body != null ? JsonConvert.SerializeObject(body) : null;
-        
-            var content = bodyContent != null
-                                 ? new StringContent(bodyContent, Encoding.UTF8, "Json")
-                                 : null;
-            string token = _token;
+            string subscriptionInfoId = "";
 
-
-            if (String.IsNullOrEmpty(_token))
+            try
             {
-                //var tokenResponse = await _tokenProvider.GetAccessTokenAsync();
-                //token = tokenResponse.AccessToken;
+                var content = bodyContent != null
+                                     ? new StringContent(bodyContent, Encoding.UTF8, "application/json")
+                                     : null;
 
-                if (AccessToken != null)
+                string token = _token;
+
+                if (String.IsNullOrEmpty(_token))
                 {
-                    _token = AccessToken.Token.Replace("Bearer ", "");
+                    //var tokenResponse = await _tokenProvider.GetAccessTokenAsync();
+                    //token = tokenResponse.AccessToken;
+
+                    if (AccessToken != null)
+                    {
+                        _token = AccessToken.Token.Replace("Bearer ", "");
+                    }
+                }
+
+                HttpResponseMessage response = await _serverUrl
+                    .AppendPathSegment(relativeUrl)
+                    .SetQueryParams(query)
+                    .WithHeader("METASYS-SUBSCRIBE", _streamId)
+                    .WithOAuthBearerToken(token)
+                    .SendAsync(new HttpMethod(method), content);
+
+                response.EnsureSuccessStatusCode();
+
+                //IFlurlResponse response = await _serverUrl
+                //   .AppendPathSegment(relativeUrl)
+                //   .SetQueryParams(query)
+                //   .WithHeader("METASYS-SUBSCRIBE", _streamId)
+                //   .WithOAuthBearerToken(token)
+                //   .SendAsync(new HttpMethod(method), content);
+
+                // response.ResponseMessage.EnsureSuccessStatusCode();
+                //var subscriptionHeader = response.Headers.GetAll("METASYS-SUBSCRIPTION-LOCATION").First();
+                // var subscriptionInfo = new SubscriptionInfo(subscriptionHeader);
+
+                IEnumerable<string> streamHeaders;
+                if(response.Headers.TryGetValues("METASYS-SUBSCRIPTION-LOCATION", out streamHeaders))
+                {
+                    var subscriptionHeader = streamHeaders.First();
+                    var subscriptionInfo = new SubscriptionInfo(subscriptionHeader);
+
+                    CreateRequestMapping(requestId, relativeUrl, bodyContent);
+
+                    _requestIdToSubscriptionMap.Add(requestId, subscriptionInfo);
+                    _subscriptionIdToRequestIdMap.Add(subscriptionInfo.Id, requestId);
+                    subscriptionInfoId = subscriptionInfo.Id;
                 }
             }
-
-            HttpResponseMessage response = await _serverUrl
-                .AppendPathSegment(relativeUrl)
-                .SetQueryParams(query)
-                .WithHeader("METASYS-SUBSCRIBE", _streamId)
-                .WithOAuthBearerToken(token)
-                .SendAsync(new HttpMethod(method), content);
-
-            response.EnsureSuccessStatusCode();
-
-            //IFlurlResponse response = await _serverUrl
-            //   .AppendPathSegment(relativeUrl)
-            //   .SetQueryParams(query)
-            //   .WithHeader("METASYS-SUBSCRIBE", _streamId)
-            //   .WithOAuthBearerToken(token)
-            //   .SendAsync(new HttpMethod(method), content);
-
-            // response.ResponseMessage.EnsureSuccessStatusCode();
-            //var subscriptionHeader = response.Headers.GetAll("METASYS-SUBSCRIPTION-LOCATION").First();
-            // var subscriptionInfo = new SubscriptionInfo(subscriptionHeader);
-
-            IEnumerable<string> streamHeaders;
-            string subscriptionInfoId = "";
-            if(response.Headers.TryGetValues("METASYS-SUBSCRIPTION-LOCATION", out streamHeaders))
+            catch (Exception ex)
             {
-                var subscriptionHeader = streamHeaders.First();
-                var subscriptionInfo = new SubscriptionInfo(subscriptionHeader);
-
-                CreateRequestMapping(requestId, relativeUrl, bodyContent);
-
-                _requestIdToSubscriptionMap.Add(requestId, subscriptionInfo);
-                _subscriptionIdToRequestIdMap.Add(subscriptionInfo.Id, requestId);
-                subscriptionInfoId = subscriptionInfo.Id;
+                Debug.Write(ex.Message);
             }
+
+
+
             return subscriptionInfoId;
         }
 
@@ -290,6 +361,7 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
 
                 case "object.values.update":
                     _ = HandleAttibuteValueSubscriptionAsync(e);
+                    //_ = HandleAttibuteValueSubscription2Async(e);
                     break;
 
                 case "activity.audit.new":
@@ -335,7 +407,6 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
         private async Task HandleAttibuteValueSubscriptionAsync(EventSourceMessageEventArgs e)
         {
             var covObjects = JsonConvert.DeserializeObject<ExpandoObject>(e.Message);
-            //var covObjects = Newtonsoft.Json.JsonConvert.DeserializeObject(e.Message);
             foreach (KeyValuePair<string, object> kvp in covObjects)
             {
                 if (kvp.Key.ToLower().Equals("item"))
@@ -362,26 +433,95 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
             }
         }
 
+        private async Task HandleAttibuteValueSubscription2Async(EventSourceMessageEventArgs e)
+        {
+            String msg = e.Message;
+            JObject covObjects = JObject.Parse(msg);
+            if (covObjects != null)
+            {
+                if (covObjects.ContainsKey("item") && (covObjects["item"] != null))
+                {
+                    String id = GetJObjectValue(covObjects, "item", "id");
+                    var objectId = (id != String.Empty) ? new Guid(id) : Guid.Empty;
+                    var attrId = "presentValue";
+                    if (!string.IsNullOrEmpty(attrId) && _objectAndAttrToRequestIdsMap.ContainsKey($"{objectId}:{attrId}"))
+                    {
+                        foreach (var requestId in _objectAndAttrToRequestIdsMap[$"{objectId}:{attrId}"])
+                        {
+                            var cov = new StreamMessage(e.Event, e.Message); // messages missing stream id, can't correlate to specific request id
+                            cov.RequestId = requestId;
+                            cov.StreamId = e.Id;
+                            cov.AttributeName = attrId;
+                            if (_requestIdToSubscriptionMap.TryGetValue(requestId, out var subscriptioninfo))
+                                cov.SubscriptionId = subscriptioninfo.Id;
+                            // _logger.LogDebug("Writing COV to channel...");
+                            await _channel.Writer.WriteAsync(cov);
+                        }
+                    }
+
+                }
+            }
+        }
+        private string GetJObjectValue(JObject jObj, string group, string field)
+        {
+            string res = string.Empty;
+            try
+            {
+                if (jObj != null)
+                {
+                    if (jObj.ContainsKey(group) && (jObj[group] != null))
+                    {
+                        JObject grp = (JObject)jObj[group];
+
+                        if ((grp.ContainsKey(field)) && (grp[field] != null))
+                        {
+                            res = grp[field].Value<string>();
+                        }
+                    };
+                };
+            }
+            catch (ArgumentNullException e)
+            {
+                // Something went wrong on object parsing
+                throw new MetasysObjectException(e);
+            }
+            return res;
+        }
+
         public List<StreamMessage> UpdateCOVStremValuesList(List<StreamMessage> values, StreamMessage msg)
         {
-            List<StreamMessage> res = values;
-            if (res.Count == 0)
+            //List<StreamMessage> res = values;
+            if (values.Count == 0)
             {
-                if (msg.Event != "hello") { res.Add(msg); }           
+                if (msg.Event != "hello") values.Add(msg);            
             }
             else
             {
-                var newValues = values.Where(c => c.RequestId == msg.RequestId && c.Id == msg.Id).Select(c => { c.Data = msg.Data; return c; });
-                if (newValues is null)
+                var updated = false;
+                foreach (StreamMessage m in values)
                 {
-                    res.Add(msg);
+                    if (m.RequestId == msg.RequestId && m.Id == msg.Id)
+                    {
+                        m.Data = msg.Data;
+                        updated = true;
+                        break;
+                    }
                 }
-                else
+                if (!updated)
                 {
-                    res = newValues.ToList();
+                    values.Add(msg);
                 }
+                //var newValues = values.Where(c => c.RequestId == msg.RequestId & c.Id == msg.Id).Select(c => { c.Data = msg.Data; return c; });
+                //if (newValues is null)
+                //{
+                //    res.Add(msg);
+                //}
+                //else
+                //{
+                //    res = newValues.ToList();
+                //}
             }
-            return res;
+            return values;
         }
 
         private async Task HandleHelloEventAsync(EventSourceMessageEventArgs e)
@@ -390,9 +530,22 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
             _streamId = Newtonsoft.Json.Linq.JToken.Parse(e.Message).ToString();
             var st = new StreamMessage(e.Event, e.Message);
             await _channel.Writer.WriteAsync(st);
+            SubscribeAllRequest();
             _initializeStreamTaskSource.TrySetResult(true);            
         }
 
+        private void SubscribeAllRequest()
+        {
+            _subscriptionRequest.ForEach(async request =>
+            {
+                var requestId = Guid.NewGuid();
+                _ = await SubscribeAsync(requestId, request.Method, request.RelativeUrl, request.Params, request.Body);
+                _requestIds.Add(requestId);
+            });
+
+            Thread.Sleep(3000);// wait for subcriptions to complete
+            //_initializeStreamTaskSource.TrySetResult(true);
+        }
 
         private async Task UnsubscribeInternalAsync(SubscriptionInfo subscriptionInfo)
         {
@@ -421,19 +574,19 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
             }
             else if (relativeUrl.StartsWith($"api/{Version}/objects/batch"))
             {
-                //if (!string.IsNullOrEmpty(bodyContent))
-                //{
-                //    var attributeBatch = JsonConvert.DeserializeObject<AttributeBatchModel>(bodyContent);
-                //    foreach (var request in attributeBatch.requests)
-                //    {
-                //        var pieces = request.relativeUrl.Split('/');
-                //        var combinedId = $"{pieces[0]}:{pieces[2]}";
-                //        if (!_objectAndAttrToRequestIdsMap.TryGetValue(combinedId, out var requestIds))
-                //        {
-                //            _objectAndAttrToRequestIdsMap.Add(combinedId, new List<Guid>() { requestId });
-                //        }
-                //    }
-                //}
+                if (!string.IsNullOrEmpty(bodyContent))
+                {
+                    var attributeBatch = JsonConvert.DeserializeObject<AttributeBatchModel>(bodyContent);
+                    foreach (var request in attributeBatch.requests)
+                    {
+                        var pieces = request.relativeUrl.Split('/');
+                        var combinedId = $"{pieces[0]}:{pieces[2]}";
+                        if (!_objectAndAttrToRequestIdsMap.TryGetValue(combinedId, out var requestIds))
+                        {
+                            _objectAndAttrToRequestIdsMap.Add(combinedId, new List<Guid>() { requestId });
+                        }
+                    }
+                }
             }
             else if (relativeUrl.StartsWith($"api/{Version}/objects")) // ex: api/v4/objects/9aa3f0cc-e7bb-59f2-97b1-56ad9d406051/attributes/presentValue
             {
@@ -446,7 +599,14 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
             }
         }
 
-        
+        //private static List<Subscription> LoadSubscriptions()
+        //{
+        //    using StreamReader r = new StreamReader(@"Agent\Configuration\SubscriptionConfig.json");
+        //    string json = r.ReadToEnd();
+        //    SubscriptionModel SubscriptionModel = JsonConvert.DeserializeObject<SubscriptionModel>(json);
+        //    return SubscriptionModel.Subscriptions;
+        //}
+
 
         private static int GetDelayMS(DateTime expireTime)
         {

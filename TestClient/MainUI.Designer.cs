@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.rcbToken = new System.Windows.Forms.RichTextBox();
             this.btnLogin = new System.Windows.Forms.Button();
             this.lblPassword = new System.Windows.Forms.Label();
@@ -274,7 +274,8 @@
             this.TpgTrend = new System.Windows.Forms.TabPage();
             this.TpgStream = new System.Windows.Forms.TabPage();
             this.TabStream = new System.Windows.Forms.TabControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.TpgGetCOVStream = new System.Windows.Forms.TabPage();
+            this.PrgStreamCOV = new System.Windows.Forms.PropertyGrid();
             this.DgvStreamCOV = new System.Windows.Forms.DataGridView();
             this.TxtStream_RequestId = new System.Windows.Forms.TextBox();
             this.LblStream_RequestId = new System.Windows.Forms.Label();
@@ -284,8 +285,8 @@
             this.button3 = new System.Windows.Forms.Button();
             this.RtbCOVStreamValue = new System.Windows.Forms.RichTextBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.BtnStream_StartCollCOVStreamValue = new System.Windows.Forms.Button();
+            this.TpgGetCOVStreamMultiple = new System.Windows.Forms.TabPage();
             this.TpgMisc = new System.Windows.Forms.TabPage();
             this.TabMiscellanea = new System.Windows.Forms.TabControl();
             this.TpgMisc_GetServerTime = new System.Windows.Forms.TabPage();
@@ -304,7 +305,15 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.TmrRefreshCOVStreamValue = new System.Windows.Forms.Timer(this.components);
-            this.PrgStreamCOV = new System.Windows.Forms.PropertyGrid();
+            this.DgvStreamCOVMulti = new System.Windows.Forms.DataGridView();
+            this.TxtStreamMulti_RequestId = new System.Windows.Forms.TextBox();
+            this.LblStreamMulti_RequestId = new System.Windows.Forms.Label();
+            this.LblStreamMulti_ObjectGuid = new System.Windows.Forms.Label();
+            this.TxtStreamMulti_ObjectGuid1 = new System.Windows.Forms.TextBox();
+            this.button4 = new System.Windows.Forms.Button();
+            this.BtnStreamMulti_StartCollCOVStreamValue = new System.Windows.Forms.Button();
+            this.TxtStreamMulti_ObjectGuid2 = new System.Windows.Forms.TextBox();
+            this.TmrRefreshCOVStreamValueMulti = new System.Windows.Forms.Timer(this.components);
             this.GrbGetAlarms.SuspendLayout();
             this.GrbAlarm_Filter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvAlarm)).BeginInit();
@@ -376,12 +385,14 @@
             this.TabSpace.SuspendLayout();
             this.TpgStream.SuspendLayout();
             this.TabStream.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.TpgGetCOVStream.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvStreamCOV)).BeginInit();
+            this.TpgGetCOVStreamMultiple.SuspendLayout();
             this.TpgMisc.SuspendLayout();
             this.TabMiscellanea.SuspendLayout();
             this.TpgMisc_GetServerTime.SuspendLayout();
             this.TpgMisc_Localize.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvStreamCOVMulti)).BeginInit();
             this.SuspendLayout();
             // 
             // rcbToken
@@ -1110,33 +1121,33 @@
             this.DgvAlarm_GFO.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvAlarm_GFO.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvAlarm_GFO.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.DgvAlarm_GFO.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DgvAlarm_GFO.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DgvAlarm_GFO.DefaultCellStyle = dataGridViewCellStyle8;
             this.DgvAlarm_GFO.Location = new System.Drawing.Point(6, 136);
             this.DgvAlarm_GFO.Name = "DgvAlarm_GFO";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvAlarm_GFO.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvAlarm_GFO.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.DgvAlarm_GFO.Size = new System.Drawing.Size(1048, 257);
             this.DgvAlarm_GFO.TabIndex = 32;
             // 
@@ -1727,33 +1738,33 @@
             this.DgvAudit_GFO.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvAudit_GFO.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvAudit_GFO.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.DgvAudit_GFO.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DgvAudit_GFO.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DgvAudit_GFO.DefaultCellStyle = dataGridViewCellStyle11;
             this.DgvAudit_GFO.Location = new System.Drawing.Point(6, 136);
             this.DgvAudit_GFO.Name = "DgvAudit_GFO";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvAudit_GFO.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvAudit_GFO.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.DgvAudit_GFO.Size = new System.Drawing.Size(1048, 257);
             this.DgvAudit_GFO.TabIndex = 32;
             // 
@@ -2931,8 +2942,8 @@
             // TabStream
             // 
             this.TabStream.Appearance = System.Windows.Forms.TabAppearance.Buttons;
-            this.TabStream.Controls.Add(this.tabPage3);
-            this.TabStream.Controls.Add(this.tabPage4);
+            this.TabStream.Controls.Add(this.TpgGetCOVStream);
+            this.TabStream.Controls.Add(this.TpgGetCOVStreamMultiple);
             this.TabStream.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabStream.ItemSize = new System.Drawing.Size(58, 25);
             this.TabStream.Location = new System.Drawing.Point(3, 3);
@@ -2941,26 +2952,35 @@
             this.TabStream.Size = new System.Drawing.Size(1074, 444);
             this.TabStream.TabIndex = 0;
             // 
-            // tabPage3
+            // TpgGetCOVStream
             // 
-            this.tabPage3.Controls.Add(this.PrgStreamCOV);
-            this.tabPage3.Controls.Add(this.DgvStreamCOV);
-            this.tabPage3.Controls.Add(this.TxtStream_RequestId);
-            this.tabPage3.Controls.Add(this.LblStream_RequestId);
-            this.tabPage3.Controls.Add(this.LblStream_ObjectGuid);
-            this.tabPage3.Controls.Add(this.TxtStream_ObjectGuid);
-            this.tabPage3.Controls.Add(this.BtnStreamConnect);
-            this.tabPage3.Controls.Add(this.button3);
-            this.tabPage3.Controls.Add(this.RtbCOVStreamValue);
-            this.tabPage3.Controls.Add(this.button2);
-            this.tabPage3.Controls.Add(this.button1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 29);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1066, 411);
-            this.tabPage3.TabIndex = 0;
-            this.tabPage3.Text = "tabPage3";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.TpgGetCOVStream.Controls.Add(this.PrgStreamCOV);
+            this.TpgGetCOVStream.Controls.Add(this.DgvStreamCOV);
+            this.TpgGetCOVStream.Controls.Add(this.TxtStream_RequestId);
+            this.TpgGetCOVStream.Controls.Add(this.LblStream_RequestId);
+            this.TpgGetCOVStream.Controls.Add(this.LblStream_ObjectGuid);
+            this.TpgGetCOVStream.Controls.Add(this.TxtStream_ObjectGuid);
+            this.TpgGetCOVStream.Controls.Add(this.BtnStreamConnect);
+            this.TpgGetCOVStream.Controls.Add(this.button3);
+            this.TpgGetCOVStream.Controls.Add(this.RtbCOVStreamValue);
+            this.TpgGetCOVStream.Controls.Add(this.button2);
+            this.TpgGetCOVStream.Controls.Add(this.BtnStream_StartCollCOVStreamValue);
+            this.TpgGetCOVStream.Location = new System.Drawing.Point(4, 29);
+            this.TpgGetCOVStream.Name = "TpgGetCOVStream";
+            this.TpgGetCOVStream.Padding = new System.Windows.Forms.Padding(3);
+            this.TpgGetCOVStream.Size = new System.Drawing.Size(1066, 411);
+            this.TpgGetCOVStream.TabIndex = 0;
+            this.TpgGetCOVStream.Text = "GetCOVStream";
+            this.TpgGetCOVStream.UseVisualStyleBackColor = true;
+            // 
+            // PrgStreamCOV
+            // 
+            this.PrgStreamCOV.HelpVisible = false;
+            this.PrgStreamCOV.Location = new System.Drawing.Point(210, 66);
+            this.PrgStreamCOV.Name = "PrgStreamCOV";
+            this.PrgStreamCOV.Size = new System.Drawing.Size(425, 158);
+            this.PrgStreamCOV.TabIndex = 10;
+            this.PrgStreamCOV.ToolbarVisible = false;
             // 
             // DgvStreamCOV
             // 
@@ -3017,7 +3037,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(17, 137);
+            this.button3.Location = new System.Drawing.Point(15, 124);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(178, 23);
             this.button3.TabIndex = 3;
@@ -3035,7 +3055,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(17, 108);
+            this.button2.Location = new System.Drawing.Point(15, 95);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(178, 23);
             this.button2.TabIndex = 1;
@@ -3043,25 +3063,33 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
-            // button1
+            // BtnStream_StartCollCOVStreamValue
             // 
-            this.button1.Location = new System.Drawing.Point(15, 66);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(178, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "StartCollectingCOVStreamValue";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            this.BtnStream_StartCollCOVStreamValue.Location = new System.Drawing.Point(15, 66);
+            this.BtnStream_StartCollCOVStreamValue.Name = "BtnStream_StartCollCOVStreamValue";
+            this.BtnStream_StartCollCOVStreamValue.Size = new System.Drawing.Size(178, 23);
+            this.BtnStream_StartCollCOVStreamValue.TabIndex = 0;
+            this.BtnStream_StartCollCOVStreamValue.Text = "StartCollectingCOVStreamValue";
+            this.BtnStream_StartCollCOVStreamValue.UseVisualStyleBackColor = true;
+            this.BtnStream_StartCollCOVStreamValue.Click += new System.EventHandler(this.Button1_Click);
             // 
-            // tabPage4
+            // TpgGetCOVStreamMultiple
             // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 29);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1066, 411);
-            this.tabPage4.TabIndex = 1;
-            this.tabPage4.Text = "tabPage4";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.TpgGetCOVStreamMultiple.Controls.Add(this.TxtStreamMulti_ObjectGuid2);
+            this.TpgGetCOVStreamMultiple.Controls.Add(this.DgvStreamCOVMulti);
+            this.TpgGetCOVStreamMultiple.Controls.Add(this.TxtStreamMulti_RequestId);
+            this.TpgGetCOVStreamMultiple.Controls.Add(this.LblStreamMulti_RequestId);
+            this.TpgGetCOVStreamMultiple.Controls.Add(this.LblStreamMulti_ObjectGuid);
+            this.TpgGetCOVStreamMultiple.Controls.Add(this.TxtStreamMulti_ObjectGuid1);
+            this.TpgGetCOVStreamMultiple.Controls.Add(this.button4);
+            this.TpgGetCOVStreamMultiple.Controls.Add(this.BtnStreamMulti_StartCollCOVStreamValue);
+            this.TpgGetCOVStreamMultiple.Location = new System.Drawing.Point(4, 29);
+            this.TpgGetCOVStreamMultiple.Name = "TpgGetCOVStreamMultiple";
+            this.TpgGetCOVStreamMultiple.Padding = new System.Windows.Forms.Padding(3);
+            this.TpgGetCOVStreamMultiple.Size = new System.Drawing.Size(1066, 411);
+            this.TpgGetCOVStreamMultiple.TabIndex = 1;
+            this.TpgGetCOVStreamMultiple.Text = "GetCOVStreamMultiple";
+            this.TpgGetCOVStreamMultiple.UseVisualStyleBackColor = true;
             // 
             // TpgMisc
             // 
@@ -3236,14 +3264,79 @@
             this.TmrRefreshCOVStreamValue.Interval = 1000;
             this.TmrRefreshCOVStreamValue.Tick += new System.EventHandler(this.TmrRefreshCOVStreamValue_Tick);
             // 
-            // PrgStreamCOV
+            // DgvStreamCOVMulti
             // 
-            this.PrgStreamCOV.HelpVisible = false;
-            this.PrgStreamCOV.Location = new System.Drawing.Point(210, 66);
-            this.PrgStreamCOV.Name = "PrgStreamCOV";
-            this.PrgStreamCOV.Size = new System.Drawing.Size(425, 158);
-            this.PrgStreamCOV.TabIndex = 10;
-            this.PrgStreamCOV.ToolbarVisible = false;
+            this.DgvStreamCOVMulti.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvStreamCOVMulti.Location = new System.Drawing.Point(211, 69);
+            this.DgvStreamCOVMulti.Name = "DgvStreamCOVMulti";
+            this.DgvStreamCOVMulti.Size = new System.Drawing.Size(838, 333);
+            this.DgvStreamCOVMulti.TabIndex = 18;
+            // 
+            // TxtStreamMulti_RequestId
+            // 
+            this.TxtStreamMulti_RequestId.Location = new System.Drawing.Point(209, 35);
+            this.TxtStreamMulti_RequestId.Name = "TxtStreamMulti_RequestId";
+            this.TxtStreamMulti_RequestId.ReadOnly = true;
+            this.TxtStreamMulti_RequestId.Size = new System.Drawing.Size(236, 20);
+            this.TxtStreamMulti_RequestId.TabIndex = 17;
+            // 
+            // LblStreamMulti_RequestId
+            // 
+            this.LblStreamMulti_RequestId.AutoSize = true;
+            this.LblStreamMulti_RequestId.Location = new System.Drawing.Point(130, 37);
+            this.LblStreamMulti_RequestId.Name = "LblStreamMulti_RequestId";
+            this.LblStreamMulti_RequestId.Size = new System.Drawing.Size(64, 13);
+            this.LblStreamMulti_RequestId.TabIndex = 16;
+            this.LblStreamMulti_RequestId.Text = "Request ID:";
+            // 
+            // LblStreamMulti_ObjectGuid
+            // 
+            this.LblStreamMulti_ObjectGuid.AutoSize = true;
+            this.LblStreamMulti_ObjectGuid.Location = new System.Drawing.Point(130, 12);
+            this.LblStreamMulti_ObjectGuid.Name = "LblStreamMulti_ObjectGuid";
+            this.LblStreamMulti_ObjectGuid.Size = new System.Drawing.Size(71, 13);
+            this.LblStreamMulti_ObjectGuid.TabIndex = 15;
+            this.LblStreamMulti_ObjectGuid.Text = "Object Guids:";
+            // 
+            // TxtStreamMulti_ObjectGuid1
+            // 
+            this.TxtStreamMulti_ObjectGuid1.Location = new System.Drawing.Point(209, 9);
+            this.TxtStreamMulti_ObjectGuid1.Name = "TxtStreamMulti_ObjectGuid1";
+            this.TxtStreamMulti_ObjectGuid1.Size = new System.Drawing.Size(236, 20);
+            this.TxtStreamMulti_ObjectGuid1.TabIndex = 14;
+            this.TxtStreamMulti_ObjectGuid1.Text = "453be0a5-2027-5b01-a088-b16ea8a45556";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(16, 127);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(178, 23);
+            this.button4.TabIndex = 13;
+            this.button4.Text = "GetCOVStreamValue";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // BtnStreamMulti_StartCollCOVStreamValue
+            // 
+            this.BtnStreamMulti_StartCollCOVStreamValue.Location = new System.Drawing.Point(16, 69);
+            this.BtnStreamMulti_StartCollCOVStreamValue.Name = "BtnStreamMulti_StartCollCOVStreamValue";
+            this.BtnStreamMulti_StartCollCOVStreamValue.Size = new System.Drawing.Size(178, 23);
+            this.BtnStreamMulti_StartCollCOVStreamValue.TabIndex = 11;
+            this.BtnStreamMulti_StartCollCOVStreamValue.Text = "StartCollectingCOVStreamValue";
+            this.BtnStreamMulti_StartCollCOVStreamValue.UseVisualStyleBackColor = true;
+            this.BtnStreamMulti_StartCollCOVStreamValue.Click += new System.EventHandler(this.BtnStreamMulti_StartCollCOVStreamValue_Click);
+            // 
+            // TxtStreamMulti_ObjectGuid2
+            // 
+            this.TxtStreamMulti_ObjectGuid2.Location = new System.Drawing.Point(465, 9);
+            this.TxtStreamMulti_ObjectGuid2.Name = "TxtStreamMulti_ObjectGuid2";
+            this.TxtStreamMulti_ObjectGuid2.Size = new System.Drawing.Size(236, 20);
+            this.TxtStreamMulti_ObjectGuid2.TabIndex = 20;
+            this.TxtStreamMulti_ObjectGuid2.Text = "16580b9f-b82c-5040-9ab4-e68766f9b306";
+            // 
+            // TmrRefreshCOVStreamValueMulti
+            // 
+            this.TmrRefreshCOVStreamValueMulti.Interval = 1000;
+            this.TmrRefreshCOVStreamValueMulti.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // MainUI
             // 
@@ -3355,15 +3448,18 @@
             this.TabSpace.ResumeLayout(false);
             this.TpgStream.ResumeLayout(false);
             this.TabStream.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.TpgGetCOVStream.ResumeLayout(false);
+            this.TpgGetCOVStream.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvStreamCOV)).EndInit();
+            this.TpgGetCOVStreamMultiple.ResumeLayout(false);
+            this.TpgGetCOVStreamMultiple.PerformLayout();
             this.TpgMisc.ResumeLayout(false);
             this.TabMiscellanea.ResumeLayout(false);
             this.TpgMisc_GetServerTime.ResumeLayout(false);
             this.TpgMisc_GetServerTime.PerformLayout();
             this.TpgMisc_Localize.ResumeLayout(false);
             this.TpgMisc_Localize.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvStreamCOVMulti)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -3626,10 +3722,10 @@
         private System.Windows.Forms.CheckBox ChkAudit_ActionType_Error;
         private System.Windows.Forms.CheckBox ChkAudit_ActionType_Subsystem;
         private System.Windows.Forms.TabControl TabStream;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage TpgGetCOVStream;
+        private System.Windows.Forms.TabPage TpgGetCOVStreamMultiple;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button BtnStream_StartCollCOVStreamValue;
         private System.Windows.Forms.RichTextBox RtbCOVStreamValue;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Timer TmrRefreshCOVStreamValue;
@@ -3640,6 +3736,15 @@
         private System.Windows.Forms.Label LblStream_RequestId;
         private System.Windows.Forms.DataGridView DgvStreamCOV;
         private System.Windows.Forms.PropertyGrid PrgStreamCOV;
+        private System.Windows.Forms.DataGridView DgvStreamCOVMulti;
+        private System.Windows.Forms.TextBox TxtStreamMulti_RequestId;
+        private System.Windows.Forms.Label LblStreamMulti_RequestId;
+        private System.Windows.Forms.Label LblStreamMulti_ObjectGuid;
+        private System.Windows.Forms.TextBox TxtStreamMulti_ObjectGuid1;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button BtnStreamMulti_StartCollCOVStreamValue;
+        private System.Windows.Forms.TextBox TxtStreamMulti_ObjectGuid2;
+        private System.Windows.Forms.Timer TmrRefreshCOVStreamValueMulti;
     }
 }
 

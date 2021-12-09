@@ -78,9 +78,12 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
             }
         }
 
-        public StreamMessage(string eventType, string data)
+        /// <summary>
+        /// Constructor of the class
+        /// </summary>
+        public StreamMessage(string @event, string data)
         {
-            Event = eventType;
+            Event = @event;
             Data = data;
         }
 
@@ -104,7 +107,7 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
             {
                 if (jObj != null)
                 {
-                    if ((jObj.ContainsKey(group) != null) && (jObj[group] != null))
+                    if (jObj.ContainsKey(group) && (jObj[group] != null))
                     {
                         JObject grp = (JObject)jObj[group];
                         

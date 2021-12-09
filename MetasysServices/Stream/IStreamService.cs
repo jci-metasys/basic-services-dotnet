@@ -16,11 +16,16 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
     {
         ChannelReader<StreamMessage> ResultChannel { get; }
         Task<bool> ConnectAsync();
-        Task<string> SubscribeAsync(Guid requestId, string method, string relativeUrl,
-            Dictionary<string, string> query = null, dynamic body = null);
+        Task<string> SubscribeAsync(Guid requestId, string method, string relativeUrl, Dictionary<string, string> query = null, dynamic body = null);
         Task UnsubscribeAsync(Guid requestId);
         AccessToken AccessToken { get; set; }
         string _token { get; set; }
+
+        void LoadCOVSubscriptions(Guid id);
+
+        void LoadCOVSubscriptions(IEnumerable<Guid> ids);
+
+        List<Guid> GetRequestIds();
 
         List<StreamMessage> UpdateCOVStremValuesList(List<StreamMessage> values, StreamMessage msg);
     }
