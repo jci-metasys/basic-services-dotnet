@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using JohnsonControls.Metasys.BasicServices.Stream;
+using JohnsonControls.Metasys.BasicServices;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -326,6 +326,11 @@ namespace JohnsonControls.Metasys.BasicServices
         IAuditService Audits { get; set; }
 
         /// <summary>
+        /// Services for Streams.
+        /// </summary>
+        IStreamService Streams { get; set; }
+
+        /// <summary>
         /// Attempts to login to the given host using Credential Manager and retrieve an access token.
         /// </summary>
         /// <param name="credManTarget">The Credential Manager target where to pick the credentials.</param>
@@ -346,7 +351,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="IMetasysClient.GetServerTime()"/>
         Task<DateTime> GetServerTimeAsync();
 
-        IStreamService StreamingClient { get; set; }
+
+        //==========================================================================================================================
+
+
 
         /// <summary>
         /// Connect the Stream Client.
@@ -389,34 +397,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         Task<StreamMessage> GetSingleStreamingChannelAsync();
 
-        /// <summary>
-        /// Start Collecting COV Stream Value.
-        /// </summary>
-        void StartReadingCOVStreamValue(Guid id);
 
-        /// <summary>
-        /// Stop Collecting COV Stream Value.
-        /// </summary>
-        void StopReadingCOVStreamValue(Guid requestId);
-
-        /// <summary>
-        /// Start Collecting COV Stream Value for Multiple objects.
-        /// </summary>
-        void StartReadingCOVStreamValueMultiple(IEnumerable<Guid> ids);
-
-        /// <summary>
-        /// GetCOVStreamValue.
-        /// </summary>
-        StreamMessage GetCOVStreamValue();
-
-        /// <summary>
-        /// GetCOVStreamValues.
-        /// </summary>
-        List<StreamMessage> GetCOVStreamValues();
-
-        /// <summary>
-        /// Event fired when a COV Stream value has changed
-        /// </summary>
-        event EventHandler<StreamEventArgs> COVStreamValueChanged;
     }
 }

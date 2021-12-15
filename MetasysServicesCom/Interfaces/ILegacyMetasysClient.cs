@@ -331,5 +331,10 @@ namespace JohnsonControls.Metasys.ComServices
         /// The enumeration key of the en-US objectType if found, original resource if not.
         /// </returns>
         string GetObjectTypeEnumeration(string resource);
+
+        /// <summary>
+        /// Start the method that reads the COV values using the stream mechanism.
+        /// </summary>
+        void StartReadingStreamCOVValues(string id);
     }
 }

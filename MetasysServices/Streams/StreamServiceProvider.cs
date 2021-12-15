@@ -1,7 +1,7 @@
 ﻿using EvtSource;
 using Flurl;
 using Flurl.Http;
-using JohnsonControls.Metasys.BasicServices.Stream.Token;
+using JohnsonControls.Metasys.BasicServices.Token;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -21,9 +21,9 @@ using System.Threading.Tasks;
 using System.Timers;
 
 
-namespace JohnsonControls.Metasys.BasicServices.Stream
+namespace JohnsonControls.Metasys.BasicServices
 {
-    public class StreamingClient : IDisposable, IStreamService
+    public sealed class StreamServiceProvider : IDisposable, IStreamService
     {
         private bool _isDisposed = false;
 
@@ -68,7 +68,7 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
         private System.Timers.Timer _timer;
 
 
-        public StreamingClient(IFlurlClient client, string serverUrl, ApiVersion version)
+        public StreamServiceProvider(IFlurlClient client, string serverUrl, ApiVersion version)
         {
             _client = client;
             _serverUrl = $"https://{serverUrl}";
@@ -126,6 +126,18 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
                 _subscriptionRequest.Clear();
                 _subscriptionRequest.Add(subscription);
             }
+        }
+
+        public void LoadActivitySubscriptions(string activityType)
+        {
+            var subscription = new Subscription();
+            subscription.RelativeUrl = "api/" + Version.ToString() + "/activities";
+            subscription.Method = "GET";
+            subscription.Params = new Dictionary<string, string> { {"ActivityType", activityType } };
+            subscription.Body = null;
+
+            _subscriptionRequest.Clear();
+            _subscriptionRequest.Add(subscription);
         }
 
         public List<Guid> GetRequestIds()
@@ -267,8 +279,6 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
                 Debug.Write(ex.Message);
             }
 
-
-
             return subscriptionInfoId;
         }
 
@@ -330,9 +340,9 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
                 }
 
                 HttpResponseMessage response = await _serverUrl
-                    .AppendPathSegments("api", Version, "stream", "keepalive")
-                    .WithOAuthBearerToken(_token)
-                    .SendAsync(HttpMethod.Get);
+                                        .AppendPathSegments("api", Version, "stream", "keepalive")
+                                        .WithOAuthBearerToken(_token)
+                                        .SendAsync(HttpMethod.Get);
 
                 // response.ResponseMessage.EnsureSuccessStatusCode();
                 response.EnsureSuccessStatusCode();               
@@ -458,7 +468,6 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
                             await _channel.Writer.WriteAsync(cov);
                         }
                     }
-
                 }
             }
         }
@@ -488,9 +497,8 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
             return res;
         }
 
-        public List<StreamMessage> UpdateCOVStremValuesList(List<StreamMessage> values, StreamMessage msg)
+        public List<StreamMessage> UpdateCOVStreamValuesList(List<StreamMessage> values, StreamMessage msg)
         {
-            //List<StreamMessage> res = values;
             if (values.Count == 0)
             {
                 if (msg.Event != "hello") values.Add(msg);            
@@ -500,26 +508,40 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
                 var updated = false;
                 foreach (StreamMessage m in values)
                 {
-                    if (m.RequestId == msg.RequestId && m.Id == msg.Id)
+                    if (m.RequestId == msg.RequestId && m.ObjectId == msg.ObjectId)
                     {
                         m.Data = msg.Data;
                         updated = true;
                         break;
                     }
                 }
-                if (!updated)
-                {
-                    values.Add(msg);
-                }
-                //var newValues = values.Where(c => c.RequestId == msg.RequestId & c.Id == msg.Id).Select(c => { c.Data = msg.Data; return c; });
-                //if (newValues is null)
-                //{
-                //    res.Add(msg);
-                //}
-                //else
-                //{
-                //    res = newValues.ToList();
-                //}
+                if (!updated) values.Add(msg);
+            }
+            return values;
+        }
+        public List<StreamMessage> UpdateAlarmStreamValuesList(List<StreamMessage> values, StreamMessage msg, int maxNumber)
+        {
+            if (values.Count < maxNumber)
+            {
+                if (msg.Event != "hello") values.Add(msg);
+            }
+            else
+            {
+                values.RemoveAt(0);
+                values.Add(msg);
+            }
+            return values;
+        }
+        public List<StreamMessage> UpdateAuditStreamValuesList(List<StreamMessage> values, StreamMessage msg, int maxNumber)
+        {
+            if (values.Count < maxNumber)
+            {
+                if (msg.Event != "hello") values.Add(msg);
+            }
+            else
+            {
+                values.RemoveAt(0);
+                values.Add(msg);
             }
             return values;
         }
@@ -636,5 +658,169 @@ namespace JohnsonControls.Metasys.BasicServices.Stream
             return delayms;
         }
         #endregion
+
+
+        #region "COV Values"
+        /// <summary>
+        /// Variable to keep the list of current COV stream messages
+        /// </summary>
+        private List<StreamMessage> COVValues = new List<StreamMessage>();
+        /// <summary>
+        /// Variable to keep the loop that updated the list of COV Stream values
+        /// </summary>
+        private bool KeepCOVReading = true;
+
+
+        public async Task StartReadingCOVValueAsync(Guid id)
+        {
+            COVValues.Clear();
+            KeepCOVReading = true;
+            LoadCOVSubscriptions(id);
+            await ConnectAsync();
+            UpdateCOVValues();
+        }
+
+        /// <inheritdoc />
+        public async Task StartReadingCOVValuesAsync(IEnumerable<Guid> ids)
+        {
+            COVValues.Clear();
+            KeepCOVReading = true;
+            LoadCOVSubscriptions(ids);
+            await ConnectAsync();
+            UpdateCOVValues();
+        }
+        private async void UpdateCOVValues()
+        {
+            while (KeepCOVReading)
+            {
+                StreamMessage streamMsg = await ResultChannel.ReadAsync(); ;
+                COVValues = UpdateCOVStreamValuesList(COVValues, streamMsg);
+                //Raise the event
+                StreamEventArgs arg = new StreamEventArgs();
+                arg.Value = streamMsg;
+                OnCOVValueChanged(arg);
+            }
+        }
+
+        /// <inheritdoc />
+        public void StopReadingCOVValues(Guid requestId)
+        {
+            KeepCOVReading = false;
+            UnsubscribeAsync(requestId);
+        }
+
+
+        /// <inheritdoc />
+        public List<StreamMessage> GetCOVValues()
+        {
+            return COVValues;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<StreamEventArgs> COVValueChanged;
+        protected void OnCOVValueChanged(StreamEventArgs e)
+        {
+            COVValueChanged?.Invoke(this, e);
+        }
+#endregion
+
+#region "Alarm Events"
+        /// <summary>
+        /// Variable to keep the list of current Alarm event messages
+        /// </summary>
+        private List<StreamMessage> AlarmEvents = new List<StreamMessage>();
+        /// <summary>
+        /// Variable to keep the loop that updated the list of COV Stream values
+        /// </summary>
+        private bool KeepAlarmCollecting = true;
+
+        /// <inheritdoc />
+        public async Task StartCollectingAlarmsAsync(int maxNumber = 100)
+        {
+            AlarmEvents.Clear();
+            KeepAlarmCollecting = true;
+            LoadActivitySubscriptions("Alarm");
+            await ConnectAsync();
+            while (KeepAlarmCollecting)
+            {
+                StreamMessage streamMsg = await ResultChannel.ReadAsync(); ;
+                AlarmEvents = UpdateAlarmStreamValuesList(AlarmEvents, streamMsg, maxNumber);
+                //Raise the event
+                StreamEventArgs arg = new StreamEventArgs();
+                arg.Value = streamMsg;
+                OnAlarmOccurred(arg);
+            }
+        }
+
+        /// <inheritdoc />
+        public void StopCollectingAlarms(Guid requestId)
+        {
+            KeepAlarmCollecting = false;
+            UnsubscribeAsync(requestId);
+        }
+
+        /// <inheritdoc />
+        public List<StreamMessage> GetAlarmEvents()
+        {
+            return AlarmEvents;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<StreamEventArgs> AlarmOccurred;
+        protected  void OnAlarmOccurred(StreamEventArgs e)
+        {
+            AlarmOccurred?.Invoke(this, e);
+        }
+#endregion
+
+#region "AUDIT EVENTS"
+        /// <summary>
+        /// Variable to keep the list of current Audit event messages
+        /// </summary>
+        private List<StreamMessage> AuditEvents = new List<StreamMessage>();
+        /// <summary>
+        /// Variable to keep the loop that updated the list of COV Stream values
+        /// </summary>
+        private bool KeepAuditCollecting = true;
+
+        /// <inheritdoc />
+        public async Task StartCollectingAuditsAsync(int maxNumber = 100)
+        {
+            AuditEvents.Clear();
+            KeepAuditCollecting = true;
+            LoadActivitySubscriptions("Audit");
+            await ConnectAsync();
+            while (KeepAuditCollecting)
+            {
+                StreamMessage streamMsg = await ResultChannel.ReadAsync(); ;
+                AuditEvents = UpdateAuditStreamValuesList(AuditEvents, streamMsg, maxNumber);
+                //Raise the event
+                StreamEventArgs arg = new StreamEventArgs();
+                arg.Value = streamMsg;
+                OnAuditOccurred(arg);
+            }
+        }
+
+        /// <inheritdoc />
+        public void StopCollectingAudits(Guid requestId)
+        {
+            KeepAuditCollecting = false;
+            UnsubscribeAsync(requestId);
+        }
+
+        /// <inheritdoc />
+        public List<StreamMessage> GetAuditEvents()
+        {
+            return AuditEvents;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<StreamEventArgs> AuditOccurred;
+        protected  void OnAuditOccurred(StreamEventArgs e)
+        {
+            AuditOccurred?.Invoke(this, e);
+        }
+#endregion
+
     }
 }

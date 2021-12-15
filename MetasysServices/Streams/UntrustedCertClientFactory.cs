@@ -1,7 +1,7 @@
 ﻿using Flurl.Http.Configuration;
 using System.Net.Http;
 
-namespace JohnsonControls.Metasys.BasicServices.Stream
+namespace JohnsonControls.Metasys.BasicServices
 {
     public class UntrustedCertClientFactory : DefaultHttpClientFactory
     {

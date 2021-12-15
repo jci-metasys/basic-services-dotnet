@@ -9,27 +9,28 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Globalization;
 using JohnsonControls.Metasys.BasicServices;
-using JohnsonControls.Metasys.BasicServices.Stream;
+
 
 namespace MetasysServices_TestClient
 {
     public partial class MainUI : Form
     {
-        private Boolean _enableTabs = false;
         private MetasysClient _client;
+
+        private Boolean _enableTabs = false;
         private Guid _alarmId = Guid.Empty;
         private AlarmAnnotation _firstAnnotation = null;
         private IEnumerable<AlarmAnnotation> _annotations = null;
         private Guid _networkDeviceId = Guid.Empty;
         private Guid _objectId = Guid.Empty;
-        private StreamMessage _currCOVStreamValue = null;
-        private List<StreamMessage> _CurrCOVStreamValues;
-        private Guid _requestId = Guid.Empty;
+        private Streams _frmStreams;
 
         #region "Public Method"
         public MainUI()
         {
             InitializeComponent();
+
+
         }
         #endregion
 
@@ -266,6 +267,8 @@ namespace MetasysServices_TestClient
             ToolTip.SetToolTip(BtnRefresh, "Use method: 'Refresh()'");
             ToolTip.SetToolTip(BtnGetAccessToken, "Use method: 'GetAccessToken()'");
 
+            _frmStreams = new Streams();
+            _frmStreams.InitForm(_client, TpgStream);
         }
         private void BtnLogin_Click(object sender, EventArgs e)
         {
@@ -288,11 +291,12 @@ namespace MetasysServices_TestClient
             _client = new MetasysClient(txtHost.Text, true, ver, culture);
             if (_client != null)
             {
+                _frmStreams.Client = _client;
+
                 //Do the login using the credentials got from the UI
                 var token = _client.TryLogin(txtUsername.Text, txtPassword.Text);
                 if (token != null)
                 {
-                    _client.COVStreamValueChanged += C_COVStreamValueChanged;
 
                     //Show the token
                     rcbToken.Text = token.ToString();
@@ -722,89 +726,11 @@ namespace MetasysServices_TestClient
             }
         }
 
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            var id = new Guid(TxtStream_ObjectGuid.Text);
-            _client.StartReadingCOVStreamValue(id);
-            TmrRefreshCOVStreamValue.Enabled = true;
-        }
-
-        private void Button2_Click(object sender, EventArgs e)
-        {
-            _client.StopReadingCOVStreamValue(_requestId);
-            //TmrRefreshCOVStreamValue.Enabled = false;
-        }
-
-        #region "Event Handler"
-        private void C_COVStreamValueChanged(object sender, EventArgs e)
-        {
-            _CurrCOVStreamValues = _client.GetCOVStreamValues();
-            _currCOVStreamValue = (_CurrCOVStreamValues != null) ? _CurrCOVStreamValues.FirstOrDefault() : null;
-        }
 
 
-        #endregion
 
-        private void Button3_Click(object sender, EventArgs e)
-        {
-            _CurrCOVStreamValues = _client.GetCOVStreamValues();
-            _currCOVStreamValue = (_CurrCOVStreamValues != null) ? _CurrCOVStreamValues.First() : null;
 
-            var str = (_currCOVStreamValue is null) ? String.Empty : _currCOVStreamValue.Data;
-            MessageBox.Show(str);
-            RtbCOVStreamValue.Text = str;
-            DgvStreamCOV.DataSource = null;
-            DgvStreamCOV.DataSource = _CurrCOVStreamValues;        
-        }
 
-        private void TmrRefreshCOVStreamValue_Tick(object sender, EventArgs e)
-        {
-            var requestId = _client.StreamingClient.GetRequestIds().FirstOrDefault();
-            TxtStream_RequestId.Text = requestId.ToString();
 
-            PrgStreamCOV.SelectedObject = _currCOVStreamValue;
-            RtbCOVStreamValue.Text = (_currCOVStreamValue is null) ? String.Empty : _currCOVStreamValue.Data;
-
-            DgvStreamCOV.DataSource = null;
-            DgvStreamCOV.DataSource = _CurrCOVStreamValues;
-        }
-
-        private void BtnStreamConnect_Click(object sender, EventArgs e)
-        {
-            _client.StreamingClient.ConnectAsync();
-        }
-
-        private void TxtStream_ObjectGuid_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ToolTip_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void BtnStreamMulti_StartCollCOVStreamValue_Click(object sender, EventArgs e)
-        {
-
-            var ids = new List<Guid>();
-            var id1 = new Guid(TxtStreamMulti_ObjectGuid1.Text);
-            ids.Add(id1);
-            var id2 = new Guid(TxtStreamMulti_ObjectGuid2.Text);
-            ids.Add(id2);
-
-            _client.StartReadingCOVStreamValueMultiple(ids);
-            TmrRefreshCOVStreamValueMulti.Enabled = true;
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            var requestId = _client.StreamingClient.GetRequestIds().FirstOrDefault();
-            TxtStreamMulti_RequestId.Text = requestId.ToString();
-
-            DgvStreamCOVMulti.DataSource = null;
-            DgvStreamCOVMulti.DataSource = _CurrCOVStreamValues;
-
-        }
     }
 }

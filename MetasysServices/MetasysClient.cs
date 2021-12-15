@@ -11,7 +11,8 @@ using Flurl.Http;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using JohnsonControls.Metasys.BasicServices.Utils;
-using JohnsonControls.Metasys.BasicServices.Stream;
+using JohnsonControls.Metasys.BasicServices;
+using System.Diagnostics;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -39,24 +40,35 @@ namespace JohnsonControls.Metasys.BasicServices
         public IAuditService Audits { get; set; }
 
         /// <inheritdoc/>
-        public IStreamService StreamingClient { get; set; }
+        public IStreamService Streams { get; set; }
 
         private string hostname;
 
-        /// <summary>
-        /// Variable to keep the current COV stream message
-        /// </summary>
-        private StreamMessage COVStreamValue;
 
         /// <summary>
-        /// Variable to keep the list of current COV stream messages
+        /// Variable to keep the list of current Alarn stream messages
         /// </summary>
-        private List<StreamMessage> COVStreamValues = new List<StreamMessage>();
+        private List<StreamMessage> AlarmStreamValues = new List<StreamMessage>();
+
+        /// <summary>
+        /// Variable to keep the list of current Audit stream messages
+        /// </summary>
+        private List<StreamMessage> AuditStreamValues = new List<StreamMessage>();
 
         /// <summary>
         /// Variable to keep the loop that updated the list of COV Stream values
         /// </summary>
         private bool KeepCOVStreamAlive = true;
+
+        /// <summary>
+        /// Variable to keep the loop that updated the list of Alarm Stream values
+        /// </summary>
+        private bool KeepAlarmStreamAlive = true;
+
+        /// <summary>
+        /// Variable to keep the loop that updated the list of Audit Stream values
+        /// </summary>
+        private bool KeepAuditStreamAlive = true;
 
 
         /// <inheritdoc/>
@@ -108,9 +120,9 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     Alarms.Version = version.Value;
                 }
-                if (StreamingClient != null)
+                if (Streams != null)
                 {
-                    StreamingClient.Version = version.Value;
+                    Streams.Version = version.Value;
                 }
 
             }
@@ -209,7 +221,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 Audits = new AuditServiceProvider(Client, version, logClientErrors);
                 if (Version > ApiVersion.v3)
                 {
-                    StreamingClient = new StreamingClient(Client, hostname, version);
+                    Streams = new StreamServiceProvider(Client, hostname, version);
                 }
             }
             catch (FlurlHttpException e)
@@ -264,9 +276,9 @@ namespace JohnsonControls.Metasys.BasicServices
                     .ConfigureAwait(false);
 
                 CreateAccessToken(Hostname, username, response);
-                if (StreamingClient != null)
+                if (Streams != null)
                 {
-                    StreamingClient.AccessToken = this.AccessToken; ;
+                    Streams.AccessToken = this.AccessToken; ;
                 }
             }
             catch (FlurlHttpException e)
@@ -293,9 +305,9 @@ namespace JohnsonControls.Metasys.BasicServices
                 // Since it's a refresh, get issue info from the current token                
                 CreateAccessToken(AccessToken.Issuer, AccessToken.IssuedTo, response);
                 // Set the new value of the Token to the StreamClient
-                if (StreamingClient != null)
+                if (Streams != null)
                 {
-                    StreamingClient.AccessToken = this.AccessToken; ;
+                    Streams.AccessToken = this.AccessToken; ;
                 }
             }
             catch (FlurlHttpException e)
@@ -1073,7 +1085,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<bool> StreamConnectAsync()
         {
             // Connect the Stream Client
-            return await StreamingClient.ConnectAsync(); 
+            return await Streams.ConnectAsync(); 
         }
 
         /// <inheritdoc />
@@ -1087,21 +1099,14 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             try
             {
-                StreamingClient.LoadCOVSubscriptions(id);
-
-                await StreamingClient.ConnectAsync();
-
-                //await StreamingClient.ConnectAsync();
-                //string idStr = id.ToString();
-                //string relativeUrl = "api/" + Version.ToString() + "/objects/" + idStr + "/attributes/presentValue";
-                //_ = await StreamingClient.SubscribeAsync(requestId, "GET", relativeUrl);
+                Streams.LoadCOVSubscriptions(id);
+                await Streams.ConnectAsync();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("\n \nAn Error occurred. Press Enter to return to exit - {0}", e.Message);
+                Debug.Write(ex.Message);
             }
         }
-
 
         /// <inheritdoc />
         public void GetCOVStreamMultiple(IEnumerable<Guid> ids)
@@ -1114,34 +1119,37 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             try
             {
-                StreamingClient.LoadCOVSubscriptions(ids);
-
-                await StreamingClient.ConnectAsync();
-
-                //var relativeUrl = "api/" + Version.ToString() + "/objects/batch";
-
-                //var body = new Newtonsoft.Json.Linq.JObject();
-                //body.Add("method", "GET");
-                //var requests = new Newtonsoft.Json.Linq.JArray();
-
-                //// Concatenate batch segment to use batch request and prepare the list of requests  
-                //int index = 1;
-                //foreach (var i in ids)
-                //{
-                //    var request = new Newtonsoft.Json.Linq.JObject();
-                //    request.Add("id", index.ToString());
-                //    request.Add("relativeUrl", i.ToString() + "/attributes/presentValue");
-
-                //    requests.Add(request);
-                //    index += 1;
-                //}
-                //body.Add("requests", requests);
-
-                //_ = await StreamingClient.SubscribeAsync(requestId, "POST", relativeUrl, body: body);
+                Streams.LoadCOVSubscriptions(ids);
+                await Streams.ConnectAsync();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("\n \nAn Error occurred. Press Enter to return to exit - {0}", e.Message);
+                Debug.Write(ex.Message);
+            }
+        }
+
+        public async Task GetAlarmStreamAsync()
+        {
+            try
+            {
+                Streams.LoadActivitySubscriptions("Alarm");
+                await Streams.ConnectAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.Message);
+            }
+        }
+        public async Task GetAuditStreamAsync()
+        {
+            try
+            {
+                Streams.LoadActivitySubscriptions("Audit");
+                await Streams.ConnectAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.Message);
             }
         }
 
@@ -1154,78 +1162,23 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc />
         public async Task<StreamMessage> GetSingleStreamingChannelAsync()
         {
-            var result = await StreamingClient.ResultChannel.ReadAsync();
+            var result = await Streams.ResultChannel.ReadAsync();
             return result;
         }
 
-        /// <inheritdoc />
-        public void StartReadingCOVStreamValue(Guid id)
-        {
-            System.Threading.Tasks.Task.Run(() =>
-            {
-                COVStreamValues.Clear();
-                KeepCOVStreamAlive = true;
-                GetCOVStream(id);
-                UpdateCOVStreamValue();
-            });
-        }
-
-        /// <inheritdoc />
-        public void StopReadingCOVStreamValue(Guid requestId)
-        {
-            KeepCOVStreamAlive = false;
-            StreamingClient.UnsubscribeAsync(requestId);
-        }
-
-        /// <inheritdoc />
-        public void StartReadingCOVStreamValueMultiple(IEnumerable<Guid> ids)
-        {
-            System.Threading.Tasks.Task.Run(() =>
-            {
-                COVStreamValues.Clear();
-                KeepCOVStreamAlive = true;
-                GetCOVStreamMultiple(ids);
-                UpdateCOVStreamValue();
-            });
-        }
+        ///// <inheritdoc />
+        //public void StartReadingCOVStreamValue(Guid id)
+        //{
+        //    System.Threading.Tasks.Task.Run(() =>
+        //    {
+        //        COVStreamValues.Clear();
+        //        KeepCOVStreamAlive = true;
+        //        GetCOVStream(id);
+        //        UpdateCOVStreamValue();
+        //    });
+        //}
 
 
-
-
-
-        public StreamMessage GetCOVStreamValue()
-        {
-            return COVStreamValue;
-        }
-        public List<StreamMessage> GetCOVStreamValues()
-        {
-            return COVStreamValues;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<StreamEventArgs> COVStreamValueChanged;
-
-
-        private async void UpdateCOVStreamValue()
-        {
-            while (KeepCOVStreamAlive)
-            {
-                StreamMessage streamMsg = await GetSingleStreamingChannelAsync();
-                COVStreamValues = StreamingClient.UpdateCOVStremValuesList(COVStreamValues, streamMsg);
-
-                //Raise the event
-                StreamEventArgs arg = new StreamEventArgs();
-                arg.Value = streamMsg;
-                OnCOVStreamValueChanged(arg);
-            }
-        }
-
-
-
-        protected virtual void OnCOVStreamValueChanged(StreamEventArgs e)
-        {
-            COVStreamValueChanged?.Invoke(this, e);
-        }
 
 
     }

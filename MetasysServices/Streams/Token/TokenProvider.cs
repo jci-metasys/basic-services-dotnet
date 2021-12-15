@@ -3,7 +3,7 @@ using Flurl.Http;
 using System;
 using System.Threading.Tasks;
 
-namespace JohnsonControls.Metasys.BasicServices.Stream.Token
+namespace JohnsonControls.Metasys.BasicServices.Token
 {
     public class AccessTokenResponse
     {

@@ -446,6 +446,14 @@ namespace JohnsonControls.Metasys.ComServices
         {
             return Mapper.Map<IComAccessToken>(Client.TryLogin(target, refresh));
         }
-       
+
+        /// <inheritdoc/>
+        public void StartReadingStreamCOVValues(string id)
+        {
+            Guid guid = new Guid(id);
+            Client.Streams.StartReadingCOVValueAsync(guid);
+        }
+
+
     }
 }

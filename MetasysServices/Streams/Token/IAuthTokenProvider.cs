@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace JohnsonControls.Metasys.BasicServices.Stream.Token
+namespace JohnsonControls.Metasys.BasicServices.Token
 {
     public interface IAuthTokenProvider
     {

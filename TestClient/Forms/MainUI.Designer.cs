@@ -273,20 +273,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.TpgTrend = new System.Windows.Forms.TabPage();
             this.TpgStream = new System.Windows.Forms.TabPage();
-            this.TabStream = new System.Windows.Forms.TabControl();
-            this.TpgGetCOVStream = new System.Windows.Forms.TabPage();
-            this.PrgStreamCOV = new System.Windows.Forms.PropertyGrid();
-            this.DgvStreamCOV = new System.Windows.Forms.DataGridView();
-            this.TxtStream_RequestId = new System.Windows.Forms.TextBox();
-            this.LblStream_RequestId = new System.Windows.Forms.Label();
-            this.LblStream_ObjectGuid = new System.Windows.Forms.Label();
-            this.TxtStream_ObjectGuid = new System.Windows.Forms.TextBox();
-            this.BtnStreamConnect = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.RtbCOVStreamValue = new System.Windows.Forms.RichTextBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.BtnStream_StartCollCOVStreamValue = new System.Windows.Forms.Button();
-            this.TpgGetCOVStreamMultiple = new System.Windows.Forms.TabPage();
             this.TpgMisc = new System.Windows.Forms.TabPage();
             this.TabMiscellanea = new System.Windows.Forms.TabControl();
             this.TpgMisc_GetServerTime = new System.Windows.Forms.TabPage();
@@ -304,16 +290,6 @@
             this.LblMisc_Title2 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.TmrRefreshCOVStreamValue = new System.Windows.Forms.Timer(this.components);
-            this.DgvStreamCOVMulti = new System.Windows.Forms.DataGridView();
-            this.TxtStreamMulti_RequestId = new System.Windows.Forms.TextBox();
-            this.LblStreamMulti_RequestId = new System.Windows.Forms.Label();
-            this.LblStreamMulti_ObjectGuid = new System.Windows.Forms.Label();
-            this.TxtStreamMulti_ObjectGuid1 = new System.Windows.Forms.TextBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.BtnStreamMulti_StartCollCOVStreamValue = new System.Windows.Forms.Button();
-            this.TxtStreamMulti_ObjectGuid2 = new System.Windows.Forms.TextBox();
-            this.TmrRefreshCOVStreamValueMulti = new System.Windows.Forms.Timer(this.components);
             this.GrbGetAlarms.SuspendLayout();
             this.GrbAlarm_Filter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvAlarm)).BeginInit();
@@ -383,16 +359,10 @@
             this.grbReadProperty.SuspendLayout();
             this.TpgSpace.SuspendLayout();
             this.TabSpace.SuspendLayout();
-            this.TpgStream.SuspendLayout();
-            this.TabStream.SuspendLayout();
-            this.TpgGetCOVStream.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvStreamCOV)).BeginInit();
-            this.TpgGetCOVStreamMultiple.SuspendLayout();
             this.TpgMisc.SuspendLayout();
             this.TabMiscellanea.SuspendLayout();
             this.TpgMisc_GetServerTime.SuspendLayout();
             this.TpgMisc_Localize.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvStreamCOVMulti)).BeginInit();
             this.SuspendLayout();
             // 
             // rcbToken
@@ -2931,165 +2901,12 @@
             // TpgStream
             // 
             this.TpgStream.BackColor = System.Drawing.SystemColors.Control;
-            this.TpgStream.Controls.Add(this.TabStream);
             this.TpgStream.Location = new System.Drawing.Point(4, 34);
             this.TpgStream.Name = "TpgStream";
             this.TpgStream.Padding = new System.Windows.Forms.Padding(3);
             this.TpgStream.Size = new System.Drawing.Size(1080, 450);
             this.TpgStream.TabIndex = 11;
             this.TpgStream.Text = "STREAMS";
-            // 
-            // TabStream
-            // 
-            this.TabStream.Appearance = System.Windows.Forms.TabAppearance.Buttons;
-            this.TabStream.Controls.Add(this.TpgGetCOVStream);
-            this.TabStream.Controls.Add(this.TpgGetCOVStreamMultiple);
-            this.TabStream.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TabStream.ItemSize = new System.Drawing.Size(58, 25);
-            this.TabStream.Location = new System.Drawing.Point(3, 3);
-            this.TabStream.Name = "TabStream";
-            this.TabStream.SelectedIndex = 0;
-            this.TabStream.Size = new System.Drawing.Size(1074, 444);
-            this.TabStream.TabIndex = 0;
-            // 
-            // TpgGetCOVStream
-            // 
-            this.TpgGetCOVStream.Controls.Add(this.PrgStreamCOV);
-            this.TpgGetCOVStream.Controls.Add(this.DgvStreamCOV);
-            this.TpgGetCOVStream.Controls.Add(this.TxtStream_RequestId);
-            this.TpgGetCOVStream.Controls.Add(this.LblStream_RequestId);
-            this.TpgGetCOVStream.Controls.Add(this.LblStream_ObjectGuid);
-            this.TpgGetCOVStream.Controls.Add(this.TxtStream_ObjectGuid);
-            this.TpgGetCOVStream.Controls.Add(this.BtnStreamConnect);
-            this.TpgGetCOVStream.Controls.Add(this.button3);
-            this.TpgGetCOVStream.Controls.Add(this.RtbCOVStreamValue);
-            this.TpgGetCOVStream.Controls.Add(this.button2);
-            this.TpgGetCOVStream.Controls.Add(this.BtnStream_StartCollCOVStreamValue);
-            this.TpgGetCOVStream.Location = new System.Drawing.Point(4, 29);
-            this.TpgGetCOVStream.Name = "TpgGetCOVStream";
-            this.TpgGetCOVStream.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgGetCOVStream.Size = new System.Drawing.Size(1066, 411);
-            this.TpgGetCOVStream.TabIndex = 0;
-            this.TpgGetCOVStream.Text = "GetCOVStream";
-            this.TpgGetCOVStream.UseVisualStyleBackColor = true;
-            // 
-            // PrgStreamCOV
-            // 
-            this.PrgStreamCOV.HelpVisible = false;
-            this.PrgStreamCOV.Location = new System.Drawing.Point(210, 66);
-            this.PrgStreamCOV.Name = "PrgStreamCOV";
-            this.PrgStreamCOV.Size = new System.Drawing.Size(425, 158);
-            this.PrgStreamCOV.TabIndex = 10;
-            this.PrgStreamCOV.ToolbarVisible = false;
-            // 
-            // DgvStreamCOV
-            // 
-            this.DgvStreamCOV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvStreamCOV.Location = new System.Drawing.Point(210, 237);
-            this.DgvStreamCOV.Name = "DgvStreamCOV";
-            this.DgvStreamCOV.Size = new System.Drawing.Size(838, 162);
-            this.DgvStreamCOV.TabIndex = 9;
-            // 
-            // TxtStream_RequestId
-            // 
-            this.TxtStream_RequestId.Location = new System.Drawing.Point(208, 32);
-            this.TxtStream_RequestId.Name = "TxtStream_RequestId";
-            this.TxtStream_RequestId.ReadOnly = true;
-            this.TxtStream_RequestId.Size = new System.Drawing.Size(236, 20);
-            this.TxtStream_RequestId.TabIndex = 8;
-            // 
-            // LblStream_RequestId
-            // 
-            this.LblStream_RequestId.AutoSize = true;
-            this.LblStream_RequestId.Location = new System.Drawing.Point(129, 34);
-            this.LblStream_RequestId.Name = "LblStream_RequestId";
-            this.LblStream_RequestId.Size = new System.Drawing.Size(64, 13);
-            this.LblStream_RequestId.TabIndex = 7;
-            this.LblStream_RequestId.Text = "Request ID:";
-            // 
-            // LblStream_ObjectGuid
-            // 
-            this.LblStream_ObjectGuid.AutoSize = true;
-            this.LblStream_ObjectGuid.Location = new System.Drawing.Point(129, 9);
-            this.LblStream_ObjectGuid.Name = "LblStream_ObjectGuid";
-            this.LblStream_ObjectGuid.Size = new System.Drawing.Size(66, 13);
-            this.LblStream_ObjectGuid.TabIndex = 6;
-            this.LblStream_ObjectGuid.Text = "Object Guid:";
-            // 
-            // TxtStream_ObjectGuid
-            // 
-            this.TxtStream_ObjectGuid.Location = new System.Drawing.Point(208, 6);
-            this.TxtStream_ObjectGuid.Name = "TxtStream_ObjectGuid";
-            this.TxtStream_ObjectGuid.Size = new System.Drawing.Size(236, 20);
-            this.TxtStream_ObjectGuid.TabIndex = 5;
-            this.TxtStream_ObjectGuid.Text = "453be0a5-2027-5b01-a088-b16ea8a45556";
-            this.TxtStream_ObjectGuid.TextChanged += new System.EventHandler(this.TxtStream_ObjectGuid_TextChanged);
-            // 
-            // BtnStreamConnect
-            // 
-            this.BtnStreamConnect.Location = new System.Drawing.Point(17, 290);
-            this.BtnStreamConnect.Name = "BtnStreamConnect";
-            this.BtnStreamConnect.Size = new System.Drawing.Size(176, 23);
-            this.BtnStreamConnect.TabIndex = 4;
-            this.BtnStreamConnect.Text = "StreamConnect";
-            this.BtnStreamConnect.UseVisualStyleBackColor = true;
-            this.BtnStreamConnect.Click += new System.EventHandler(this.BtnStreamConnect_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(15, 124);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(178, 23);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "GetCOVStreamValue";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.Button3_Click);
-            // 
-            // RtbCOVStreamValue
-            // 
-            this.RtbCOVStreamValue.Location = new System.Drawing.Point(641, 66);
-            this.RtbCOVStreamValue.Name = "RtbCOVStreamValue";
-            this.RtbCOVStreamValue.Size = new System.Drawing.Size(408, 158);
-            this.RtbCOVStreamValue.TabIndex = 2;
-            this.RtbCOVStreamValue.Text = "";
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(15, 95);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(178, 23);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "StopCollectingCOVStreamValue";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.Button2_Click);
-            // 
-            // BtnStream_StartCollCOVStreamValue
-            // 
-            this.BtnStream_StartCollCOVStreamValue.Location = new System.Drawing.Point(15, 66);
-            this.BtnStream_StartCollCOVStreamValue.Name = "BtnStream_StartCollCOVStreamValue";
-            this.BtnStream_StartCollCOVStreamValue.Size = new System.Drawing.Size(178, 23);
-            this.BtnStream_StartCollCOVStreamValue.TabIndex = 0;
-            this.BtnStream_StartCollCOVStreamValue.Text = "StartCollectingCOVStreamValue";
-            this.BtnStream_StartCollCOVStreamValue.UseVisualStyleBackColor = true;
-            this.BtnStream_StartCollCOVStreamValue.Click += new System.EventHandler(this.Button1_Click);
-            // 
-            // TpgGetCOVStreamMultiple
-            // 
-            this.TpgGetCOVStreamMultiple.Controls.Add(this.TxtStreamMulti_ObjectGuid2);
-            this.TpgGetCOVStreamMultiple.Controls.Add(this.DgvStreamCOVMulti);
-            this.TpgGetCOVStreamMultiple.Controls.Add(this.TxtStreamMulti_RequestId);
-            this.TpgGetCOVStreamMultiple.Controls.Add(this.LblStreamMulti_RequestId);
-            this.TpgGetCOVStreamMultiple.Controls.Add(this.LblStreamMulti_ObjectGuid);
-            this.TpgGetCOVStreamMultiple.Controls.Add(this.TxtStreamMulti_ObjectGuid1);
-            this.TpgGetCOVStreamMultiple.Controls.Add(this.button4);
-            this.TpgGetCOVStreamMultiple.Controls.Add(this.BtnStreamMulti_StartCollCOVStreamValue);
-            this.TpgGetCOVStreamMultiple.Location = new System.Drawing.Point(4, 29);
-            this.TpgGetCOVStreamMultiple.Name = "TpgGetCOVStreamMultiple";
-            this.TpgGetCOVStreamMultiple.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgGetCOVStreamMultiple.Size = new System.Drawing.Size(1066, 411);
-            this.TpgGetCOVStreamMultiple.TabIndex = 1;
-            this.TpgGetCOVStreamMultiple.Text = "GetCOVStreamMultiple";
-            this.TpgGetCOVStreamMultiple.UseVisualStyleBackColor = true;
             // 
             // TpgMisc
             // 
@@ -3255,89 +3072,6 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker1_RunWorkerCompleted);
             // 
-            // ToolTip
-            // 
-            this.ToolTip.Popup += new System.Windows.Forms.PopupEventHandler(this.ToolTip_Popup);
-            // 
-            // TmrRefreshCOVStreamValue
-            // 
-            this.TmrRefreshCOVStreamValue.Interval = 1000;
-            this.TmrRefreshCOVStreamValue.Tick += new System.EventHandler(this.TmrRefreshCOVStreamValue_Tick);
-            // 
-            // DgvStreamCOVMulti
-            // 
-            this.DgvStreamCOVMulti.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvStreamCOVMulti.Location = new System.Drawing.Point(211, 69);
-            this.DgvStreamCOVMulti.Name = "DgvStreamCOVMulti";
-            this.DgvStreamCOVMulti.Size = new System.Drawing.Size(838, 333);
-            this.DgvStreamCOVMulti.TabIndex = 18;
-            // 
-            // TxtStreamMulti_RequestId
-            // 
-            this.TxtStreamMulti_RequestId.Location = new System.Drawing.Point(209, 35);
-            this.TxtStreamMulti_RequestId.Name = "TxtStreamMulti_RequestId";
-            this.TxtStreamMulti_RequestId.ReadOnly = true;
-            this.TxtStreamMulti_RequestId.Size = new System.Drawing.Size(236, 20);
-            this.TxtStreamMulti_RequestId.TabIndex = 17;
-            // 
-            // LblStreamMulti_RequestId
-            // 
-            this.LblStreamMulti_RequestId.AutoSize = true;
-            this.LblStreamMulti_RequestId.Location = new System.Drawing.Point(130, 37);
-            this.LblStreamMulti_RequestId.Name = "LblStreamMulti_RequestId";
-            this.LblStreamMulti_RequestId.Size = new System.Drawing.Size(64, 13);
-            this.LblStreamMulti_RequestId.TabIndex = 16;
-            this.LblStreamMulti_RequestId.Text = "Request ID:";
-            // 
-            // LblStreamMulti_ObjectGuid
-            // 
-            this.LblStreamMulti_ObjectGuid.AutoSize = true;
-            this.LblStreamMulti_ObjectGuid.Location = new System.Drawing.Point(130, 12);
-            this.LblStreamMulti_ObjectGuid.Name = "LblStreamMulti_ObjectGuid";
-            this.LblStreamMulti_ObjectGuid.Size = new System.Drawing.Size(71, 13);
-            this.LblStreamMulti_ObjectGuid.TabIndex = 15;
-            this.LblStreamMulti_ObjectGuid.Text = "Object Guids:";
-            // 
-            // TxtStreamMulti_ObjectGuid1
-            // 
-            this.TxtStreamMulti_ObjectGuid1.Location = new System.Drawing.Point(209, 9);
-            this.TxtStreamMulti_ObjectGuid1.Name = "TxtStreamMulti_ObjectGuid1";
-            this.TxtStreamMulti_ObjectGuid1.Size = new System.Drawing.Size(236, 20);
-            this.TxtStreamMulti_ObjectGuid1.TabIndex = 14;
-            this.TxtStreamMulti_ObjectGuid1.Text = "453be0a5-2027-5b01-a088-b16ea8a45556";
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(16, 127);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(178, 23);
-            this.button4.TabIndex = 13;
-            this.button4.Text = "GetCOVStreamValue";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
-            // BtnStreamMulti_StartCollCOVStreamValue
-            // 
-            this.BtnStreamMulti_StartCollCOVStreamValue.Location = new System.Drawing.Point(16, 69);
-            this.BtnStreamMulti_StartCollCOVStreamValue.Name = "BtnStreamMulti_StartCollCOVStreamValue";
-            this.BtnStreamMulti_StartCollCOVStreamValue.Size = new System.Drawing.Size(178, 23);
-            this.BtnStreamMulti_StartCollCOVStreamValue.TabIndex = 11;
-            this.BtnStreamMulti_StartCollCOVStreamValue.Text = "StartCollectingCOVStreamValue";
-            this.BtnStreamMulti_StartCollCOVStreamValue.UseVisualStyleBackColor = true;
-            this.BtnStreamMulti_StartCollCOVStreamValue.Click += new System.EventHandler(this.BtnStreamMulti_StartCollCOVStreamValue_Click);
-            // 
-            // TxtStreamMulti_ObjectGuid2
-            // 
-            this.TxtStreamMulti_ObjectGuid2.Location = new System.Drawing.Point(465, 9);
-            this.TxtStreamMulti_ObjectGuid2.Name = "TxtStreamMulti_ObjectGuid2";
-            this.TxtStreamMulti_ObjectGuid2.Size = new System.Drawing.Size(236, 20);
-            this.TxtStreamMulti_ObjectGuid2.TabIndex = 20;
-            this.TxtStreamMulti_ObjectGuid2.Text = "16580b9f-b82c-5040-9ab4-e68766f9b306";
-            // 
-            // TmrRefreshCOVStreamValueMulti
-            // 
-            this.TmrRefreshCOVStreamValueMulti.Interval = 1000;
-            this.TmrRefreshCOVStreamValueMulti.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // MainUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3446,20 +3180,12 @@
             this.grbReadProperty.PerformLayout();
             this.TpgSpace.ResumeLayout(false);
             this.TabSpace.ResumeLayout(false);
-            this.TpgStream.ResumeLayout(false);
-            this.TabStream.ResumeLayout(false);
-            this.TpgGetCOVStream.ResumeLayout(false);
-            this.TpgGetCOVStream.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvStreamCOV)).EndInit();
-            this.TpgGetCOVStreamMultiple.ResumeLayout(false);
-            this.TpgGetCOVStreamMultiple.PerformLayout();
             this.TpgMisc.ResumeLayout(false);
             this.TabMiscellanea.ResumeLayout(false);
             this.TpgMisc_GetServerTime.ResumeLayout(false);
             this.TpgMisc_GetServerTime.PerformLayout();
             this.TpgMisc_Localize.ResumeLayout(false);
             this.TpgMisc_Localize.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvStreamCOVMulti)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -3721,30 +3447,6 @@
         private System.Windows.Forms.CheckBox ChkAudit_ActionType_Delete;
         private System.Windows.Forms.CheckBox ChkAudit_ActionType_Error;
         private System.Windows.Forms.CheckBox ChkAudit_ActionType_Subsystem;
-        private System.Windows.Forms.TabControl TabStream;
-        private System.Windows.Forms.TabPage TpgGetCOVStream;
-        private System.Windows.Forms.TabPage TpgGetCOVStreamMultiple;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button BtnStream_StartCollCOVStreamValue;
-        private System.Windows.Forms.RichTextBox RtbCOVStreamValue;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Timer TmrRefreshCOVStreamValue;
-        private System.Windows.Forms.Button BtnStreamConnect;
-        private System.Windows.Forms.Label LblStream_ObjectGuid;
-        private System.Windows.Forms.TextBox TxtStream_ObjectGuid;
-        private System.Windows.Forms.TextBox TxtStream_RequestId;
-        private System.Windows.Forms.Label LblStream_RequestId;
-        private System.Windows.Forms.DataGridView DgvStreamCOV;
-        private System.Windows.Forms.PropertyGrid PrgStreamCOV;
-        private System.Windows.Forms.DataGridView DgvStreamCOVMulti;
-        private System.Windows.Forms.TextBox TxtStreamMulti_RequestId;
-        private System.Windows.Forms.Label LblStreamMulti_RequestId;
-        private System.Windows.Forms.Label LblStreamMulti_ObjectGuid;
-        private System.Windows.Forms.TextBox TxtStreamMulti_ObjectGuid1;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button BtnStreamMulti_StartCollCOVStreamValue;
-        private System.Windows.Forms.TextBox TxtStreamMulti_ObjectGuid2;
-        private System.Windows.Forms.Timer TmrRefreshCOVStreamValueMulti;
     }
 }
 

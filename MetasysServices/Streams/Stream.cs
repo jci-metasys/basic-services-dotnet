@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace JohnsonControls.Metasys.BasicServices.Stream
+namespace JohnsonControls.Metasys.BasicServices
 {
     public class Stream
     {

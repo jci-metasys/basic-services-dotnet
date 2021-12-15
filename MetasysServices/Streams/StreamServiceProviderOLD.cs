@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-namespace JohnsonControls.Metasys.BasicServices.Stream
+namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// Provide Stream values for the endpoints of the Metasys Stream API.
     /// </summary>
 
-    public class StreamServiceProvider
+    public class StreamServiceProviderOLD
     {
         StreamCOV item = null;
         private StreamCOV CreateItem(StreamMessage msg)

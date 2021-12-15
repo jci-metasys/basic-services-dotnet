@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace JohnsonControls.Metasys.BasicServices.Stream
+namespace JohnsonControls.Metasys.BasicServices
 {
     internal class SubscriptionInfo
     {
