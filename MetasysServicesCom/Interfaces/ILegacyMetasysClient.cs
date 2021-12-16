@@ -335,6 +335,21 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Start the method that reads the COV values using the stream mechanism.
         /// </summary>
-        void StartReadingStreamCOVValues(string id);
+        void StartReadingStreamCOVValue(string id);
+
+        /// <summary>
+        /// Start the method that reads multiple COV values using the stream mechanism.
+        /// </summary>
+        void StartReadingStreamCOVValues([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids);
+
+        /// <summary>
+        /// Stop reading COV stream Values.
+        /// </summary>
+        void StopReadingStreamCOVValues(string requestId);
+
+        /// <summary>
+        /// Return the list of COV values
+        /// </summary>
+        List<StreamMessage> GetCOVValues();
     }
 }

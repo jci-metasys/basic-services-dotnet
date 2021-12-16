@@ -448,12 +448,35 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc/>
-        public void StartReadingStreamCOVValues(string id)
+        public void StartReadingStreamCOVValue(string id)
         {
             Guid guid = new Guid(id);
             Client.Streams.StartReadingCOVValueAsync(guid);
         }
 
+        /// <inheritdoc/>
+        public void StartReadingStreamCOVValues([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids)
+        {
+            var guids = new List<Guid>();
+            foreach (var id in ids)
+            {
+                guids.Add(new Guid(id));
+            }
 
+            Client.Streams.StartReadingCOVValuesAsync(guids);
+        }
+
+        /// <inheritdoc/>
+        public void StopReadingStreamCOVValues(string requestId)
+        {
+            Guid requestGuid = new Guid(requestId);
+            Client.Streams.StopReadingCOVValues(requestGuid);
+        }
+
+        /// <inheritdoc/>
+        public List<StreamMessage> GetCOVValues()
+        {
+            return Client.Streams.GetCOVValues();
+        }
     }
 }
