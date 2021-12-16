@@ -75,6 +75,7 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<MetasysPoint, IComMetasysPoint>();
                 cfg.CreateMap<AlarmAnnotation, IComAlarmAnnotation>();
                 cfg.CreateMap<AuditAnnotation, IComAuditAnnotation>();
+                cfg.CreateMap<StreamMessage, IComStreamMessage>();
             }).CreateMapper();
         }
 
@@ -447,11 +448,28 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComAccessToken>(Client.TryLogin(target, refresh));
         }
 
+        //====================================================================================================================================
+
         /// <inheritdoc/>
-        public void StartReadingStreamCOVValue(string id)
+        public string[] GetStreamRequestIds()
+        {
+            var response = Client.Streams.GetRequestIds();
+            string[] result = new string[response.Count()];
+            int i = 0;
+            foreach (var res in response)
+            {
+                result[i] = res.ToString();
+                i++;
+            }
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public string StartReadingStreamCOVValue(string id)
         {
             Guid guid = new Guid(id);
             Client.Streams.StartReadingCOVValueAsync(guid);
+            return guid.ToString();
         }
 
         /// <inheritdoc/>
@@ -474,7 +492,15 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc/>
-        public List<StreamMessage> GetCOVValues()
+        public IComStreamMessage GetCOVStremValue()
+        {
+            var result = Client.Streams.GetCOVValues();
+            StreamMessage msg = result.FirstOrDefault();
+            return Mapper.Map<IComStreamMessage>(msg);
+        }
+
+        /// <inheritdoc/>
+        public List<StreamMessage> GetCOVStremValues()
         {
             return Client.Streams.GetCOVValues();
         }

@@ -356,15 +356,6 @@ namespace JohnsonControls.Metasys.BasicServices
 
 
 
-        /// <summary>
-        /// Connect the Stream Client.
-        /// </summary>
-        bool StreamConnect();
-
-        /// <summary>
-        /// Connect the Stream Client (Async).
-        /// </summary>
-        Task<bool> StreamConnectAsync();
 
         /// <summary>
         /// GetCOVStream.

@@ -55,22 +55,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         private List<StreamMessage> AuditStreamValues = new List<StreamMessage>();
 
-        /// <summary>
-        /// Variable to keep the loop that updated the list of COV Stream values
-        /// </summary>
-        private bool KeepCOVStreamAlive = true;
-
-        /// <summary>
-        /// Variable to keep the loop that updated the list of Alarm Stream values
-        /// </summary>
-        private bool KeepAlarmStreamAlive = true;
-
-        /// <summary>
-        /// Variable to keep the loop that updated the list of Audit Stream values
-        /// </summary>
-        private bool KeepAuditStreamAlive = true;
-
-
         /// <inheritdoc/>
         public string Hostname
         {
@@ -1076,18 +1060,6 @@ namespace JohnsonControls.Metasys.BasicServices
 
 
 
-        public bool StreamConnect()
-        {
-            // Connect the Stream Client
-            return StreamConnectAsync().GetAwaiter().GetResult();
-        }
-
-        public async Task<bool> StreamConnectAsync()
-        {
-            // Connect the Stream Client
-            return await Streams.ConnectAsync(); 
-        }
-
         /// <inheritdoc />
         public void GetCOVStream(Guid id)
         {
@@ -1128,6 +1100,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+        /// <inheritdoc />
         public async Task GetAlarmStreamAsync()
         {
             try
@@ -1140,6 +1113,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 Debug.Write(ex.Message);
             }
         }
+
+        /// <inheritdoc />
         public async Task GetAuditStreamAsync()
         {
             try

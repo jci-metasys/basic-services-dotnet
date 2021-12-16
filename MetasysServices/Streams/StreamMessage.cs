@@ -16,6 +16,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// Request Id
+        /// </summary>
         public Guid RequestId
         {
             get { return _requestId; }
@@ -124,20 +127,16 @@ namespace JohnsonControls.Metasys.BasicServices
                     case "activity.audit.new":
                     case "activity.alarm.new":
                     case "activity.alarm.ack":
-
                         string id = GetJObjectValue(dataObj, "activity", "id");
                         this.Id = (id == string.Empty) ? Guid.Empty : new Guid(id);
-
                         objectId = GetJObjectValue(dataObj, "activity", "objectId");
                         this.ObjectId = (objectId == string.Empty) ? Guid.Empty : new Guid(objectId);
                         this.Id = this.ObjectId;
-
                         this.ItemReference = GetJObjectValue(dataObj, "activity", "itemReference");
                         this.CreationTime = GetJObjectValue(dataObj, "activity", "creationTime");
 
                         switch (Event.ToLower())
                         {
-
                             case "activity.audit.new":
                                 if (dataObj.ContainsKey("activity") && (dataObj["activity"] != null))
                                 {

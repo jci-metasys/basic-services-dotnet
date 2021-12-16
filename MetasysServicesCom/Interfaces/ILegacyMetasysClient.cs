@@ -332,10 +332,17 @@ namespace JohnsonControls.Metasys.ComServices
         /// </returns>
         string GetObjectTypeEnumeration(string resource);
 
+        //==================================================================================================================================
+
+        /// <summary>
+        /// Return the list of Request IDs.
+        /// </summary>
+        string[] GetStreamRequestIds();
+
         /// <summary>
         /// Start the method that reads the COV values using the stream mechanism.
         /// </summary>
-        void StartReadingStreamCOVValue(string id);
+        string StartReadingStreamCOVValue(string id);
 
         /// <summary>
         /// Start the method that reads multiple COV values using the stream mechanism.
@@ -348,8 +355,13 @@ namespace JohnsonControls.Metasys.ComServices
         void StopReadingStreamCOVValues(string requestId);
 
         /// <summary>
+        /// Return a single COV values (first of the list)
+        /// </summary>
+        IComStreamMessage GetCOVStremValue();
+
+        /// <summary>
         /// Return the list of COV values
         /// </summary>
-        List<StreamMessage> GetCOVValues();
+        List<StreamMessage> GetCOVStremValues();
     }
 }

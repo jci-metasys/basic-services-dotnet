@@ -670,7 +670,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         private bool KeepCOVReading = true;
 
-
+        /// <inheritdoc />
         public async Task StartReadingCOVValueAsync(Guid id)
         {
             COVValues.Clear();
@@ -709,7 +709,6 @@ namespace JohnsonControls.Metasys.BasicServices
             UnsubscribeAsync(requestId);
         }
 
-
         /// <inheritdoc />
         public List<StreamMessage> GetCOVValues()
         {
@@ -718,6 +717,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <inheritdoc />
         public event EventHandler<StreamEventArgs> COVValueChanged;
+        /// <inheritdoc />
         protected void OnCOVValueChanged(StreamEventArgs e)
         {
             COVValueChanged?.Invoke(this, e);
@@ -767,7 +767,9 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <inheritdoc />
         public event EventHandler<StreamEventArgs> AlarmOccurred;
-        protected  void OnAlarmOccurred(StreamEventArgs e)
+
+        /// <inheritdoc />
+        void OnAlarmOccurred(StreamEventArgs e)
         {
             AlarmOccurred?.Invoke(this, e);
         }
@@ -816,7 +818,9 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <inheritdoc />
         public event EventHandler<StreamEventArgs> AuditOccurred;
-        protected  void OnAuditOccurred(StreamEventArgs e)
+
+        /// <inheritdoc />
+        void OnAuditOccurred(StreamEventArgs e)
         {
             AuditOccurred?.Invoke(this, e);
         }
