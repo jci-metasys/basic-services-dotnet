@@ -10,11 +10,11 @@ using System.Windows.Forms;
 using JohnsonControls.Metasys.BasicServices;
 using Newtonsoft.Json;
 
-namespace MetasysServices_TestClient
+namespace MetasysServices_TestClient.Forms
 {
     public partial class Streams : Form
     {
-         private MetasysClient _client;
+        private MetasysClient _client;
 
         private Guid _requestId = Guid.Empty;
         private StreamMessage _COVValue = null;
@@ -39,10 +39,12 @@ namespace MetasysServices_TestClient
                 _client = value;
                 if (_client != null)
                 {
-                _client.Streams.COVValueChanged += COVValue_Changed;
-                _client.Streams.AlarmOccurred += Alarm_Occurred;
-                _client.Streams.AuditOccurred += Audit_Occurred;
-
+                    if (_client.Version == ApiVersion.v4)
+                    {
+                        _client.Streams.COVValueChanged += COVValue_Changed;
+                        _client.Streams.AlarmOccurred += Alarm_Occurred;
+                        _client.Streams.AuditOccurred += Audit_Occurred;
+                    }
                 }
             }
         }

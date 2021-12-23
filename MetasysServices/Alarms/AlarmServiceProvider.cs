@@ -61,15 +61,25 @@ namespace JohnsonControls.Metasys.BasicServices
             CheckVersion(Version);
 
             var response = await GetRequestAsync("alarms", null, alarmId).ConfigureAwait(false);
-            if (response["items"] != null) {
-                response = response["items"];
-            }
+            if (response["items"] != null) response = response["items"];
+            
             var alarmData = JsonConvert.DeserializeObject<Alarm>(response.ToString());
-            if (Version == ApiVersion.v3 || Version == ApiVersion.v4) {
+            if (Version == ApiVersion.v3) {
                 alarmData = CreateItem(alarmData);
             }
-
+            else if (Version == ApiVersion.v4) {
+                alarmData = JsonConvert.DeserializeObject<Alarm_V4>(response.ToString());
+                alarmData = CreateItem_v4((Alarm_V4)alarmData);
+            }
+            else {
+                alarmData = JsonConvert.DeserializeObject<Alarm>(response.ToString());
+            }
             return alarmData;
+        }
+        /// <inheritdoc/>
+        public Alarm FindById(Guid alarmId)
+        {
+            return FindByIdAsync(alarmId).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
@@ -117,11 +127,6 @@ namespace JohnsonControls.Metasys.BasicServices
             return response;
         }
 
-        /// <inheritdoc/>
-        public Alarm FindById(Guid alarmId)
-        {
-            return FindByIdAsync(alarmId).GetAwaiter().GetResult();
-        }
 
         /// <inheritdoc/>
         public PagedResult<Alarm> Get(AlarmFilter alarmFilter)
@@ -176,13 +181,27 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             try
             {
-                var measurement = new Measurement
+                var triggerValue = new Measurement
                 {
                     Units = item.TriggerValue.Units != null ? ResourceManager.Localize(item.TriggerValue.Units, _CultureInfo) : null,
                     Value = item.TriggerValue.Value
                 };
 
-                item.TriggerValue = measurement;
+                item.TriggerValue = triggerValue;
+            }
+            catch (ArgumentNullException e)
+            {
+                // Something went wrong on object parsing
+                throw new MetasysObjectException(e);
+            }
+            return item;
+        }
+        private Alarm_V4 CreateItem_v4(Alarm_V4 item)
+        {
+            try
+            {
+                item.TriggerValue.Value = item.TriggerValue.item;
+                item.TriggerValue.Units = item.TriggerValue.Units != null ? ResourceManager.Localize(item.TriggerValue.Units, _CultureInfo) : null;
             }
             catch (ArgumentNullException e)
             {

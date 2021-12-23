@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Globalization;
 using JohnsonControls.Metasys.BasicServices;
-
+using Newtonsoft.Json;
 
 namespace MetasysServices_TestClient
 {
@@ -23,7 +23,9 @@ namespace MetasysServices_TestClient
         private IEnumerable<AlarmAnnotation> _annotations = null;
         private Guid _networkDeviceId = Guid.Empty;
         private Guid _objectId = Guid.Empty;
-        private Streams _frmStreams;
+
+        private Forms.Streams _frmStreams;
+        private Forms.Spaces _frmSpaces;
 
         #region "Public Method"
         public MainUI()
@@ -77,6 +79,7 @@ namespace MetasysServices_TestClient
                 if (alarm != null)
                 {
                     PrgAlarm_FindByID.SelectedObject = alarm;
+                    RtbAlarm.Text = FormatJson(alarm);
                 }
             }
         }
@@ -267,8 +270,12 @@ namespace MetasysServices_TestClient
             ToolTip.SetToolTip(BtnRefresh, "Use method: 'Refresh()'");
             ToolTip.SetToolTip(BtnGetAccessToken, "Use method: 'GetAccessToken()'");
 
-            _frmStreams = new Streams();
+            _frmStreams = new Forms.Streams();
             _frmStreams.InitForm(_client, TpgStream);
+
+            _frmSpaces = new Forms.Spaces();
+            _frmSpaces.InitForm(_client, TpgSpace);
+
         }
         private void BtnLogin_Click(object sender, EventArgs e)
         {
@@ -292,6 +299,7 @@ namespace MetasysServices_TestClient
             if (_client != null)
             {
                 _frmStreams.Client = _client;
+                _frmSpaces.Client = _client;
 
                 //Do the login using the credentials got from the UI
                 var token = _client.TryLogin(txtUsername.Text, txtPassword.Text);
@@ -727,6 +735,11 @@ namespace MetasysServices_TestClient
         }
 
 
+        private static string FormatJson(object obj)
+        {
+            //dynamic parsedJson = JsonConvert.DeserializeObject(json);
+            return JsonConvert.SerializeObject(obj, Formatting.Indented);
+        }
 
 
 

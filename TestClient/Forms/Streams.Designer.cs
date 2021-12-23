@@ -1,5 +1,5 @@
 ﻿
-namespace MetasysServices_TestClient
+namespace MetasysServices_TestClient.Forms
 {
     partial class Streams
     {
@@ -43,6 +43,7 @@ namespace MetasysServices_TestClient
             this.BtnCOVValue_StopReadingCOVValue = new System.Windows.Forms.Button();
             this.BtnCOVValue_StartReadingValue = new System.Windows.Forms.Button();
             this.TpgCOVValues = new System.Windows.Forms.TabPage();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.TxtCOVValues_ObjectID2 = new System.Windows.Forms.TextBox();
             this.TxtCOVValues_RequestID = new System.Windows.Forms.TextBox();
             this.LblCOVValues_RequestID = new System.Windows.Forms.Label();
@@ -62,16 +63,15 @@ namespace MetasysServices_TestClient
             this.LblAuditEvents_RequestID = new System.Windows.Forms.Label();
             this.TmrRefreshCOVValue = new System.Windows.Forms.Timer(this.components);
             this.TmrRefreshCOVValues = new System.Windows.Forms.Timer(this.components);
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.TabMain.SuspendLayout();
             this.TpgCOVValue.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValue)).BeginInit();
             this.TpgCOVValues.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.TpgAlarmEvents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvAlarmEvents)).BeginInit();
             this.TpgAuditEvents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvAuditEvents)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // TabMain
@@ -214,6 +214,14 @@ namespace MetasysServices_TestClient
             this.TpgCOVValues.TabIndex = 1;
             this.TpgCOVValues.Text = "Get COV Values (multiple)";
             this.TpgCOVValues.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(205, 61);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(842, 434);
+            this.dataGridView1.TabIndex = 29;
             // 
             // TxtCOVValues_ObjectID2
             // 
@@ -383,19 +391,11 @@ namespace MetasysServices_TestClient
             this.TmrRefreshCOVValues.Interval = 1000;
             this.TmrRefreshCOVValues.Tick += new System.EventHandler(this.TmrRefreshCOVValues_Tick);
             // 
-            // dataGridView1
-            // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(205, 61);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(842, 434);
-            this.dataGridView1.TabIndex = 29;
-            // 
             // Streams
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1090, 565);
+            this.ClientSize = new System.Drawing.Size(1084, 561);
             this.Controls.Add(this.TabMain);
             this.Name = "Streams";
             this.Text = "Streams";
@@ -405,13 +405,13 @@ namespace MetasysServices_TestClient
             ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValue)).EndInit();
             this.TpgCOVValues.ResumeLayout(false);
             this.TpgCOVValues.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.TpgAlarmEvents.ResumeLayout(false);
             this.TpgAlarmEvents.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvAlarmEvents)).EndInit();
             this.TpgAuditEvents.ResumeLayout(false);
             this.TpgAuditEvents.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvAuditEvents)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
