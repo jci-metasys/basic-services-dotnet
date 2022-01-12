@@ -81,7 +81,7 @@ namespace MetasysServices_TestClient.Forms
             this.TabMain.Controls.Add(this.TpgCOVValues);
             this.TabMain.Controls.Add(this.TpgAlarmEvents);
             this.TabMain.Controls.Add(this.TpgAuditEvents);
-            this.TabMain.ItemSize = new System.Drawing.Size(84, 26);
+            this.TabMain.ItemSize = new System.Drawing.Size(84, 25);
             this.TabMain.Location = new System.Drawing.Point(12, 12);
             this.TabMain.Name = "TabMain";
             this.TabMain.SelectedIndex = 0;
@@ -100,10 +100,10 @@ namespace MetasysServices_TestClient.Forms
             this.TpgCOVValue.Controls.Add(this.RtbCOVValue);
             this.TpgCOVValue.Controls.Add(this.BtnCOVValue_StopReadingCOVValue);
             this.TpgCOVValue.Controls.Add(this.BtnCOVValue_StartReadingValue);
-            this.TpgCOVValue.Location = new System.Drawing.Point(4, 30);
+            this.TpgCOVValue.Location = new System.Drawing.Point(4, 29);
             this.TpgCOVValue.Name = "TpgCOVValue";
             this.TpgCOVValue.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgCOVValue.Size = new System.Drawing.Size(1060, 507);
+            this.TpgCOVValue.Size = new System.Drawing.Size(1060, 508);
             this.TpgCOVValue.TabIndex = 0;
             this.TpgCOVValue.Text = "Get COV Value";
             this.TpgCOVValue.UseVisualStyleBackColor = true;
@@ -119,10 +119,13 @@ namespace MetasysServices_TestClient.Forms
             // 
             // DgvCOVValue
             // 
+            this.DgvCOVValue.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.DgvCOVValue.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvCOVValue.Location = new System.Drawing.Point(205, 237);
             this.DgvCOVValue.Name = "DgvCOVValue";
-            this.DgvCOVValue.Size = new System.Drawing.Size(838, 162);
+            this.DgvCOVValue.Size = new System.Drawing.Size(838, 257);
             this.DgvCOVValue.TabIndex = 19;
             // 
             // TxtCOVValue_RequestID
@@ -207,16 +210,19 @@ namespace MetasysServices_TestClient.Forms
             this.TpgCOVValues.Controls.Add(this.TxtCOVValues_ObjectID1);
             this.TpgCOVValues.Controls.Add(this.BtnCOVValues_StopReadingCOVValues);
             this.TpgCOVValues.Controls.Add(this.BtnCOVValues_StartReadingCOVValues);
-            this.TpgCOVValues.Location = new System.Drawing.Point(4, 30);
+            this.TpgCOVValues.Location = new System.Drawing.Point(4, 29);
             this.TpgCOVValues.Name = "TpgCOVValues";
             this.TpgCOVValues.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgCOVValues.Size = new System.Drawing.Size(1060, 507);
+            this.TpgCOVValues.Size = new System.Drawing.Size(1060, 508);
             this.TpgCOVValues.TabIndex = 1;
             this.TpgCOVValues.Text = "Get COV Values (multiple)";
             this.TpgCOVValues.UseVisualStyleBackColor = true;
             // 
             // dataGridView1
             // 
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(205, 61);
             this.dataGridView1.Name = "dataGridView1";
@@ -291,9 +297,9 @@ namespace MetasysServices_TestClient.Forms
             this.TpgAlarmEvents.Controls.Add(this.TxtAlarmEvents_RequestID);
             this.TpgAlarmEvents.Controls.Add(this.LblAlarmEvents_RequestID);
             this.TpgAlarmEvents.Controls.Add(this.BtnAlarmEvent_StartCollectingAlarms);
-            this.TpgAlarmEvents.Location = new System.Drawing.Point(4, 30);
+            this.TpgAlarmEvents.Location = new System.Drawing.Point(4, 29);
             this.TpgAlarmEvents.Name = "TpgAlarmEvents";
-            this.TpgAlarmEvents.Size = new System.Drawing.Size(1060, 507);
+            this.TpgAlarmEvents.Size = new System.Drawing.Size(1060, 508);
             this.TpgAlarmEvents.TabIndex = 2;
             this.TpgAlarmEvents.Text = "Alarm Events";
             this.TpgAlarmEvents.UseVisualStyleBackColor = true;
@@ -339,9 +345,9 @@ namespace MetasysServices_TestClient.Forms
             this.TpgAuditEvents.Controls.Add(this.DgvAuditEvents);
             this.TpgAuditEvents.Controls.Add(this.TxtAuditEvents_RequestID);
             this.TpgAuditEvents.Controls.Add(this.LblAuditEvents_RequestID);
-            this.TpgAuditEvents.Location = new System.Drawing.Point(4, 30);
+            this.TpgAuditEvents.Location = new System.Drawing.Point(4, 29);
             this.TpgAuditEvents.Name = "TpgAuditEvents";
-            this.TpgAuditEvents.Size = new System.Drawing.Size(1060, 507);
+            this.TpgAuditEvents.Size = new System.Drawing.Size(1060, 508);
             this.TpgAuditEvents.TabIndex = 3;
             this.TpgAuditEvents.Text = "Audit Events";
             this.TpgAuditEvents.UseVisualStyleBackColor = true;

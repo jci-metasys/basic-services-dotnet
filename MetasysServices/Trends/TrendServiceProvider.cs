@@ -35,15 +35,23 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public PagedResult<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter)
         {
-            return GetSamplesAsync(objectId, attributeId, filter).GetAwaiter().GetResult();
+            if (Version == ApiVersion.v4)
+            {
+                String name = Enum.GetName(typeof(AttributeEnumSet), attributeId);
+                AttributeEnumSet attributeName = (AttributeEnumSet)Enum.Parse(typeof(AttributeEnumSet), name);
+                return GetSamplesAsync(objectId, attributeName, filter).GetAwaiter().GetResult();
+            }
+            else
+            {
+                return GetSamplesAsync(objectId, attributeId, filter).GetAwaiter().GetResult();
+            }
         }
 
         /// <inheritdoc/>
         public async Task<PagedResult<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter)
         {
-            if (Version > ApiVersion.v3) {
-                throw new MetasysUnsupportedApiVersion(Version.ToString());
-            }
+            CheckVersion(Version);
+
             List<Sample> objectSamples = new List<Sample>();
             // Perform a generic call using objects resource valid for Network Devices as well
             var response = await GetPagedResultsAsync<JToken>("objects", ToDictionary(filter), objectId, "attributes", attributeId,"samples").ConfigureAwait(false);
@@ -98,6 +106,70 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
+        public PagedResult<Sample> GetSamples(Guid objectId, AttributeEnumSet attributeName, TimeFilter filter)
+        {
+            if (Version == ApiVersion.v4)
+            {
+                return GetSamplesAsync(objectId, attributeName, filter).GetAwaiter().GetResult();
+            }
+            else 
+            {
+                return GetSamplesAsync(objectId, (int)attributeName, filter).GetAwaiter().GetResult();
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<PagedResult<Sample>> GetSamplesAsync(Guid objectId, AttributeEnumSet attributeName, TimeFilter filter)
+        {
+            CheckVersion(Version);
+
+            List<Sample> objectSamples = new List<Sample>();
+            // Perform a generic call using objects resource valid for Network Devices as well
+            var response = await GetPagedResultsAsync<JToken>("objects", ToDictionary(filter), objectId, "trendedAttributes", attributeName.ToString(), "samples").ConfigureAwait(false);
+            // Read full attribute from url
+            foreach (JToken s in response.Items)
+            {
+                Sample sample = new Sample();
+                string unitsUrl = string.Empty;
+                try
+                {
+                    sample.Timestamp = s["timestamp"].Value<DateTime>();
+                    sample.IsReliable = s["isReliable"].Value<Boolean>();
+                    sample.Value = s["value"]["value"].Value<double>();
+                    unitsUrl = s["value"]["units"].Value<string>();
+                    sample.Unit = ResourceManager.Localize(unitsUrl, _CultureInfo);
+                }
+                catch (ArgumentNullException e)
+                {
+                    // Something went wrong on object parsing
+                    throw new MetasysObjectException(e);
+                }
+                if (Version < ApiVersion.v3)
+                {
+                    // On Api v2 and v1 there was the url endpoint of the enum instead of the fully qualified enumeration string
+                    var unitId = unitsUrl.Split('/').Last();
+                    // Read full url if not cached previously
+                    if (!Units.ContainsKey(unitId))
+                    {
+                        var unit = await GetWithFullUrl(unitsUrl).ConfigureAwait(false);
+                        Units.Add(unitId, unit["description"].Value<string>());
+                    }
+                    sample.Unit = Units[unitId];
+                }
+                objectSamples.Add(sample);
+            }
+            // Type the response as Sample List
+            return new PagedResult<Sample>
+            {
+                Items = objectSamples,
+                CurrentPage = response.CurrentPage,
+                PageCount = response.PageCount,
+                PageSize = response.PageSize,
+                Total = response.Total
+            };
+        }
+
+        /// <inheritdoc/>
         public List<MetasysAttribute> GetTrendedAttributes(Guid id)
         {
             return GetTrendedAttributesAsync(id).GetAwaiter().GetResult();
@@ -106,9 +178,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<List<MetasysAttribute>> GetTrendedAttributesAsync(Guid id)
         {
-            if (Version > ApiVersion.v3) {
-                throw new MetasysUnsupportedApiVersion(Version.ToString());
-            }
+            CheckVersion(Version);
+
             List<MetasysAttribute> objectAttributes = new List<MetasysAttribute>();
             // Perform a generic call using objects resource valid for Network Devices as well
             JToken attributes = (await GetRequestAsync("objects", null, id, "trendedAttributes").ConfigureAwait(false));
@@ -133,7 +204,14 @@ namespace JohnsonControls.Metasys.BasicServices
                         // Take the attribute ID from the samples url
                         var samplesUrl= a["samplesUrl"].Value<string>();
                         var attrId = samplesUrl.Split('/').Reverse().Skip(1).FirstOrDefault();
-                        metasysAttribute.Id = int.Parse(attrId);
+                        if (Version == ApiVersion.v3)
+                        {
+                            metasysAttribute.Id = int.Parse(attrId);
+                        } else
+                        {
+                            AttributeEnumSet attributeName = (AttributeEnumSet)Enum.Parse(typeof(AttributeEnumSet), attrId);
+                            metasysAttribute.Id = (int)attributeName;
+                        }
                     }
                     objectAttributes.Add(metasysAttribute);
                 } catch (ArgumentNullException e) {

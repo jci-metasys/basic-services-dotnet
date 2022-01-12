@@ -345,6 +345,16 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
         /// <inheritdoc />
+        public IComPagedResult GetSamples(string objectId, String attributeName, IComTimeFilter filter)
+        {
+            var mapTrendedAttributes = Mapper.Map<TimeFilter>(filter);
+            AttributeEnumSet attribute = (AttributeEnumSet)Enum.Parse(typeof(AttributeEnumSet), attributeName);
+            PagedResult<Sample> samples = Client.Trends.GetSamples(new Guid(objectId), attribute, mapTrendedAttributes);
+            var map = Mapper.Map<IComPagedResult>(samples);
+            return map;
+        }
+
+        /// <inheritdoc />
         public object GetSingleAudit(string auditId)
         {
             Guid guidAuditId = Guid.Parse(auditId);

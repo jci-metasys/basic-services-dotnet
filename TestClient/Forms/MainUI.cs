@@ -24,8 +24,10 @@ namespace MetasysServices_TestClient
         private Guid _networkDeviceId = Guid.Empty;
         private Guid _objectId = Guid.Empty;
 
+        private Forms.Equipments _frmEquipments;
         private Forms.Streams _frmStreams;
         private Forms.Spaces _frmSpaces;
+        private Forms.Trends _frmTrends;
 
         #region "Public Method"
         public MainUI()
@@ -270,11 +272,17 @@ namespace MetasysServices_TestClient
             ToolTip.SetToolTip(BtnRefresh, "Use method: 'Refresh()'");
             ToolTip.SetToolTip(BtnGetAccessToken, "Use method: 'GetAccessToken()'");
 
+            _frmEquipments = new Forms.Equipments();
+            _frmEquipments.InitForm(_client, TpgEquipment);
+
             _frmStreams = new Forms.Streams();
             _frmStreams.InitForm(_client, TpgStream);
 
             _frmSpaces = new Forms.Spaces();
             _frmSpaces.InitForm(_client, TpgSpace);
+
+            _frmTrends = new Forms.Trends();
+            _frmTrends.InitForm(_client, TpgTrend);
 
         }
         private void BtnLogin_Click(object sender, EventArgs e)
@@ -282,30 +290,19 @@ namespace MetasysServices_TestClient
             //Define the 'language' to use 
             CultureInfo culture = new CultureInfo("en-US");
             //Create a new 'client' object
-            var ver = ApiVersion.v4;
-            switch (cmbVersion.Text)
-            {
-                case "v2":
-                    ver = ApiVersion.v2;
-                    break;
-                case "v3":
-                    ver = ApiVersion.v3;
-                    break;
-                case "v4":
-                    ver = ApiVersion.v4;
-                    break;
-            }
-            _client = new MetasysClient(txtHost.Text, true, ver, culture);
+            ApiVersion version = (ApiVersion)Enum.Parse(typeof(ApiVersion), cmbVersion.Text);
+            _client = new MetasysClient(txtHost.Text, true, version, culture);
             if (_client != null)
             {
+                _frmEquipments.Client = _client;
                 _frmStreams.Client = _client;
                 _frmSpaces.Client = _client;
+                _frmTrends.Client = _client;
 
                 //Do the login using the credentials got from the UI
                 var token = _client.TryLogin(txtUsername.Text, txtPassword.Text);
                 if (token != null)
                 {
-
                     //Show the token
                     rcbToken.Text = token.ToString();
                     //enables the controls to get the Alarms
@@ -623,12 +620,6 @@ namespace MetasysServices_TestClient
 
         private void BtnGetEquipment_Click(object sender, EventArgs e)
         {
-            DgvGetEquipment.DataSource = null;
-            if (_client != null)
-            {
-                var res = _client.GetEquipment();
-                DgvGetEquipment.DataSource = res;
-            }
         }
 
         private void BtnGetNetworkDeviceTypes_Click(object sender, EventArgs e)
@@ -644,11 +635,18 @@ namespace MetasysServices_TestClient
         private void BtnGetNetworkDevices_Click(object sender, EventArgs e)
         {
             DgvGetNetworkDevices.DataSource = null;
-            string type = TxtGetNetworkDevices_Type_ID.Text;
-            if (_client != null && type.Length > 0)
+            if (_client != null)
             {
-                var res = _client.GetNetworkDevices(type);
-                DgvGetNetworkDevices.DataSource = res;
+                string type = TxtGetNetworkDevices_Type_ID.Text;
+                IEnumerable<MetasysObject> result;
+                if (type.Length>0)
+                {
+                    result = _client.GetNetworkDevices(type);
+                } else
+                {
+                    result = _client.GetNetworkDevices();
+                }
+                DgvGetNetworkDevices.DataSource = result;
             }
         }
 

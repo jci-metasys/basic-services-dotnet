@@ -83,7 +83,6 @@ namespace JohnsonControls.Metasys.BasicServices.Utils
             {
                 return value;
             }
-
             return resource;
         }
 

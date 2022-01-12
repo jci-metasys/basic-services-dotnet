@@ -212,12 +212,6 @@
             this.LblAudit_DiscardMulti_GUID1 = new System.Windows.Forms.Label();
             this.TpgEnumeration = new System.Windows.Forms.TabPage();
             this.TpgEquipment = new System.Windows.Forms.TabPage();
-            this.TabEquipment = new System.Windows.Forms.TabControl();
-            this.TpgGetEquipment = new System.Windows.Forms.TabPage();
-            this.GrbGetEquipment = new System.Windows.Forms.GroupBox();
-            this.BtnGetEquipment = new System.Windows.Forms.Button();
-            this.DgvGetEquipment = new System.Windows.Forms.DataGridView();
-            this.TpgGetEquipmentPoints = new System.Windows.Forms.TabPage();
             this.TpgNetworkDevice = new System.Windows.Forms.TabPage();
             this.TabNetworkDevice = new System.Windows.Forms.TabControl();
             this.TpgGetNetworkDevices = new System.Windows.Forms.TabPage();
@@ -330,11 +324,6 @@
             this.GrbDiscardAudit.SuspendLayout();
             this.TpgDiscardMultiple.SuspendLayout();
             this.GrbDiscardAuditMulti.SuspendLayout();
-            this.TpgEquipment.SuspendLayout();
-            this.TabEquipment.SuspendLayout();
-            this.TpgGetEquipment.SuspendLayout();
-            this.GrbGetEquipment.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvGetEquipment)).BeginInit();
             this.TpgNetworkDevice.SuspendLayout();
             this.TabNetworkDevice.SuspendLayout();
             this.TpgGetNetworkDevices.SuspendLayout();
@@ -398,6 +387,7 @@
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(100, 20);
             this.txtPassword.TabIndex = 12;
+            this.txtPassword.UseSystemPasswordChar = true;
             // 
             // lblUsername
             // 
@@ -2254,80 +2244,12 @@
             // TpgEquipment
             // 
             this.TpgEquipment.BackColor = System.Drawing.SystemColors.Control;
-            this.TpgEquipment.Controls.Add(this.TabEquipment);
             this.TpgEquipment.Location = new System.Drawing.Point(4, 34);
             this.TpgEquipment.Name = "TpgEquipment";
             this.TpgEquipment.Padding = new System.Windows.Forms.Padding(3);
             this.TpgEquipment.Size = new System.Drawing.Size(1080, 450);
             this.TpgEquipment.TabIndex = 8;
             this.TpgEquipment.Text = "EQUIPMENTS";
-            // 
-            // TabEquipment
-            // 
-            this.TabEquipment.Appearance = System.Windows.Forms.TabAppearance.Buttons;
-            this.TabEquipment.Controls.Add(this.TpgGetEquipment);
-            this.TabEquipment.Controls.Add(this.TpgGetEquipmentPoints);
-            this.TabEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TabEquipment.ItemSize = new System.Drawing.Size(58, 25);
-            this.TabEquipment.Location = new System.Drawing.Point(3, 3);
-            this.TabEquipment.Name = "TabEquipment";
-            this.TabEquipment.SelectedIndex = 0;
-            this.TabEquipment.Size = new System.Drawing.Size(1074, 444);
-            this.TabEquipment.TabIndex = 1;
-            // 
-            // TpgGetEquipment
-            // 
-            this.TpgGetEquipment.Controls.Add(this.GrbGetEquipment);
-            this.TpgGetEquipment.Location = new System.Drawing.Point(4, 29);
-            this.TpgGetEquipment.Name = "TpgGetEquipment";
-            this.TpgGetEquipment.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TpgGetEquipment.Size = new System.Drawing.Size(1066, 411);
-            this.TpgGetEquipment.TabIndex = 0;
-            this.TpgGetEquipment.Text = "Get Equipments";
-            this.TpgGetEquipment.UseVisualStyleBackColor = true;
-            // 
-            // GrbGetEquipment
-            // 
-            this.GrbGetEquipment.Controls.Add(this.BtnGetEquipment);
-            this.GrbGetEquipment.Controls.Add(this.DgvGetEquipment);
-            this.GrbGetEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GrbGetEquipment.Location = new System.Drawing.Point(3, 6);
-            this.GrbGetEquipment.Name = "GrbGetEquipment";
-            this.GrbGetEquipment.Size = new System.Drawing.Size(1060, 402);
-            this.GrbGetEquipment.TabIndex = 0;
-            this.GrbGetEquipment.TabStop = false;
-            this.GrbGetEquipment.Text = "Method: GetEquipment";
-            // 
-            // BtnGetEquipment
-            // 
-            this.BtnGetEquipment.Location = new System.Drawing.Point(6, 19);
-            this.BtnGetEquipment.Name = "BtnGetEquipment";
-            this.BtnGetEquipment.Size = new System.Drawing.Size(515, 23);
-            this.BtnGetEquipment.TabIndex = 26;
-            this.BtnGetEquipment.Text = "GetEquipment";
-            this.BtnGetEquipment.UseVisualStyleBackColor = true;
-            this.BtnGetEquipment.Click += new System.EventHandler(this.BtnGetEquipment_Click);
-            // 
-            // DgvGetEquipment
-            // 
-            this.DgvGetEquipment.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DgvGetEquipment.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvGetEquipment.Location = new System.Drawing.Point(6, 48);
-            this.DgvGetEquipment.Name = "DgvGetEquipment";
-            this.DgvGetEquipment.Size = new System.Drawing.Size(1048, 348);
-            this.DgvGetEquipment.TabIndex = 25;
-            // 
-            // TpgGetEquipmentPoints
-            // 
-            this.TpgGetEquipmentPoints.Location = new System.Drawing.Point(4, 29);
-            this.TpgGetEquipmentPoints.Name = "TpgGetEquipmentPoints";
-            this.TpgGetEquipmentPoints.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TpgGetEquipmentPoints.Size = new System.Drawing.Size(1066, 411);
-            this.TpgGetEquipmentPoints.TabIndex = 1;
-            this.TpgGetEquipmentPoints.Text = "Get Points by Equipment";
-            this.TpgGetEquipmentPoints.UseVisualStyleBackColor = true;
             // 
             // TpgNetworkDevice
             // 
@@ -3121,11 +3043,6 @@
             this.TpgDiscardMultiple.ResumeLayout(false);
             this.GrbDiscardAuditMulti.ResumeLayout(false);
             this.GrbDiscardAuditMulti.PerformLayout();
-            this.TpgEquipment.ResumeLayout(false);
-            this.TabEquipment.ResumeLayout(false);
-            this.TpgGetEquipment.ResumeLayout(false);
-            this.GrbGetEquipment.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DgvGetEquipment)).EndInit();
             this.TpgNetworkDevice.ResumeLayout(false);
             this.TabNetworkDevice.ResumeLayout(false);
             this.TpgGetNetworkDevices.ResumeLayout(false);
@@ -3338,12 +3255,6 @@
         private System.Windows.Forms.TextBox TxtAudit_DiscardMulti_GUID1;
         private System.Windows.Forms.Label LblAudit_DiscardMulti_GUID1;
         private System.Windows.Forms.TabPage TpgEquipment;
-        private System.Windows.Forms.GroupBox GrbGetEquipment;
-        private System.Windows.Forms.Button BtnGetEquipment;
-        private System.Windows.Forms.DataGridView DgvGetEquipment;
-        private System.Windows.Forms.TabControl TabEquipment;
-        private System.Windows.Forms.TabPage TpgGetEquipment;
-        private System.Windows.Forms.TabPage TpgGetEquipmentPoints;
         private System.Windows.Forms.TabPage TpgNetworkDevice;
         private System.Windows.Forms.TabControl TabNetworkDevice;
         private System.Windows.Forms.TabPage TpgGetNetworkDevices;

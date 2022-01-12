@@ -44,7 +44,6 @@ namespace MetasysServices_TestClient.Forms
             TabMain.Parent = container;
             TabMain.Dock = DockStyle.Fill;
             TabMain.Visible = true;
-
         }
 
         private void BtnGetSpaces_Click(object sender, EventArgs e)
@@ -65,6 +64,29 @@ namespace MetasysServices_TestClient.Forms
         private void ChkGetSpaces_CheckedChanged(object sender, EventArgs e)
         {
             CmbGetSpaces.Enabled = !ChkGetSpaces.Checked;
+        }
+
+        private void BtnGetSpaceChildren_Click(object sender, EventArgs e)
+        {
+            IEnumerable<MetasysObject> result;
+            Guid spaceId = new Guid(TxtGetSpaceChildren_SpaceID.Text);
+            result = _client.GetSpaceChildren(spaceId);
+            DgvGetSpaceChildren.DataSource = result;
+        }
+
+        private void BtnGetSpaceEquipment_Click(object sender, EventArgs e)
+        {
+            IEnumerable<MetasysObject> result;
+            Guid spaceId = new Guid(TxtGetSpaceEquipment_SpaceID.Text);
+            result = _client.GetSpaceEquipment(spaceId);
+            DgvGetSpaceEquipment.DataSource = result;
+        }
+
+        private void BtnGetSpaceTypes_Click(object sender, EventArgs e)
+        {
+            IEnumerable<MetasysObjectType> result;
+            result = _client.GetSpaceTypes();
+            DgvGetSpaceTypes.DataSource = result;
         }
     }
 }

@@ -21,7 +21,5 @@ namespace MetasysServices_TestClient
             Application.Run(new MainUI());
         }
 
-
-
     }
 }

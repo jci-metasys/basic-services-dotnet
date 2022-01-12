@@ -233,6 +233,15 @@ namespace JohnsonControls.Metasys.ComServices
         IComPagedResult GetSamples(string objectId, int attributeId, IComTimeFilter filter);
 
         /// <summary>
+        /// Retrieves a collection of samples for the specified object attribute during a particular date and time range.
+        /// </summary>
+        /// <param name="objectId">The identifier of the object</param>
+        /// <param name="attributeName">Name of the attribute for which to retrieve sample information</param>
+        /// <param name="filter">Filter for a timeline based request</param>
+        /// <returns>The list of samples for the specified objectduring a particular date and time range.</returns>
+        IComPagedResult GetSamples(string objectId, String attributeName, IComTimeFilter filter);
+
+        /// <summary>
         /// Retrieves the specified audit.
         /// </summary>
         /// <param name="auditId">The identifier of the audit.</param>

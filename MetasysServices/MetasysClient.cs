@@ -932,7 +932,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 throw new MetasysHttpParsingException(response.ToString(), e);
             }
-            if (readAttributeValue)
+            if (readAttributeValue && guids.Count > 0)
             {
                 // Try to Read Present Value when available. Note: can't read attribute ID from attribute full URL of point since we got only the description.
                 var results = await ReadPropertyMultipleAsync(guids, new List<string> { "presentValue" }).ConfigureAwait(false);

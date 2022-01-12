@@ -44,5 +44,25 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <inheritdoc cref="ITrendService.GetSamples(Guid, int, TimeFilter)"/>
         Task<PagedResult<Sample>> GetSamplesAsync(Guid objectId, int attributeId, TimeFilter filter);
+
+        /// <summary>
+        /// Retrieves available samples for the given object attribute, filtered by startTime and endTime.
+        /// </summary>
+        /// <remarks>StartTime and EndTime are mandatory parameters.</remarks>
+        /// <param name="objectId"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="filter"></param>
+        /// <returns>The list of samples.</returns>
+        /// <exception cref="MetasysHttpNotFoundException"></exception>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpTimeoutException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <exception cref="MetasysHttpNotFoundException"></exception>
+        /// <exception cref="MetasysObjectException"></exception>
+        PagedResult<Sample> GetSamples(Guid objectId, AttributeEnumSet attributeName, TimeFilter filter);
+
+        /// <inheritdoc cref="ITrendService.GetSamples(Guid, int, TimeFilter)"/>
+        Task<PagedResult<Sample>> GetSamplesAsync(Guid objectId, AttributeEnumSet attributeName, TimeFilter filter);
+
     }
 }
