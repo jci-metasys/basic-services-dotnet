@@ -8,11 +8,13 @@ using System.Net;
 using System.Collections;
 using Flurl;
 using Flurl.Http;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using JohnsonControls.Metasys.BasicServices.Utils;
 using JohnsonControls.Metasys.BasicServices;
 using System.Diagnostics;
+using System.Dynamic;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -731,6 +733,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync()
         {
+
             return await GetResourceTypesAsync("networkDevices", "availableTypes").ConfigureAwait(false);
         }
 
@@ -751,25 +754,45 @@ namespace JohnsonControls.Metasys.BasicServices
                     .ConfigureAwait(false);
                 try
                 {
-                    // The response is a list of typeUrls, not the type data
-                    var list = response["items"] as JArray;
-                    foreach (var item in list)
+                    if (Version < ApiVersion.v4)
                     {
-                        try
+                        // The response is a list of typeUrls, not the type data
+                        var list = response["items"] as JArray;
+                        foreach (var item in list)
                         {
-                            JToken typeToken = item;
-                            // Retrieve type token from url (when available) and construct Metasys Object Type
-                            if (item["typeUrl"] != null)
+                            try
                             {
-                                var url = item["typeUrl"].Value<string>();
-                                typeToken = await GetWithFullUrl(url).ConfigureAwait(false);
+                                JToken typeToken = item;
+                                // Retrieve type token from url (when available) and construct Metasys Object Type
+                                if (item["typeUrl"] != null)
+                                {
+                                    var url = item["typeUrl"].Value<string>();
+                                    typeToken = await GetWithFullUrl(url).ConfigureAwait(false);
+                                }
+                                var type = GetType(typeToken);
+                                types.Add(type);
                             }
-                            var type = GetType(typeToken);
-                            types.Add(type);
+                            catch (System.ArgumentNullException e)
+                            {
+                                throw new MetasysHttpParsingException(response.ToString(), e);
+                            }
                         }
-                        catch (System.ArgumentNullException e)
+                    } else
+                    {
+                        var item = response["item"];
+                        var members = item["members"];
+                        dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(members.ToString());
+                        foreach (KeyValuePair<string, object> kvp in kvpList)
                         {
-                            throw new MetasysHttpParsingException(response.ToString(), e);
+                            if (kvp.Key.Length > 0)
+                            {
+                                var itm = kvp.Value as IDictionary<string, object>;
+                                String description = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
+                                int id = int.Parse( (itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
+                                
+                                var type = GetType(id, description, kvp.Key);
+                                types.Add(type);
+                            }
                         }
                     }
                 }
@@ -795,21 +818,76 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             try
             {
-                string description = typeToken["description"].Value<string>();
-                int id = typeToken["id"].Value<int>();
-                string key = GetObjectTypeEnumeration(description);
-                string translation = Localize(key);
-                if (translation != key)
+                if (typeToken != null || typeToken == null)
                 {
-                    // A translation was found
-                    description = translation;
+                    //string description = (typeToken.Contains("description") && typeToken["description"] != null) ? typeToken["description"].Value<string>(): "";
+                    //int id = (typeToken.Contains("id") && typeToken["id"] != null) ?  typeToken["id"].Value<int>() : -1;
+                    //string key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
+                    string description = typeToken["description"].Value<string>();
+                    int id = typeToken["id"].Value<int>();
+                    //string key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
+                    string key = GetObjectTypeEnumeration(description);
+
+                    if (key.Length > 0)
+                    {
+                        string translation = Localize(key);
+                        if (translation != key)
+                        {
+                            // A translation was found
+                            description = translation;
+                        }
+                    }
+                    return new MetasysObjectType(id, key, description);
                 }
-                return new MetasysObjectType(id, key, description);
+                else
+                {
+                    return new MetasysObjectType(-1, "", "");
+                }
             }
             catch (Exception e) when (e is System.ArgumentNullException
                 || e is System.NullReferenceException || e is System.FormatException)
             {
                 throw new MetasysObjectTypeException(typeToken.ToString(), e);
+            }
+        }
+
+        /// <summary>
+        /// Gets the type from the values of the paramenters
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="description"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysObjectTypeException"></exception>
+        protected MetasysObjectType GetType(int id, String description, String key)
+        {
+            try
+            {
+                if (id >= 0 && description.Length > 0)
+                {
+                    if (String.IsNullOrEmpty(key))
+                    {
+                        key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
+                    }
+                    if (key.Length > 0)
+                    {
+                        string translation = Localize(key);
+                        if (translation != key)
+                        {
+                            // A translation was found
+                            description = translation;
+                        }
+                    }
+                    return new MetasysObjectType(id, key, description);
+                }
+                else
+                {
+                    return new MetasysObjectType(-1, "", "");
+                }
+            }
+            catch (Exception e) when (e is System.ArgumentNullException
+                || e is System.NullReferenceException || e is System.FormatException)
+            {
+                throw new MetasysObjectTypeException(id.ToString() + " " + description, e);
             }
         }
 
@@ -875,7 +953,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObjectType>> GetSpaceTypesAsync()
         {
-            return await GetResourceTypesAsync("enumSets", "1766/members").ConfigureAwait(false);
+            if (Version < ApiVersion.v4)
+            {
+                return await GetResourceTypesAsync("enumSets", "1766/members").ConfigureAwait(false);
+            } else
+            {
+                return await GetResourceTypesAsync("enumerations", "spaceTypesEnumSet").ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc/>

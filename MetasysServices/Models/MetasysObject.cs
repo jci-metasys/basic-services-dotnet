@@ -85,7 +85,7 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 Id = new Guid(token["id"].Value<string>());
-                ItemReference = GetJTokenValue(token, "itemReference");
+                ItemReference = token["itemReference"].Value<string>();
             }
             catch (Exception e)
             {
@@ -115,6 +115,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 // This applies for v2 and v1.
                 TypeUrl = GetJTokenValue(token,"typeUrl");
                 if (Type == MetasysObjectTypeEnum.Space && TypeUrl.Length > 0)
+                //if (Type == MetasysObjectTypeEnum.Space)
                 {
                     // Set the specific category for Space
                     var typeId = TypeUrl.Split('/').Last();

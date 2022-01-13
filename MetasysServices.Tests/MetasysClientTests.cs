@@ -2242,6 +2242,7 @@ namespace MetasysServices.Tests
             string space = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\"}");
+
             httpTest.RespondWith(string.Concat("{",
                 "\"total\": 1,",
                 "\"next\": null,",
