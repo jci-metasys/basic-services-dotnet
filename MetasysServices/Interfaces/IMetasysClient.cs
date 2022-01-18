@@ -388,6 +388,24 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         Task<StreamMessage> GetSingleStreamingChannelAsync();
 
+        /// <summary>
+        /// Get all the Site Enumerations
+        /// </summary>
+         IEnumerable<MetasysEnumeration> GetSiteEnumerations();
 
+        /// <summary>
+        /// Get all the Site Enumerations (Async)
+        /// </summary>
+        Task<IEnumerable<MetasysEnumeration>> GetSiteEnumerationsAsync();
+
+        /// <summary>
+        /// Get all the values of a specified enumeration set
+        /// </summary>
+        IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey);
+
+        /// <summary>
+        /// Get all the values of a specified enumeration set (Async)
+        /// </summary>
+        Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey);
     }
 }

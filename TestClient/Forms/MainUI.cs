@@ -24,6 +24,7 @@ namespace MetasysServices_TestClient
         private Guid _networkDeviceId = Guid.Empty;
         private Guid _objectId = Guid.Empty;
 
+        private Forms.Enumerations _frmEnumerations;
         private Forms.Equipments _frmEquipments;
         private Forms.Streams _frmStreams;
         private Forms.Spaces _frmSpaces;
@@ -33,8 +34,6 @@ namespace MetasysServices_TestClient
         public MainUI()
         {
             InitializeComponent();
-
-
         }
         #endregion
 
@@ -272,6 +271,9 @@ namespace MetasysServices_TestClient
             ToolTip.SetToolTip(BtnRefresh, "Use method: 'Refresh()'");
             ToolTip.SetToolTip(BtnGetAccessToken, "Use method: 'GetAccessToken()'");
 
+            _frmEnumerations = new Forms.Enumerations();
+            _frmEnumerations.InitForm(_client, TpgEnumeration);
+
             _frmEquipments = new Forms.Equipments();
             _frmEquipments.InitForm(_client, TpgEquipment);
 
@@ -294,6 +296,7 @@ namespace MetasysServices_TestClient
             _client = new MetasysClient(txtHost.Text, true, version, culture);
             if (_client != null)
             {
+                _frmEnumerations.Client = _client;
                 _frmEquipments.Client = _client;
                 _frmStreams.Client = _client;
                 _frmSpaces.Client = _client;

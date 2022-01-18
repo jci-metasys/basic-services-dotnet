@@ -93,6 +93,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\Enumerations.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Enumerations.Designer.cs">
+      <DependentUpon>Enumerations.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Equipments.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +132,9 @@
     <Compile Include="Forms\Streams.Designer.cs">
       <DependentUpon>Streams.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\Enumerations.resx">
+      <DependentUpon>Enumerations.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Equipments.resx">
       <DependentUpon>Equipments.cs</DependentUpon>
     </EmbeddedResource>

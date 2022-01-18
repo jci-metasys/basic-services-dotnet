@@ -697,6 +697,106 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
+        public IEnumerable<MetasysEnumeration> GetSiteEnumerations()
+        {
+            return GetSiteEnumerationsAsync().GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysEnumeration>> GetSiteEnumerationsAsync()
+        {
+            List<MetasysEnumeration> enums = new List<MetasysEnumeration>() { };
+
+            if (version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(version.ToString()); }
+
+            try
+            {
+                var response = await Client.Request(new Url("enumerations"))
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+                try
+                {
+                    var items = response["items"];
+                    dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(items.ToString());
+                    foreach (KeyValuePair<string, object> kvp in kvpList)
+                    {
+                        if (kvp.Key.Length > 0)
+                        {
+                            var itm = kvp.Value as IDictionary<string, object>;
+                            String key = kvp.Key;
+                            String name = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
+                            bool isTwoState = bool.Parse((itm.ContainsKey("isTwoState")) ? itm["isTwoState"].ToString() : Convert.ToString(false));
+                            bool isMultiState = bool.Parse((itm.ContainsKey("isMultiState")) ? itm["isMultiState"].ToString() : Convert.ToString(false));
+                            int numberOfStates = int.Parse((itm.ContainsKey("numberOfStates")) ? itm["numberOfStates"].ToString() : Convert.ToString(0));
+
+                            var enumItem = new MetasysEnumeration(key, name, isTwoState, isMultiState, numberOfStates, culture);
+                            enums.Add(enumItem);
+                        }
+                    }
+                }
+                catch (System.NullReferenceException e)
+                {
+                    throw new MetasysHttpParsingException(response.ToString(), e);
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return enums;
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey)
+        {
+            return GetEnumValuesAsync(enumerationKey).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey)
+        {
+            List<MetasysEnumValue> enums = new List<MetasysEnumValue>() { };
+
+            if (version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(version.ToString()); }
+
+            try
+            {
+                var response = await Client.Request(new Url("enumerations")
+                    .AppendPathSegment(enumerationKey))
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+                try
+                {
+                    var item = response["item"];
+                    var members = item["members"];
+                    dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(members.ToString());
+                    foreach (KeyValuePair<string, object> kvp in kvpList)
+                    {
+                        if (kvp.Key.Length > 0)
+                        {
+                            var itm = kvp.Value as IDictionary<string, object>;
+                            String key = kvp.Key;
+                            String name = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
+                            int value = int.Parse((itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
+
+                            var enumValue = new MetasysEnumValue(key, name, value, culture);
+                            enums.Add(enumValue);
+                        }
+                    }
+                }
+                catch (System.NullReferenceException e)
+                {
+                    throw new MetasysHttpParsingException(response.ToString(), e);
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return enums;
+        }
+
+        /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetNetworkDevices(string type = null)
         {
             return GetNetworkDevicesAsync(type).GetAwaiter().GetResult();
@@ -714,7 +814,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
             var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } }).ConfigureAwait(false);
-            return ToMetasysObject(response);
+            return ToMetasysObject(response, Version,  MetasysObjectTypeEnum.Object);
         }
 
         /// <inheritdoc/>
@@ -856,6 +956,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="id"></param>
         /// <param name="description"></param>
+        /// <param name="key"></param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysObjectTypeException"></exception>
         protected MetasysObjectType GetType(int id, String description, String key)
@@ -913,7 +1014,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 parameters = new Dictionary<string, string>() { { "type", ((int)type).ToString() } };
             }
             var spaces = await GetAllAvailablePagesAsync("spaces", parameters).ConfigureAwait(false);
-            return ToMetasysObject(spaces, type: MetasysObjectTypeEnum.Space);
+            return ToMetasysObject(spaces, Version, type: MetasysObjectTypeEnum.Space);
         }
 
         /// <inheritdoc/>
@@ -926,7 +1027,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid id)
         {
             var spaceChildren = await GetAllAvailablePagesAsync("spaces", null, id.ToString(), "spaces").ConfigureAwait(false);
-            return ToMetasysObject(spaceChildren, MetasysObjectTypeEnum.Space);
+            return ToMetasysObject(spaceChildren, Version, MetasysObjectTypeEnum.Space);
         }
 
 
@@ -941,7 +1042,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             CheckVersion(Version);
             var equipment = await GetAllAvailablePagesAsync("equipment").ConfigureAwait(false);
-            return ToMetasysObject(equipment, MetasysObjectTypeEnum.Equipment);
+            return ToMetasysObject(equipment, Version, MetasysObjectTypeEnum.Equipment);
         }
 
         /// <inheritdoc/>
@@ -972,7 +1073,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
         {
             var spaceEquipment = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment").ConfigureAwait(false);
-            return ToMetasysObject(spaceEquipment, MetasysObjectTypeEnum.Equipment);
+            return ToMetasysObject(spaceEquipment, Version, MetasysObjectTypeEnum.Equipment);
         }
 
         /// <inheritdoc/>
@@ -1043,7 +1144,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 parameters.Add("includeInternalObjects", includeInternalObjects.ToString());
             }
             var objects = await GetObjectChildrenAsync(id, parameters, levels).ConfigureAwait(false);
-            return ToMetasysObject(objects);
+            return ToMetasysObject(objects, Version);
         }
 
         /// <inheritdoc/>

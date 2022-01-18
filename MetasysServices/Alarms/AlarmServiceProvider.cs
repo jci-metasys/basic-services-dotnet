@@ -33,6 +33,11 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
+        public PagedResult<Alarm> Get(AlarmFilter alarmFilter)
+        {
+            return GetAsync(alarmFilter).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
         public async Task<PagedResult<Alarm>> GetAsync(AlarmFilter alarmFilter)
         {
             CheckVersion(Version);
@@ -43,18 +48,22 @@ namespace JohnsonControls.Metasys.BasicServices
                 foreach (var item in response.Items) {
                     alarms.Add(CreateItem(item));
                 }
-
                 response = new PagedResult<Alarm> {
-                    Items = alarms,
-                    CurrentPage = response.CurrentPage,
-                    PageCount = response.PageCount,
-                    PageSize = response.PageSize,
-                    Total = response.Total
+                Items = alarms,
+                CurrentPage = response.CurrentPage,
+                PageCount = response.PageCount,
+                PageSize = response.PageSize,
+                Total = response.Total
                 };
             }
             return response;
         }
 
+        /// <inheritdoc/>
+        public Alarm FindById(Guid alarmId)
+        {
+            return FindByIdAsync(alarmId).GetAwaiter().GetResult();
+        }
         /// <inheritdoc/>
         public async Task<Alarm> FindByIdAsync(Guid alarmId)
         {
@@ -64,24 +73,17 @@ namespace JohnsonControls.Metasys.BasicServices
             if (response["items"] != null) response = response["items"];
             
             var alarmData = JsonConvert.DeserializeObject<Alarm>(response.ToString());
-            if (Version == ApiVersion.v3) {
+            if (Version == ApiVersion.v3 || Version == ApiVersion.v4) {
                 alarmData = CreateItem(alarmData);
-            }
-            else if (Version == ApiVersion.v4) {
-                alarmData = JsonConvert.DeserializeObject<Alarm_V4>(response.ToString());
-                alarmData = CreateItem_v4((Alarm_V4)alarmData);
-            }
-            else {
-                alarmData = JsonConvert.DeserializeObject<Alarm>(response.ToString());
-            }
+            } 
             return alarmData;
         }
-        /// <inheritdoc/>
-        public Alarm FindById(Guid alarmId)
-        {
-            return FindByIdAsync(alarmId).GetAwaiter().GetResult();
-        }
 
+        /// <inheritdoc/>
+        public PagedResult<Alarm> GetForObject(Guid objectId, AlarmFilter alarmFilter)
+        {
+            return GetForObjectAsync(objectId, alarmFilter).GetAwaiter().GetResult();
+        }
         /// <inheritdoc/>
         public async Task<PagedResult<Alarm>> GetForObjectAsync(Guid objectId, AlarmFilter alarmFilter)
         {
@@ -105,6 +107,11 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
+        public PagedResult<Alarm> GetForNetworkDevice(Guid networkDeviceId, AlarmFilter alarmFilter)
+        {
+            return GetForNetworkDeviceAsync(networkDeviceId, alarmFilter).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
         public async Task<PagedResult<Alarm>> GetForNetworkDeviceAsync(Guid networkDeviceId, AlarmFilter alarmFilter)
         {
             CheckVersion(Version);
@@ -127,25 +134,6 @@ namespace JohnsonControls.Metasys.BasicServices
             return response;
         }
 
-
-        /// <inheritdoc/>
-        public PagedResult<Alarm> Get(AlarmFilter alarmFilter)
-        {
-            return GetAsync(alarmFilter).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc/>
-        public PagedResult<Alarm> GetForObject(Guid objectId, AlarmFilter alarmFilter)
-        {
-            return GetForObjectAsync(objectId, alarmFilter).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc/>
-        public PagedResult<Alarm> GetForNetworkDevice(Guid networkDeviceId, AlarmFilter alarmFilter)
-        {
-            return GetForNetworkDeviceAsync(networkDeviceId, alarmFilter).GetAwaiter().GetResult();
-        }
-
         /// <inheritdoc/>
         public IEnumerable<AlarmAnnotation> GetAnnotations(Guid alarmId)
         {
@@ -160,18 +148,7 @@ namespace JohnsonControls.Metasys.BasicServices
             List<AlarmAnnotation> annotationsList = new List<AlarmAnnotation>();
             // Convert to a collection of AlarmAnnotation
             foreach (var token in annotations) {
-                AlarmAnnotation alarmAnnotation = new AlarmAnnotation();
-                // Build AlarmAnnotation object
-                try {
-                    alarmAnnotation.Text = token["text"].Value<string>();
-                    alarmAnnotation.User = token["user"].Value<string>();
-                    alarmAnnotation.CreationTime = token["creationTime"].Value<DateTime>();
-                    alarmAnnotation.Action = token["action"].Value<string>();
-                    alarmAnnotation.AlarmUrl = token["alarmUrl"].Value<string>();
-                    annotationsList.Add(alarmAnnotation);
-                } catch (Exception e) {
-                    throw new MetasysObjectException(token.ToString(), e);
-                }
+                annotationsList.Add(CreateAlarmAnnotation(token));
             }
             return annotationsList;
         }
@@ -181,13 +158,16 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             try
             {
-                var triggerValue = new Measurement
+                if (Version == ApiVersion.v3)
                 {
-                    Units = item.TriggerValue.Units != null ? ResourceManager.Localize(item.TriggerValue.Units, _CultureInfo) : null,
-                    Value = item.TriggerValue.Value
-                };
+                    var triggerValue = new TriggerValue
+                    {
+                        Units = item.TriggerValue.Units != null ? ResourceManager.Localize(item.TriggerValue.Units, _CultureInfo) : null,
+                        Value = item.TriggerValue.Value
+                    };
+                    item.TriggerValue = triggerValue;
+                }
 
-                item.TriggerValue = triggerValue;
             }
             catch (ArgumentNullException e)
             {
@@ -196,19 +176,30 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return item;
         }
-        private Alarm_V4 CreateItem_v4(Alarm_V4 item)
+
+        private AlarmAnnotation CreateAlarmAnnotation(JToken token)
         {
+            // Build AlarmAnnotation object
+            AlarmAnnotation res = new AlarmAnnotation();
             try
             {
-                item.TriggerValue.Value = item.TriggerValue.item;
-                item.TriggerValue.Units = item.TriggerValue.Units != null ? ResourceManager.Localize(item.TriggerValue.Units, _CultureInfo) : null;
+                //res.Text = GetJTokenValue(token, "text");
+                //res.User = GetJTokenValue(token, "User");
+                //res.CreationTime = GetJTokenDate(token, "creationTime");
+                //res.Action = GetJTokenValue(token, "action");
+                //res.AlarmUrl = GetJTokenValue(token, "alarmUrl");
+
+                res.Text = token["text"].Value<string>();
+                res.User = token["user"].Value<string>();
+                res.CreationTime = token["creationTime"].Value<DateTime>();
+                res.Action = token["action"].Value<string>();
+                res.AlarmUrl = token["alarmUrl"].Value<string>();
             }
-            catch (ArgumentNullException e)
+            catch (Exception e)
             {
-                // Something went wrong on object parsing
-                throw new MetasysObjectException(e);
+                throw new MetasysObjectException(token.ToString(), e);
             }
-            return item;
+            return res;
         }
 
     }

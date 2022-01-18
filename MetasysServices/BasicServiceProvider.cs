@@ -11,19 +11,25 @@ using System.Reflection;
 using System.Net.Http;
 using System.Globalization;
 using System.IO;
+using JohnsonControls.Metasys.BasicServices.Utils;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// Base abstract class to be extended on specific provider implementation.
     /// </summary>
-    public abstract class BasicServiceProvider
+    public abstract class BasicServiceProvider: ObjectUtil
     {
         /// <summary>The http client.</summary>
         protected IFlurlClient Client;
 
         /// <inheritdoc/>
         public ApiVersion Version { get; set; }
+
+        /// <summary>
+        /// Min API version supported by this SDK.
+        /// </summary>
+        public ApiVersion MinVersionSupported { get; } = ApiVersion.v2;
 
         /// <summary>
         /// Max API version supported by this SDK.
@@ -89,8 +95,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Return Metasys Object representation from a generic JSON object tree.
         /// </summary>
         /// <returns></returns>
-        protected List<MetasysObject> ToMetasysObject(IEnumerable<TreeObject> objects, MetasysObjectTypeEnum? objectType=null)
+        protected List<MetasysObject> ToMetasysObject(IEnumerable<TreeObject> objects, ApiVersion version, MetasysObjectTypeEnum? objectType=null)
         {
+            Version = version;
             if (objects == null)
             {
                 // Exit condition for recursion
@@ -99,7 +106,7 @@ namespace JohnsonControls.Metasys.BasicServices
             List<MetasysObject> metasysObjects = new List<MetasysObject>();
             foreach (var o in objects)
             {
-                metasysObjects.Add(new MetasysObject(o.Item, Version, ToMetasysObject(o.Children), type:objectType));
+                metasysObjects.Add(new MetasysObject(o.Item, Version, ToMetasysObject(o.Children, Version), type:objectType));
             }
             return metasysObjects;
         }
@@ -108,8 +115,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Return Metasys Object representation from a generic JSON object.
         /// </summary>
         /// <returns></returns>
-        protected MetasysObject ToMetasysObject(JToken item, MetasysObjectTypeEnum? objectType = null)
+        protected MetasysObject ToMetasysObject(JToken item, ApiVersion version, MetasysObjectTypeEnum? objectType = null)
         {
+            Version = version;
             return new MetasysObject(item, Version, null, type:objectType);
         }
 
@@ -118,12 +126,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Return Metasys Object representation from a generic JSON object List.
         /// </summary>
         /// <returns></returns>
-        protected List<MetasysObject> ToMetasysObject(List<JToken> items, MetasysObjectTypeEnum? type = null)
+        protected List<MetasysObject> ToMetasysObject(List<JToken> items, ApiVersion version, MetasysObjectTypeEnum? type = null)
         {
+            Version = version;
             List<MetasysObject> objects = new List<MetasysObject>();
             foreach (var i in items)
             {
-                objects.Add(ToMetasysObject(i, objectType:type));
+                objects.Add(ToMetasysObject(i, Version, objectType:type));
             }
             return objects;
         }
@@ -550,7 +559,8 @@ namespace JohnsonControls.Metasys.BasicServices
 
         protected void CheckVersion(ApiVersion version)
         {
-            if (version > MaxVersionSupported)
+            //Check if the selected version is supported by the SDK
+            if (version < MinVersionSupported || version > MaxVersionSupported)
             { throw new MetasysUnsupportedApiVersion(version.ToString()); }
         }
     }

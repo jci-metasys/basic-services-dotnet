@@ -23,6 +23,9 @@ using System.Timers;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
+    /// <summary>
+    /// Provide methods for the endpoints of the Metasys Stream API v4.
+    /// </summary>
     public sealed class StreamServiceProvider : IDisposable, IStreamService
     {
         private bool _isDisposed = false;
@@ -147,9 +150,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         public void Dispose()
         {
-
             _isDisposed = true;
-
             try
             {
                 // networking issues can cause a delayed exception                

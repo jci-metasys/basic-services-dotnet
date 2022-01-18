@@ -37,26 +37,42 @@ namespace MetasysServices_TestClient.Forms
 
         private void BtnGetTrendedAttributes_Click(object sender, EventArgs e)
         {
-            List<MetasysAttribute> result;
-            Guid objectId = new Guid(TxtGetTrendedAttributes_ObjectID.Text);
-            result = _client.Trends.GetTrendedAttributes(objectId);
-            DgvGetTrendedAttributes.DataSource = result;
+            String objectId = TxtGetTrendedAttributes_ObjectID.Text.Trim();
+            if (! String.IsNullOrEmpty(objectId))
+            {
+                DgvGetTrendedAttributes.DataSource = null;
+                List<MetasysAttribute> result;
+                Guid id = new Guid(objectId);
+                result = _client.Trends.GetTrendedAttributes(id);
+                DgvGetTrendedAttributes.DataSource = result;
+            } else
+            {
+                MessageBox.Show("The parameter 'Object ID' is mandatory!", "Warning");
+            }
         }
 
         private void BtnGetSamples_Click(object sender, EventArgs e)
         {
-            PagedResult<Sample> result;
-            Guid objectId = new Guid(TxtGetSamples_ObjectID.Text);
-            int attributeId = (int)NudGetSamples_AttributeID.Value;
-            TimeFilter filter = new TimeFilter {StartTime = DtpGetSamples_StartTime.Value, EndTime = DtpGetSamples_EndTime.Value};
-            result = _client.Trends.GetSamples(objectId, attributeId,filter);
-            DgvGetSamples.DataSource = null;
-            if (result != null)
+            String strObjectId = TxtGetSamples_ObjectID.Text.Trim();
+            if (!String.IsNullOrEmpty(strObjectId))
             {
-                if (result.PageCount > 0)
+                DgvGetSamples.DataSource = null;
+                PagedResult<Sample> result;
+                Guid objectId = new Guid(strObjectId);
+                int attributeId = (int)NudGetSamples_AttributeID.Value;
+                TimeFilter filter = new TimeFilter { StartTime = DtpGetSamples_StartTime.Value, EndTime = DtpGetSamples_EndTime.Value };
+                result = _client.Trends.GetSamples(objectId, attributeId, filter);
+                if (result != null)
                 {
-                    DgvGetSamples.DataSource = result.Items;
+                    if (result.PageCount > 0)
+                    {
+                        DgvGetSamples.DataSource = result.Items;
+                    }
                 }
+            }
+            else
+            {
+                MessageBox.Show("The parameter 'Object ID' is mandatory!", "Warning");
             }
 
         }

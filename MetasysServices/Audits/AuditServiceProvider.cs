@@ -46,7 +46,6 @@ namespace JohnsonControls.Metasys.BasicServices
             if (Version == ApiVersion.v3 || Version == ApiVersion.v4) {
                 auditData = CreateItem(auditData);
             }
-
             return auditData;
         }
 

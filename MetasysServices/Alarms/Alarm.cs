@@ -29,10 +29,22 @@ namespace JohnsonControls.Metasys.BasicServices
         public string ItemReference { get; set; }
 
         /// <summary>
+        /// Alarm description
+        /// </summary>
+        /// <remarks> This is available since Metasys API v4. </remarks>
+        public string Description { get; set; }
+
+        /// <summary>
         /// Item name
         /// </summary>
         [JsonProperty(Required = Required.Always)]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Discarded Time
+        /// </summary>
+        /// <remarks> This is available since Metasys API v4. </remarks>
+        public string DiscardedTime { get; set; }
 
         /// <summary>
         /// Alarm message
@@ -47,7 +59,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm type route
         /// </summary>
-        /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
+        /// <remarks> This is available only with Metasys API v2 and v1. </remarks>
         public string TypeUrl { get; set; }
 
         /// <summary>
@@ -64,7 +76,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm trigger value details
         /// </summary>
-        public Measurement TriggerValue { get; set; }
+        public TriggerValue TriggerValue { get; set; }
 
         /// <summary>
         /// Alarm creation time
@@ -72,19 +84,27 @@ namespace JohnsonControls.Metasys.BasicServices
         public string CreationTime { get; set; }
 
         /// <summary>
+        /// Activity Management Status
+        /// </summary>
+        /// <remarks> This is available since Metasys API v4. </remarks>
+        public string ActivityManagementStatus { get; set; }
+
+        /// <summary>
         /// Is alarm already acknowledged
         /// </summary>
+        /// <remarks> This is not anymore available since Metasys API v4. </remarks>
         public bool IsAcknowledged { get; set; }
 
         /// <summary>
-        /// Is alarm discarded
+        /// Is alarm already discarded
         /// </summary>
+        /// <remarks> This is not anymore available since Metasys API v4. </remarks>
         public bool IsDiscarded { get; set; }
 
         /// <summary>
         /// Alarm Category route
         /// </summary>
-        /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
+        /// <remarks> This is available only with Metasys API v2 and v1. </remarks>
         public string CategoryUrl { get; set; }
 
         /// <summary>
@@ -102,6 +122,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Link to annotations
         /// </summary>
         public string AnnotationsUrl { get; set; }
+
 
         /// <summary>
         /// Returns a value indicating whether this instance has values equal to a specified object.
@@ -166,5 +187,6 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
+
     }
 }

@@ -113,7 +113,7 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 // This applies for v2 and v1.
-                TypeUrl = GetJTokenValue(token,"typeUrl");
+                TypeUrl =  (version < ApiVersion.v4)?  token["typeUrl"].Value<string>() : TypeUrl = String.Empty;
                 if (Type == MetasysObjectTypeEnum.Space && TypeUrl.Length > 0)
                 //if (Type == MetasysObjectTypeEnum.Space)
                 {
@@ -122,7 +122,6 @@ namespace JohnsonControls.Metasys.BasicServices
                     // Convert space type to enum
                     Category = ((SpaceTypeEnum)int.Parse(typeId)).ToString();
                 }
-                ObjectType = GetJTokenValue(token, "objectType");
             }
             catch
             {
@@ -135,15 +134,29 @@ namespace JohnsonControls.Metasys.BasicServices
                 try
                 {
                     // Object Type is available since API v3 only on object detail. 
-                    ObjectType= GetJTokenValue(token, "objectType");
+                    ObjectType= token["objectType"].Value<string>();
                 }
                 catch
                 {
                     ObjectType = null;
                 }
             }
-            CategoryUrl = GetJTokenValue(token, "categoryUrl");
-            ObjectCategory = GetJTokenValue(token, "objectCategory");
+            try
+            {
+                CategoryUrl = token["categoryUrl"].Value<string>();
+            }
+            catch
+            {
+                CategoryUrl = null;
+            }
+            try
+            {
+                ObjectCategory = token["objectCategory"].Value<string>();
+            }
+            catch
+            {
+                ObjectCategory = null;
+            }
         }
 
         /// <summary>

@@ -31,12 +31,12 @@ namespace MetasysServices_TestClient.Forms
         {
             this.TabMain = new System.Windows.Forms.TabControl();
             this.TpgGetTrendedAttributes = new System.Windows.Forms.TabPage();
-            this.TpgGetSamples = new System.Windows.Forms.TabPage();
             this.TlpGetTrendedAttributes = new System.Windows.Forms.TableLayoutPanel();
             this.LblGetTrendedAttributes_ObjectID = new System.Windows.Forms.Label();
             this.TxtGetTrendedAttributes_ObjectID = new System.Windows.Forms.TextBox();
             this.BtnGetTrendedAttributes = new System.Windows.Forms.Button();
             this.DgvGetTrendedAttributes = new System.Windows.Forms.DataGridView();
+            this.TpgGetSamples = new System.Windows.Forms.TabPage();
             this.TlpGetSamples = new System.Windows.Forms.TableLayoutPanel();
             this.LblGetSamples_ObjectID = new System.Windows.Forms.Label();
             this.TxtGetSamples_ObjectID = new System.Windows.Forms.TextBox();
@@ -52,9 +52,9 @@ namespace MetasysServices_TestClient.Forms
             this.DtpGetSamples_EndTime = new System.Windows.Forms.DateTimePicker();
             this.TabMain.SuspendLayout();
             this.TpgGetTrendedAttributes.SuspendLayout();
-            this.TpgGetSamples.SuspendLayout();
             this.TlpGetTrendedAttributes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetTrendedAttributes)).BeginInit();
+            this.TpgGetSamples.SuspendLayout();
             this.TlpGetSamples.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetSamples)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NudGetSamples_AttributeID)).BeginInit();
@@ -83,17 +83,6 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetTrendedAttributes.TabIndex = 0;
             this.TpgGetTrendedAttributes.Text = "GetTrendedAttributes";
             this.TpgGetTrendedAttributes.UseVisualStyleBackColor = true;
-            // 
-            // TpgGetSamples
-            // 
-            this.TpgGetSamples.Controls.Add(this.TlpGetSamples);
-            this.TpgGetSamples.Location = new System.Drawing.Point(4, 29);
-            this.TpgGetSamples.Name = "TpgGetSamples";
-            this.TpgGetSamples.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgGetSamples.Size = new System.Drawing.Size(838, 467);
-            this.TpgGetSamples.TabIndex = 1;
-            this.TpgGetSamples.Text = "GetSamples";
-            this.TpgGetSamples.UseVisualStyleBackColor = true;
             // 
             // TlpGetTrendedAttributes
             // 
@@ -158,6 +147,17 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetTrendedAttributes.Size = new System.Drawing.Size(680, 360);
             this.DgvGetTrendedAttributes.TabIndex = 3;
             // 
+            // TpgGetSamples
+            // 
+            this.TpgGetSamples.Controls.Add(this.TlpGetSamples);
+            this.TpgGetSamples.Location = new System.Drawing.Point(4, 29);
+            this.TpgGetSamples.Name = "TpgGetSamples";
+            this.TpgGetSamples.Padding = new System.Windows.Forms.Padding(3);
+            this.TpgGetSamples.Size = new System.Drawing.Size(838, 467);
+            this.TpgGetSamples.TabIndex = 1;
+            this.TpgGetSamples.Text = "GetSamples";
+            this.TpgGetSamples.UseVisualStyleBackColor = true;
+            // 
             // TlpGetSamples
             // 
             this.TlpGetSamples.ColumnCount = 4;
@@ -210,7 +210,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             // BtnGetSamples
             // 
-            this.BtnGetSamples.Location = new System.Drawing.Point(129, 147);
+            this.BtnGetSamples.Location = new System.Drawing.Point(129, 127);
             this.BtnGetSamples.Name = "BtnGetSamples";
             this.BtnGetSamples.Size = new System.Drawing.Size(130, 23);
             this.BtnGetSamples.TabIndex = 2;
@@ -222,9 +222,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetSamples.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetSamples.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetSamples.Location = new System.Drawing.Point(129, 176);
+            this.DgvGetSamples.Location = new System.Drawing.Point(129, 156);
             this.DgvGetSamples.Name = "DgvGetSamples";
-            this.DgvGetSamples.Size = new System.Drawing.Size(680, 262);
+            this.DgvGetSamples.Size = new System.Drawing.Size(680, 282);
             this.DgvGetSamples.TabIndex = 3;
             // 
             // LblGetSamples_AttributeID
@@ -269,7 +269,7 @@ namespace MetasysServices_TestClient.Forms
             this.LblGetSamples_Filter.Location = new System.Drawing.Point(23, 75);
             this.LblGetSamples_Filter.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetSamples_Filter.Name = "LblGetSamples_Filter";
-            this.LblGetSamples_Filter.Size = new System.Drawing.Size(100, 66);
+            this.LblGetSamples_Filter.Size = new System.Drawing.Size(100, 46);
             this.LblGetSamples_Filter.TabIndex = 6;
             this.LblGetSamples_Filter.Text = "Filter (TimeFilter):";
             this.LblGetSamples_Filter.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -289,12 +289,11 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetSamples_Filter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetSamples_Filter.Location = new System.Drawing.Point(129, 75);
             this.TlpGetSamples_Filter.Name = "TlpGetSamples_Filter";
-            this.TlpGetSamples_Filter.RowCount = 3;
+            this.TlpGetSamples_Filter.RowCount = 2;
             this.TlpGetSamples_Filter.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetSamples_Filter.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetSamples_Filter.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetSamples_Filter.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetSamples_Filter.Size = new System.Drawing.Size(680, 66);
+            this.TlpGetSamples_Filter.Size = new System.Drawing.Size(680, 46);
             this.TlpGetSamples_Filter.TabIndex = 7;
             // 
             // LblGetSamples_StartTime
@@ -347,10 +346,10 @@ namespace MetasysServices_TestClient.Forms
             this.Text = "Trends";
             this.TabMain.ResumeLayout(false);
             this.TpgGetTrendedAttributes.ResumeLayout(false);
-            this.TpgGetSamples.ResumeLayout(false);
             this.TlpGetTrendedAttributes.ResumeLayout(false);
             this.TlpGetTrendedAttributes.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetTrendedAttributes)).EndInit();
+            this.TpgGetSamples.ResumeLayout(false);
             this.TlpGetSamples.ResumeLayout(false);
             this.TlpGetSamples.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetSamples)).EndInit();

@@ -25,9 +25,35 @@ namespace JohnsonControls.Metasys.BasicServices.Utils
             {
                 if (jToken != null)
                 {
-                    if ((jToken.Contains(field) != null) && (jToken[field] != null))
+                    if ((jToken.Contains(field)) && (jToken[field] != null))
                     {
                         res = jToken[field].Value<string>();
+                    };
+                };
+            }
+            catch (ArgumentNullException e)
+            {
+                // Something went wrong on object parsing
+                throw new MetasysObjectException(e);
+            }
+            return res;
+        }
+        /// <summary>
+        /// Get the date value of a JToken field.
+        /// </summary>
+        /// <param name="jToken"></param>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        public static DateTime GetJTokenDate(JToken jToken, string field)
+        {
+            DateTime res = DateTime.UtcNow;
+            try
+            {
+                if (jToken != null)
+                {
+                    if (jToken.Contains(field) && (jToken[field] != null))
+                    {
+                        res = jToken[field].Value<DateTime>();
                     };
                 };
             }

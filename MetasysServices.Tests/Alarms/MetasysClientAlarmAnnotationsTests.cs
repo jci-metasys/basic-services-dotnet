@@ -15,25 +15,25 @@ namespace MetasysServices.Tests
     {
              
         [Test]
-        public void TestGetAuditAnnotationsNone()
+        public void TestGetAlarmAnnotationsNone()
         {
             var response = @"{
                     ""total"": 1,
                     ""next"": null,
                     ""previous"": null,
                     ""items"": [],
-                    ""self"": ""https://win-ervotujej94/api/v2/audits/f0f64d5c-b70e-8754-836c-1ac99182f4e4/annotations?pageSize=100&page=1""
+                    ""self"": ""https://win-ervotujej94/api/v2/alarms/f0f64d5c-b70e-8754-836c-1ac99182f4e4/annotations?pageSize=100&page=1""
                 }";
             httpTest.RespondWith(response);
-            var annotations = client.Audits.GetAnnotations(mockid);
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits/{mockid}/annotations")
+            var annotations = client.Alarms.GetAnnotations(mockid);
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms/{mockid}/annotations")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
             Assert.AreEqual(0, annotations.Count());
         }
      
         [Test]
-        public void TestGetAuditAnnotationsOnePage()
+        public void TestGetAlarmAnnotationsOnePage()
         {
             var response = @"
                 {
