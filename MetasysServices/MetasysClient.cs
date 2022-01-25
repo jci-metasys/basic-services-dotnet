@@ -635,7 +635,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     {
                         try
                         {
-                            Command c = new Command(command, Culture);
+                            Command c = new Command(command, Culture, Version);
                             commands.Add(c);
                         }
                         catch (Exception e)
@@ -796,10 +796,19 @@ namespace JohnsonControls.Metasys.BasicServices
             return enums;
         }
 
+
+        #region "NETWORK DEVICES"
+
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetNetworkDevices(string type = null)
         {
             return GetNetworkDevicesAsync(type).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
+        {
+            var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } }).ConfigureAwait(false);
+            return ToMetasysObject(response, Version,  MetasysObjectTypeEnum.Object);
         }
 
         /// <inheritdoc/>
@@ -809,14 +818,6 @@ namespace JohnsonControls.Metasys.BasicServices
             //return GetNetworkDevices(type);
             return GetNetworkDevicesAsync(networkDevicetype).GetAwaiter().GetResult();
         }
-
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
-        {
-            var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } }).ConfigureAwait(false);
-            return ToMetasysObject(response, Version,  MetasysObjectTypeEnum.Object);
-        }
-
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(NetworkDeviceTypeEnum networkDevicetype)
         {
@@ -829,13 +830,49 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             return GetNetworkDeviceTypesAsync().GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync()
         {
-
-            return await GetResourceTypesAsync("networkDevices", "availableTypes").ConfigureAwait(false);
+            if (version < ApiVersion.v4)
+            {
+                return await GetResourceTypesAsync("networkDevices", "availableTypes").ConfigureAwait(false);
+            } else
+            {
+                return await RetrieveNetworkDeviceTypesAsync().ConfigureAwait(false);
+            }
         }
+
+        private async Task<IEnumerable<MetasysObjectType>> RetrieveNetworkDeviceTypesAsync()
+        {
+            List<MetasysObjectType> types = new List<MetasysObjectType>() { };
+            try
+            {
+                //Get the whole list of Network Devices
+                var devices = await GetAllAvailablePagesAsync("networkDevices").ConfigureAwait(false);
+                List<NetworkDevice> networkDevices = ToNetworkDevice(devices, Version);
+                //Get the Object Type enumeration Set (Set ID = 508)
+                List<MetasysEnumValue> enums = (List<MetasysEnumValue>)GetEnumValuesAsync("objectTypeEnumSet").GetAwaiter().GetResult();
+
+                //Make the joine of the two lists in order to get only the enum values that are related to the network devices
+                //var result = enums.Join(networkDevices, e1 => e1.Key, e2 => e2.ObjectType, (e1, e2) => e1).Distinct();
+                var joinedList = (from nd in networkDevices
+                             join en in enums on nd.ObjectType equals en.Key into gj
+                             from suben in gj
+                             select new { Description = suben.Name, DescriptionEnumerationKey = suben.Key, ID = suben.Value }).Distinct();
+                //Build the result
+                foreach (var i in joinedList)
+                {
+                    types.Add(new MetasysObjectType(i.ID,i.DescriptionEnumerationKey,i.Description));
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return types;
+        }
+
+        #endregion
 
         /// <summary>
         /// Gets all resource types asynchronously.
@@ -993,12 +1030,6 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false)
-        {
-            return GetObjectsAsync(id, levels, includeInternalObjects).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetSpaces(SpaceTypeEnum? type = null)
         {
             return GetSpacesAsync(type).GetAwaiter().GetResult();
@@ -1133,6 +1164,11 @@ namespace JohnsonControls.Metasys.BasicServices
             return points;
         }
 
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false)
+        {
+            return GetObjectsAsync(id, levels, includeInternalObjects).GetAwaiter().GetResult();
+        }
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels, bool includeInternalObjects = false)
         {

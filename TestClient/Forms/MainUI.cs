@@ -26,6 +26,7 @@ namespace MetasysServices_TestClient
 
         private Forms.Enumerations _frmEnumerations;
         private Forms.Equipments _frmEquipments;
+        private Forms.Objects _frmObjects;
         private Forms.Streams _frmStreams;
         private Forms.Spaces _frmSpaces;
         private Forms.Trends _frmTrends;
@@ -277,6 +278,9 @@ namespace MetasysServices_TestClient
             _frmEquipments = new Forms.Equipments();
             _frmEquipments.InitForm(_client, TpgEquipment);
 
+            _frmObjects = new Forms.Objects();
+            _frmObjects.InitForm(_client, TpgObject);
+
             _frmStreams = new Forms.Streams();
             _frmStreams.InitForm(_client, TpgStream);
 
@@ -298,6 +302,7 @@ namespace MetasysServices_TestClient
             {
                 _frmEnumerations.Client = _client;
                 _frmEquipments.Client = _client;
+                _frmObjects.Client = _client;
                 _frmStreams.Client = _client;
                 _frmSpaces.Client = _client;
                 _frmTrends.Client = _client;
@@ -310,7 +315,6 @@ namespace MetasysServices_TestClient
                     rcbToken.Text = token.ToString();
                     //enables the controls to get the Alarms
                     GrbGetAlarms.Enabled = true;
-                    grbReadProperty.Enabled = true;
                     _enableTabs = true;
                 }
             }
@@ -364,7 +368,6 @@ namespace MetasysServices_TestClient
                     rcbToken.Text = token.ToString();
                     //enables the controls to get the Alarms
                     GrbGetAlarms.Enabled = true;
-                    grbReadProperty.Enabled = true;
                 }
             }
         }
@@ -380,22 +383,12 @@ namespace MetasysServices_TestClient
                     rcbToken.Text = token.ToString();
                     //enables the controls to get the Alarms
                     GrbGetAlarms.Enabled = true;
-                    grbReadProperty.Enabled = true;
                 }
             }
         }
 
         private void BtnGetObjectIdentifier_Click(object sender, EventArgs e)
         {
-            if (_client != null)
-            {
-                var guid = _client.GetObjectIdentifier(TxtGetObjectIdentifier_FQR.Text);
-                if (guid != null)
-                {
-                    //Show the GUID
-                    TxtObjectIdentifier_GUID.Text = guid.ToString();
-                }
-            }
         }
 
         private void BtnMisc_GetServerTime_Click(object sender, EventArgs e)
@@ -655,75 +648,14 @@ namespace MetasysServices_TestClient
 
         private void BtnGetCommands_Click(object sender, EventArgs e)
         {
-            DgvGetCommands.DataSource = null;
-            string guid = TxtObjects_GetCommands_GUID.Text;
-            if (_client != null && guid.Length>0)
-            {
-                Guid id = new Guid(guid);
-                List<Command> res = _client.GetCommands(id).ToList();
-
-                DgvGetCommands.Rows.Clear();
-                foreach (Command c in res)
-                {
-                    int i = DgvGetCommands.Rows.Add();
-                    DgvGetCommands.Rows[i].Cells["DgvCommand_Title"].Value = c.Title;
-                    DgvGetCommands.Rows[i].Cells["DgvCommand_TitleEnumerationKey"].Value = c.TitleEnumerationKey;
-                    DgvGetCommands.Rows[i].Cells["DgvCommand_CommandId"].Value = c.CommandId;
-                    DgvGetCommands.Rows[i].Tag = c;
-                }
-            }
         }
 
         private void BtnGetCommandEnumeration_Click(object sender, EventArgs e)
         {
-            {
-                DgvGetCommandEnumeration.DataSource = null;
-                string resource = TxtObjects_GetCommandEnum_ID.Text;
-                if (_client != null && resource.Length > 0)
-                {
-                    var res = _client.GetCommandEnumeration(resource);
-                    DgvGetCommandEnumeration.DataSource = res;
-                }
-            }
         }
 
         private void BtnGetCommandEnums_Click(object sender, EventArgs e)
         {
-            DgvGetCommandEnums.Rows.Clear();
-            DataGridViewRow dgvr = null;
-            if (DgvGetCommands.SelectedRows.Count > 0)
-            {
-                dgvr = DgvGetCommands.SelectedRows[0];
-            }
-
-            if (dgvr != null)
-            {
-                Command boundItem = (Command)dgvr.Tag;
-                if (boundItem != null)
-                {
-                    if ((boundItem.Items != null) && (boundItem.Items.Count() > 0))
-                    {
-                        Command.Item itm = boundItem.Items.First();
-                        if (itm.EnumerationValues != null)
-                        {
-                            foreach (Command.EnumerationItem ev in itm.EnumerationValues)
-                            {
-                                int i = DgvGetCommandEnums.Rows.Add();
-                                DgvGetCommandEnums.Rows[i].Cells["DgvCommandEnum_TitleEnumerationKey"].Value = ev.TitleEnumerationKey;
-                                DgvGetCommandEnums.Rows[i].Tag = ev;
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
-
-        private void BtnReadProperty_Click_1(object sender, EventArgs e)
-        {
-            Guid itemGUID = _client.GetObjectIdentifier(txtObjectFQR.Text);
-            Variant response = _client.ReadProperty(itemGUID, txtPropertyName.Text);
-            TxtObject_PropertyValue.Text = response.StringValue;
         }
 
         private void TabMain_Selecting(object sender, TabControlCancelEventArgs e)
@@ -734,7 +666,6 @@ namespace MetasysServices_TestClient
                 MessageBox.Show("You must Login before to change 'Tab'!", "Caution", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
 
         private static string FormatJson(object obj)
         {

@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.rcbToken = new System.Windows.Forms.RichTextBox();
             this.btnLogin = new System.Windows.Forms.Button();
             this.lblPassword = new System.Windows.Forms.Label();
@@ -225,43 +225,6 @@
             this.BtnGetNetworkDeviceTypes = new System.Windows.Forms.Button();
             this.DgvGetNetworkDeviceTypes = new System.Windows.Forms.DataGridView();
             this.TpgObject = new System.Windows.Forms.TabPage();
-            this.TabObject = new System.Windows.Forms.TabControl();
-            this.TpgGetObjectIdentifier = new System.Windows.Forms.TabPage();
-            this.label11 = new System.Windows.Forms.Label();
-            this.TxtObjectIdentifier_GUID = new System.Windows.Forms.TextBox();
-            this.LblObjectIdentifier_GUID = new System.Windows.Forms.Label();
-            this.BtnGetObjectIdentifier = new System.Windows.Forms.Button();
-            this.TxtGetObjectIdentifier_FQR = new System.Windows.Forms.TextBox();
-            this.LblGetObjectIdentifier_FQR = new System.Windows.Forms.Label();
-            this.TpgGetObjects = new System.Windows.Forms.TabPage();
-            this.TpgGetCommands = new System.Windows.Forms.TabPage();
-            this.GrbGetCommands = new System.Windows.Forms.GroupBox();
-            this.DgvGetCommandEnums = new System.Windows.Forms.DataGridView();
-            this.DgvCommandEnum_TitleEnumerationKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BtnGetCommandEnums = new System.Windows.Forms.Button();
-            this.DgvGetCommands = new System.Windows.Forms.DataGridView();
-            this.DgvCommand_Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DgvCommand_TitleEnumerationKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DgvCommand_CommandId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BtnGetCommands = new System.Windows.Forms.Button();
-            this.TxtObjects_GetCommands_GUID = new System.Windows.Forms.TextBox();
-            this.LblObjects_GetCommands_GUID = new System.Windows.Forms.Label();
-            this.TpgGetCommandEnumeration = new System.Windows.Forms.TabPage();
-            this.GrbGetCommandEnumeration = new System.Windows.Forms.GroupBox();
-            this.DgvGetCommandEnumeration = new System.Windows.Forms.DataGridView();
-            this.BtnGetCommandEnumeration = new System.Windows.Forms.Button();
-            this.TxtObjects_GetCommandEnum_ID = new System.Windows.Forms.TextBox();
-            this.LblObjects_GetCommandEnum_ID = new System.Windows.Forms.Label();
-            this.TpgReadProperty = new System.Windows.Forms.TabPage();
-            this.LblObject_Title5 = new System.Windows.Forms.Label();
-            this.grbReadProperty = new System.Windows.Forms.GroupBox();
-            this.lblPropertyValue = new System.Windows.Forms.Label();
-            this.TxtObject_PropertyValue = new System.Windows.Forms.TextBox();
-            this.lblObjectProperty = new System.Windows.Forms.Label();
-            this.btnReadProperty = new System.Windows.Forms.Button();
-            this.txtPropertyName = new System.Windows.Forms.TextBox();
-            this.lblObjectFQR = new System.Windows.Forms.Label();
-            this.txtObjectFQR = new System.Windows.Forms.TextBox();
             this.TpgSpace = new System.Windows.Forms.TabPage();
             this.TpgTrend = new System.Windows.Forms.TabPage();
             this.TpgStream = new System.Windows.Forms.TabPage();
@@ -332,18 +295,6 @@
             this.TpgGetNetworkDeviceTypes.SuspendLayout();
             this.GrbGetNetworkDeviceTypes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetNetworkDeviceTypes)).BeginInit();
-            this.TpgObject.SuspendLayout();
-            this.TabObject.SuspendLayout();
-            this.TpgGetObjectIdentifier.SuspendLayout();
-            this.TpgGetCommands.SuspendLayout();
-            this.GrbGetCommands.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvGetCommandEnums)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvGetCommands)).BeginInit();
-            this.TpgGetCommandEnumeration.SuspendLayout();
-            this.GrbGetCommandEnumeration.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvGetCommandEnumeration)).BeginInit();
-            this.TpgReadProperty.SuspendLayout();
-            this.grbReadProperty.SuspendLayout();
             this.TpgMisc.SuspendLayout();
             this.TabMiscellanea.SuspendLayout();
             this.TpgMisc_GetServerTime.SuspendLayout();
@@ -1089,33 +1040,33 @@
             this.DgvAlarm_GFO.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvAlarm_GFO.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvAlarm_GFO.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.DgvAlarm_GFO.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DgvAlarm_GFO.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DgvAlarm_GFO.DefaultCellStyle = dataGridViewCellStyle8;
             this.DgvAlarm_GFO.Location = new System.Drawing.Point(6, 136);
             this.DgvAlarm_GFO.Name = "DgvAlarm_GFO";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvAlarm_GFO.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvAlarm_GFO.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.DgvAlarm_GFO.Size = new System.Drawing.Size(1048, 257);
             this.DgvAlarm_GFO.TabIndex = 32;
             // 
@@ -1706,33 +1657,33 @@
             this.DgvAudit_GFO.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvAudit_GFO.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvAudit_GFO.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.DgvAudit_GFO.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DgvAudit_GFO.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DgvAudit_GFO.DefaultCellStyle = dataGridViewCellStyle11;
             this.DgvAudit_GFO.Location = new System.Drawing.Point(6, 136);
             this.DgvAudit_GFO.Name = "DgvAudit_GFO";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvAudit_GFO.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvAudit_GFO.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.DgvAudit_GFO.Size = new System.Drawing.Size(1048, 257);
             this.DgvAudit_GFO.TabIndex = 32;
             // 
@@ -2384,395 +2335,12 @@
             // TpgObject
             // 
             this.TpgObject.BackColor = System.Drawing.SystemColors.Control;
-            this.TpgObject.Controls.Add(this.TabObject);
             this.TpgObject.Location = new System.Drawing.Point(4, 34);
             this.TpgObject.Name = "TpgObject";
             this.TpgObject.Padding = new System.Windows.Forms.Padding(3);
             this.TpgObject.Size = new System.Drawing.Size(1080, 450);
             this.TpgObject.TabIndex = 5;
             this.TpgObject.Text = "OBJECTS";
-            // 
-            // TabObject
-            // 
-            this.TabObject.Appearance = System.Windows.Forms.TabAppearance.Buttons;
-            this.TabObject.Controls.Add(this.TpgGetObjectIdentifier);
-            this.TabObject.Controls.Add(this.TpgGetObjects);
-            this.TabObject.Controls.Add(this.TpgGetCommands);
-            this.TabObject.Controls.Add(this.TpgGetCommandEnumeration);
-            this.TabObject.Controls.Add(this.TpgReadProperty);
-            this.TabObject.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TabObject.ItemSize = new System.Drawing.Size(106, 25);
-            this.TabObject.Location = new System.Drawing.Point(3, 3);
-            this.TabObject.Name = "TabObject";
-            this.TabObject.SelectedIndex = 0;
-            this.TabObject.Size = new System.Drawing.Size(1074, 444);
-            this.TabObject.TabIndex = 0;
-            // 
-            // TpgGetObjectIdentifier
-            // 
-            this.TpgGetObjectIdentifier.Controls.Add(this.label11);
-            this.TpgGetObjectIdentifier.Controls.Add(this.TxtObjectIdentifier_GUID);
-            this.TpgGetObjectIdentifier.Controls.Add(this.LblObjectIdentifier_GUID);
-            this.TpgGetObjectIdentifier.Controls.Add(this.BtnGetObjectIdentifier);
-            this.TpgGetObjectIdentifier.Controls.Add(this.TxtGetObjectIdentifier_FQR);
-            this.TpgGetObjectIdentifier.Controls.Add(this.LblGetObjectIdentifier_FQR);
-            this.TpgGetObjectIdentifier.Location = new System.Drawing.Point(4, 29);
-            this.TpgGetObjectIdentifier.Name = "TpgGetObjectIdentifier";
-            this.TpgGetObjectIdentifier.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TpgGetObjectIdentifier.Size = new System.Drawing.Size(1066, 411);
-            this.TpgGetObjectIdentifier.TabIndex = 0;
-            this.TpgGetObjectIdentifier.Text = "Get Object Identifier";
-            this.TpgGetObjectIdentifier.UseVisualStyleBackColor = true;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(6, 6);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(196, 16);
-            this.label11.TabIndex = 5;
-            this.label11.Text = "Method: GetObjectIdentifier";
-            // 
-            // TxtObjectIdentifier_GUID
-            // 
-            this.TxtObjectIdentifier_GUID.Location = new System.Drawing.Point(78, 92);
-            this.TxtObjectIdentifier_GUID.Name = "TxtObjectIdentifier_GUID";
-            this.TxtObjectIdentifier_GUID.ReadOnly = true;
-            this.TxtObjectIdentifier_GUID.Size = new System.Drawing.Size(316, 20);
-            this.TxtObjectIdentifier_GUID.TabIndex = 4;
-            // 
-            // LblObjectIdentifier_GUID
-            // 
-            this.LblObjectIdentifier_GUID.AutoSize = true;
-            this.LblObjectIdentifier_GUID.Location = new System.Drawing.Point(6, 95);
-            this.LblObjectIdentifier_GUID.Name = "LblObjectIdentifier_GUID";
-            this.LblObjectIdentifier_GUID.Size = new System.Drawing.Size(68, 13);
-            this.LblObjectIdentifier_GUID.TabIndex = 3;
-            this.LblObjectIdentifier_GUID.Text = "Object GUID";
-            // 
-            // BtnGetObjectIdentifier
-            // 
-            this.BtnGetObjectIdentifier.Location = new System.Drawing.Point(78, 63);
-            this.BtnGetObjectIdentifier.Name = "BtnGetObjectIdentifier";
-            this.BtnGetObjectIdentifier.Size = new System.Drawing.Size(316, 23);
-            this.BtnGetObjectIdentifier.TabIndex = 2;
-            this.BtnGetObjectIdentifier.Text = "GetObjectIdentifier";
-            this.BtnGetObjectIdentifier.UseVisualStyleBackColor = true;
-            this.BtnGetObjectIdentifier.Click += new System.EventHandler(this.BtnGetObjectIdentifier_Click);
-            // 
-            // TxtGetObjectIdentifier_FQR
-            // 
-            this.TxtGetObjectIdentifier_FQR.Location = new System.Drawing.Point(78, 37);
-            this.TxtGetObjectIdentifier_FQR.Name = "TxtGetObjectIdentifier_FQR";
-            this.TxtGetObjectIdentifier_FQR.Size = new System.Drawing.Size(576, 20);
-            this.TxtGetObjectIdentifier_FQR.TabIndex = 1;
-            // 
-            // LblGetObjectIdentifier_FQR
-            // 
-            this.LblGetObjectIdentifier_FQR.AutoSize = true;
-            this.LblGetObjectIdentifier_FQR.Location = new System.Drawing.Point(6, 40);
-            this.LblGetObjectIdentifier_FQR.Name = "LblGetObjectIdentifier_FQR";
-            this.LblGetObjectIdentifier_FQR.Size = new System.Drawing.Size(63, 13);
-            this.LblGetObjectIdentifier_FQR.TabIndex = 0;
-            this.LblGetObjectIdentifier_FQR.Text = "Object FQR";
-            // 
-            // TpgGetObjects
-            // 
-            this.TpgGetObjects.Location = new System.Drawing.Point(4, 29);
-            this.TpgGetObjects.Name = "TpgGetObjects";
-            this.TpgGetObjects.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TpgGetObjects.Size = new System.Drawing.Size(1066, 411);
-            this.TpgGetObjects.TabIndex = 1;
-            this.TpgGetObjects.Text = "Get Objects";
-            this.TpgGetObjects.UseVisualStyleBackColor = true;
-            // 
-            // TpgGetCommands
-            // 
-            this.TpgGetCommands.Controls.Add(this.GrbGetCommands);
-            this.TpgGetCommands.Location = new System.Drawing.Point(4, 29);
-            this.TpgGetCommands.Name = "TpgGetCommands";
-            this.TpgGetCommands.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TpgGetCommands.Size = new System.Drawing.Size(1066, 411);
-            this.TpgGetCommands.TabIndex = 2;
-            this.TpgGetCommands.Text = "Get Commands List";
-            this.TpgGetCommands.UseVisualStyleBackColor = true;
-            // 
-            // GrbGetCommands
-            // 
-            this.GrbGetCommands.Controls.Add(this.DgvGetCommandEnums);
-            this.GrbGetCommands.Controls.Add(this.BtnGetCommandEnums);
-            this.GrbGetCommands.Controls.Add(this.DgvGetCommands);
-            this.GrbGetCommands.Controls.Add(this.BtnGetCommands);
-            this.GrbGetCommands.Controls.Add(this.TxtObjects_GetCommands_GUID);
-            this.GrbGetCommands.Controls.Add(this.LblObjects_GetCommands_GUID);
-            this.GrbGetCommands.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GrbGetCommands.Location = new System.Drawing.Point(3, 6);
-            this.GrbGetCommands.Name = "GrbGetCommands";
-            this.GrbGetCommands.Size = new System.Drawing.Size(1060, 402);
-            this.GrbGetCommands.TabIndex = 0;
-            this.GrbGetCommands.TabStop = false;
-            this.GrbGetCommands.Text = "Method: GetCommands";
-            // 
-            // DgvGetCommandEnums
-            // 
-            this.DgvGetCommandEnums.AllowUserToAddRows = false;
-            this.DgvGetCommandEnums.AllowUserToDeleteRows = false;
-            this.DgvGetCommandEnums.AllowUserToResizeRows = false;
-            this.DgvGetCommandEnums.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvGetCommandEnums.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.DgvCommandEnum_TitleEnumerationKey});
-            this.DgvGetCommandEnums.Location = new System.Drawing.Point(608, 94);
-            this.DgvGetCommandEnums.Name = "DgvGetCommandEnums";
-            this.DgvGetCommandEnums.Size = new System.Drawing.Size(446, 302);
-            this.DgvGetCommandEnums.TabIndex = 33;
-            // 
-            // DgvCommandEnum_TitleEnumerationKey
-            // 
-            this.DgvCommandEnum_TitleEnumerationKey.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.DgvCommandEnum_TitleEnumerationKey.HeaderText = "TitleEnumerationKey";
-            this.DgvCommandEnum_TitleEnumerationKey.Name = "DgvCommandEnum_TitleEnumerationKey";
-            this.DgvCommandEnum_TitleEnumerationKey.Width = 129;
-            // 
-            // BtnGetCommandEnums
-            // 
-            this.BtnGetCommandEnums.Location = new System.Drawing.Point(608, 65);
-            this.BtnGetCommandEnums.Name = "BtnGetCommandEnums";
-            this.BtnGetCommandEnums.Size = new System.Drawing.Size(261, 23);
-            this.BtnGetCommandEnums.TabIndex = 32;
-            this.BtnGetCommandEnums.Text = "Get Command Enumerations";
-            this.BtnGetCommandEnums.UseVisualStyleBackColor = true;
-            this.BtnGetCommandEnums.Click += new System.EventHandler(this.BtnGetCommandEnums_Click);
-            // 
-            // DgvGetCommands
-            // 
-            this.DgvGetCommands.AllowUserToAddRows = false;
-            this.DgvGetCommands.AllowUserToDeleteRows = false;
-            this.DgvGetCommands.AllowUserToResizeRows = false;
-            this.DgvGetCommands.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DgvGetCommands.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvGetCommands.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.DgvCommand_Title,
-            this.DgvCommand_TitleEnumerationKey,
-            this.DgvCommand_CommandId});
-            this.DgvGetCommands.Location = new System.Drawing.Point(6, 94);
-            this.DgvGetCommands.Name = "DgvGetCommands";
-            this.DgvGetCommands.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DgvGetCommands.Size = new System.Drawing.Size(596, 302);
-            this.DgvGetCommands.TabIndex = 31;
-            // 
-            // DgvCommand_Title
-            // 
-            this.DgvCommand_Title.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.DgvCommand_Title.HeaderText = "Title";
-            this.DgvCommand_Title.Name = "DgvCommand_Title";
-            this.DgvCommand_Title.Width = 52;
-            // 
-            // DgvCommand_TitleEnumerationKey
-            // 
-            this.DgvCommand_TitleEnumerationKey.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.DgvCommand_TitleEnumerationKey.HeaderText = "TitleEnumerationKey";
-            this.DgvCommand_TitleEnumerationKey.Name = "DgvCommand_TitleEnumerationKey";
-            this.DgvCommand_TitleEnumerationKey.Width = 129;
-            // 
-            // DgvCommand_CommandId
-            // 
-            this.DgvCommand_CommandId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.DgvCommand_CommandId.HeaderText = "CommandId";
-            this.DgvCommand_CommandId.Name = "DgvCommand_CommandId";
-            this.DgvCommand_CommandId.Width = 88;
-            // 
-            // BtnGetCommands
-            // 
-            this.BtnGetCommands.Location = new System.Drawing.Point(6, 65);
-            this.BtnGetCommands.Name = "BtnGetCommands";
-            this.BtnGetCommands.Size = new System.Drawing.Size(344, 23);
-            this.BtnGetCommands.TabIndex = 30;
-            this.BtnGetCommands.Text = "GetCommands";
-            this.BtnGetCommands.UseVisualStyleBackColor = true;
-            this.BtnGetCommands.Click += new System.EventHandler(this.BtnGetCommands_Click);
-            // 
-            // TxtObjects_GetCommands_GUID
-            // 
-            this.TxtObjects_GetCommands_GUID.Location = new System.Drawing.Point(6, 39);
-            this.TxtObjects_GetCommands_GUID.Name = "TxtObjects_GetCommands_GUID";
-            this.TxtObjects_GetCommands_GUID.Size = new System.Drawing.Size(344, 20);
-            this.TxtObjects_GetCommands_GUID.TabIndex = 29;
-            // 
-            // LblObjects_GetCommands_GUID
-            // 
-            this.LblObjects_GetCommands_GUID.AutoSize = true;
-            this.LblObjects_GetCommands_GUID.Location = new System.Drawing.Point(3, 25);
-            this.LblObjects_GetCommands_GUID.Name = "LblObjects_GetCommands_GUID";
-            this.LblObjects_GetCommands_GUID.Size = new System.Drawing.Size(91, 13);
-            this.LblObjects_GetCommands_GUID.TabIndex = 28;
-            this.LblObjects_GetCommands_GUID.Text = "Object ID (GUID):";
-            // 
-            // TpgGetCommandEnumeration
-            // 
-            this.TpgGetCommandEnumeration.Controls.Add(this.GrbGetCommandEnumeration);
-            this.TpgGetCommandEnumeration.Location = new System.Drawing.Point(4, 29);
-            this.TpgGetCommandEnumeration.Name = "TpgGetCommandEnumeration";
-            this.TpgGetCommandEnumeration.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TpgGetCommandEnumeration.Size = new System.Drawing.Size(1066, 411);
-            this.TpgGetCommandEnumeration.TabIndex = 3;
-            this.TpgGetCommandEnumeration.Text = "Get Command Enumeration";
-            this.TpgGetCommandEnumeration.UseVisualStyleBackColor = true;
-            // 
-            // GrbGetCommandEnumeration
-            // 
-            this.GrbGetCommandEnumeration.Controls.Add(this.DgvGetCommandEnumeration);
-            this.GrbGetCommandEnumeration.Controls.Add(this.BtnGetCommandEnumeration);
-            this.GrbGetCommandEnumeration.Controls.Add(this.TxtObjects_GetCommandEnum_ID);
-            this.GrbGetCommandEnumeration.Controls.Add(this.LblObjects_GetCommandEnum_ID);
-            this.GrbGetCommandEnumeration.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GrbGetCommandEnumeration.Location = new System.Drawing.Point(3, 6);
-            this.GrbGetCommandEnumeration.Name = "GrbGetCommandEnumeration";
-            this.GrbGetCommandEnumeration.Size = new System.Drawing.Size(1060, 402);
-            this.GrbGetCommandEnumeration.TabIndex = 0;
-            this.GrbGetCommandEnumeration.TabStop = false;
-            this.GrbGetCommandEnumeration.Text = "Method: GetCommandEnumeration";
-            // 
-            // DgvGetCommandEnumeration
-            // 
-            this.DgvGetCommandEnumeration.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DgvGetCommandEnumeration.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvGetCommandEnumeration.Location = new System.Drawing.Point(6, 94);
-            this.DgvGetCommandEnumeration.Name = "DgvGetCommandEnumeration";
-            this.DgvGetCommandEnumeration.Size = new System.Drawing.Size(1048, 302);
-            this.DgvGetCommandEnumeration.TabIndex = 35;
-            // 
-            // BtnGetCommandEnumeration
-            // 
-            this.BtnGetCommandEnumeration.Location = new System.Drawing.Point(6, 65);
-            this.BtnGetCommandEnumeration.Name = "BtnGetCommandEnumeration";
-            this.BtnGetCommandEnumeration.Size = new System.Drawing.Size(207, 23);
-            this.BtnGetCommandEnumeration.TabIndex = 34;
-            this.BtnGetCommandEnumeration.Text = "GetCommandEnumeration";
-            this.BtnGetCommandEnumeration.UseVisualStyleBackColor = true;
-            this.BtnGetCommandEnumeration.Click += new System.EventHandler(this.BtnGetCommandEnumeration_Click);
-            // 
-            // TxtObjects_GetCommandEnum_ID
-            // 
-            this.TxtObjects_GetCommandEnum_ID.Location = new System.Drawing.Point(6, 39);
-            this.TxtObjects_GetCommandEnum_ID.Name = "TxtObjects_GetCommandEnum_ID";
-            this.TxtObjects_GetCommandEnum_ID.Size = new System.Drawing.Size(207, 20);
-            this.TxtObjects_GetCommandEnum_ID.TabIndex = 33;
-            // 
-            // LblObjects_GetCommandEnum_ID
-            // 
-            this.LblObjects_GetCommandEnum_ID.AutoSize = true;
-            this.LblObjects_GetCommandEnum_ID.Location = new System.Drawing.Point(3, 25);
-            this.LblObjects_GetCommandEnum_ID.Name = "LblObjects_GetCommandEnum_ID";
-            this.LblObjects_GetCommandEnum_ID.Size = new System.Drawing.Size(91, 13);
-            this.LblObjects_GetCommandEnum_ID.TabIndex = 32;
-            this.LblObjects_GetCommandEnum_ID.Text = "Object ID (GUID):";
-            // 
-            // TpgReadProperty
-            // 
-            this.TpgReadProperty.Controls.Add(this.LblObject_Title5);
-            this.TpgReadProperty.Controls.Add(this.grbReadProperty);
-            this.TpgReadProperty.Location = new System.Drawing.Point(4, 29);
-            this.TpgReadProperty.Name = "TpgReadProperty";
-            this.TpgReadProperty.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TpgReadProperty.Size = new System.Drawing.Size(1066, 411);
-            this.TpgReadProperty.TabIndex = 4;
-            this.TpgReadProperty.Text = "Read Object Property";
-            this.TpgReadProperty.UseVisualStyleBackColor = true;
-            // 
-            // LblObject_Title5
-            // 
-            this.LblObject_Title5.AutoSize = true;
-            this.LblObject_Title5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblObject_Title5.Location = new System.Drawing.Point(6, 6);
-            this.LblObject_Title5.Name = "LblObject_Title5";
-            this.LblObject_Title5.Size = new System.Drawing.Size(171, 16);
-            this.LblObject_Title5.TabIndex = 29;
-            this.LblObject_Title5.Text = "Function: ReadProperty";
-            // 
-            // grbReadProperty
-            // 
-            this.grbReadProperty.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.grbReadProperty.Controls.Add(this.lblPropertyValue);
-            this.grbReadProperty.Controls.Add(this.TxtObject_PropertyValue);
-            this.grbReadProperty.Controls.Add(this.lblObjectProperty);
-            this.grbReadProperty.Controls.Add(this.btnReadProperty);
-            this.grbReadProperty.Controls.Add(this.txtPropertyName);
-            this.grbReadProperty.Controls.Add(this.lblObjectFQR);
-            this.grbReadProperty.Controls.Add(this.txtObjectFQR);
-            this.grbReadProperty.Location = new System.Drawing.Point(6, 25);
-            this.grbReadProperty.Name = "grbReadProperty";
-            this.grbReadProperty.Size = new System.Drawing.Size(1054, 380);
-            this.grbReadProperty.TabIndex = 28;
-            this.grbReadProperty.TabStop = false;
-            // 
-            // lblPropertyValue
-            // 
-            this.lblPropertyValue.AutoSize = true;
-            this.lblPropertyValue.Location = new System.Drawing.Point(3, 111);
-            this.lblPropertyValue.Name = "lblPropertyValue";
-            this.lblPropertyValue.Size = new System.Drawing.Size(79, 13);
-            this.lblPropertyValue.TabIndex = 6;
-            this.lblPropertyValue.Text = "Property Value:";
-            // 
-            // TxtObject_PropertyValue
-            // 
-            this.TxtObject_PropertyValue.Location = new System.Drawing.Point(86, 108);
-            this.TxtObject_PropertyValue.Name = "TxtObject_PropertyValue";
-            this.TxtObject_PropertyValue.ReadOnly = true;
-            this.TxtObject_PropertyValue.Size = new System.Drawing.Size(152, 20);
-            this.TxtObject_PropertyValue.TabIndex = 5;
-            // 
-            // lblObjectProperty
-            // 
-            this.lblObjectProperty.AutoSize = true;
-            this.lblObjectProperty.Location = new System.Drawing.Point(3, 50);
-            this.lblObjectProperty.Name = "lblObjectProperty";
-            this.lblObjectProperty.Size = new System.Drawing.Size(77, 13);
-            this.lblObjectProperty.TabIndex = 4;
-            this.lblObjectProperty.Text = "Property Name";
-            this.lblObjectProperty.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // btnReadProperty
-            // 
-            this.btnReadProperty.Location = new System.Drawing.Point(86, 73);
-            this.btnReadProperty.Name = "btnReadProperty";
-            this.btnReadProperty.Size = new System.Drawing.Size(152, 23);
-            this.btnReadProperty.TabIndex = 3;
-            this.btnReadProperty.Text = "Read Property";
-            this.btnReadProperty.UseVisualStyleBackColor = true;
-            this.btnReadProperty.Click += new System.EventHandler(this.BtnReadProperty_Click_1);
-            // 
-            // txtPropertyName
-            // 
-            this.txtPropertyName.Location = new System.Drawing.Point(86, 47);
-            this.txtPropertyName.Name = "txtPropertyName";
-            this.txtPropertyName.Size = new System.Drawing.Size(152, 20);
-            this.txtPropertyName.TabIndex = 2;
-            this.txtPropertyName.Text = "presentValue";
-            // 
-            // lblObjectFQR
-            // 
-            this.lblObjectFQR.AutoSize = true;
-            this.lblObjectFQR.Location = new System.Drawing.Point(12, 23);
-            this.lblObjectFQR.Name = "lblObjectFQR";
-            this.lblObjectFQR.Size = new System.Drawing.Size(66, 13);
-            this.lblObjectFQR.TabIndex = 1;
-            this.lblObjectFQR.Text = "Object FQR:";
-            this.lblObjectFQR.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // txtObjectFQR
-            // 
-            this.txtObjectFQR.Location = new System.Drawing.Point(86, 20);
-            this.txtObjectFQR.Name = "txtObjectFQR";
-            this.txtObjectFQR.Size = new System.Drawing.Size(604, 20);
-            this.txtObjectFQR.TabIndex = 0;
             // 
             // TpgSpace
             // 
@@ -3052,23 +2620,6 @@
             this.TpgGetNetworkDeviceTypes.ResumeLayout(false);
             this.GrbGetNetworkDeviceTypes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetNetworkDeviceTypes)).EndInit();
-            this.TpgObject.ResumeLayout(false);
-            this.TabObject.ResumeLayout(false);
-            this.TpgGetObjectIdentifier.ResumeLayout(false);
-            this.TpgGetObjectIdentifier.PerformLayout();
-            this.TpgGetCommands.ResumeLayout(false);
-            this.GrbGetCommands.ResumeLayout(false);
-            this.GrbGetCommands.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvGetCommandEnums)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvGetCommands)).EndInit();
-            this.TpgGetCommandEnumeration.ResumeLayout(false);
-            this.GrbGetCommandEnumeration.ResumeLayout(false);
-            this.GrbGetCommandEnumeration.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvGetCommandEnumeration)).EndInit();
-            this.TpgReadProperty.ResumeLayout(false);
-            this.TpgReadProperty.PerformLayout();
-            this.grbReadProperty.ResumeLayout(false);
-            this.grbReadProperty.PerformLayout();
             this.TpgMisc.ResumeLayout(false);
             this.TabMiscellanea.ResumeLayout(false);
             this.TpgMisc_GetServerTime.ResumeLayout(false);
@@ -3119,14 +2670,6 @@
         private System.Windows.Forms.Button BtnGetAccessToken;
         private System.Windows.Forms.ToolTip ToolTip;
         private System.Windows.Forms.TabPage TpgObject;
-        private System.Windows.Forms.TabControl TabObject;
-        private System.Windows.Forms.TabPage TpgGetObjectIdentifier;
-        private System.Windows.Forms.Button BtnGetObjectIdentifier;
-        private System.Windows.Forms.TextBox TxtGetObjectIdentifier_FQR;
-        private System.Windows.Forms.Label LblGetObjectIdentifier_FQR;
-        private System.Windows.Forms.TabPage TpgGetObjects;
-        private System.Windows.Forms.Label LblObjectIdentifier_GUID;
-        private System.Windows.Forms.TextBox TxtObjectIdentifier_GUID;
         private System.Windows.Forms.TabPage TpgMisc;
         private System.Windows.Forms.TextBox TxtMisc_ServerTime;
         private System.Windows.Forms.Button BtnMisc_GetServerTime;
@@ -3268,24 +2811,6 @@
         private System.Windows.Forms.Label LblGetNetworkDevices_Type_ID;
         private System.Windows.Forms.DataGridView DgvGetNetworkDevices;
         private System.Windows.Forms.TabPage TpgSpace;
-        private System.Windows.Forms.TabPage TpgGetCommands;
-        private System.Windows.Forms.GroupBox GrbGetCommands;
-        private System.Windows.Forms.DataGridView DgvGetCommands;
-        private System.Windows.Forms.Button BtnGetCommands;
-        private System.Windows.Forms.TextBox TxtObjects_GetCommands_GUID;
-        private System.Windows.Forms.Label LblObjects_GetCommands_GUID;
-        private System.Windows.Forms.TabPage TpgGetCommandEnumeration;
-        private System.Windows.Forms.GroupBox GrbGetCommandEnumeration;
-        private System.Windows.Forms.DataGridView DgvGetCommandEnumeration;
-        private System.Windows.Forms.Button BtnGetCommandEnumeration;
-        private System.Windows.Forms.TextBox TxtObjects_GetCommandEnum_ID;
-        private System.Windows.Forms.Label LblObjects_GetCommandEnum_ID;
-        private System.Windows.Forms.Button BtnGetCommandEnums;
-        private System.Windows.Forms.DataGridView DgvGetCommandEnums;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DgvCommandEnum_TitleEnumerationKey;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DgvCommand_Title;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DgvCommand_TitleEnumerationKey;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DgvCommand_CommandId;
         private System.Windows.Forms.TabControl TabMiscellanea;
         private System.Windows.Forms.TabPage TpgMisc_GetServerTime;
         private System.Windows.Forms.TabPage TpgMisc_Localize;
@@ -3298,21 +2823,10 @@
         private System.Windows.Forms.Label LblEnum_SourceText;
         private System.Windows.Forms.Label LblMisc_Title2;
         private System.Windows.Forms.Label LblMisc_Localize_CultureInfo;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label LblLogin_Title1;
         private System.Windows.Forms.Label LblAlarm_Get;
         private System.Windows.Forms.Label LblAlarm_FindById;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TabPage TpgReadProperty;
-        private System.Windows.Forms.GroupBox grbReadProperty;
-        private System.Windows.Forms.Label lblPropertyValue;
-        private System.Windows.Forms.TextBox TxtObject_PropertyValue;
-        private System.Windows.Forms.Label lblObjectProperty;
-        private System.Windows.Forms.Button btnReadProperty;
-        private System.Windows.Forms.TextBox txtPropertyName;
-        private System.Windows.Forms.Label lblObjectFQR;
-        private System.Windows.Forms.TextBox txtObjectFQR;
-        private System.Windows.Forms.Label LblObject_Title5;
         private System.Windows.Forms.TabPage TpgStream;
         private System.Windows.Forms.CheckBox ChkAudit_AlarmEvent;
         private System.Windows.Forms.CheckBox ChkAudit_AuditTrails;

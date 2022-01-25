@@ -1208,8 +1208,8 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            Command expected1 = new Command(JToken.Parse(command1), testCulture);
-            Command expected2 = new Command(JToken.Parse(command2), testCulture);
+            Command expected1 = new Command(JToken.Parse(command1), testCulture, ApiVersion.v2);
+            Command expected2 = new Command(JToken.Parse(command2), testCulture, ApiVersion.v2);
             Assert.AreEqual(expected1, commands.ElementAt(0));
             Assert.AreEqual(expected2, commands.ElementAt(1));
         }
@@ -1235,7 +1235,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            Command expected = new Command(JToken.Parse(command1), testCulture);
+            Command expected = new Command(JToken.Parse(command1), testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, commands.ElementAt(0));
         }
 
@@ -1261,7 +1261,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            Command expected = new Command(JToken.Parse(command1), testCulture);
+            Command expected = new Command(JToken.Parse(command1), testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, commands.ElementAt(0));
         }
 
@@ -1287,7 +1287,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            Command expected = new Command(JToken.Parse(command1), testCulture);
+            Command expected = new Command(JToken.Parse(command1), testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, commands.ElementAt(0));
         }
 
@@ -1323,7 +1323,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/commands")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            Command expected = new Command(JToken.Parse(command1), testCulture);
+            Command expected = new Command(JToken.Parse(command1), testCulture, ApiVersion.v2);
             Assert.AreEqual(expected, commands.ElementAt(0));
         }
 

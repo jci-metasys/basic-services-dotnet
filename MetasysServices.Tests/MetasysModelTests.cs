@@ -70,8 +70,8 @@ namespace MetasysServices.Tests
                 "\"minItems\": 6,",
                 "\"maxItems\": 6 }");
             string commandCopy = command.Clone().ToString();
-            Command cmd = new Command(JToken.Parse(command), testCulture);
-            Command cmdCopy = new Command(JToken.Parse(commandCopy), testCulture);
+            Command cmd = new Command(JToken.Parse(command), testCulture, ApiVersion.v2);
+            Command cmdCopy = new Command(JToken.Parse(commandCopy), testCulture, ApiVersion.v2);
 
             Assert.AreEqual(cmd.GetHashCode(), cmdCopy.GetHashCode());
             Assert.AreEqual(cmd, cmdCopy);
@@ -272,8 +272,8 @@ namespace MetasysServices.Tests
                     "}],",
                 "\"minItems\": 1,",
                 "\"maxItems\": 1 }");
-            Command cmd1 = new Command(JToken.Parse(command1), testCulture);
-            Command cmd2 = new Command(JToken.Parse(command2), testCulture);
+            Command cmd1 = new Command(JToken.Parse(command1), testCulture, ApiVersion.v2);
+            Command cmd2 = new Command(JToken.Parse(command2), testCulture, ApiVersion.v2);
 
             Assert.AreNotEqual(cmd1.GetHashCode(), cmd2.GetHashCode());
             Assert.AreNotEqual(cmd1, cmd2);

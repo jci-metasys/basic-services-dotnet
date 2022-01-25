@@ -120,8 +120,6 @@ namespace JohnsonControls.Metasys.BasicServices
             Version = version;
             return new MetasysObject(item, Version, null, type:objectType);
         }
-
-
         /// <summary>
         /// Return Metasys Object representation from a generic JSON object List.
         /// </summary>
@@ -133,6 +131,31 @@ namespace JohnsonControls.Metasys.BasicServices
             foreach (var i in items)
             {
                 objects.Add(ToMetasysObject(i, Version, objectType:type));
+            }
+            return objects;
+        }
+
+        /// <summary>
+        /// Return Network Device representation from a generic JSON object.
+        /// </summary>
+        /// <returns></returns>
+        protected NetworkDevice ToNetworkDevice(JToken item, ApiVersion version)
+        {
+            Version = version;
+            return new NetworkDevice(item, Version);
+        }
+
+        /// <summary>
+        /// Return Network Device representation from a generic JSON object List.
+        /// </summary>
+        /// <returns></returns>
+        protected List<NetworkDevice> ToNetworkDevice(List<JToken> items, ApiVersion version)
+        {
+            Version = version;
+            List<NetworkDevice> objects = new List<NetworkDevice>();
+            foreach (var i in items)
+            {
+                objects.Add(ToNetworkDevice(i, Version));
             }
             return objects;
         }
