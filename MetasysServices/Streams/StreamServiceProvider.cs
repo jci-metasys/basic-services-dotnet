@@ -26,7 +26,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Provide methods for the endpoints of the Metasys Stream API v4.
     /// </summary>
-    public sealed class StreamServiceProvider : IDisposable, IStreamService
+    public sealed class StreamServiceProvider : BasicServiceProvider, IDisposable,  IStreamService
     {
         private bool _isDisposed = false;
 

@@ -1,17 +1,20 @@
-﻿using Flurl;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Resources;
+using System.Net;
+using System.Collections;
+using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
 using System.Net.Http;
-using System.Globalization;
-using System.IO;
 using JohnsonControls.Metasys.BasicServices.Utils;
+using JohnsonControls.Metasys.BasicServices;
+using System.Diagnostics;
+using System.Dynamic;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -212,6 +215,227 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
             }
             return objects;
+        }
+
+        /// <summary>
+        /// Gets all resource types asynchronously.
+        /// </summary>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        public async Task<IEnumerable<MetasysObjectType>> GetResourceTypesAsync(string resource, string pathSegment)
+        {
+            List<MetasysObjectType> types = new List<MetasysObjectType>() { };
+
+            try
+            {
+                var response = await Client.Request(new Url(resource)
+                    .AppendPathSegment(pathSegment))
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+                try
+                {
+                    if (Version < ApiVersion.v4)
+                    {
+                        // The response is a list of typeUrls, not the type data
+                        var list = response["items"] as JArray;
+                        foreach (var item in list)
+                        {
+                            try
+                            {
+                                JToken typeToken = item;
+                                // Retrieve type token from url (when available) and construct Metasys Object Type
+                                if (item["typeUrl"] != null)
+                                {
+                                    var url = item["typeUrl"].Value<string>();
+                                    typeToken = await GetWithFullUrl(url).ConfigureAwait(false);
+                                }
+                                var type = GetType(typeToken);
+                                types.Add(type);
+                            }
+                            catch (System.ArgumentNullException e)
+                            {
+                                throw new MetasysHttpParsingException(response.ToString(), e);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var item = response["item"];
+                        var members = item["members"];
+                        dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(members.ToString());
+                        foreach (KeyValuePair<string, object> kvp in kvpList)
+                        {
+                            if (kvp.Key.Length > 0)
+                            {
+                                var itm = kvp.Value as IDictionary<string, object>;
+                                String description = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
+                                int id = int.Parse((itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
+
+                                var type = GetType(id, description, kvp.Key);
+                                types.Add(type);
+                            }
+                        }
+                    }
+                }
+                catch (System.NullReferenceException e)
+                {
+                    throw new MetasysHttpParsingException(response.ToString(), e);
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return types;
+        }
+
+        /// <summary>
+        /// Gets the type from a token retrieved from a typeUrl 
+        /// </summary>
+        /// <param name="typeToken"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysObjectTypeException"></exception>
+        protected MetasysObjectType GetType(JToken typeToken)
+        {
+            try
+            {
+                if (typeToken != null || typeToken == null)
+                {
+                    //string description = (typeToken.Contains("description") && typeToken["description"] != null) ? typeToken["description"].Value<string>(): "";
+                    //int id = (typeToken.Contains("id") && typeToken["id"] != null) ?  typeToken["id"].Value<int>() : -1;
+                    //string key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
+                    string description = typeToken["description"].Value<string>();
+                    int id = typeToken["id"].Value<int>();
+                    //string key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
+                    string key = GetObjectTypeEnumeration(description);
+
+                    if (key.Length > 0)
+                    {
+                        string translation = Localize(key);
+                        if (translation != key)
+                        {
+                            // A translation was found
+                            description = translation;
+                        }
+                    }
+                    return new MetasysObjectType(id, key, description);
+                }
+                else
+                {
+                    return new MetasysObjectType(-1, "", "");
+                }
+            }
+            catch (Exception e) when (e is System.ArgumentNullException
+                || e is System.NullReferenceException || e is System.FormatException)
+            {
+                throw new MetasysObjectTypeException(typeToken.ToString(), e);
+            }
+        }
+
+        /// <inheritdoc/>
+        public string GetObjectTypeEnumeration(string resource)
+        {
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+            return Utils.ResourceManager.GetObjectTypeEnumeration(resource);
+        }
+
+
+        /// <inheritdoc/>
+        public string Localize(string resource, CultureInfo cultureInfo = null)
+        {
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+            return Utils.ResourceManager.Localize(resource, cultureInfo ?? Culture);
+        }
+
+
+        /// <inheritdoc/>
+        public IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey)
+        {
+            return GetEnumValuesAsync(enumerationKey).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey)
+        {
+            List<MetasysEnumValue> enums = new List<MetasysEnumValue>() { };
+
+            if (Version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+
+            try
+            {
+                var response = await Client.Request(new Url("enumerations")
+                    .AppendPathSegment(enumerationKey))
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+                try
+                {
+                    var item = response["item"];
+                    var members = item["members"];
+                    dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(members.ToString());
+                    foreach (KeyValuePair<string, object> kvp in kvpList)
+                    {
+                        if (kvp.Key.Length > 0)
+                        {
+                            var itm = kvp.Value as IDictionary<string, object>;
+                            String key = kvp.Key;
+                            String name = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
+                            int value = int.Parse((itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
+
+                            var enumValue = new MetasysEnumValue(key, name, value, Culture);
+                            enums.Add(enumValue);
+                        }
+                    }
+                }
+                catch (System.NullReferenceException e)
+                {
+                    throw new MetasysHttpParsingException(response.ToString(), e);
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return enums;
+        }
+
+        /// <summary>
+        /// Gets the type from the values of the paramenters
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="description"></param>
+        /// <param name="key"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysObjectTypeException"></exception>
+        protected MetasysObjectType GetType(int id, String description, String key)
+        {
+            try
+            {
+                if (id >= 0 && description.Length > 0)
+                {
+                    if (String.IsNullOrEmpty(key))
+                    {
+                        key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
+                    }
+                    if (key.Length > 0)
+                    {
+                        string translation = Localize(key);
+                        if (translation != key)
+                        {
+                            // A translation was found
+                            description = translation;
+                        }
+                    }
+                    return new MetasysObjectType(id, key, description);
+                }
+                else
+                {
+                    return new MetasysObjectType(-1, "", "");
+                }
+            }
+            catch (Exception e) when (e is System.ArgumentNullException
+                || e is System.NullReferenceException || e is System.FormatException)
+            {
+                throw new MetasysObjectTypeException(id.ToString() + " " + description, e);
+            }
         }
 
         /// <summary>

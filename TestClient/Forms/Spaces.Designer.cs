@@ -339,13 +339,13 @@ namespace MetasysServices_TestClient.Forms
             // 
             // TlpGetSpaceTypes
             // 
-            this.TlpGetSpaceTypes.ColumnCount = 3;
+            this.TlpGetSpaceTypes.ColumnCount = 4;
             this.TlpGetSpaceTypes.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetSpaceTypes.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 106F));
             this.TlpGetSpaceTypes.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TlpGetSpaceTypes.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetSpaceTypes.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetSpaceTypes.Controls.Add(this.BtnGetSpaceTypes, 1, 1);
-            this.TlpGetSpaceTypes.Controls.Add(this.DgvGetSpaceTypes, 1, 2);
+            this.TlpGetSpaceTypes.Controls.Add(this.BtnGetSpaceTypes, 2, 1);
+            this.TlpGetSpaceTypes.Controls.Add(this.DgvGetSpaceTypes, 2, 2);
             this.TlpGetSpaceTypes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetSpaceTypes.Location = new System.Drawing.Point(3, 3);
             this.TlpGetSpaceTypes.Name = "TlpGetSpaceTypes";
@@ -359,7 +359,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             // BtnGetSpaceTypes
             // 
-            this.BtnGetSpaceTypes.Location = new System.Drawing.Point(23, 23);
+            this.BtnGetSpaceTypes.Location = new System.Drawing.Point(129, 23);
             this.BtnGetSpaceTypes.Name = "BtnGetSpaceTypes";
             this.BtnGetSpaceTypes.Size = new System.Drawing.Size(130, 23);
             this.BtnGetSpaceTypes.TabIndex = 0;
@@ -371,9 +371,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetSpaceTypes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetSpaceTypes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetSpaceTypes.Location = new System.Drawing.Point(23, 52);
+            this.DgvGetSpaceTypes.Location = new System.Drawing.Point(129, 52);
             this.DgvGetSpaceTypes.Name = "DgvGetSpaceTypes";
-            this.DgvGetSpaceTypes.Size = new System.Drawing.Size(1000, 423);
+            this.DgvGetSpaceTypes.Size = new System.Drawing.Size(894, 423);
             this.DgvGetSpaceTypes.TabIndex = 1;
             // 
             // Spaces

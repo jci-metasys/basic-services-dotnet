@@ -55,5 +55,23 @@ namespace MetasysServices_TestClient.Forms
                 DgvGetEquipmentPoints.DataSource = result;
             }
         }
+
+        private void BtnGetSingleEquipemnt_Click(object sender, EventArgs e)
+        {
+            PrgGetSingleEquipment.SelectedObject = null;
+            String equipmentId = TxtGetSingleEquipment_EquipmentId.Text;
+
+            if (_client != null && equipmentId.Length > 0)
+            {
+                Guid equipmentGuid = new Guid(equipmentId);
+                // call the method
+                var equipment = _client.GetSingleEquipment(equipmentGuid);
+                if (equipment != null)
+                {
+                    PrgGetSingleEquipment.SelectedObject = equipment;
+                }
+            }
+
+        }
     }
 }

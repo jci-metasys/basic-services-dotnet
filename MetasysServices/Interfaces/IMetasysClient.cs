@@ -9,7 +9,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// An HTTP client for consuming the most commonly used endpoints of the Metasys API.
     /// </summary>
-    public interface IMetasysClient
+    public interface IMetasysClient :IBasicService
     {
         /// <summary>
         /// The hostname of Metasys API server.
@@ -23,20 +23,20 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>The current Culture Used for Metasys client localization.</summary>
         CultureInfo Culture { get; set; }
 
-        /// <summary>
-        /// Localizes the specified resource key for the current MetasysClient locale or specified culture.
-        /// </summary>
-        /// <remarks>
-        /// The resource parameter must be the key of a Metasys enumeration resource,
-        /// otherwise no translation will be found.
-        /// </remarks>
-        /// <param name="resource">The key for the localization resource.</param>
-        /// <param name="cultureInfo">Optional culture specification.</param>
-        /// <returns>
-        /// Localized string if the resource was found, the default en-US localized string if not found,
-        /// or the resource parameter value if neither resource is found.
-        /// </returns>
-        string Localize(string resource, CultureInfo cultureInfo = null);
+        ///// <summary>
+        ///// Localizes the specified resource key for the current MetasysClient locale or specified culture.
+        ///// </summary>
+        ///// <remarks>
+        ///// The resource parameter must be the key of a Metasys enumeration resource,
+        ///// otherwise no translation will be found.
+        ///// </remarks>
+        ///// <param name="resource">The key for the localization resource.</param>
+        ///// <param name="cultureInfo">Optional culture specification.</param>
+        ///// <returns>
+        ///// Localized string if the resource was found, the default en-US localized string if not found,
+        ///// or the resource parameter value if neither resource is found.
+        ///// </returns>
+        //string Localize(string resource, CultureInfo cultureInfo = null);
 
         /// <summary>
         /// Attempts to get the enumeration key of a given en-US localized command.
@@ -51,18 +51,19 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </returns>
         string GetCommandEnumeration(string resource);
 
-        /// <summary>
-        /// Attempts to get the enumeration key of a given en-US localized objectType.
-        /// </summary>
-        /// <remarks>
-        /// The resource parameter must be the value of a Metasys objectTypeEnumSet en-US value,
-        /// otherwise no key will be found.
-        /// </remarks>
-        /// <param name="resource">The en-US value for the localization resource.</param>
-        /// <returns>
-        /// The enumeration key of the en-US objectType if found, original resource if not.
-        /// </returns>
-        string GetObjectTypeEnumeration(string resource);
+        ///// <summary>
+        ///// Attempts to get the enumeration key of a given en-US localized objectType.
+        ///// </summary>
+        ///// <remarks>
+        ///// The resource parameter must be the value of a Metasys objectTypeEnumSet en-US value,
+        ///// otherwise no key will be found.
+        ///// </remarks>
+        ///// <param name="resource">The en-US value for the localization resource.</param>
+        ///// <returns>
+        ///// The enumeration key of the en-US objectType if found, original resource if not.
+        ///// </returns>
+        //string GetObjectTypeEnumeration(string resource);
+
 
         /// <summary>
         /// Attempts to login to the given host and retrieve an access token.
@@ -294,9 +295,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Gets all equipment.
         /// </summary>
         IEnumerable<MetasysObject> GetEquipment();
-
         /// <inheritdoc cref="IMetasysClient.GetEquipment()"/>
         Task<IEnumerable<MetasysObject>> GetEquipmentAsync();
+
+        /// <summary>
+        /// Get a single equipment.
+        /// </summary>
+        MetasysObject GetSingleEquipment(Guid equipmentId);
+        /// <inheritdoc cref="IMetasysClient.GetSingleEquipment(Guid)"/>
+        Task<MetasysObject> GetSingleEquipmentAsync(Guid equipmentId);
+
 
         /// <summary>
         /// Gets all points for the given Equipment
@@ -311,11 +319,6 @@ namespace JohnsonControls.Metasys.BasicServices
         Task<IEnumerable<MetasysPoint>> GetEquipmentPointsAsync(Guid equipmentId, bool readAttributeValue = true);
 
         /// <summary>
-        /// Services for Trends and Samples.
-        /// </summary>
-        ITrendService Trends { get; set; }
-
-        /// <summary>
         /// Services for Alarms.
         /// </summary>
         IAlarmsService Alarms { get; set; }
@@ -324,6 +327,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Services for Audits.
         /// </summary>
         IAuditService Audits { get; set; }
+
+        /// <summary>
+        /// Services for Network Devices.
+        /// </summary>
+        INetworkDeviceService NetworkDevices { get; set; }
+
+        /// <summary>
+        /// Services for Trends and Samples.
+        /// </summary>
+        ITrendService Trends { get; set; }
+
 
         /// <summary>
         /// Services for Streams.
@@ -353,7 +367,6 @@ namespace JohnsonControls.Metasys.BasicServices
 
 
         //==========================================================================================================================
-
 
 
 
@@ -398,14 +411,15 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         Task<IEnumerable<MetasysEnumeration>> GetSiteEnumerationsAsync();
 
-        /// <summary>
-        /// Get all the values of a specified enumeration set
-        /// </summary>
-        IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey);
+        ///// <summary>
+        ///// Get all the values of a specified enumeration set
+        ///// </summary>
+        //IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey);
 
-        /// <summary>
-        /// Get all the values of a specified enumeration set (Async)
-        /// </summary>
-        Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey);
+        ///// <summary>
+        ///// Get all the values of a specified enumeration set (Async)
+        ///// </summary>
+        //Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey);
+
     }
 }

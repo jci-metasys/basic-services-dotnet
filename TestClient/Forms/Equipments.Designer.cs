@@ -42,6 +42,12 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetEquipmentPoints = new System.Windows.Forms.DataGridView();
             this.LblReadAttributeValue = new System.Windows.Forms.Label();
             this.ChkReadAttributeValue = new System.Windows.Forms.CheckBox();
+            this.TpgGetSingleEquipment = new System.Windows.Forms.TabPage();
+            this.TlpGetSingleEquipment = new System.Windows.Forms.TableLayoutPanel();
+            this.LblGetSingleEquipment_EquipmentId = new System.Windows.Forms.Label();
+            this.TxtGetSingleEquipment_EquipmentId = new System.Windows.Forms.TextBox();
+            this.BtnGetSingleEquipemnt = new System.Windows.Forms.Button();
+            this.PrgGetSingleEquipment = new System.Windows.Forms.PropertyGrid();
             this.TabMain.SuspendLayout();
             this.TpgGetEquipment.SuspendLayout();
             this.TlpGetEquipment.SuspendLayout();
@@ -49,6 +55,8 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetEquipmentPoints.SuspendLayout();
             this.TlpGetEquipmentpoints.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetEquipmentPoints)).BeginInit();
+            this.TpgGetSingleEquipment.SuspendLayout();
+            this.TlpGetSingleEquipment.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabMain
@@ -56,6 +64,7 @@ namespace MetasysServices_TestClient.Forms
             this.TabMain.Appearance = System.Windows.Forms.TabAppearance.Buttons;
             this.TabMain.Controls.Add(this.TpgGetEquipment);
             this.TabMain.Controls.Add(this.TpgGetEquipmentPoints);
+            this.TabMain.Controls.Add(this.TpgGetSingleEquipment);
             this.TabMain.ItemSize = new System.Drawing.Size(58, 25);
             this.TabMain.Location = new System.Drawing.Point(12, 12);
             this.TabMain.Name = "TabMain";
@@ -76,12 +85,13 @@ namespace MetasysServices_TestClient.Forms
             // 
             // TlpGetEquipment
             // 
-            this.TlpGetEquipment.ColumnCount = 3;
+            this.TlpGetEquipment.ColumnCount = 4;
             this.TlpGetEquipment.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetEquipment.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 116F));
             this.TlpGetEquipment.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TlpGetEquipment.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetEquipment.Controls.Add(this.BtnGetEquipment, 1, 1);
-            this.TlpGetEquipment.Controls.Add(this.DgvGetEquipment, 1, 2);
+            this.TlpGetEquipment.Controls.Add(this.BtnGetEquipment, 2, 1);
+            this.TlpGetEquipment.Controls.Add(this.DgvGetEquipment, 2, 2);
             this.TlpGetEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetEquipment.Location = new System.Drawing.Point(3, 3);
             this.TlpGetEquipment.Name = "TlpGetEquipment";
@@ -95,7 +105,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             // BtnGetEquipment
             // 
-            this.BtnGetEquipment.Location = new System.Drawing.Point(23, 23);
+            this.BtnGetEquipment.Location = new System.Drawing.Point(139, 23);
             this.BtnGetEquipment.Name = "BtnGetEquipment";
             this.BtnGetEquipment.Size = new System.Drawing.Size(130, 23);
             this.BtnGetEquipment.TabIndex = 0;
@@ -107,9 +117,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetEquipment.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetEquipment.Location = new System.Drawing.Point(23, 52);
+            this.DgvGetEquipment.Location = new System.Drawing.Point(139, 52);
             this.DgvGetEquipment.Name = "DgvGetEquipment";
-            this.DgvGetEquipment.Size = new System.Drawing.Size(932, 444);
+            this.DgvGetEquipment.Size = new System.Drawing.Size(816, 444);
             this.DgvGetEquipment.TabIndex = 1;
             // 
             // TpgGetEquipmentPoints
@@ -155,6 +165,7 @@ namespace MetasysServices_TestClient.Forms
             this.LblGetEquipmentPoints_EquipID.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblGetEquipmentPoints_EquipID.Location = new System.Drawing.Point(23, 23);
             this.LblGetEquipmentPoints_EquipID.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetEquipmentPoints_EquipID.MinimumSize = new System.Drawing.Size(100, 0);
             this.LblGetEquipmentPoints_EquipID.Name = "LblGetEquipmentPoints_EquipID";
             this.LblGetEquipmentPoints_EquipID.Size = new System.Drawing.Size(110, 20);
             this.LblGetEquipmentPoints_EquipID.TabIndex = 0;
@@ -210,6 +221,81 @@ namespace MetasysServices_TestClient.Forms
             this.ChkReadAttributeValue.TabIndex = 5;
             this.ChkReadAttributeValue.UseVisualStyleBackColor = true;
             // 
+            // TpgGetSingleEquipment
+            // 
+            this.TpgGetSingleEquipment.Controls.Add(this.TlpGetSingleEquipment);
+            this.TpgGetSingleEquipment.Location = new System.Drawing.Point(4, 29);
+            this.TpgGetSingleEquipment.Name = "TpgGetSingleEquipment";
+            this.TpgGetSingleEquipment.Padding = new System.Windows.Forms.Padding(3);
+            this.TpgGetSingleEquipment.Size = new System.Drawing.Size(984, 525);
+            this.TpgGetSingleEquipment.TabIndex = 2;
+            this.TpgGetSingleEquipment.Text = "GetSingleEquipment";
+            this.TpgGetSingleEquipment.UseVisualStyleBackColor = true;
+            // 
+            // TlpGetSingleEquipment
+            // 
+            this.TlpGetSingleEquipment.ColumnCount = 4;
+            this.TlpGetSingleEquipment.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetSingleEquipment.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.TlpGetSingleEquipment.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpGetSingleEquipment.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetSingleEquipment.Controls.Add(this.LblGetSingleEquipment_EquipmentId, 1, 1);
+            this.TlpGetSingleEquipment.Controls.Add(this.TxtGetSingleEquipment_EquipmentId, 2, 1);
+            this.TlpGetSingleEquipment.Controls.Add(this.BtnGetSingleEquipemnt, 2, 2);
+            this.TlpGetSingleEquipment.Controls.Add(this.PrgGetSingleEquipment, 2, 3);
+            this.TlpGetSingleEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TlpGetSingleEquipment.Location = new System.Drawing.Point(3, 3);
+            this.TlpGetSingleEquipment.Name = "TlpGetSingleEquipment";
+            this.TlpGetSingleEquipment.RowCount = 5;
+            this.TlpGetSingleEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetSingleEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpGetSingleEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpGetSingleEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpGetSingleEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetSingleEquipment.Size = new System.Drawing.Size(978, 519);
+            this.TlpGetSingleEquipment.TabIndex = 0;
+            // 
+            // LblGetSingleEquipment_EquipmentId
+            // 
+            this.LblGetSingleEquipment_EquipmentId.AutoSize = true;
+            this.LblGetSingleEquipment_EquipmentId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGetSingleEquipment_EquipmentId.Location = new System.Drawing.Point(23, 23);
+            this.LblGetSingleEquipment_EquipmentId.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetSingleEquipment_EquipmentId.MinimumSize = new System.Drawing.Size(100, 0);
+            this.LblGetSingleEquipment_EquipmentId.Name = "LblGetSingleEquipment_EquipmentId";
+            this.LblGetSingleEquipment_EquipmentId.Size = new System.Drawing.Size(110, 20);
+            this.LblGetSingleEquipment_EquipmentId.TabIndex = 0;
+            this.LblGetSingleEquipment_EquipmentId.Text = "Equipment ID (GUID):";
+            this.LblGetSingleEquipment_EquipmentId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtGetSingleEquipment_EquipmentId
+            // 
+            this.TxtGetSingleEquipment_EquipmentId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtGetSingleEquipment_EquipmentId.Location = new System.Drawing.Point(139, 23);
+            this.TxtGetSingleEquipment_EquipmentId.Name = "TxtGetSingleEquipment_EquipmentId";
+            this.TxtGetSingleEquipment_EquipmentId.Size = new System.Drawing.Size(816, 20);
+            this.TxtGetSingleEquipment_EquipmentId.TabIndex = 1;
+            // 
+            // BtnGetSingleEquipemnt
+            // 
+            this.BtnGetSingleEquipemnt.Location = new System.Drawing.Point(139, 49);
+            this.BtnGetSingleEquipemnt.MinimumSize = new System.Drawing.Size(260, 0);
+            this.BtnGetSingleEquipemnt.Name = "BtnGetSingleEquipemnt";
+            this.BtnGetSingleEquipemnt.Size = new System.Drawing.Size(260, 23);
+            this.BtnGetSingleEquipemnt.TabIndex = 2;
+            this.BtnGetSingleEquipemnt.Text = "GetSingleEquipment";
+            this.BtnGetSingleEquipemnt.UseVisualStyleBackColor = true;
+            this.BtnGetSingleEquipemnt.Click += new System.EventHandler(this.BtnGetSingleEquipemnt_Click);
+            // 
+            // PrgGetSingleEquipment
+            // 
+            this.PrgGetSingleEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PrgGetSingleEquipment.HelpVisible = false;
+            this.PrgGetSingleEquipment.Location = new System.Drawing.Point(139, 78);
+            this.PrgGetSingleEquipment.Name = "PrgGetSingleEquipment";
+            this.PrgGetSingleEquipment.Size = new System.Drawing.Size(816, 418);
+            this.PrgGetSingleEquipment.TabIndex = 3;
+            // 
             // Equipments
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -226,6 +312,9 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetEquipmentpoints.ResumeLayout(false);
             this.TlpGetEquipmentpoints.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetEquipmentPoints)).EndInit();
+            this.TpgGetSingleEquipment.ResumeLayout(false);
+            this.TlpGetSingleEquipment.ResumeLayout(false);
+            this.TlpGetSingleEquipment.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -245,5 +334,11 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.DataGridView DgvGetEquipmentPoints;
         private System.Windows.Forms.Label LblReadAttributeValue;
         private System.Windows.Forms.CheckBox ChkReadAttributeValue;
+        private System.Windows.Forms.TabPage TpgGetSingleEquipment;
+        private System.Windows.Forms.TableLayoutPanel TlpGetSingleEquipment;
+        private System.Windows.Forms.Label LblGetSingleEquipment_EquipmentId;
+        private System.Windows.Forms.TextBox TxtGetSingleEquipment_EquipmentId;
+        private System.Windows.Forms.Button BtnGetSingleEquipemnt;
+        private System.Windows.Forms.PropertyGrid PrgGetSingleEquipment;
     }
 }

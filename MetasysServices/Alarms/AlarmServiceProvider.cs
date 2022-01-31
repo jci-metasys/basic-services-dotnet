@@ -135,6 +135,35 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
+        public void EditAlarm(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
+        {
+            EditAlarmAsync(alarmId, action, annotationText).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public async Task EditAlarmAsync(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
+        {
+            if (Version > ApiVersion.v3)
+            {
+                JObject body = new JObject();
+                body.Add(propertyName: "activityManagementStatus", value: action.ToString());
+                if (annotationText != null)
+                {
+                    body.Add(propertyName: "annotationText", value: annotationText);
+                }
+
+                var response = await Client.Request(new Url("alarms")
+                .AppendPathSegments(alarmId))
+                .PatchJsonAsync(body)
+                .ConfigureAwait(false);
+            }
+            else
+            {
+                throw new MetasysUnsupportedApiVersion(Version.ToString());
+            }
+        }
+
+        /// <inheritdoc/>
         public IEnumerable<AlarmAnnotation> GetAnnotations(Guid alarmId)
         {
             return GetAnnotationsAsync(alarmId).GetAwaiter().GetResult();
@@ -144,15 +173,15 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<AlarmAnnotation>> GetAnnotationsAsync(Guid alarmId)
         {
             // Retrieve JSON collection of Annotation
-            var annotations= await GetAllAvailablePagesAsync("alarms",null,alarmId.ToString(),"annotations").ConfigureAwait(false);
+            var annotations = await GetAllAvailablePagesAsync("alarms", null, alarmId.ToString(), "annotations").ConfigureAwait(false);
             List<AlarmAnnotation> annotationsList = new List<AlarmAnnotation>();
             // Convert to a collection of AlarmAnnotation
-            foreach (var token in annotations) {
+            foreach (var token in annotations)
+            {
                 annotationsList.Add(CreateAlarmAnnotation(token));
             }
             return annotationsList;
         }
-
 
         private Alarm CreateItem(Alarm item)
         {

@@ -120,7 +120,7 @@ namespace MetasysServicesCom.Tests
         public void GetObjectIdentifer_RetursFqr()
         {
             //Arrange
-            InitMethod.httpTest.RespondWith($"\"{mockid.ToString()}\"");
+            InitMethod.httpTest.RespondWith($"\"{mockid}\"");
 
             //Act
             var id = InitMethod.LClient.GetObjectIdentifier("fully:qualified/reference1");

@@ -37,25 +37,24 @@ namespace MetasysServices_TestClient.Forms
         private void BtnGetObjectIdentifier_Click(object sender, EventArgs e)
         {
             TxtGetObjectIdentifier_Result.Text = String.Empty;
-            if (_client != null)
+            String objectFQR = TxtGetObjectIdentifier_ObjectFQR.Text.Trim();
+            if (_client != null && objectFQR.Length > 0)
             {
-                String objectFQR = TxtGetObjectIdentifier_ObjectFQR.Text.Trim();
                 var result = _client.GetObjectIdentifier(objectFQR);
                 TxtGetObjectIdentifier_Result.Text = result.ToString();
             }
-
         }
 
         private void BtnGetObjects_Click(object sender, EventArgs e)
         {
             DgvGetObjects.DataSource = null;
-            if (_client != null)
+            string guid = TxtGetObjects_ParentID.Text;
+            if (_client != null && guid.Length > 0)
             {
-                Guid parentId = new Guid(TxtGetObjects_ParentID.Text);
+                Guid parentId = new Guid(guid);
                 var result = _client.GetObjects(parentId);
                 DgvGetObjects.DataSource = result;
             }
-
         }
 
         private void BtnGetCommands_Click(object sender, EventArgs e)
@@ -77,7 +76,6 @@ namespace MetasysServices_TestClient.Forms
                     DgvGetCommands.Rows[i].Tag = c;
                 }
             }
-
         }
 
         private void BtnGetCommands_RetrieveEnumValues_Click(object sender, EventArgs e)
@@ -128,11 +126,51 @@ namespace MetasysServices_TestClient.Forms
         {
             TxtReadProperty_Result.Text = "";
             String objectId = TxtReadProperty_ObjectId.Text;
-            if (_client != null && objectId.Length > 0)
+            String attributeName = TxtReadProperty_PropertyKey.Text;
+            if (_client != null && objectId.Length > 0 && attributeName.Length > 0)
             {
                 Guid id = new Guid(objectId);
-                Variant response = _client.ReadProperty(id, TxtReadProperty.Text);
+                Variant response = _client.ReadProperty(id, attributeName);
                 TxtReadProperty_Result.Text = response.StringValue;
+            }
+        }
+
+        private void BtnSendCommand_Click(object sender, EventArgs e)
+        {
+            TxtSendCommand_Result.Text = "";
+            String objectId = TxtSendCommand_ObjectId.Text;
+            String command = TxtSendCommand_Command.Text;
+            String values = TxtSendCommand_Values.Text;
+            if (_client != null && objectId.Length > 0 && objectId.Length > 0)
+            {
+                Guid id = new Guid(objectId);
+                try
+                {
+                    if (values.Trim().Length == 0)
+                    {
+                        _client.SendCommand(id, command);
+                    }
+                    else
+                    {
+                        List<object>  objValues = new List<object>();
+                        if (double.TryParse(values, out double numericValue))
+                        {
+                            objValues.Add(numericValue);
+                        }
+                        else
+                        {
+                            objValues.Add(values);
+                        }
+
+                        _client.SendCommand(id, command, objValues);
+                    }
+
+                    TxtSendCommand_Result.Text = "OK";
+                }
+                catch (MetasysHttpException ex)
+                {
+                    TxtSendCommand_Result.Text = "Error: " + ex.Message;
+                }
             }
         }
     }

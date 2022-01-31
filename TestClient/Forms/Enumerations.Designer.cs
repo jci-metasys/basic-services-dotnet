@@ -33,8 +33,8 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetSiteEnumerations = new System.Windows.Forms.TabPage();
             this.TlpGetSiteEnumerations = new System.Windows.Forms.TableLayoutPanel();
             this.BtnGetSiteEnumerations = new System.Windows.Forms.Button();
-            this.TpgGetEnumValues = new System.Windows.Forms.TabPage();
             this.DgvGetSiteEnumerations = new System.Windows.Forms.DataGridView();
+            this.TpgGetEnumValues = new System.Windows.Forms.TabPage();
             this.TlpGetEnumValues = new System.Windows.Forms.TableLayoutPanel();
             this.LblGetEnumValues_EnumKey = new System.Windows.Forms.Label();
             this.TxtGetEnumValues_EnumKey = new System.Windows.Forms.TextBox();
@@ -43,8 +43,8 @@ namespace MetasysServices_TestClient.Forms
             this.TabMain.SuspendLayout();
             this.TpgGetSiteEnumerations.SuspendLayout();
             this.TlpGetSiteEnumerations.SuspendLayout();
-            this.TpgGetEnumValues.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetSiteEnumerations)).BeginInit();
+            this.TpgGetEnumValues.SuspendLayout();
             this.TlpGetEnumValues.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetEnumValues)).BeginInit();
             this.SuspendLayout();
@@ -76,7 +76,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.TlpGetSiteEnumerations.ColumnCount = 4;
             this.TlpGetSiteEnumerations.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetSiteEnumerations.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.TlpGetSiteEnumerations.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 106F));
             this.TlpGetSiteEnumerations.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TlpGetSiteEnumerations.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetSiteEnumerations.Controls.Add(this.BtnGetSiteEnumerations, 2, 1);
@@ -94,13 +94,22 @@ namespace MetasysServices_TestClient.Forms
             // 
             // BtnGetSiteEnumerations
             // 
-            this.BtnGetSiteEnumerations.Location = new System.Drawing.Point(133, 23);
+            this.BtnGetSiteEnumerations.Location = new System.Drawing.Point(129, 23);
             this.BtnGetSiteEnumerations.Name = "BtnGetSiteEnumerations";
             this.BtnGetSiteEnumerations.Size = new System.Drawing.Size(130, 23);
             this.BtnGetSiteEnumerations.TabIndex = 0;
             this.BtnGetSiteEnumerations.Text = "GetSiteEnumerations";
             this.BtnGetSiteEnumerations.UseVisualStyleBackColor = true;
             this.BtnGetSiteEnumerations.Click += new System.EventHandler(this.BtnGetEnumerations_Click);
+            // 
+            // DgvGetSiteEnumerations
+            // 
+            this.DgvGetSiteEnumerations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvGetSiteEnumerations.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvGetSiteEnumerations.Location = new System.Drawing.Point(129, 52);
+            this.DgvGetSiteEnumerations.Name = "DgvGetSiteEnumerations";
+            this.DgvGetSiteEnumerations.Size = new System.Drawing.Size(610, 312);
+            this.DgvGetSiteEnumerations.TabIndex = 1;
             // 
             // TpgGetEnumValues
             // 
@@ -112,15 +121,6 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetEnumValues.TabIndex = 1;
             this.TpgGetEnumValues.Text = "GetEnumValues";
             this.TpgGetEnumValues.UseVisualStyleBackColor = true;
-            // 
-            // DgvGetSiteEnumerations
-            // 
-            this.DgvGetSiteEnumerations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvGetSiteEnumerations.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetSiteEnumerations.Location = new System.Drawing.Point(133, 52);
-            this.DgvGetSiteEnumerations.Name = "DgvGetSiteEnumerations";
-            this.DgvGetSiteEnumerations.Size = new System.Drawing.Size(606, 312);
-            this.DgvGetSiteEnumerations.TabIndex = 1;
             // 
             // TlpGetEnumValues
             // 
@@ -196,8 +196,8 @@ namespace MetasysServices_TestClient.Forms
             this.TabMain.ResumeLayout(false);
             this.TpgGetSiteEnumerations.ResumeLayout(false);
             this.TlpGetSiteEnumerations.ResumeLayout(false);
-            this.TpgGetEnumValues.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetSiteEnumerations)).EndInit();
+            this.TpgGetEnumValues.ResumeLayout(false);
             this.TlpGetEnumValues.ResumeLayout(false);
             this.TlpGetEnumValues.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetEnumValues)).EndInit();

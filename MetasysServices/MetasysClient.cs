@@ -33,13 +33,17 @@ namespace JohnsonControls.Metasys.BasicServices
         protected Dictionary<string, Guid> IdentifiersDictionary = new Dictionary<string, Guid>();
 
         /// <inheritdoc/>
-        public ITrendService Trends { get; set; }
-
-        /// <inheritdoc/>
 		public IAlarmsService Alarms { get; set; }
 
         /// <inheritdoc/>
         public IAuditService Audits { get; set; }
+
+        /// <inheritdoc/>
+        public INetworkDeviceService NetworkDevices { get; set; }
+
+        /// <inheritdoc/>
+        public ITrendService Trends { get; set; }
+
 
         /// <inheritdoc/>
         public IStreamService Streams { get; set; }
@@ -105,6 +109,10 @@ namespace JohnsonControls.Metasys.BasicServices
                 if (Alarms != null)
                 {
                     Alarms.Version = version.Value;
+                }
+                if (NetworkDevices != null)
+                {
+                    NetworkDevices.Version = version.Value;
                 }
                 if (Streams != null)
                 {
@@ -205,6 +213,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 Trends = new TrendServiceProvider(Client, version, logClientErrors);
                 Alarms = new AlarmServiceProvider(Client, version, logClientErrors);
                 Audits = new AuditServiceProvider(Client, version, logClientErrors);
+                NetworkDevices = new NetworkDeviceServiceProvider(Client, version, logClientErrors);
                 if (Version > ApiVersion.v3)
                 {
                     Streams = new StreamServiceProvider(Client, hostname, version);
@@ -216,12 +225,12 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        /// <inheritdoc/>
-        public string Localize(string resource, CultureInfo cultureInfo = null)
-        {
-            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-            return Utils.ResourceManager.Localize(resource, cultureInfo ?? Culture);
-        }
+        ///// <inheritdoc/>
+        //public string Localize(string resource, CultureInfo cultureInfo = null)
+        //{
+        //    // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+        //    return Utils.ResourceManager.Localize(resource, cultureInfo ?? Culture);
+        //}
 
         /// <inheritdoc/>
         public string GetCommandEnumeration(string resource)
@@ -230,12 +239,12 @@ namespace JohnsonControls.Metasys.BasicServices
             return Utils.ResourceManager.GetCommandEnumeration(resource);
         }
 
-        /// <inheritdoc/>
-        public string GetObjectTypeEnumeration(string resource)
-        {
-            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-            return Utils.ResourceManager.GetObjectTypeEnumeration(resource);
-        }
+        ///// <inheritdoc/>
+        //public string GetObjectTypeEnumeration(string resource)
+        //{
+        //    // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+        //    return Utils.ResourceManager.GetObjectTypeEnumeration(resource);
+        //}
 
         /// <summary>Use to log an error message from an asynchronous context.</summary>
         private async Task LogErrorAsync(String message)
@@ -685,10 +694,23 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             try
             {
-                var response = await Client.Request(new Url("objects")
-                                                            .AppendPathSegments(id, "commands", command))
-                                                            .PutJsonAsync(values)
-                                                            .ConfigureAwait(false);
+                if (Version > ApiVersion.v3)
+                {
+                    JProperty propParams = new JProperty("parameters", "commandIdEnumSet.state1Command");
+                    JObject jsonValues = new JObject(propParams);
+
+                    var response = await Client.Request(new Url("objects")
+                                                                .AppendPathSegments(id, "commands", command))
+                                                                .PutJsonAsync(jsonValues)
+                                                                .ConfigureAwait(false);
+                }
+                else
+                {
+                    var response = await Client.Request(new Url("objects")
+                                                                .AppendPathSegments(id, "commands", command))
+                                                                .PutJsonAsync(values)
+                                                                .ConfigureAwait(false);
+                }
             }
             catch (FlurlHttpException e)
             {
@@ -746,55 +768,55 @@ namespace JohnsonControls.Metasys.BasicServices
             return enums;
         }
 
-        /// <inheritdoc/>
-        public IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey)
-        {
-            return GetEnumValuesAsync(enumerationKey).GetAwaiter().GetResult();
-        }
+        ///// <inheritdoc/>
+        //public IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey)
+        //{
+        //    return GetEnumValuesAsync(enumerationKey).GetAwaiter().GetResult();
+        //}
 
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey)
-        {
-            List<MetasysEnumValue> enums = new List<MetasysEnumValue>() { };
+        ///// <inheritdoc/>
+        //public async Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey)
+        //{
+        //    List<MetasysEnumValue> enums = new List<MetasysEnumValue>() { };
 
-            if (version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(version.ToString()); }
+        //    if (version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(version.ToString()); }
 
-            try
-            {
-                var response = await Client.Request(new Url("enumerations")
-                    .AppendPathSegment(enumerationKey))
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
-                try
-                {
-                    var item = response["item"];
-                    var members = item["members"];
-                    dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(members.ToString());
-                    foreach (KeyValuePair<string, object> kvp in kvpList)
-                    {
-                        if (kvp.Key.Length > 0)
-                        {
-                            var itm = kvp.Value as IDictionary<string, object>;
-                            String key = kvp.Key;
-                            String name = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
-                            int value = int.Parse((itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
+        //    try
+        //    {
+        //        var response = await Client.Request(new Url("enumerations")
+        //            .AppendPathSegment(enumerationKey))
+        //            .GetJsonAsync<JToken>()
+        //            .ConfigureAwait(false);
+        //        try
+        //        {
+        //            var item = response["item"];
+        //            var members = item["members"];
+        //            dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(members.ToString());
+        //            foreach (KeyValuePair<string, object> kvp in kvpList)
+        //            {
+        //                if (kvp.Key.Length > 0)
+        //                {
+        //                    var itm = kvp.Value as IDictionary<string, object>;
+        //                    String key = kvp.Key;
+        //                    String name = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
+        //                    int value = int.Parse((itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
 
-                            var enumValue = new MetasysEnumValue(key, name, value, culture);
-                            enums.Add(enumValue);
-                        }
-                    }
-                }
-                catch (System.NullReferenceException e)
-                {
-                    throw new MetasysHttpParsingException(response.ToString(), e);
-                }
-            }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-            return enums;
-        }
+        //                    var enumValue = new MetasysEnumValue(key, name, value, culture);
+        //                    enums.Add(enumValue);
+        //                }
+        //            }
+        //        }
+        //        catch (System.NullReferenceException e)
+        //        {
+        //            throw new MetasysHttpParsingException(response.ToString(), e);
+        //        }
+        //    }
+        //    catch (FlurlHttpException e)
+        //    {
+        //        ThrowHttpException(e);
+        //    }
+        //    return enums;
+        //}
 
 
         #region "NETWORK DEVICES"
@@ -1061,7 +1083,21 @@ namespace JohnsonControls.Metasys.BasicServices
             return ToMetasysObject(spaceChildren, Version, MetasysObjectTypeEnum.Space);
         }
 
+        /// <inheritdoc/>
+        public MetasysObject GetSingleEquipment(Guid equipmentId)
+        {
+            return GetSingleEquipmentAsync(equipmentId).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<MetasysObject> GetSingleEquipmentAsync(Guid equipmentId)
+        {
+            if (version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(version.ToString()); }
+            var response = await GetRequestAsync("equipment", null, equipmentId).ConfigureAwait(false);
+            return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Equipment);
+        }
 
+
+        // GetEquipment ----------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetEquipment()
         {

@@ -29,12 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.rcbToken = new System.Windows.Forms.RichTextBox();
             this.btnLogin = new System.Windows.Forms.Button();
             this.lblPassword = new System.Windows.Forms.Label();
@@ -46,19 +43,6 @@
             this.lblHostExample = new System.Windows.Forms.Label();
             this.lblUsernameExample = new System.Windows.Forms.Label();
             this.lblPasswordExample = new System.Windows.Forms.Label();
-            this.BtlAlarm_Get = new System.Windows.Forms.Button();
-            this.lblAlarm_StartDate = new System.Windows.Forms.Label();
-            this.DtpAlarm_StartTime = new System.Windows.Forms.DateTimePicker();
-            this.GrbGetAlarms = new System.Windows.Forms.GroupBox();
-            this.ChkAlarm_NoFilter = new System.Windows.Forms.CheckBox();
-            this.GrbAlarm_Filter = new System.Windows.Forms.GroupBox();
-            this.DtpAlarm_EndTime = new System.Windows.Forms.DateTimePicker();
-            this.chkAlarm_ExcludeDiscarded = new System.Windows.Forms.CheckBox();
-            this.lblAlarm_Enddate = new System.Windows.Forms.Label();
-            this.chkAlarm_ExcludeAcknowledged = new System.Windows.Forms.CheckBox();
-            this.TxtAlarm_Total = new System.Windows.Forms.TextBox();
-            this.lblAlarm_Total = new System.Windows.Forms.Label();
-            this.DgvAlarm = new System.Windows.Forms.DataGridView();
             this.cmbVersion = new System.Windows.Forms.ComboBox();
             this.lblVersion = new System.Windows.Forms.Label();
             this.lblVersionExample = new System.Windows.Forms.Label();
@@ -69,56 +53,6 @@
             this.BtnGetAccessToken = new System.Windows.Forms.Button();
             this.BtnRefresh = new System.Windows.Forms.Button();
             this.TpgAlarm = new System.Windows.Forms.TabPage();
-            this.TabAlarm = new System.Windows.Forms.TabControl();
-            this.TgpGetAlarms = new System.Windows.Forms.TabPage();
-            this.LblAlarm_Get = new System.Windows.Forms.Label();
-            this.TgpFindByID = new System.Windows.Forms.TabPage();
-            this.RtbAlarm = new System.Windows.Forms.RichTextBox();
-            this.LblAlarm_FindById = new System.Windows.Forms.Label();
-            this.PrgAlarm_FindByID = new System.Windows.Forms.PropertyGrid();
-            this.BtnAlarm_FindByID = new System.Windows.Forms.Button();
-            this.TxtAlarm_FindByID_GUID = new System.Windows.Forms.TextBox();
-            this.LblAlarm_FindByID_GUID = new System.Windows.Forms.Label();
-            this.TgpGetForNetworkDevice = new System.Windows.Forms.TabPage();
-            this.label12 = new System.Windows.Forms.Label();
-            this.GrbAlarm_GFND = new System.Windows.Forms.GroupBox();
-            this.TxtAlarm_GFND_GUID = new System.Windows.Forms.TextBox();
-            this.LblAlarm_GFND_GUID = new System.Windows.Forms.Label();
-            this.chkAlarm_GFND_NoFilter = new System.Windows.Forms.CheckBox();
-            this.TxtAlarm_GFND_Total = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.DgvAlarm_GFND = new System.Windows.Forms.DataGridView();
-            this.BtnAlarm_GetForNetworkDevice = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.dtpAlarm_GFND_StartTime = new System.Windows.Forms.DateTimePicker();
-            this.label1 = new System.Windows.Forms.Label();
-            this.dtpAlarm_GFND_EndTime = new System.Windows.Forms.DateTimePicker();
-            this.chkAlarm_GFND_ExcludeDiscarded = new System.Windows.Forms.CheckBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.chkAlarm_GFND_ExcludeAcknowledged = new System.Windows.Forms.CheckBox();
-            this.TgpGetForObject = new System.Windows.Forms.TabPage();
-            this.GrbAlarm_GFO = new System.Windows.Forms.GroupBox();
-            this.TxtAlarm_GFO_GUID = new System.Windows.Forms.TextBox();
-            this.LblAlarm_GFO_GUID = new System.Windows.Forms.Label();
-            this.chkAlarm_GFO_NoFilter = new System.Windows.Forms.CheckBox();
-            this.TxtAlarm_GFO_Total = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.DgvAlarm_GFO = new System.Windows.Forms.DataGridView();
-            this.BtnAlarm_GetForObject = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.DtpAlarm_GFO_StartTime = new System.Windows.Forms.DateTimePicker();
-            this.label7 = new System.Windows.Forms.Label();
-            this.dtpAlarm_GFO_EndTime = new System.Windows.Forms.DateTimePicker();
-            this.chkAlarm_GFO_ExcludeDiscarded = new System.Windows.Forms.CheckBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.chkAlarm_GFO_ExcludeAcknowledged = new System.Windows.Forms.CheckBox();
-            this.TgpGetAnnotation = new System.Windows.Forms.TabPage();
-            this.GrbGetAlarmAnnotation = new System.Windows.Forms.GroupBox();
-            this.LblAlarms_Annotations = new System.Windows.Forms.Label();
-            this.TxtAlarms_Annotations = new System.Windows.Forms.TextBox();
-            this.BtnAlarms_GetAnnotations = new System.Windows.Forms.Button();
-            this.TxtAlarmGUID = new System.Windows.Forms.TextBox();
-            this.LblAlarmGUID = new System.Windows.Forms.Label();
             this.TpgAudit = new System.Windows.Forms.TabPage();
             this.TabAudit = new System.Windows.Forms.TabControl();
             this.TpgGetAudits = new System.Windows.Forms.TabPage();
@@ -213,17 +147,6 @@
             this.TpgEnumeration = new System.Windows.Forms.TabPage();
             this.TpgEquipment = new System.Windows.Forms.TabPage();
             this.TpgNetworkDevice = new System.Windows.Forms.TabPage();
-            this.TabNetworkDevice = new System.Windows.Forms.TabControl();
-            this.TpgGetNetworkDevices = new System.Windows.Forms.TabPage();
-            this.GrbGetNetworkDevices = new System.Windows.Forms.GroupBox();
-            this.DgvGetNetworkDevices = new System.Windows.Forms.DataGridView();
-            this.BtnGetNetworkDevices = new System.Windows.Forms.Button();
-            this.TxtGetNetworkDevices_Type_ID = new System.Windows.Forms.TextBox();
-            this.LblGetNetworkDevices_Type_ID = new System.Windows.Forms.Label();
-            this.TpgGetNetworkDeviceTypes = new System.Windows.Forms.TabPage();
-            this.GrbGetNetworkDeviceTypes = new System.Windows.Forms.GroupBox();
-            this.BtnGetNetworkDeviceTypes = new System.Windows.Forms.Button();
-            this.DgvGetNetworkDeviceTypes = new System.Windows.Forms.DataGridView();
             this.TpgObject = new System.Windows.Forms.TabPage();
             this.TpgSpace = new System.Windows.Forms.TabPage();
             this.TpgTrend = new System.Windows.Forms.TabPage();
@@ -245,25 +168,8 @@
             this.LblMisc_Title2 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.GrbGetAlarms.SuspendLayout();
-            this.GrbAlarm_Filter.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvAlarm)).BeginInit();
             this.TabMain.SuspendLayout();
             this.TpgLogin.SuspendLayout();
-            this.TpgAlarm.SuspendLayout();
-            this.TabAlarm.SuspendLayout();
-            this.TgpGetAlarms.SuspendLayout();
-            this.TgpFindByID.SuspendLayout();
-            this.TgpGetForNetworkDevice.SuspendLayout();
-            this.GrbAlarm_GFND.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvAlarm_GFND)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            this.TgpGetForObject.SuspendLayout();
-            this.GrbAlarm_GFO.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvAlarm_GFO)).BeginInit();
-            this.groupBox3.SuspendLayout();
-            this.TgpGetAnnotation.SuspendLayout();
-            this.GrbGetAlarmAnnotation.SuspendLayout();
             this.TpgAudit.SuspendLayout();
             this.TabAudit.SuspendLayout();
             this.TpgGetAudits.SuspendLayout();
@@ -287,14 +193,6 @@
             this.GrbDiscardAudit.SuspendLayout();
             this.TpgDiscardMultiple.SuspendLayout();
             this.GrbDiscardAuditMulti.SuspendLayout();
-            this.TpgNetworkDevice.SuspendLayout();
-            this.TabNetworkDevice.SuspendLayout();
-            this.TpgGetNetworkDevices.SuspendLayout();
-            this.GrbGetNetworkDevices.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvGetNetworkDevices)).BeginInit();
-            this.TpgGetNetworkDeviceTypes.SuspendLayout();
-            this.GrbGetNetworkDeviceTypes.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvGetNetworkDeviceTypes)).BeginInit();
             this.TpgMisc.SuspendLayout();
             this.TabMiscellanea.SuspendLayout();
             this.TpgMisc_GetServerTime.SuspendLayout();
@@ -399,141 +297,6 @@
             this.lblPasswordExample.TabIndex = 18;
             this.lblPasswordExample.Text = "Example: ChangeThi$Pa$$w0rdN0w!";
             // 
-            // BtlAlarm_Get
-            // 
-            this.BtlAlarm_Get.Location = new System.Drawing.Point(6, 107);
-            this.BtlAlarm_Get.Name = "BtlAlarm_Get";
-            this.BtlAlarm_Get.Size = new System.Drawing.Size(515, 23);
-            this.BtlAlarm_Get.TabIndex = 19;
-            this.BtlAlarm_Get.Text = "Get";
-            this.BtlAlarm_Get.UseVisualStyleBackColor = true;
-            this.BtlAlarm_Get.Click += new System.EventHandler(this.BtlAlarm_Get_Click);
-            // 
-            // lblAlarm_StartDate
-            // 
-            this.lblAlarm_StartDate.AutoSize = true;
-            this.lblAlarm_StartDate.Location = new System.Drawing.Point(21, 26);
-            this.lblAlarm_StartDate.Name = "lblAlarm_StartDate";
-            this.lblAlarm_StartDate.Size = new System.Drawing.Size(58, 13);
-            this.lblAlarm_StartDate.TabIndex = 20;
-            this.lblAlarm_StartDate.Text = "Start Time:";
-            // 
-            // DtpAlarm_StartTime
-            // 
-            this.DtpAlarm_StartTime.Location = new System.Drawing.Point(80, 22);
-            this.DtpAlarm_StartTime.Name = "DtpAlarm_StartTime";
-            this.DtpAlarm_StartTime.Size = new System.Drawing.Size(200, 20);
-            this.DtpAlarm_StartTime.TabIndex = 21;
-            // 
-            // GrbGetAlarms
-            // 
-            this.GrbGetAlarms.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.GrbGetAlarms.Controls.Add(this.ChkAlarm_NoFilter);
-            this.GrbGetAlarms.Controls.Add(this.GrbAlarm_Filter);
-            this.GrbGetAlarms.Controls.Add(this.TxtAlarm_Total);
-            this.GrbGetAlarms.Controls.Add(this.lblAlarm_Total);
-            this.GrbGetAlarms.Controls.Add(this.DgvAlarm);
-            this.GrbGetAlarms.Controls.Add(this.BtlAlarm_Get);
-            this.GrbGetAlarms.Location = new System.Drawing.Point(3, 25);
-            this.GrbGetAlarms.Name = "GrbGetAlarms";
-            this.GrbGetAlarms.Size = new System.Drawing.Size(1060, 383);
-            this.GrbGetAlarms.TabIndex = 22;
-            this.GrbGetAlarms.TabStop = false;
-            // 
-            // ChkAlarm_NoFilter
-            // 
-            this.ChkAlarm_NoFilter.AutoSize = true;
-            this.ChkAlarm_NoFilter.Location = new System.Drawing.Point(528, 30);
-            this.ChkAlarm_NoFilter.Name = "ChkAlarm_NoFilter";
-            this.ChkAlarm_NoFilter.Size = new System.Drawing.Size(70, 17);
-            this.ChkAlarm_NoFilter.TabIndex = 30;
-            this.ChkAlarm_NoFilter.Text = "No Filters";
-            this.ChkAlarm_NoFilter.UseVisualStyleBackColor = true;
-            this.ChkAlarm_NoFilter.CheckedChanged += new System.EventHandler(this.ChkAlarm_NoFilter_CheckedChanged);
-            // 
-            // GrbAlarm_Filter
-            // 
-            this.GrbAlarm_Filter.Controls.Add(this.DtpAlarm_StartTime);
-            this.GrbAlarm_Filter.Controls.Add(this.lblAlarm_StartDate);
-            this.GrbAlarm_Filter.Controls.Add(this.DtpAlarm_EndTime);
-            this.GrbAlarm_Filter.Controls.Add(this.chkAlarm_ExcludeDiscarded);
-            this.GrbAlarm_Filter.Controls.Add(this.lblAlarm_Enddate);
-            this.GrbAlarm_Filter.Controls.Add(this.chkAlarm_ExcludeAcknowledged);
-            this.GrbAlarm_Filter.Location = new System.Drawing.Point(6, 19);
-            this.GrbAlarm_Filter.Name = "GrbAlarm_Filter";
-            this.GrbAlarm_Filter.Size = new System.Drawing.Size(515, 82);
-            this.GrbAlarm_Filter.TabIndex = 29;
-            this.GrbAlarm_Filter.TabStop = false;
-            this.GrbAlarm_Filter.Text = "Filters";
-            // 
-            // DtpAlarm_EndTime
-            // 
-            this.DtpAlarm_EndTime.Location = new System.Drawing.Point(80, 49);
-            this.DtpAlarm_EndTime.Name = "DtpAlarm_EndTime";
-            this.DtpAlarm_EndTime.Size = new System.Drawing.Size(200, 20);
-            this.DtpAlarm_EndTime.TabIndex = 22;
-            // 
-            // chkAlarm_ExcludeDiscarded
-            // 
-            this.chkAlarm_ExcludeDiscarded.AutoSize = true;
-            this.chkAlarm_ExcludeDiscarded.Location = new System.Drawing.Point(335, 49);
-            this.chkAlarm_ExcludeDiscarded.Name = "chkAlarm_ExcludeDiscarded";
-            this.chkAlarm_ExcludeDiscarded.Size = new System.Drawing.Size(115, 17);
-            this.chkAlarm_ExcludeDiscarded.TabIndex = 26;
-            this.chkAlarm_ExcludeDiscarded.Text = "Exclude Discarded";
-            this.chkAlarm_ExcludeDiscarded.UseVisualStyleBackColor = true;
-            // 
-            // lblAlarm_Enddate
-            // 
-            this.lblAlarm_Enddate.AutoSize = true;
-            this.lblAlarm_Enddate.Location = new System.Drawing.Point(24, 50);
-            this.lblAlarm_Enddate.Name = "lblAlarm_Enddate";
-            this.lblAlarm_Enddate.Size = new System.Drawing.Size(55, 13);
-            this.lblAlarm_Enddate.TabIndex = 23;
-            this.lblAlarm_Enddate.Text = "End Time:";
-            // 
-            // chkAlarm_ExcludeAcknowledged
-            // 
-            this.chkAlarm_ExcludeAcknowledged.AutoSize = true;
-            this.chkAlarm_ExcludeAcknowledged.Location = new System.Drawing.Point(335, 25);
-            this.chkAlarm_ExcludeAcknowledged.Name = "chkAlarm_ExcludeAcknowledged";
-            this.chkAlarm_ExcludeAcknowledged.Size = new System.Drawing.Size(138, 17);
-            this.chkAlarm_ExcludeAcknowledged.TabIndex = 25;
-            this.chkAlarm_ExcludeAcknowledged.Text = "Exclude Acknowledged";
-            this.chkAlarm_ExcludeAcknowledged.UseVisualStyleBackColor = true;
-            // 
-            // TxtAlarm_Total
-            // 
-            this.TxtAlarm_Total.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.TxtAlarm_Total.Location = new System.Drawing.Point(954, 109);
-            this.TxtAlarm_Total.Name = "TxtAlarm_Total";
-            this.TxtAlarm_Total.ReadOnly = true;
-            this.TxtAlarm_Total.Size = new System.Drawing.Size(100, 20);
-            this.TxtAlarm_Total.TabIndex = 28;
-            // 
-            // lblAlarm_Total
-            // 
-            this.lblAlarm_Total.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblAlarm_Total.AutoSize = true;
-            this.lblAlarm_Total.Location = new System.Drawing.Point(864, 113);
-            this.lblAlarm_Total.Name = "lblAlarm_Total";
-            this.lblAlarm_Total.Size = new System.Drawing.Size(87, 13);
-            this.lblAlarm_Total.TabIndex = 27;
-            this.lblAlarm_Total.Text = "Numb. of Alarms:";
-            // 
-            // DgvAlarm
-            // 
-            this.DgvAlarm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DgvAlarm.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvAlarm.Location = new System.Drawing.Point(6, 136);
-            this.DgvAlarm.Name = "DgvAlarm";
-            this.DgvAlarm.Size = new System.Drawing.Size(1048, 238);
-            this.DgvAlarm.TabIndex = 24;
-            // 
             // cmbVersion
             // 
             this.cmbVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -564,7 +327,7 @@
             this.lblVersionExample.Name = "lblVersionExample";
             this.lblVersionExample.Size = new System.Drawing.Size(65, 13);
             this.lblVersionExample.TabIndex = 25;
-            this.lblVersionExample.Text = "Example: v3";
+            this.lblVersionExample.Text = "Example: v4";
             // 
             // lblToken
             // 
@@ -662,563 +425,12 @@
             // TpgAlarm
             // 
             this.TpgAlarm.BackColor = System.Drawing.SystemColors.Control;
-            this.TpgAlarm.Controls.Add(this.TabAlarm);
             this.TpgAlarm.Location = new System.Drawing.Point(4, 34);
             this.TpgAlarm.Name = "TpgAlarm";
             this.TpgAlarm.Padding = new System.Windows.Forms.Padding(3);
             this.TpgAlarm.Size = new System.Drawing.Size(1080, 450);
             this.TpgAlarm.TabIndex = 0;
             this.TpgAlarm.Text = "ALARMS";
-            // 
-            // TabAlarm
-            // 
-            this.TabAlarm.Appearance = System.Windows.Forms.TabAppearance.Buttons;
-            this.TabAlarm.Controls.Add(this.TgpGetAlarms);
-            this.TabAlarm.Controls.Add(this.TgpFindByID);
-            this.TabAlarm.Controls.Add(this.TgpGetForNetworkDevice);
-            this.TabAlarm.Controls.Add(this.TgpGetForObject);
-            this.TabAlarm.Controls.Add(this.TgpGetAnnotation);
-            this.TabAlarm.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TabAlarm.ItemSize = new System.Drawing.Size(63, 25);
-            this.TabAlarm.Location = new System.Drawing.Point(3, 3);
-            this.TabAlarm.Name = "TabAlarm";
-            this.TabAlarm.SelectedIndex = 0;
-            this.TabAlarm.Size = new System.Drawing.Size(1074, 444);
-            this.TabAlarm.TabIndex = 23;
-            // 
-            // TgpGetAlarms
-            // 
-            this.TgpGetAlarms.Controls.Add(this.LblAlarm_Get);
-            this.TgpGetAlarms.Controls.Add(this.GrbGetAlarms);
-            this.TgpGetAlarms.Location = new System.Drawing.Point(4, 29);
-            this.TgpGetAlarms.Name = "TgpGetAlarms";
-            this.TgpGetAlarms.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TgpGetAlarms.Size = new System.Drawing.Size(1066, 411);
-            this.TgpGetAlarms.TabIndex = 1;
-            this.TgpGetAlarms.Text = "Get Alarms";
-            this.TgpGetAlarms.UseVisualStyleBackColor = true;
-            // 
-            // LblAlarm_Get
-            // 
-            this.LblAlarm_Get.AutoSize = true;
-            this.LblAlarm_Get.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblAlarm_Get.Location = new System.Drawing.Point(6, 6);
-            this.LblAlarm_Get.Name = "LblAlarm_Get";
-            this.LblAlarm_Get.Size = new System.Drawing.Size(150, 16);
-            this.LblAlarm_Get.TabIndex = 23;
-            this.LblAlarm_Get.Text = "Function: Alarms.Get";
-            // 
-            // TgpFindByID
-            // 
-            this.TgpFindByID.Controls.Add(this.RtbAlarm);
-            this.TgpFindByID.Controls.Add(this.LblAlarm_FindById);
-            this.TgpFindByID.Controls.Add(this.PrgAlarm_FindByID);
-            this.TgpFindByID.Controls.Add(this.BtnAlarm_FindByID);
-            this.TgpFindByID.Controls.Add(this.TxtAlarm_FindByID_GUID);
-            this.TgpFindByID.Controls.Add(this.LblAlarm_FindByID_GUID);
-            this.TgpFindByID.Location = new System.Drawing.Point(4, 29);
-            this.TgpFindByID.Name = "TgpFindByID";
-            this.TgpFindByID.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TgpFindByID.Size = new System.Drawing.Size(1066, 411);
-            this.TgpFindByID.TabIndex = 0;
-            this.TgpFindByID.Text = "Get a Single Alarm";
-            this.TgpFindByID.UseVisualStyleBackColor = true;
-            // 
-            // RtbAlarm
-            // 
-            this.RtbAlarm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.RtbAlarm.Location = new System.Drawing.Point(530, 85);
-            this.RtbAlarm.Name = "RtbAlarm";
-            this.RtbAlarm.Size = new System.Drawing.Size(530, 320);
-            this.RtbAlarm.TabIndex = 5;
-            this.RtbAlarm.Text = "";
-            // 
-            // LblAlarm_FindById
-            // 
-            this.LblAlarm_FindById.AutoSize = true;
-            this.LblAlarm_FindById.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblAlarm_FindById.Location = new System.Drawing.Point(6, 6);
-            this.LblAlarm_FindById.Name = "LblAlarm_FindById";
-            this.LblAlarm_FindById.Size = new System.Drawing.Size(187, 16);
-            this.LblAlarm_FindById.TabIndex = 4;
-            this.LblAlarm_FindById.Text = "Function: Alarms.FindById";
-            // 
-            // PrgAlarm_FindByID
-            // 
-            this.PrgAlarm_FindByID.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.PrgAlarm_FindByID.HelpVisible = false;
-            this.PrgAlarm_FindByID.Location = new System.Drawing.Point(9, 85);
-            this.PrgAlarm_FindByID.Name = "PrgAlarm_FindByID";
-            this.PrgAlarm_FindByID.Size = new System.Drawing.Size(515, 320);
-            this.PrgAlarm_FindByID.TabIndex = 3;
-            this.PrgAlarm_FindByID.ToolbarVisible = false;
-            // 
-            // BtnAlarm_FindByID
-            // 
-            this.BtnAlarm_FindByID.Location = new System.Drawing.Point(98, 56);
-            this.BtnAlarm_FindByID.Name = "BtnAlarm_FindByID";
-            this.BtnAlarm_FindByID.Size = new System.Drawing.Size(220, 23);
-            this.BtnAlarm_FindByID.TabIndex = 2;
-            this.BtnAlarm_FindByID.Text = "FindByID";
-            this.BtnAlarm_FindByID.UseVisualStyleBackColor = true;
-            this.BtnAlarm_FindByID.Click += new System.EventHandler(this.BtnAlarm_FindByID_Click);
-            // 
-            // TxtAlarm_FindByID_GUID
-            // 
-            this.TxtAlarm_FindByID_GUID.Location = new System.Drawing.Point(98, 30);
-            this.TxtAlarm_FindByID_GUID.Name = "TxtAlarm_FindByID_GUID";
-            this.TxtAlarm_FindByID_GUID.Size = new System.Drawing.Size(220, 20);
-            this.TxtAlarm_FindByID_GUID.TabIndex = 1;
-            // 
-            // LblAlarm_FindByID_GUID
-            // 
-            this.LblAlarm_FindByID_GUID.AutoSize = true;
-            this.LblAlarm_FindByID_GUID.Location = new System.Drawing.Point(6, 33);
-            this.LblAlarm_FindByID_GUID.Name = "LblAlarm_FindByID_GUID";
-            this.LblAlarm_FindByID_GUID.Size = new System.Drawing.Size(86, 13);
-            this.LblAlarm_FindByID_GUID.TabIndex = 0;
-            this.LblAlarm_FindByID_GUID.Text = "Alarm ID (GUID):";
-            // 
-            // TgpGetForNetworkDevice
-            // 
-            this.TgpGetForNetworkDevice.Controls.Add(this.label12);
-            this.TgpGetForNetworkDevice.Controls.Add(this.GrbAlarm_GFND);
-            this.TgpGetForNetworkDevice.Location = new System.Drawing.Point(4, 29);
-            this.TgpGetForNetworkDevice.Name = "TgpGetForNetworkDevice";
-            this.TgpGetForNetworkDevice.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TgpGetForNetworkDevice.Size = new System.Drawing.Size(1066, 411);
-            this.TgpGetForNetworkDevice.TabIndex = 2;
-            this.TgpGetForNetworkDevice.Text = "Get Alarms for a Network Device";
-            this.TgpGetForNetworkDevice.UseVisualStyleBackColor = true;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(6, 6);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(226, 16);
-            this.label12.TabIndex = 1;
-            this.label12.Text = "Function: GetForNetworkDevice";
-            // 
-            // GrbAlarm_GFND
-            // 
-            this.GrbAlarm_GFND.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.GrbAlarm_GFND.Controls.Add(this.TxtAlarm_GFND_GUID);
-            this.GrbAlarm_GFND.Controls.Add(this.LblAlarm_GFND_GUID);
-            this.GrbAlarm_GFND.Controls.Add(this.chkAlarm_GFND_NoFilter);
-            this.GrbAlarm_GFND.Controls.Add(this.TxtAlarm_GFND_Total);
-            this.GrbAlarm_GFND.Controls.Add(this.label4);
-            this.GrbAlarm_GFND.Controls.Add(this.DgvAlarm_GFND);
-            this.GrbAlarm_GFND.Controls.Add(this.BtnAlarm_GetForNetworkDevice);
-            this.GrbAlarm_GFND.Controls.Add(this.groupBox1);
-            this.GrbAlarm_GFND.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GrbAlarm_GFND.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.GrbAlarm_GFND.Location = new System.Drawing.Point(3, 25);
-            this.GrbAlarm_GFND.Name = "GrbAlarm_GFND";
-            this.GrbAlarm_GFND.Size = new System.Drawing.Size(1060, 383);
-            this.GrbAlarm_GFND.TabIndex = 0;
-            this.GrbAlarm_GFND.TabStop = false;
-            // 
-            // TxtAlarm_GFND_GUID
-            // 
-            this.TxtAlarm_GFND_GUID.Location = new System.Drawing.Point(666, 47);
-            this.TxtAlarm_GFND_GUID.Name = "TxtAlarm_GFND_GUID";
-            this.TxtAlarm_GFND_GUID.Size = new System.Drawing.Size(261, 20);
-            this.TxtAlarm_GFND_GUID.TabIndex = 37;
-            // 
-            // LblAlarm_GFND_GUID
-            // 
-            this.LblAlarm_GFND_GUID.AutoSize = true;
-            this.LblAlarm_GFND_GUID.Location = new System.Drawing.Point(663, 31);
-            this.LblAlarm_GFND_GUID.Name = "LblAlarm_GFND_GUID";
-            this.LblAlarm_GFND_GUID.Size = new System.Drawing.Size(137, 13);
-            this.LblAlarm_GFND_GUID.TabIndex = 36;
-            this.LblAlarm_GFND_GUID.Text = "Network Device ID (GUID):";
-            // 
-            // chkAlarm_GFND_NoFilter
-            // 
-            this.chkAlarm_GFND_NoFilter.AutoSize = true;
-            this.chkAlarm_GFND_NoFilter.Location = new System.Drawing.Point(527, 29);
-            this.chkAlarm_GFND_NoFilter.Name = "chkAlarm_GFND_NoFilter";
-            this.chkAlarm_GFND_NoFilter.Size = new System.Drawing.Size(70, 17);
-            this.chkAlarm_GFND_NoFilter.TabIndex = 35;
-            this.chkAlarm_GFND_NoFilter.Text = "No Filters";
-            this.chkAlarm_GFND_NoFilter.UseVisualStyleBackColor = true;
-            // 
-            // TxtAlarm_GFND_Total
-            // 
-            this.TxtAlarm_GFND_Total.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.TxtAlarm_GFND_Total.Location = new System.Drawing.Point(954, 109);
-            this.TxtAlarm_GFND_Total.Name = "TxtAlarm_GFND_Total";
-            this.TxtAlarm_GFND_Total.ReadOnly = true;
-            this.TxtAlarm_GFND_Total.Size = new System.Drawing.Size(100, 20);
-            this.TxtAlarm_GFND_Total.TabIndex = 34;
-            // 
-            // label4
-            // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(864, 113);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(87, 13);
-            this.label4.TabIndex = 33;
-            this.label4.Text = "Numb. of Alarms:";
-            // 
-            // DgvAlarm_GFND
-            // 
-            this.DgvAlarm_GFND.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DgvAlarm_GFND.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvAlarm_GFND.Location = new System.Drawing.Point(6, 136);
-            this.DgvAlarm_GFND.Name = "DgvAlarm_GFND";
-            this.DgvAlarm_GFND.Size = new System.Drawing.Size(1048, 238);
-            this.DgvAlarm_GFND.TabIndex = 32;
-            // 
-            // BtnAlarm_GetForNetworkDevice
-            // 
-            this.BtnAlarm_GetForNetworkDevice.Location = new System.Drawing.Point(6, 107);
-            this.BtnAlarm_GetForNetworkDevice.Name = "BtnAlarm_GetForNetworkDevice";
-            this.BtnAlarm_GetForNetworkDevice.Size = new System.Drawing.Size(515, 23);
-            this.BtnAlarm_GetForNetworkDevice.TabIndex = 31;
-            this.BtnAlarm_GetForNetworkDevice.Text = "GetForNetworkDevice";
-            this.BtnAlarm_GetForNetworkDevice.UseVisualStyleBackColor = true;
-            this.BtnAlarm_GetForNetworkDevice.Click += new System.EventHandler(this.BtnAlarm_GetForNetworkDevice_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.dtpAlarm_GFND_StartTime);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.dtpAlarm_GFND_EndTime);
-            this.groupBox1.Controls.Add(this.chkAlarm_GFND_ExcludeDiscarded);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.chkAlarm_GFND_ExcludeAcknowledged);
-            this.groupBox1.Location = new System.Drawing.Point(6, 19);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(515, 82);
-            this.groupBox1.TabIndex = 30;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Filters";
-            // 
-            // dtpAlarm_GFND_StartTime
-            // 
-            this.dtpAlarm_GFND_StartTime.Location = new System.Drawing.Point(80, 22);
-            this.dtpAlarm_GFND_StartTime.Name = "dtpAlarm_GFND_StartTime";
-            this.dtpAlarm_GFND_StartTime.Size = new System.Drawing.Size(200, 20);
-            this.dtpAlarm_GFND_StartTime.TabIndex = 21;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 28);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 13);
-            this.label1.TabIndex = 20;
-            this.label1.Text = "Start Time:";
-            // 
-            // dtpAlarm_GFND_EndTime
-            // 
-            this.dtpAlarm_GFND_EndTime.Location = new System.Drawing.Point(80, 49);
-            this.dtpAlarm_GFND_EndTime.Name = "dtpAlarm_GFND_EndTime";
-            this.dtpAlarm_GFND_EndTime.Size = new System.Drawing.Size(200, 20);
-            this.dtpAlarm_GFND_EndTime.TabIndex = 22;
-            // 
-            // chkAlarm_GFND_ExcludeDiscarded
-            // 
-            this.chkAlarm_GFND_ExcludeDiscarded.AutoSize = true;
-            this.chkAlarm_GFND_ExcludeDiscarded.Location = new System.Drawing.Point(335, 49);
-            this.chkAlarm_GFND_ExcludeDiscarded.Name = "chkAlarm_GFND_ExcludeDiscarded";
-            this.chkAlarm_GFND_ExcludeDiscarded.Size = new System.Drawing.Size(115, 17);
-            this.chkAlarm_GFND_ExcludeDiscarded.TabIndex = 26;
-            this.chkAlarm_GFND_ExcludeDiscarded.Text = "Exclude Discarded";
-            this.chkAlarm_GFND_ExcludeDiscarded.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(24, 55);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(55, 13);
-            this.label3.TabIndex = 23;
-            this.label3.Text = "End Time:";
-            // 
-            // chkAlarm_GFND_ExcludeAcknowledged
-            // 
-            this.chkAlarm_GFND_ExcludeAcknowledged.AutoSize = true;
-            this.chkAlarm_GFND_ExcludeAcknowledged.Location = new System.Drawing.Point(335, 25);
-            this.chkAlarm_GFND_ExcludeAcknowledged.Name = "chkAlarm_GFND_ExcludeAcknowledged";
-            this.chkAlarm_GFND_ExcludeAcknowledged.Size = new System.Drawing.Size(138, 17);
-            this.chkAlarm_GFND_ExcludeAcknowledged.TabIndex = 25;
-            this.chkAlarm_GFND_ExcludeAcknowledged.Text = "Exclude Acknowledged";
-            this.chkAlarm_GFND_ExcludeAcknowledged.UseVisualStyleBackColor = true;
-            // 
-            // TgpGetForObject
-            // 
-            this.TgpGetForObject.Controls.Add(this.GrbAlarm_GFO);
-            this.TgpGetForObject.Location = new System.Drawing.Point(4, 29);
-            this.TgpGetForObject.Name = "TgpGetForObject";
-            this.TgpGetForObject.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TgpGetForObject.Size = new System.Drawing.Size(1066, 411);
-            this.TgpGetForObject.TabIndex = 3;
-            this.TgpGetForObject.Text = "Get Alarms for an Object";
-            this.TgpGetForObject.UseVisualStyleBackColor = true;
-            // 
-            // GrbAlarm_GFO
-            // 
-            this.GrbAlarm_GFO.Controls.Add(this.TxtAlarm_GFO_GUID);
-            this.GrbAlarm_GFO.Controls.Add(this.LblAlarm_GFO_GUID);
-            this.GrbAlarm_GFO.Controls.Add(this.chkAlarm_GFO_NoFilter);
-            this.GrbAlarm_GFO.Controls.Add(this.TxtAlarm_GFO_Total);
-            this.GrbAlarm_GFO.Controls.Add(this.label6);
-            this.GrbAlarm_GFO.Controls.Add(this.DgvAlarm_GFO);
-            this.GrbAlarm_GFO.Controls.Add(this.BtnAlarm_GetForObject);
-            this.GrbAlarm_GFO.Controls.Add(this.groupBox3);
-            this.GrbAlarm_GFO.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GrbAlarm_GFO.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GrbAlarm_GFO.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.GrbAlarm_GFO.Location = new System.Drawing.Point(3, 6);
-            this.GrbAlarm_GFO.Name = "GrbAlarm_GFO";
-            this.GrbAlarm_GFO.Size = new System.Drawing.Size(1060, 402);
-            this.GrbAlarm_GFO.TabIndex = 1;
-            this.GrbAlarm_GFO.TabStop = false;
-            this.GrbAlarm_GFO.Text = "Method: Alarms.GetForObject";
-            // 
-            // TxtAlarm_GFO_GUID
-            // 
-            this.TxtAlarm_GFO_GUID.Location = new System.Drawing.Point(666, 47);
-            this.TxtAlarm_GFO_GUID.Name = "TxtAlarm_GFO_GUID";
-            this.TxtAlarm_GFO_GUID.Size = new System.Drawing.Size(261, 20);
-            this.TxtAlarm_GFO_GUID.TabIndex = 37;
-            // 
-            // LblAlarm_GFO_GUID
-            // 
-            this.LblAlarm_GFO_GUID.AutoSize = true;
-            this.LblAlarm_GFO_GUID.Location = new System.Drawing.Point(663, 31);
-            this.LblAlarm_GFO_GUID.Name = "LblAlarm_GFO_GUID";
-            this.LblAlarm_GFO_GUID.Size = new System.Drawing.Size(91, 13);
-            this.LblAlarm_GFO_GUID.TabIndex = 36;
-            this.LblAlarm_GFO_GUID.Text = "Object ID (GUID):";
-            // 
-            // chkAlarm_GFO_NoFilter
-            // 
-            this.chkAlarm_GFO_NoFilter.AutoSize = true;
-            this.chkAlarm_GFO_NoFilter.Location = new System.Drawing.Point(527, 29);
-            this.chkAlarm_GFO_NoFilter.Name = "chkAlarm_GFO_NoFilter";
-            this.chkAlarm_GFO_NoFilter.Size = new System.Drawing.Size(70, 17);
-            this.chkAlarm_GFO_NoFilter.TabIndex = 35;
-            this.chkAlarm_GFO_NoFilter.Text = "No Filters";
-            this.chkAlarm_GFO_NoFilter.UseVisualStyleBackColor = true;
-            // 
-            // TxtAlarm_GFO_Total
-            // 
-            this.TxtAlarm_GFO_Total.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.TxtAlarm_GFO_Total.Location = new System.Drawing.Point(954, 109);
-            this.TxtAlarm_GFO_Total.Name = "TxtAlarm_GFO_Total";
-            this.TxtAlarm_GFO_Total.ReadOnly = true;
-            this.TxtAlarm_GFO_Total.Size = new System.Drawing.Size(100, 20);
-            this.TxtAlarm_GFO_Total.TabIndex = 34;
-            // 
-            // label6
-            // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(864, 113);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(87, 13);
-            this.label6.TabIndex = 33;
-            this.label6.Text = "Numb. of Alarms:";
-            // 
-            // DgvAlarm_GFO
-            // 
-            this.DgvAlarm_GFO.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvAlarm_GFO.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
-            this.DgvAlarm_GFO.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DgvAlarm_GFO.DefaultCellStyle = dataGridViewCellStyle8;
-            this.DgvAlarm_GFO.Location = new System.Drawing.Point(6, 136);
-            this.DgvAlarm_GFO.Name = "DgvAlarm_GFO";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvAlarm_GFO.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
-            this.DgvAlarm_GFO.Size = new System.Drawing.Size(1048, 257);
-            this.DgvAlarm_GFO.TabIndex = 32;
-            // 
-            // BtnAlarm_GetForObject
-            // 
-            this.BtnAlarm_GetForObject.Location = new System.Drawing.Point(6, 107);
-            this.BtnAlarm_GetForObject.Name = "BtnAlarm_GetForObject";
-            this.BtnAlarm_GetForObject.Size = new System.Drawing.Size(515, 23);
-            this.BtnAlarm_GetForObject.TabIndex = 31;
-            this.BtnAlarm_GetForObject.Text = "GetForObject";
-            this.BtnAlarm_GetForObject.UseVisualStyleBackColor = true;
-            this.BtnAlarm_GetForObject.Click += new System.EventHandler(this.BtnAlarm_GetForObject_Click);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.DtpAlarm_GFO_StartTime);
-            this.groupBox3.Controls.Add(this.label7);
-            this.groupBox3.Controls.Add(this.dtpAlarm_GFO_EndTime);
-            this.groupBox3.Controls.Add(this.chkAlarm_GFO_ExcludeDiscarded);
-            this.groupBox3.Controls.Add(this.label8);
-            this.groupBox3.Controls.Add(this.chkAlarm_GFO_ExcludeAcknowledged);
-            this.groupBox3.Location = new System.Drawing.Point(6, 19);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(515, 82);
-            this.groupBox3.TabIndex = 30;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Filters";
-            // 
-            // DtpAlarm_GFO_StartTime
-            // 
-            this.DtpAlarm_GFO_StartTime.Location = new System.Drawing.Point(80, 22);
-            this.DtpAlarm_GFO_StartTime.Name = "DtpAlarm_GFO_StartTime";
-            this.DtpAlarm_GFO_StartTime.Size = new System.Drawing.Size(200, 20);
-            this.DtpAlarm_GFO_StartTime.TabIndex = 21;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(21, 28);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(58, 13);
-            this.label7.TabIndex = 20;
-            this.label7.Text = "Start Time:";
-            // 
-            // dtpAlarm_GFO_EndTime
-            // 
-            this.dtpAlarm_GFO_EndTime.Location = new System.Drawing.Point(80, 49);
-            this.dtpAlarm_GFO_EndTime.Name = "dtpAlarm_GFO_EndTime";
-            this.dtpAlarm_GFO_EndTime.Size = new System.Drawing.Size(200, 20);
-            this.dtpAlarm_GFO_EndTime.TabIndex = 22;
-            // 
-            // chkAlarm_GFO_ExcludeDiscarded
-            // 
-            this.chkAlarm_GFO_ExcludeDiscarded.AutoSize = true;
-            this.chkAlarm_GFO_ExcludeDiscarded.Location = new System.Drawing.Point(335, 49);
-            this.chkAlarm_GFO_ExcludeDiscarded.Name = "chkAlarm_GFO_ExcludeDiscarded";
-            this.chkAlarm_GFO_ExcludeDiscarded.Size = new System.Drawing.Size(115, 17);
-            this.chkAlarm_GFO_ExcludeDiscarded.TabIndex = 26;
-            this.chkAlarm_GFO_ExcludeDiscarded.Text = "Exclude Discarded";
-            this.chkAlarm_GFO_ExcludeDiscarded.UseVisualStyleBackColor = true;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(24, 55);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(55, 13);
-            this.label8.TabIndex = 23;
-            this.label8.Text = "End Time:";
-            // 
-            // chkAlarm_GFO_ExcludeAcknowledged
-            // 
-            this.chkAlarm_GFO_ExcludeAcknowledged.AutoSize = true;
-            this.chkAlarm_GFO_ExcludeAcknowledged.Location = new System.Drawing.Point(335, 25);
-            this.chkAlarm_GFO_ExcludeAcknowledged.Name = "chkAlarm_GFO_ExcludeAcknowledged";
-            this.chkAlarm_GFO_ExcludeAcknowledged.Size = new System.Drawing.Size(138, 17);
-            this.chkAlarm_GFO_ExcludeAcknowledged.TabIndex = 25;
-            this.chkAlarm_GFO_ExcludeAcknowledged.Text = "Exclude Acknowledged";
-            this.chkAlarm_GFO_ExcludeAcknowledged.UseVisualStyleBackColor = true;
-            // 
-            // TgpGetAnnotation
-            // 
-            this.TgpGetAnnotation.Controls.Add(this.GrbGetAlarmAnnotation);
-            this.TgpGetAnnotation.Location = new System.Drawing.Point(4, 29);
-            this.TgpGetAnnotation.Name = "TgpGetAnnotation";
-            this.TgpGetAnnotation.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TgpGetAnnotation.Size = new System.Drawing.Size(1066, 411);
-            this.TgpGetAnnotation.TabIndex = 4;
-            this.TgpGetAnnotation.Text = "Get Alarm Annotations";
-            this.TgpGetAnnotation.UseVisualStyleBackColor = true;
-            // 
-            // GrbGetAlarmAnnotation
-            // 
-            this.GrbGetAlarmAnnotation.Controls.Add(this.LblAlarms_Annotations);
-            this.GrbGetAlarmAnnotation.Controls.Add(this.TxtAlarms_Annotations);
-            this.GrbGetAlarmAnnotation.Controls.Add(this.BtnAlarms_GetAnnotations);
-            this.GrbGetAlarmAnnotation.Controls.Add(this.TxtAlarmGUID);
-            this.GrbGetAlarmAnnotation.Controls.Add(this.LblAlarmGUID);
-            this.GrbGetAlarmAnnotation.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GrbGetAlarmAnnotation.Location = new System.Drawing.Point(3, 6);
-            this.GrbGetAlarmAnnotation.Name = "GrbGetAlarmAnnotation";
-            this.GrbGetAlarmAnnotation.Size = new System.Drawing.Size(1060, 402);
-            this.GrbGetAlarmAnnotation.TabIndex = 1;
-            this.GrbGetAlarmAnnotation.TabStop = false;
-            this.GrbGetAlarmAnnotation.Text = "Method: Alarms.GetAnnotations";
-            // 
-            // LblAlarms_Annotations
-            // 
-            this.LblAlarms_Annotations.AutoSize = true;
-            this.LblAlarms_Annotations.Location = new System.Drawing.Point(6, 86);
-            this.LblAlarms_Annotations.Name = "LblAlarms_Annotations";
-            this.LblAlarms_Annotations.Size = new System.Drawing.Size(66, 13);
-            this.LblAlarms_Annotations.TabIndex = 4;
-            this.LblAlarms_Annotations.Text = "Annotations:";
-            // 
-            // TxtAlarms_Annotations
-            // 
-            this.TxtAlarms_Annotations.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TxtAlarms_Annotations.Location = new System.Drawing.Point(6, 102);
-            this.TxtAlarms_Annotations.Multiline = true;
-            this.TxtAlarms_Annotations.Name = "TxtAlarms_Annotations";
-            this.TxtAlarms_Annotations.Size = new System.Drawing.Size(1047, 289);
-            this.TxtAlarms_Annotations.TabIndex = 3;
-            // 
-            // BtnAlarms_GetAnnotations
-            // 
-            this.BtnAlarms_GetAnnotations.Location = new System.Drawing.Point(254, 39);
-            this.BtnAlarms_GetAnnotations.Name = "BtnAlarms_GetAnnotations";
-            this.BtnAlarms_GetAnnotations.Size = new System.Drawing.Size(157, 23);
-            this.BtnAlarms_GetAnnotations.TabIndex = 2;
-            this.BtnAlarms_GetAnnotations.Text = "GetAnnotations";
-            this.BtnAlarms_GetAnnotations.UseVisualStyleBackColor = true;
-            this.BtnAlarms_GetAnnotations.Click += new System.EventHandler(this.BtnGetAlarmAnnotation_Click);
-            // 
-            // TxtAlarmGUID
-            // 
-            this.TxtAlarmGUID.Location = new System.Drawing.Point(14, 41);
-            this.TxtAlarmGUID.Name = "TxtAlarmGUID";
-            this.TxtAlarmGUID.Size = new System.Drawing.Size(234, 20);
-            this.TxtAlarmGUID.TabIndex = 1;
-            // 
-            // LblAlarmGUID
-            // 
-            this.LblAlarmGUID.AutoSize = true;
-            this.LblAlarmGUID.Location = new System.Drawing.Point(11, 25);
-            this.LblAlarmGUID.Name = "LblAlarmGUID";
-            this.LblAlarmGUID.Size = new System.Drawing.Size(86, 13);
-            this.LblAlarmGUID.TabIndex = 0;
-            this.LblAlarmGUID.Text = "Alarm ID (GUID):";
-            this.LblAlarmGUID.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // TpgAudit
             // 
@@ -1657,33 +869,33 @@
             this.DgvAudit_GFO.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvAudit_GFO.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvAudit_GFO.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.DgvAudit_GFO.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DgvAudit_GFO.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DgvAudit_GFO.DefaultCellStyle = dataGridViewCellStyle2;
             this.DgvAudit_GFO.Location = new System.Drawing.Point(6, 136);
             this.DgvAudit_GFO.Name = "DgvAudit_GFO";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgvAudit_GFO.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgvAudit_GFO.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.DgvAudit_GFO.Size = new System.Drawing.Size(1048, 257);
             this.DgvAudit_GFO.TabIndex = 32;
             // 
@@ -2205,132 +1417,12 @@
             // TpgNetworkDevice
             // 
             this.TpgNetworkDevice.BackColor = System.Drawing.SystemColors.Control;
-            this.TpgNetworkDevice.Controls.Add(this.TabNetworkDevice);
             this.TpgNetworkDevice.Location = new System.Drawing.Point(4, 34);
             this.TpgNetworkDevice.Name = "TpgNetworkDevice";
             this.TpgNetworkDevice.Padding = new System.Windows.Forms.Padding(3);
             this.TpgNetworkDevice.Size = new System.Drawing.Size(1080, 450);
             this.TpgNetworkDevice.TabIndex = 9;
             this.TpgNetworkDevice.Text = "NETWORK DEVICES";
-            // 
-            // TabNetworkDevice
-            // 
-            this.TabNetworkDevice.Appearance = System.Windows.Forms.TabAppearance.Buttons;
-            this.TabNetworkDevice.Controls.Add(this.TpgGetNetworkDevices);
-            this.TabNetworkDevice.Controls.Add(this.TpgGetNetworkDeviceTypes);
-            this.TabNetworkDevice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TabNetworkDevice.ItemSize = new System.Drawing.Size(58, 25);
-            this.TabNetworkDevice.Location = new System.Drawing.Point(3, 3);
-            this.TabNetworkDevice.Name = "TabNetworkDevice";
-            this.TabNetworkDevice.SelectedIndex = 0;
-            this.TabNetworkDevice.Size = new System.Drawing.Size(1074, 444);
-            this.TabNetworkDevice.TabIndex = 0;
-            // 
-            // TpgGetNetworkDevices
-            // 
-            this.TpgGetNetworkDevices.Controls.Add(this.GrbGetNetworkDevices);
-            this.TpgGetNetworkDevices.Location = new System.Drawing.Point(4, 29);
-            this.TpgGetNetworkDevices.Name = "TpgGetNetworkDevices";
-            this.TpgGetNetworkDevices.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TpgGetNetworkDevices.Size = new System.Drawing.Size(1066, 411);
-            this.TpgGetNetworkDevices.TabIndex = 0;
-            this.TpgGetNetworkDevices.Text = "Get Network Devices";
-            this.TpgGetNetworkDevices.UseVisualStyleBackColor = true;
-            // 
-            // GrbGetNetworkDevices
-            // 
-            this.GrbGetNetworkDevices.Controls.Add(this.DgvGetNetworkDevices);
-            this.GrbGetNetworkDevices.Controls.Add(this.BtnGetNetworkDevices);
-            this.GrbGetNetworkDevices.Controls.Add(this.TxtGetNetworkDevices_Type_ID);
-            this.GrbGetNetworkDevices.Controls.Add(this.LblGetNetworkDevices_Type_ID);
-            this.GrbGetNetworkDevices.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GrbGetNetworkDevices.Location = new System.Drawing.Point(3, 6);
-            this.GrbGetNetworkDevices.Name = "GrbGetNetworkDevices";
-            this.GrbGetNetworkDevices.Size = new System.Drawing.Size(1060, 402);
-            this.GrbGetNetworkDevices.TabIndex = 0;
-            this.GrbGetNetworkDevices.TabStop = false;
-            this.GrbGetNetworkDevices.Text = "Method: GetNetworkDevices";
-            // 
-            // DgvGetNetworkDevices
-            // 
-            this.DgvGetNetworkDevices.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DgvGetNetworkDevices.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvGetNetworkDevices.Location = new System.Drawing.Point(9, 85);
-            this.DgvGetNetworkDevices.Name = "DgvGetNetworkDevices";
-            this.DgvGetNetworkDevices.Size = new System.Drawing.Size(1045, 311);
-            this.DgvGetNetworkDevices.TabIndex = 27;
-            // 
-            // BtnGetNetworkDevices
-            // 
-            this.BtnGetNetworkDevices.Location = new System.Drawing.Point(9, 56);
-            this.BtnGetNetworkDevices.Name = "BtnGetNetworkDevices";
-            this.BtnGetNetworkDevices.Size = new System.Drawing.Size(207, 23);
-            this.BtnGetNetworkDevices.TabIndex = 5;
-            this.BtnGetNetworkDevices.Text = "GetNetworkDevices";
-            this.BtnGetNetworkDevices.UseVisualStyleBackColor = true;
-            this.BtnGetNetworkDevices.Click += new System.EventHandler(this.BtnGetNetworkDevices_Click);
-            // 
-            // TxtGetNetworkDevices_Type_ID
-            // 
-            this.TxtGetNetworkDevices_Type_ID.Location = new System.Drawing.Point(9, 30);
-            this.TxtGetNetworkDevices_Type_ID.Name = "TxtGetNetworkDevices_Type_ID";
-            this.TxtGetNetworkDevices_Type_ID.Size = new System.Drawing.Size(207, 20);
-            this.TxtGetNetworkDevices_Type_ID.TabIndex = 4;
-            // 
-            // LblGetNetworkDevices_Type_ID
-            // 
-            this.LblGetNetworkDevices_Type_ID.AutoSize = true;
-            this.LblGetNetworkDevices_Type_ID.Location = new System.Drawing.Point(6, 16);
-            this.LblGetNetworkDevices_Type_ID.Name = "LblGetNetworkDevices_Type_ID";
-            this.LblGetNetworkDevices_Type_ID.Size = new System.Drawing.Size(131, 13);
-            this.LblGetNetworkDevices_Type_ID.TabIndex = 3;
-            this.LblGetNetworkDevices_Type_ID.Text = "Device Type ID (numeric):";
-            // 
-            // TpgGetNetworkDeviceTypes
-            // 
-            this.TpgGetNetworkDeviceTypes.Controls.Add(this.GrbGetNetworkDeviceTypes);
-            this.TpgGetNetworkDeviceTypes.Location = new System.Drawing.Point(4, 29);
-            this.TpgGetNetworkDeviceTypes.Name = "TpgGetNetworkDeviceTypes";
-            this.TpgGetNetworkDeviceTypes.Padding = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.TpgGetNetworkDeviceTypes.Size = new System.Drawing.Size(1066, 411);
-            this.TpgGetNetworkDeviceTypes.TabIndex = 1;
-            this.TpgGetNetworkDeviceTypes.Text = "Get Network Device Types";
-            this.TpgGetNetworkDeviceTypes.UseVisualStyleBackColor = true;
-            // 
-            // GrbGetNetworkDeviceTypes
-            // 
-            this.GrbGetNetworkDeviceTypes.Controls.Add(this.BtnGetNetworkDeviceTypes);
-            this.GrbGetNetworkDeviceTypes.Controls.Add(this.DgvGetNetworkDeviceTypes);
-            this.GrbGetNetworkDeviceTypes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GrbGetNetworkDeviceTypes.Location = new System.Drawing.Point(3, 6);
-            this.GrbGetNetworkDeviceTypes.Name = "GrbGetNetworkDeviceTypes";
-            this.GrbGetNetworkDeviceTypes.Size = new System.Drawing.Size(1060, 402);
-            this.GrbGetNetworkDeviceTypes.TabIndex = 0;
-            this.GrbGetNetworkDeviceTypes.TabStop = false;
-            this.GrbGetNetworkDeviceTypes.Text = "Method: GetNetworkDeviceTypes";
-            // 
-            // BtnGetNetworkDeviceTypes
-            // 
-            this.BtnGetNetworkDeviceTypes.Location = new System.Drawing.Point(6, 19);
-            this.BtnGetNetworkDeviceTypes.Name = "BtnGetNetworkDeviceTypes";
-            this.BtnGetNetworkDeviceTypes.Size = new System.Drawing.Size(515, 23);
-            this.BtnGetNetworkDeviceTypes.TabIndex = 27;
-            this.BtnGetNetworkDeviceTypes.Text = "GetNetworkDeviceTypes";
-            this.BtnGetNetworkDeviceTypes.UseVisualStyleBackColor = true;
-            this.BtnGetNetworkDeviceTypes.Click += new System.EventHandler(this.BtnGetNetworkDeviceTypes_Click);
-            // 
-            // DgvGetNetworkDeviceTypes
-            // 
-            this.DgvGetNetworkDeviceTypes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DgvGetNetworkDeviceTypes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvGetNetworkDeviceTypes.Location = new System.Drawing.Point(6, 48);
-            this.DgvGetNetworkDeviceTypes.Name = "DgvGetNetworkDeviceTypes";
-            this.DgvGetNetworkDeviceTypes.Size = new System.Drawing.Size(1048, 348);
-            this.DgvGetNetworkDeviceTypes.TabIndex = 26;
             // 
             // TpgObject
             // 
@@ -2531,11 +1623,6 @@
             this.LblMisc_Title2.TabIndex = 0;
             this.LblMisc_Title2.Text = "Method: Localize";
             // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker1_DoWork);
-            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker1_RunWorkerCompleted);
-            // 
             // MainUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2546,36 +1633,9 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Metasys Services: Test Client";
             this.Load += new System.EventHandler(this.MainUI_Load);
-            this.GrbGetAlarms.ResumeLayout(false);
-            this.GrbGetAlarms.PerformLayout();
-            this.GrbAlarm_Filter.ResumeLayout(false);
-            this.GrbAlarm_Filter.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvAlarm)).EndInit();
             this.TabMain.ResumeLayout(false);
             this.TpgLogin.ResumeLayout(false);
             this.TpgLogin.PerformLayout();
-            this.TpgAlarm.ResumeLayout(false);
-            this.TabAlarm.ResumeLayout(false);
-            this.TgpGetAlarms.ResumeLayout(false);
-            this.TgpGetAlarms.PerformLayout();
-            this.TgpFindByID.ResumeLayout(false);
-            this.TgpFindByID.PerformLayout();
-            this.TgpGetForNetworkDevice.ResumeLayout(false);
-            this.TgpGetForNetworkDevice.PerformLayout();
-            this.GrbAlarm_GFND.ResumeLayout(false);
-            this.GrbAlarm_GFND.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvAlarm_GFND)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.TgpGetForObject.ResumeLayout(false);
-            this.GrbAlarm_GFO.ResumeLayout(false);
-            this.GrbAlarm_GFO.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvAlarm_GFO)).EndInit();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.TgpGetAnnotation.ResumeLayout(false);
-            this.GrbGetAlarmAnnotation.ResumeLayout(false);
-            this.GrbGetAlarmAnnotation.PerformLayout();
             this.TpgAudit.ResumeLayout(false);
             this.TabAudit.ResumeLayout(false);
             this.TpgGetAudits.ResumeLayout(false);
@@ -2611,15 +1671,6 @@
             this.TpgDiscardMultiple.ResumeLayout(false);
             this.GrbDiscardAuditMulti.ResumeLayout(false);
             this.GrbDiscardAuditMulti.PerformLayout();
-            this.TpgNetworkDevice.ResumeLayout(false);
-            this.TabNetworkDevice.ResumeLayout(false);
-            this.TpgGetNetworkDevices.ResumeLayout(false);
-            this.GrbGetNetworkDevices.ResumeLayout(false);
-            this.GrbGetNetworkDevices.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvGetNetworkDevices)).EndInit();
-            this.TpgGetNetworkDeviceTypes.ResumeLayout(false);
-            this.GrbGetNetworkDeviceTypes.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DgvGetNetworkDeviceTypes)).EndInit();
             this.TpgMisc.ResumeLayout(false);
             this.TabMiscellanea.ResumeLayout(false);
             this.TpgMisc_GetServerTime.ResumeLayout(false);
@@ -2643,19 +1694,6 @@
         private System.Windows.Forms.Label lblHostExample;
         private System.Windows.Forms.Label lblUsernameExample;
         private System.Windows.Forms.Label lblPasswordExample;
-        private System.Windows.Forms.Button BtlAlarm_Get;
-        private System.Windows.Forms.Label lblAlarm_StartDate;
-        private System.Windows.Forms.DateTimePicker DtpAlarm_StartTime;
-        private System.Windows.Forms.GroupBox GrbGetAlarms;
-        private System.Windows.Forms.DateTimePicker DtpAlarm_EndTime;
-        private System.Windows.Forms.Label lblAlarm_Enddate;
-        private System.Windows.Forms.DataGridView DgvAlarm;
-        private System.Windows.Forms.CheckBox chkAlarm_ExcludeDiscarded;
-        private System.Windows.Forms.CheckBox chkAlarm_ExcludeAcknowledged;
-        private System.Windows.Forms.TextBox TxtAlarm_Total;
-        private System.Windows.Forms.Label lblAlarm_Total;
-        private System.Windows.Forms.GroupBox GrbAlarm_Filter;
-        private System.Windows.Forms.CheckBox ChkAlarm_NoFilter;
         private System.Windows.Forms.ComboBox cmbVersion;
         private System.Windows.Forms.Label lblVersion;
         private System.Windows.Forms.Label lblVersionExample;
@@ -2674,52 +1712,6 @@
         private System.Windows.Forms.TextBox TxtMisc_ServerTime;
         private System.Windows.Forms.Button BtnMisc_GetServerTime;
         private System.Windows.Forms.TabPage TpgEnumeration;
-        private System.Windows.Forms.TabControl TabAlarm;
-        private System.Windows.Forms.TabPage TgpFindByID;
-        private System.Windows.Forms.TabPage TgpGetAlarms;
-        private System.Windows.Forms.Button BtnAlarm_FindByID;
-        private System.Windows.Forms.TextBox TxtAlarm_FindByID_GUID;
-        private System.Windows.Forms.Label LblAlarm_FindByID_GUID;
-        private System.Windows.Forms.PropertyGrid PrgAlarm_FindByID;
-        private System.Windows.Forms.TabPage TgpGetForNetworkDevice;
-        private System.Windows.Forms.GroupBox GrbAlarm_GFND;
-        private System.Windows.Forms.TextBox TxtAlarm_GFND_Total;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.DataGridView DgvAlarm_GFND;
-        private System.Windows.Forms.Button BtnAlarm_GetForNetworkDevice;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.DateTimePicker dtpAlarm_GFND_StartTime;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DateTimePicker dtpAlarm_GFND_EndTime;
-        private System.Windows.Forms.CheckBox chkAlarm_GFND_ExcludeDiscarded;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.CheckBox chkAlarm_GFND_ExcludeAcknowledged;
-        private System.Windows.Forms.CheckBox chkAlarm_GFND_NoFilter;
-        private System.Windows.Forms.TextBox TxtAlarm_GFND_GUID;
-        private System.Windows.Forms.Label LblAlarm_GFND_GUID;
-        private System.Windows.Forms.TabPage TgpGetForObject;
-        private System.Windows.Forms.TabPage TgpGetAnnotation;
-        private System.Windows.Forms.GroupBox GrbGetAlarmAnnotation;
-        private System.Windows.Forms.Label LblAlarms_Annotations;
-        private System.Windows.Forms.TextBox TxtAlarms_Annotations;
-        private System.Windows.Forms.Button BtnAlarms_GetAnnotations;
-        private System.Windows.Forms.TextBox TxtAlarmGUID;
-        private System.Windows.Forms.Label LblAlarmGUID;
-        private System.Windows.Forms.GroupBox GrbAlarm_GFO;
-        private System.Windows.Forms.TextBox TxtAlarm_GFO_GUID;
-        private System.Windows.Forms.Label LblAlarm_GFO_GUID;
-        private System.Windows.Forms.CheckBox chkAlarm_GFO_NoFilter;
-        private System.Windows.Forms.TextBox TxtAlarm_GFO_Total;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.DataGridView DgvAlarm_GFO;
-        private System.Windows.Forms.Button BtnAlarm_GetForObject;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.DateTimePicker DtpAlarm_GFO_StartTime;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.DateTimePicker dtpAlarm_GFO_EndTime;
-        private System.Windows.Forms.CheckBox chkAlarm_GFO_ExcludeDiscarded;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.CheckBox chkAlarm_GFO_ExcludeAcknowledged;
         private System.Windows.Forms.TabControl TabAudit;
         private System.Windows.Forms.TabPage TpgGetAudits;
         private System.Windows.Forms.GroupBox GrbAudits_Get;
@@ -2799,17 +1791,6 @@
         private System.Windows.Forms.Label LblAudit_DiscardMulti_GUID1;
         private System.Windows.Forms.TabPage TpgEquipment;
         private System.Windows.Forms.TabPage TpgNetworkDevice;
-        private System.Windows.Forms.TabControl TabNetworkDevice;
-        private System.Windows.Forms.TabPage TpgGetNetworkDevices;
-        private System.Windows.Forms.TabPage TpgGetNetworkDeviceTypes;
-        private System.Windows.Forms.GroupBox GrbGetNetworkDevices;
-        private System.Windows.Forms.GroupBox GrbGetNetworkDeviceTypes;
-        private System.Windows.Forms.Button BtnGetNetworkDeviceTypes;
-        private System.Windows.Forms.DataGridView DgvGetNetworkDeviceTypes;
-        private System.Windows.Forms.Button BtnGetNetworkDevices;
-        private System.Windows.Forms.TextBox TxtGetNetworkDevices_Type_ID;
-        private System.Windows.Forms.Label LblGetNetworkDevices_Type_ID;
-        private System.Windows.Forms.DataGridView DgvGetNetworkDevices;
         private System.Windows.Forms.TabPage TpgSpace;
         private System.Windows.Forms.TabControl TabMiscellanea;
         private System.Windows.Forms.TabPage TpgMisc_GetServerTime;
@@ -2824,9 +1805,6 @@
         private System.Windows.Forms.Label LblMisc_Title2;
         private System.Windows.Forms.Label LblMisc_Localize_CultureInfo;
         private System.Windows.Forms.Label LblLogin_Title1;
-        private System.Windows.Forms.Label LblAlarm_Get;
-        private System.Windows.Forms.Label LblAlarm_FindById;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TabPage TpgStream;
         private System.Windows.Forms.CheckBox ChkAudit_AlarmEvent;
         private System.Windows.Forms.CheckBox ChkAudit_AuditTrails;
@@ -2841,7 +1819,6 @@
         private System.Windows.Forms.CheckBox ChkAudit_ActionType_Delete;
         private System.Windows.Forms.CheckBox ChkAudit_ActionType_Error;
         private System.Windows.Forms.CheckBox ChkAudit_ActionType_Subsystem;
-        private System.Windows.Forms.RichTextBox RtbAlarm;
     }
 }
 

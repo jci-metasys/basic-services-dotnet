@@ -24,8 +24,10 @@ namespace MetasysServices_TestClient
         private Guid _networkDeviceId = Guid.Empty;
         private Guid _objectId = Guid.Empty;
 
+        private Forms.Alarms _frmAlarms;
         private Forms.Enumerations _frmEnumerations;
         private Forms.Equipments _frmEquipments;
+        private Forms.NetworkDevices _frmNetworkDevices;
         private Forms.Objects _frmObjects;
         private Forms.Streams _frmStreams;
         private Forms.Spaces _frmSpaces;
@@ -43,153 +45,10 @@ namespace MetasysServices_TestClient
 
         // ==========================================================================================================================
         // ALARMS
-        private void Alarms_Get(DateTime startTime, DateTime endTime, Boolean excludeAcknowledged, Boolean excludeDiscarded, Boolean noFilters)
-        {
-            AlarmFilter alarmFilter;
-            if (!noFilters)
-            {
-                alarmFilter = new AlarmFilter
-                {
-                    StartTime = startTime,
-                    EndTime = endTime,
-                    ExcludeAcknowledged = excludeAcknowledged,
-                    ExcludeDiscarded = excludeDiscarded
-                };
-            }
-            else
-            {
-                alarmFilter = new AlarmFilter { };
-            };
-            PagedResult<Alarm> alarmPages = _client.Alarms.Get(alarmFilter);
-            if (alarmPages != null)
-            {
-                if (alarmPages.PageCount > 0)
-                {
-                    TxtAlarm_Total.Text = alarmPages.Total.ToString();
-                    DgvAlarm.DataSource = alarmPages.Items;
-                }
-            }
-        }
-        private void Alarms_FindByID(string guid)
-        {
-            if (_client != null)
-            {
-                //Define the 'language' to use 
-                Guid alarmGuid = new Guid(guid);
-
-                var alarm = _client.Alarms.FindById(alarmGuid);
-                if (alarm != null)
-                {
-                    PrgAlarm_FindByID.SelectedObject = alarm;
-                    RtbAlarm.Text = FormatJson(alarm);
-                }
-            }
-        }
-        private void Alarms_GetForNetworkDevice(string networkDeviceId,
-                                                DateTime startTime,
-                                                DateTime endTime,
-                                                Boolean excludeAcknowledged,
-                                                Boolean excludeDiscarded,
-                                                Boolean noFilters)
-        {
-            AlarmFilter alarmFilter;
-            if (!noFilters)
-            {
-                alarmFilter = new AlarmFilter
-                {
-                    StartTime = startTime,
-                    EndTime = endTime,
-                    ExcludeAcknowledged = excludeAcknowledged,
-                    ExcludeDiscarded = excludeDiscarded
-                };
-            }
-            else
-            {
-                alarmFilter = new AlarmFilter { };
-            };
-
-            _networkDeviceId = new Guid(networkDeviceId);
-            PagedResult<Alarm> alarmPages = _client.Alarms.GetForNetworkDevice(_networkDeviceId, alarmFilter);
-            if (alarmPages != null)
-            {
-                if (alarmPages.PageCount > 0)
-                {
-                    TxtAlarm_GFND_Total.Text = alarmPages.Total.ToString();
-                    DgvAlarm_GFND.DataSource = alarmPages.Items;
-                }
-            }
-        }
-        private void Alarms_GetForObject(string objectId,
-                                        DateTime startTime,
-                                        DateTime endTime,
-                                        Boolean excludeAcknowledged,
-                                        Boolean excludeDiscarded,
-                                        Boolean noFilters)
-        {
-            AlarmFilter alarmFilter;
-            if (!noFilters)
-            {
-                alarmFilter = new AlarmFilter
-                {
-                    StartTime = startTime,
-                    EndTime = endTime,
-                    ExcludeAcknowledged = excludeAcknowledged,
-                    ExcludeDiscarded = excludeDiscarded
-                };
-            }
-            else
-            {
-                alarmFilter = new AlarmFilter { };
-            };
-
-            _objectId = new Guid(objectId);
-            PagedResult<Alarm> alarmPages = _client.Alarms.GetForObject(_objectId, alarmFilter);
-            if (alarmPages != null)
-            {
-                if (alarmPages.PageCount > 0)
-                {
-                    TxtAlarm_GFO_Total.Text = alarmPages.Total.ToString();
-                    DgvAlarm_GFO.DataSource = alarmPages.Items;
-                }
-            }
-        }
-        private void Alarms_GetAnnotations(string guid)
-        {
-            if (!string.IsNullOrEmpty(guid))
-            {
-                _alarmId = new Guid(guid);
-            }
-
-            if (_alarmId != Guid.Empty)
-            {
-                backgroundWorker1.RunWorkerAsync();
-            }
-        }
 
 
         // ==================================================================================================================
         // AUDITS
-        private PagedResult<Audit> Audits_Get(DateTime startTime, DateTime endTime, Boolean excludeDiscarded, Boolean noFilters)
-        {
-            PagedResult<Audit> res;
-            AuditFilter auditFilter;
-            if (!noFilters)
-            {
-                auditFilter = new AuditFilter
-                {
-                    StartTime = startTime,
-                    EndTime = endTime,
-                    ExcludeDiscarded = excludeDiscarded
-                };
-            }
-            else
-            {
-                auditFilter = new AuditFilter { };
-            };
-
-            res = _client.Audits.Get(auditFilter);
-            return res;
-        }
         private Audit Audits_FindByID(string guid)
         {
             Audit res = null;
@@ -263,8 +122,6 @@ namespace MetasysServices_TestClient
             txtPassword.Text = PubConstants.PASSWORD;
             cmbVersion.SelectedIndex = 0;
 
-            DtpAlarm_StartTime.Value = DateTime.Now.AddDays(-2);
-            DtpAlarm_EndTime.Value = DateTime.Now;
             DtpAudit_StartTime.Value = DateTime.Now.AddDays(-2);
             DtpAudit_EndTime.Value = DateTime.Now;
 
@@ -272,11 +129,18 @@ namespace MetasysServices_TestClient
             ToolTip.SetToolTip(BtnRefresh, "Use method: 'Refresh()'");
             ToolTip.SetToolTip(BtnGetAccessToken, "Use method: 'GetAccessToken()'");
 
+
+            _frmAlarms = new Forms.Alarms();
+            _frmAlarms.InitForm(_client, TpgAlarm);
+
             _frmEnumerations = new Forms.Enumerations();
             _frmEnumerations.InitForm(_client, TpgEnumeration);
 
             _frmEquipments = new Forms.Equipments();
             _frmEquipments.InitForm(_client, TpgEquipment);
+
+            _frmNetworkDevices = new Forms.NetworkDevices();
+            _frmNetworkDevices.InitForm(_client, TpgNetworkDevice);
 
             _frmObjects = new Forms.Objects();
             _frmObjects.InitForm(_client, TpgObject);
@@ -300,8 +164,10 @@ namespace MetasysServices_TestClient
             _client = new MetasysClient(txtHost.Text, true, version, culture);
             if (_client != null)
             {
+                _frmAlarms.Client = _client;
                 _frmEnumerations.Client = _client;
                 _frmEquipments.Client = _client;
+                _frmNetworkDevices.Client = _client;
                 _frmObjects.Client = _client;
                 _frmStreams.Client = _client;
                 _frmSpaces.Client = _client;
@@ -314,46 +180,19 @@ namespace MetasysServices_TestClient
                     //Show the token
                     rcbToken.Text = token.ToString();
                     //enables the controls to get the Alarms
-                    GrbGetAlarms.Enabled = true;
                     _enableTabs = true;
                 }
             }
         }
         private void BtlAlarm_Get_Click(object sender, EventArgs e)
         {
-            DgvAlarm.DataSource = null;
-            Alarms_Get(DtpAlarm_StartTime.Value, DtpAlarm_EndTime.Value, chkAlarm_ExcludeAcknowledged.Checked, chkAlarm_ExcludeDiscarded.Checked, ChkAlarm_NoFilter.Checked);
         }
+
         private void ChkAlarm_NoFilter_CheckedChanged(object sender, EventArgs e)
         {
-            GrbAlarm_Filter.Enabled = !ChkAlarm_NoFilter.Checked;
         }
 
 
-        private void BackgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-            _annotations = _client.Alarms.GetAnnotations(_alarmId);
-            _firstAnnotation = _annotations.FirstOrDefault();
-        }
-
-        private void BackgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (_firstAnnotation != null)
-            {
-                string res = "";
-                string nl = System.Environment.NewLine;
-                foreach (AlarmAnnotation ann in _annotations)
-                    {
-                    if (res.Length > 0) { res += nl; };
-                    res += ann.Text;
-                    }
-                TxtAlarms_Annotations.Text = res;
-            }
-            else
-            {
-                TxtAlarms_Annotations.Text = "No Alarm Annotation";
-            }
-        }
         #endregion
 
         private void BtnRefresh_Click(object sender, EventArgs e)
@@ -367,7 +206,6 @@ namespace MetasysServices_TestClient
                     //Show the token
                     rcbToken.Text = token.ToString();
                     //enables the controls to get the Alarms
-                    GrbGetAlarms.Enabled = true;
                 }
             }
         }
@@ -382,7 +220,6 @@ namespace MetasysServices_TestClient
                     //Show the token
                     rcbToken.Text = token.ToString();
                     //enables the controls to get the Alarms
-                    GrbGetAlarms.Enabled = true;
                 }
             }
         }
@@ -413,36 +250,18 @@ namespace MetasysServices_TestClient
 
         private void BtnAlarm_FindByID_Click(object sender, EventArgs e)
         {
-            string guid = TxtAlarm_FindByID_GUID.Text;
-            Alarms_FindByID(guid);
         }
 
         private void BtnAlarm_GetForNetworkDevice_Click(object sender, EventArgs e)
         {
-            DgvAlarm_GFND.DataSource = null;
-            Alarms_GetForNetworkDevice(TxtAlarm_GFND_GUID.Text,
-                                        dtpAlarm_GFND_StartTime.Value,
-                                        dtpAlarm_GFND_EndTime.Value,
-                                        chkAlarm_GFND_ExcludeAcknowledged.Checked, 
-                                        chkAlarm_GFND_ExcludeDiscarded.Checked,
-                                        chkAlarm_GFND_NoFilter.Checked);
-
         }
 
         private void BtnGetAlarmAnnotation_Click(object sender, EventArgs e)
         {
-            Alarms_GetAnnotations(TxtAlarmGUID.Text);
         }
 
         private void BtnAlarm_GetForObject_Click(object sender, EventArgs e)
         {
-            DgvAlarm_GFO.DataSource = null;
-            Alarms_GetForObject(TxtAlarm_GFO_GUID.Text,
-                                DtpAlarm_GFO_StartTime.Value,
-                                dtpAlarm_GFO_EndTime.Value,
-                                chkAlarm_GFO_ExcludeAcknowledged.Checked,
-                                chkAlarm_GFO_ExcludeDiscarded.Checked,
-                                chkAlarm_GFO_NoFilter.Checked);
         }
 
         private void BtlAudit_Get_Click(object sender, EventArgs e)
@@ -614,49 +433,6 @@ namespace MetasysServices_TestClient
 
         }
 
-        private void BtnGetEquipment_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void BtnGetNetworkDeviceTypes_Click(object sender, EventArgs e)
-        {
-            DgvGetNetworkDeviceTypes.DataSource = null;
-            if (_client != null)
-            {
-                var res = _client.GetNetworkDeviceTypes();
-                DgvGetNetworkDeviceTypes.DataSource = res;
-            }
-        }
-
-        private void BtnGetNetworkDevices_Click(object sender, EventArgs e)
-        {
-            DgvGetNetworkDevices.DataSource = null;
-            if (_client != null)
-            {
-                string type = TxtGetNetworkDevices_Type_ID.Text;
-                IEnumerable<MetasysObject> result;
-                if (type.Length>0)
-                {
-                    result = _client.GetNetworkDevices(type);
-                } else
-                {
-                    result = _client.GetNetworkDevices();
-                }
-                DgvGetNetworkDevices.DataSource = result;
-            }
-        }
-
-        private void BtnGetCommands_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void BtnGetCommandEnumeration_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void BtnGetCommandEnums_Click(object sender, EventArgs e)
-        {
-        }
 
         private void TabMain_Selecting(object sender, TabControlCancelEventArgs e)
         {

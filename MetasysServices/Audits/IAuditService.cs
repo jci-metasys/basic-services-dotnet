@@ -60,7 +60,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysUnsupportedApiVersion"></exception>
         void Discard(Guid id, string annotationText);
 
-        /// <inheritdoc cref="IAuditService.Discard(Guid , string )"/>
+        /// <inheritdoc cref="IAuditService.Discard(Guid , string)"/>
         Task DiscardAsync(Guid id, string annotationText);
 
         /// <summary>
