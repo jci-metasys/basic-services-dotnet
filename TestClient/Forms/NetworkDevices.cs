@@ -38,18 +38,10 @@ namespace MetasysServices_TestClient.Forms
         private void BtnGet_Click(object sender, EventArgs e)
         {
             DgvGet.DataSource = null;
+            string type = TxtGetTypes_TypeID.Text;
             if (_client != null)
             {
-                string type = TxtGetTypes_TypeID.Text;
-                IEnumerable<MetasysObject> result;
-                if (type.Length > 0)
-                {
-                    result = _client.GetNetworkDevices(type);
-                }
-                else
-                {
-                    result = _client.GetNetworkDevices();
-                }
+                var result = _client.GetNetworkDevices((type.Length > 0) ? type : null) ;
                 DgvGet.DataSource = result;
             }
         }
@@ -59,8 +51,8 @@ namespace MetasysServices_TestClient.Forms
             DgvGetTypes.DataSource = null;
             if (_client != null)
             {
-                var res = _client.GetNetworkDeviceTypes();
-                DgvGetTypes.DataSource = res;
+                var result = _client.GetNetworkDeviceTypes();
+                DgvGetTypes.DataSource = result;
             }
 
         }
@@ -69,19 +61,52 @@ namespace MetasysServices_TestClient.Forms
         {
             PrgFindById.SelectedObject = null;
             String networkDevideId = TxtFindById_NetworkDeviceID.Text;
-
             if (_client != null && networkDevideId.Length > 0)
             {
                 Guid networkDeviceGuid = new Guid(networkDevideId);
                 // call the method
                 var networkDevice = _client.NetworkDevices.FindById(networkDeviceGuid);
-                if (networkDevice != null)
-                {
-                    PrgFindById.SelectedObject = networkDevice;
-                }
+                PrgFindById.SelectedObject = networkDevice;
             }
         }
 
+        private void BtnGetChildren_Click(object sender, EventArgs e)
+        {
+            DgvGetChildren.DataSource = null;
+            String networkDevideId = TxtGetChildren_NetworkDeviceID.Text;
+            if (_client != null && networkDevideId.Length > 0)
+            {
+                Guid networkDeviceGuid = new Guid(networkDevideId);
+                // call the method
+                var result = _client.NetworkDevices.GetChildren(networkDeviceGuid);
+                DgvGetChildren.DataSource = result;
+            }
+        }
 
+        private void BtnGetHostingAnEquipment_Click(object sender, EventArgs e)
+        {
+            DgvGetHostingAnEquipment.DataSource = null;
+            String equipmentId = TxtGetHostingAnEquipment_EquipmentID.Text;
+            if (_client != null && equipmentId.Length > 0)
+            {
+                Guid equipmentGuid = new Guid(equipmentId);
+                // call the method
+                var result = _client.NetworkDevices.GetHostingAnEquipment(equipmentGuid);
+                DgvGetHostingAnEquipment.DataSource = result;
+            }
+        }
+
+        private void BtnGetServingASpace_Click(object sender, EventArgs e)
+        {
+            DgvGetServingASpace.DataSource = null;
+            String spaceId = TxtGetServingASpace_SpaceID.Text;
+            if (_client != null && spaceId.Length > 0)
+            {
+                Guid spaceGuid = new Guid(spaceId);
+                // call the method
+                var result = _client.NetworkDevices.GetServingASpace(spaceGuid);
+                DgvGetServingASpace.DataSource = result;
+            }
+        }
     }
 }

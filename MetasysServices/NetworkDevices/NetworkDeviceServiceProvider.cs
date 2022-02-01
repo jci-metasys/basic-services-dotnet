@@ -16,7 +16,7 @@ using JohnsonControls.Metasys.BasicServices.Utils;
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
-    /// Provide network device item for the endpoints of the Metasys Alarm API.
+    /// Provide network device item for the endpoints of the Metasys Network Devices API.
     /// </summary>
 
     public sealed class NetworkDeviceServiceProvider : BasicServiceProvider, INetworkDeviceService
@@ -41,7 +41,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<MetasysObject> FindByIdAsync(Guid networkDeviceId)
         {
-            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+            //if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
             var response = await GetRequestAsync("networkDevices", null, networkDeviceId).ConfigureAwait(false);
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Equipment);
         }
@@ -90,6 +90,49 @@ namespace JohnsonControls.Metasys.BasicServices
                 return await RetrieveNetworkDeviceTypesAsync().ConfigureAwait(false);
             }
         }
+
+        // GetChildren ---------------------------------------------------------------------------------------------------------------------------------------------
+        public IEnumerable<MetasysObject> GetChildren(Guid networkDeviceId)
+        {
+            return GetChildrenAsync(networkDeviceId).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetChildrenAsync(Guid networkDeviceId)
+        {
+            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+
+            var response = await GetAllAvailablePagesAsync("networkDevices", null, networkDeviceId.ToString(), "networkDevices").ConfigureAwait(false);
+            return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Object);
+        }
+
+        // GetHostingAnEquipment ---------------------------------------------------------------------------------------------------------------------------------------------
+        public IEnumerable<MetasysObject> GetHostingAnEquipment(Guid equipmentId)
+        {
+            return GetHostingAnEquipmentAsync(equipmentId).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetHostingAnEquipmentAsync(Guid equipmentId)
+        {
+            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+
+            var response = await GetAllAvailablePagesAsync("equipment", null, equipmentId.ToString(), "networkDevices").ConfigureAwait(false);
+            return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Object);
+        }
+
+        // GetServingASpace ---------------------------------------------------------------------------------------------------------------------------------------------
+        public IEnumerable<MetasysObject> GetServingASpace(Guid spaceId)
+        {
+            return GetServingASpaceAsync(spaceId).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetServingASpaceAsync(Guid spaceId)
+        {
+            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+
+            var response = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "networkDevices").ConfigureAwait(false);
+            return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Object);
+        }
+
 
 
         private async Task<IEnumerable<MetasysObjectType>> RetrieveNetworkDeviceTypesAsync()

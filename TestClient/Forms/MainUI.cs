@@ -19,11 +19,8 @@ namespace MetasysServices_TestClient
 
         private Boolean _enableTabs = false;
         private Guid _alarmId = Guid.Empty;
-        private AlarmAnnotation _firstAnnotation = null;
-        private IEnumerable<AlarmAnnotation> _annotations = null;
         private Guid _networkDeviceId = Guid.Empty;
         private Guid _objectId = Guid.Empty;
-
         private Forms.Alarms _frmAlarms;
         private Forms.Enumerations _frmEnumerations;
         private Forms.Equipments _frmEquipments;

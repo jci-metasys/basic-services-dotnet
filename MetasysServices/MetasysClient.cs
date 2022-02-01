@@ -42,6 +42,9 @@ namespace JohnsonControls.Metasys.BasicServices
         public INetworkDeviceService NetworkDevices { get; set; }
 
         /// <inheritdoc/>
+        public ISpaceService Spaces { get; set; }
+
+        /// <inheritdoc/>
         public ITrendService Trends { get; set; }
 
 
@@ -113,6 +116,10 @@ namespace JohnsonControls.Metasys.BasicServices
                 if (NetworkDevices != null)
                 {
                     NetworkDevices.Version = version.Value;
+                }
+                if (Spaces != null)
+                {
+                    Spaces.Version = version.Value;
                 }
                 if (Streams != null)
                 {
@@ -214,6 +221,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 Alarms = new AlarmServiceProvider(Client, version, logClientErrors);
                 Audits = new AuditServiceProvider(Client, version, logClientErrors);
                 NetworkDevices = new NetworkDeviceServiceProvider(Client, version, logClientErrors);
+                Spaces = new SpaceServiceProvider(Client, version, logClientErrors);
                 if (Version > ApiVersion.v3)
                 {
                     Streams = new StreamServiceProvider(Client, hostname, version);
@@ -824,74 +832,40 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetNetworkDevices(string type = null)
         {
-            return GetNetworkDevicesAsync(type).GetAwaiter().GetResult();
+            // This the new method
+            return NetworkDevices.Get(type);
         }
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
-            var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } }).ConfigureAwait(false);
-            return ToMetasysObject(response, Version,  MetasysObjectTypeEnum.Object);
+            // This the new method
+            return await NetworkDevices.GetAsync(type);
         }
 
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetNetworkDevices(NetworkDeviceTypeEnum networkDevicetype)
         {
-            //string type = Convert.ToString((int)networkDevicetype);
-            //return GetNetworkDevices(type);
-            return GetNetworkDevicesAsync(networkDevicetype).GetAwaiter().GetResult();
+            // This the new method
+            return NetworkDevices.Get(networkDevicetype);
         }
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(NetworkDeviceTypeEnum networkDevicetype)
         {
-            string type = Convert.ToString((int)networkDevicetype);
-            return await GetNetworkDevicesAsync(type);
+            // This the new method
+            return await NetworkDevices.GetAsync(networkDevicetype);
         }
 
         /// <inheritdoc/>
         public IEnumerable<MetasysObjectType> GetNetworkDeviceTypes()
         {
-            return GetNetworkDeviceTypesAsync().GetAwaiter().GetResult();
+            // This is the new method
+            return NetworkDevices.GetTypes();
         }
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync()
         {
-            if (version < ApiVersion.v4)
-            {
-                return await GetResourceTypesAsync("networkDevices", "availableTypes").ConfigureAwait(false);
-            } else
-            {
-                return await RetrieveNetworkDeviceTypesAsync().ConfigureAwait(false);
-            }
-        }
-
-        private async Task<IEnumerable<MetasysObjectType>> RetrieveNetworkDeviceTypesAsync()
-        {
-            List<MetasysObjectType> types = new List<MetasysObjectType>() { };
-            try
-            {
-                //Get the whole list of Network Devices
-                var devices = await GetAllAvailablePagesAsync("networkDevices").ConfigureAwait(false);
-                List<NetworkDevice> networkDevices = ToNetworkDevice(devices, Version);
-                //Get the Object Type enumeration Set (Set ID = 508)
-                List<MetasysEnumValue> enums = (List<MetasysEnumValue>)GetEnumValuesAsync("objectTypeEnumSet").GetAwaiter().GetResult();
-
-                //Make the joine of the two lists in order to get only the enum values that are related to the network devices
-                //var result = enums.Join(networkDevices, e1 => e1.Key, e2 => e2.ObjectType, (e1, e2) => e1).Distinct();
-                var joinedList = (from nd in networkDevices
-                             join en in enums on nd.ObjectType equals en.Key into gj
-                             from suben in gj
-                             select new { Description = suben.Name, DescriptionEnumerationKey = suben.Key, ID = suben.Value }).Distinct();
-                //Build the result
-                foreach (var i in joinedList)
-                {
-                    types.Add(new MetasysObjectType(i.ID,i.DescriptionEnumerationKey,i.Description));
-                }
-            }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-            return types;
+            // This is the new method
+            return await NetworkDevices.GetTypesAsync();
         }
 
         #endregion

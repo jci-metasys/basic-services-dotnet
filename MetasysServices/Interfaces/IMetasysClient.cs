@@ -207,6 +207,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets all network devices.
         /// </summary>
+        /// <remarks>
+        /// Note this method has been deprecated.
+        /// </remarks>
         /// <param name="type">Optional type number as a string</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
@@ -254,6 +257,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="IMetasysClient.GetObjects(Guid, int, bool)"/>
         Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, bool includeInternalObjects = false);
 
+        // GetSpaces ---------------------------------------------------------------------------------------------------------------------
         /// <summary>
         /// Gets all spaces.
         /// </summary>
@@ -261,16 +265,15 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         IEnumerable<MetasysObject> GetSpaces(SpaceTypeEnum? type = null);
+        /// <inheritdoc cref="IMetasysClient.GetSpaces(SpaceTypeEnum?)"/>
+        Task<IEnumerable<MetasysObject>> GetSpacesAsync(SpaceTypeEnum? type = null);
 
+        // GetSpaceChildren ---------------------------------------------------------------------------------------------------------------
         /// <summary>
         /// Gets children spaces of the given space.
         /// </summary>
         /// <param name="spaceId">The GUID of the parent space.</param>
         IEnumerable<MetasysObject> GetSpaceChildren(Guid spaceId);
-
-        /// <inheritdoc cref="IMetasysClient.GetSpaces(SpaceTypeEnum?)"/>
-        Task<IEnumerable<MetasysObject>> GetSpacesAsync(SpaceTypeEnum? type = null);
-
         /// <inheritdoc cref="IMetasysClient.GetSpaceChildren(Guid)"/>
         Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid id);
 

@@ -7,12 +7,11 @@ using JohnsonControls.Metasys.BasicServices;
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
-    /// Defines method to provide network device infos for endpoints of the Metasys Alarm API.
+    /// Defines method to provide network device infos for endpoints of the Metasys Network Devices API.
     /// </summary>
 
     public interface INetworkDeviceService : IBasicService
     {
-
         /// <summary>
         /// Retrieves the specified network device.
         /// </summary>
@@ -22,6 +21,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="INetworkDeviceService.FindById(Guid)"/>
         Task<MetasysObject> FindByIdAsync(Guid equipmentId);
 
+
         /// <summary>
         /// Gets all network devices.
         /// </summary>
@@ -29,9 +29,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         IEnumerable<MetasysObject> Get(string type = null);
-
         /// <inheritdoc cref="INetworkDeviceService.Get(string)"/>
         Task<IEnumerable<MetasysObject>> GetAsync(string type = null);
+
 
         /// <summary>
         /// Gets all network devices.
@@ -40,7 +40,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         IEnumerable<MetasysObject> Get(NetworkDeviceTypeEnum networkDevicetype);
-
         /// <inheritdoc cref="INetworkDeviceService.Get(NetworkDeviceTypeEnum)"/>
         Task<IEnumerable<MetasysObject>> GetAsync(NetworkDeviceTypeEnum networkDevicetype);
 
@@ -51,11 +50,30 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         IEnumerable<MetasysObjectType> GetTypes();
-
         /// <inheritdoc cref="INetworkDeviceService.GetTypes()"/>
         Task<IEnumerable<MetasysObjectType>> GetTypesAsync();
 
 
+        /// <summary>
+        /// List network device children.
+        /// </summary>
+        IEnumerable<MetasysObject> GetChildren(Guid networkDeviceId);
+        /// <inheritdoc cref="INetworkDeviceService.GetChildren()"/>
+        Task<IEnumerable<MetasysObject>> GetChildrenAsync(Guid networkDeviceId);
+
+        /// <summary>
+        /// List network devices hosting an equipment instance.
+        /// </summary>
+        IEnumerable<MetasysObject> GetHostingAnEquipment(Guid equipmentId);
+        /// <inheritdoc cref="INetworkDeviceService.GetHostingAnEquipment()"/>
+        Task<IEnumerable<MetasysObject>> GetHostingAnEquipmentAsync(Guid equipmentId);
+
+        /// <summary>
+        /// List network devices serving a space.
+        /// </summary>
+        IEnumerable<MetasysObject> GetServingASpace(Guid spaceId);
+        /// <inheritdoc cref="INetworkDeviceService.GetServingASpace()"/>
+        Task<IEnumerable<MetasysObject>> GetServingASpaceAsync(Guid spaceId);
 
     }
 }
