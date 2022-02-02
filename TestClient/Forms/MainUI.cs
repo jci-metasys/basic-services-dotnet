@@ -181,13 +181,6 @@ namespace MetasysServices_TestClient
                 }
             }
         }
-        private void BtlAlarm_Get_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void ChkAlarm_NoFilter_CheckedChanged(object sender, EventArgs e)
-        {
-        }
 
 
         #endregion
@@ -245,21 +238,6 @@ namespace MetasysServices_TestClient
             }
         }
 
-        private void BtnAlarm_FindByID_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void BtnAlarm_GetForNetworkDevice_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void BtnGetAlarmAnnotation_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void BtnAlarm_GetForObject_Click(object sender, EventArgs e)
-        {
-        }
 
         private void BtlAudit_Get_Click(object sender, EventArgs e)
         {

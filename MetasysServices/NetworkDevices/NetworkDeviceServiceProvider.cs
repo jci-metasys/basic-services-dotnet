@@ -32,6 +32,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public NetworkDeviceServiceProvider(IFlurlClient client, ApiVersion version, bool logClientErrors = true) : base(client, version, logClientErrors)
         {
         }
+
         // FindById -------------------------------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public MetasysObject FindById(Guid networkDeviceId)
@@ -45,7 +46,6 @@ namespace JohnsonControls.Metasys.BasicServices
             var response = await GetRequestAsync("networkDevices", null, networkDeviceId).ConfigureAwait(false);
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Equipment);
         }
-
 
         // Get ------------------------------------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
@@ -72,7 +72,7 @@ namespace JohnsonControls.Metasys.BasicServices
             return await GetAsync(type);
         }
 
-        // GetType -------------------------------------------------------------------------------------------------------------------------------------------------
+        // GetTypes -------------------------------------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public IEnumerable<MetasysObjectType> GetTypes()
         {

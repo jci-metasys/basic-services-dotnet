@@ -33,13 +33,26 @@ namespace JohnsonControls.Metasys.BasicServices
         {
         }
 
+        // FindById -------------------------------------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public MetasysObject FindById(Guid spaceId)
+        {
+            return FindByIdAsync(spaceId).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<MetasysObject> FindByIdAsync(Guid spaceId)
+        {
+            //if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+            var response = await GetRequestAsync("spaces", null, spaceId).ConfigureAwait(false);
+            return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Space);
+        }
 
+        // Get ---------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> Get(SpaceTypeEnum? type = null)
         {
             return GetAsync(type).GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetAsync(SpaceTypeEnum? type = null)
         {
@@ -51,6 +64,66 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             var spaces = await GetAllAvailablePagesAsync("spaces", parameters).ConfigureAwait(false);
             return ToMetasysObject(spaces, Version, type: MetasysObjectTypeEnum.Space);
+        }
+
+        // GetChildren ------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetChildren(Guid spaceId)
+        {
+            return GetChildrenAsync(spaceId).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetChildrenAsync(Guid spaceId)
+        {
+            var spaceChildren = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "spaces").ConfigureAwait(false);
+            return ToMetasysObject(spaceChildren, Version, MetasysObjectTypeEnum.Space);
+        }
+
+        // GetTypes ---------------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObjectType> GetTypes()
+        {
+            return GetTypesAsync().GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObjectType>> GetTypesAsync()
+        {
+            if (Version < ApiVersion.v4)
+            {
+                return await GetResourceTypesAsync("enumSets", "1766/members").ConfigureAwait(false);
+            }
+            else
+            {
+                return await GetResourceTypesAsync("enumerations", "spaceTypesEnumSet").ConfigureAwait(false);
+            }
+        }
+
+        // GetServedByNetworkDevice ------------------------------------------------------------------------------------------------------
+        public IEnumerable<MetasysObject> GetServedByNetworkDevice(Guid networkDeviceId)
+        {
+            return GetServedByNetworkDeviceAsync(networkDeviceId).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetServedByNetworkDeviceAsync(Guid networkDeviceId)
+        {
+            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+
+            var response = await GetAllAvailablePagesAsync("networkDevices", null, networkDeviceId.ToString(), "spaces").ConfigureAwait(false);
+            return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Space);
+        }
+
+        // GetServedByEquipment ------------------------------------------------------------------------------------------------------
+        public IEnumerable<MetasysObject> GetServedByEquipment(Guid equipmentId)
+        {
+            return GetServedByEquipmentAsync(equipmentId).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetServedByEquipmentAsync(Guid equipmentId)
+        {
+            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+
+            var response = await GetAllAvailablePagesAsync("equipment", null, equipmentId.ToString(), "spaces").ConfigureAwait(false);
+            return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Space);
         }
 
     }

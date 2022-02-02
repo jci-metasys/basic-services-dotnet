@@ -65,8 +65,24 @@ namespace JohnsonControls.Metasys.BasicServices
                 Label = token["label"].Value<string>();
                 Category = token["category"].Value<string>();
                 IsDisplayData = token["isDisplayData"].Value<bool>();
-                AttributeUrl = GetJTokenValue(token, "attributeUrl");
-                Attribute = GetJTokenValue(token, "attribute");
+                //AttributeUrl = GetJTokenValue(token, "attributeUrl");
+                try
+                {
+                    AttributeUrl = token["attributeUrl"].Value<string>();
+                }
+                catch
+                {
+                    AttributeUrl = null;
+                }
+                //Attribute = GetJTokenValue(token, "attribute");
+                try
+                {
+                    Attribute = token["attribute"].Value<string>();
+                }
+                catch
+                {
+                    Attribute = null;
+                }
                 ObjectUrl = token["objectUrl"].Value<string>();            
                 PresentValue = null;
             }

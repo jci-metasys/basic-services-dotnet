@@ -38,40 +38,52 @@ namespace MetasysServices_TestClient.Forms
         private void BtnGetEquipment_Click(object sender, EventArgs e)
         {
             DgvGetEquipment.DataSource = null;
-            if (_client != null)
-            {
-                var result = _client.GetEquipment();
-                DgvGetEquipment.DataSource = result;
-            }
+            var result = _client.GetEquipment();
+            DgvGetEquipment.DataSource = result;
         }
 
         private void BtnGetEuipmentPoints_Click(object sender, EventArgs e)
         {
             DgvGetEquipmentPoints.DataSource = null;
-            if (_client != null)
+            String equipmentId = TxtGetEquipmentPoints_EquipID.Text.Trim();
+            if (equipmentId.Length > 0)
             {
-                Guid equipmentId = new Guid(TxtGetEquipmentPoints_EquipID.Text);
-                var result = _client.GetEquipmentPoints(equipmentId,ChkReadAttributeValue.Checked);
+                Guid equipmentGuid = new Guid(equipmentId);
+                var result = _client.GetEquipmentPoints(equipmentGuid, ChkReadAttributeValue.Checked);
                 DgvGetEquipmentPoints.DataSource = result;
             }
         }
 
         private void BtnGetSingleEquipemnt_Click(object sender, EventArgs e)
         {
-            PrgGetSingleEquipment.SelectedObject = null;
-            String equipmentId = TxtGetSingleEquipment_EquipmentId.Text;
-
-            if (_client != null && equipmentId.Length > 0)
+            PrgGetFindById.SelectedObject = null;
+            String equipmentId = TxtFindById_EquipmentId.Text.Trim();
+            if ( equipmentId.Length > 0)
             {
                 Guid equipmentGuid = new Guid(equipmentId);
                 // call the method
-                var equipment = _client.GetSingleEquipment(equipmentGuid);
-                if (equipment != null)
-                {
-                    PrgGetSingleEquipment.SelectedObject = equipment;
-                }
+                var equipment = _client.Equipments.FindById(equipmentGuid);
+                PrgGetFindById.SelectedObject = equipment;
             }
+        }
 
+        private void BtnGetSpaceEquipment_Click(object sender, EventArgs e)
+        {
+            Guid spaceId = new Guid(TxtGetSpaceEquipment_SpaceID.Text);
+            var result = _client.GetSpaceEquipment(spaceId);
+            DgvGetSpaceEquipment.DataSource = result;
+        }
+
+        private void BtnGetHostedByNetworkDevice_Click(object sender, EventArgs e)
+        {
+            DgvGetHostedByNetworkDevice.DataSource = null;
+            String networkDeviceId = TxtGetHostedByNetworkDevice_NetDevID.Text.Trim();
+            if (networkDeviceId.Length > 0)
+            {
+                Guid networkDeviceGuid = new Guid(networkDeviceId);
+                var result = _client.Equipments.GetHostedByNetworkDevice(networkDeviceGuid);
+                DgvGetHostedByNetworkDevice.DataSource = result;
+            }
         }
     }
 }

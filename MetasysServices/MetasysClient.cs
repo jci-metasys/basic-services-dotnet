@@ -39,17 +39,19 @@ namespace JohnsonControls.Metasys.BasicServices
         public IAuditService Audits { get; set; }
 
         /// <inheritdoc/>
+        public IEquipmentService Equipments { get; set; }
+
+        /// <inheritdoc/>
         public INetworkDeviceService NetworkDevices { get; set; }
 
         /// <inheritdoc/>
         public ISpaceService Spaces { get; set; }
 
         /// <inheritdoc/>
-        public ITrendService Trends { get; set; }
-
+        public IStreamService Streams { get; set; }
 
         /// <inheritdoc/>
-        public IStreamService Streams { get; set; }
+        public ITrendService Trends { get; set; }
 
         private string hostname;
 
@@ -101,31 +103,13 @@ namespace JohnsonControls.Metasys.BasicServices
                 version = value;
                 // set base url and all related services to the new value
                 InitFlurlClient(Hostname);
-                if (Trends != null)
-                {
-                    Trends.Version = version.Value;
-                }
-                if (Audits != null)
-                {
-                    Audits.Version = version.Value;
-                }
-                if (Alarms != null)
-                {
-                    Alarms.Version = version.Value;
-                }
-                if (NetworkDevices != null)
-                {
-                    NetworkDevices.Version = version.Value;
-                }
-                if (Spaces != null)
-                {
-                    Spaces.Version = version.Value;
-                }
-                if (Streams != null)
-                {
-                    Streams.Version = version.Value;
-                }
-
+                if (Alarms != null) { Alarms.Version = version.Value; }
+                if (Audits != null) { Audits.Version = version.Value; }
+                if (Equipments != null) { Equipments.Version = version.Value; }
+                if (NetworkDevices != null) { NetworkDevices.Version = version.Value; }
+                if (Spaces != null) { Spaces.Version = version.Value; }
+                if (Streams != null) { Streams.Version = version.Value; }
+                if (Trends != null) { Trends.Version = version.Value; }
             }
         }
 
@@ -158,10 +142,13 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
                 culture = value;
                 // set all related services to the new value
-                if (Audits != null)
-                {
-                    Audits.Culture = culture;
-                }
+                if (Alarms != null) { Alarms.Culture = culture; }
+                if (Audits != null) { Audits.Culture = culture; }
+                if (Equipments != null) { Equipments.Culture = culture; }
+                if (NetworkDevices != null) { NetworkDevices.Culture = culture; }
+                if (Spaces != null) { Spaces.Culture = culture; }
+                if (Streams != null) { Streams.Culture = culture; }
+                if (Trends != null) { Trends.Culture = culture; }
             }
         }
 
@@ -217,15 +204,16 @@ namespace JohnsonControls.Metasys.BasicServices
                 LogClientErrors = logClientErrors;
                 Version = version;
                 // Init related services
-                Trends = new TrendServiceProvider(Client, version, logClientErrors);
                 Alarms = new AlarmServiceProvider(Client, version, logClientErrors);
                 Audits = new AuditServiceProvider(Client, version, logClientErrors);
+                Equipments = new EquipmentServiceProvider(Client, version, logClientErrors);
                 NetworkDevices = new NetworkDeviceServiceProvider(Client, version, logClientErrors);
                 Spaces = new SpaceServiceProvider(Client, version, logClientErrors);
                 if (Version > ApiVersion.v3)
                 {
                     Streams = new StreamServiceProvider(Client, hostname, version);
                 }
+                Trends = new TrendServiceProvider(Client, version, logClientErrors);
             }
             catch (FlurlHttpException e)
             {
@@ -259,6 +247,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             await Console.Error.WriteLineAsync(message).ConfigureAwait(false);
         }
+
 
         /// <inheritdoc/>
         public AccessToken TryLogin(string username, string password, bool refresh = true)
@@ -394,12 +383,13 @@ namespace JohnsonControls.Metasys.BasicServices
             this.AccessToken = accessToken;
         }
 
+
+
         /// <inheritdoc/>
         public Guid GetObjectIdentifier(string itemReference)
         {
             return GetObjectIdentifierAsync(itemReference).GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task<Guid> GetObjectIdentifierAsync(string itemReference)
         {
@@ -432,12 +422,12 @@ namespace JohnsonControls.Metasys.BasicServices
             return IdentifiersDictionary[normalizedItemReference];
         }
 
+
         /// <inheritdoc/>
         public Variant ReadProperty(Guid id, string attributeName)
         {
             return ReadPropertyAsync(id, attributeName).GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task<Variant> ReadPropertyAsync(Guid id, string attributeName)
         {
@@ -494,7 +484,6 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             return ReadPropertyMultipleAsync(ids, attributeNames).GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task<IEnumerable<VariantMultiple>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids, IEnumerable<string> attributeNames)
         {
@@ -541,12 +530,12 @@ namespace JohnsonControls.Metasys.BasicServices
             return results.AsEnumerable();
         }
 
+
         /// <inheritdoc/>
         public void WriteProperty(Guid id, string attributeName, object newValue)
         {
             WritePropertyAsync(id, attributeName, newValue).GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task WritePropertyAsync(Guid id, string attributeName, object newValue)
         {
@@ -556,13 +545,13 @@ namespace JohnsonControls.Metasys.BasicServices
             await WritePropertyRequestAsync(id, item).ConfigureAwait(false);
         }
 
+
         /// <inheritdoc/>
         public void WritePropertyMultiple(IEnumerable<Guid> ids,
             IEnumerable<(string Attribute, object Value)> attributeValues)
         {
             WritePropertyMultipleAsync(ids, attributeValues).GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
             IEnumerable<(string Attribute, object Value)> attributeValues)
@@ -587,8 +576,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="attributeValues">The (attribute, value) pairs.</param>      
         /// <returns>Dictionary of the attribute, value pairs.</returns>
-        private Dictionary<string, object> GetWritePropertyBody(
-            IEnumerable<(string Attribute, object Value)> attributeValues)
+        private Dictionary<string, object> GetWritePropertyBody(IEnumerable<(string Attribute, object Value)> attributeValues)
         {
             Dictionary<string, object> pairs = new Dictionary<string, object>();
             foreach (var attribute in attributeValues)
@@ -627,7 +615,6 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             return GetCommandsAsync(id).GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task<IEnumerable<Command>> GetCommandsAsync(Guid id)
         {
@@ -671,12 +658,12 @@ namespace JohnsonControls.Metasys.BasicServices
             return null;
         }
 
+
         /// <inheritdoc/>
         public void SendCommand(Guid id, string command, IEnumerable<object> values = null)
         {
             SendCommandAsync(id, command, values).GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task SendCommandAsync(Guid id, string command, IEnumerable<object> values = null)
         {
@@ -726,12 +713,12 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+
         /// <inheritdoc/>
         public IEnumerable<MetasysEnumeration> GetSiteEnumerations()
         {
             return GetSiteEnumerationsAsync().GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysEnumeration>> GetSiteEnumerationsAsync()
         {
@@ -867,7 +854,6 @@ namespace JohnsonControls.Metasys.BasicServices
             // This is the new method
             return await NetworkDevices.GetTypesAsync();
         }
-
         #endregion
 
         /// <summary>
@@ -1025,59 +1011,53 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+
+        #region "SPACES" //==========================================================================================================
+        
+        // GetSpaces ----------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetSpaces(SpaceTypeEnum? type = null)
         {
-            return GetSpacesAsync(type).GetAwaiter().GetResult();
+            return Spaces.Get(type);
         }
-
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetSpacesAsync(SpaceTypeEnum? type = null)
-        {
-            Dictionary<string, string> parameters = null;
-            if (type != null)
-            {
-                // Init Dictionary with Space Type parameter
-                parameters = new Dictionary<string, string>() { { "type", ((int)type).ToString() } };
-            }
-            var spaces = await GetAllAvailablePagesAsync("spaces", parameters).ConfigureAwait(false);
-            return ToMetasysObject(spaces, Version, type: MetasysObjectTypeEnum.Space);
+        {            
+            return await Spaces.GetAsync(type);
         }
 
+        // GetSpaceChildren --------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public IEnumerable<MetasysObject> GetSpaceChildren(Guid id)
+        public IEnumerable<MetasysObject> GetSpaceChildren(Guid spaceId)
         {
-            return GetSpaceChildrenAsync(id).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid id)
-        {
-            var spaceChildren = await GetAllAvailablePagesAsync("spaces", null, id.ToString(), "spaces").ConfigureAwait(false);
-            return ToMetasysObject(spaceChildren, Version, MetasysObjectTypeEnum.Space);
-        }
-
-        /// <inheritdoc/>
-        public MetasysObject GetSingleEquipment(Guid equipmentId)
-        {
-            return GetSingleEquipmentAsync(equipmentId).GetAwaiter().GetResult();
+            return Spaces.GetChildren(spaceId);
         }
         /// <inheritdoc/>
-        public async Task<MetasysObject> GetSingleEquipmentAsync(Guid equipmentId)
+        public async Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid spaceId)
         {
-            if (version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(version.ToString()); }
-            var response = await GetRequestAsync("equipment", null, equipmentId).ConfigureAwait(false);
-            return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Equipment);
+            return await  Spaces.GetChildrenAsync(spaceId);
         }
 
+        // GetSpaceTypes ----------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObjectType> GetSpaceTypes()
+        {
+            return Spaces.GetTypes();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObjectType>> GetSpaceTypesAsync()
+        {
+            return await Spaces.GetTypesAsync();
+        }
+        #endregion //==============================================================================================================
 
-        // GetEquipment ----------------------------------------------------------------------------------------------------------
+        #region "EQUIPMENTS" // =====================================================================================================
+        // GetEquipment -------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetEquipment()
         {
             return GetEquipmentAsync().GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
         {
@@ -1086,43 +1066,13 @@ namespace JohnsonControls.Metasys.BasicServices
             return ToMetasysObject(equipment, Version, MetasysObjectTypeEnum.Equipment);
         }
 
-        /// <inheritdoc/>
-        public IEnumerable<MetasysObjectType> GetSpaceTypes()
-        {
-            return GetSpaceTypesAsync().GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObjectType>> GetSpaceTypesAsync()
-        {
-            if (Version < ApiVersion.v4)
-            {
-                return await GetResourceTypesAsync("enumSets", "1766/members").ConfigureAwait(false);
-            } else
-            {
-                return await GetResourceTypesAsync("enumerations", "spaceTypesEnumSet").ConfigureAwait(false);
-            }
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<MetasysObject> GetSpaceEquipment(Guid spaceId)
-        {
-            return GetSpaceEquipmentAsync(spaceId).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
-        {
-            var spaceEquipment = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment").ConfigureAwait(false);
-            return ToMetasysObject(spaceEquipment, Version, MetasysObjectTypeEnum.Equipment);
-        }
-
+        // GetEquipmentPoints -------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public IEnumerable<MetasysPoint> GetEquipmentPoints(Guid equipmentId, bool readAttributeValue = true)
         {
-            return GetEquipmentPointsAsync(equipmentId, readAttributeValue).GetAwaiter().GetResult();
+            //return GetEquipmentPointsAsync(equipmentId, readAttributeValue).GetAwaiter().GetResult();
+            return Equipments.GetPoints(equipmentId, readAttributeValue);
         }
-
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysPoint>> GetEquipmentPointsAsync(Guid equipmentId, bool readAttributeValue = true)
         {
@@ -1138,11 +1088,15 @@ namespace JohnsonControls.Metasys.BasicServices
                     string objectId = point.ObjectUrl.Split('/').Last();
                     point.ObjectId = ParseObjectIdentifier(objectId);
                     // Retrieve attribute Id from full URL 
-                    string attributeId = point.AttributeUrl.Split('/').Last();
+                    string attributeId = (point.Attribute != null) ? point.Attribute.Split('.').Last() : String.Empty;
+                    if (attributeId == String.Empty)
+                    {
+                        attributeId = (point.AttributeUrl != null) ? point.AttributeUrl.Split('/').Last() : String.Empty;
+                    }
                     if (point.ObjectId != Guid.Empty) // Sometime can happen that there are empty Guids.
                     {
                         // Collect Guids to perform read property multiple in "one call" (supporting only presentValue so far)
-                        if (attributeId == "85" && readAttributeValue)
+                        if ((attributeId == "85" | attributeId == "presentValue") && readAttributeValue)
                         {
                             guids.Add(point.ObjectId);
                             pointsWithAttribute.Add(point);
@@ -1173,6 +1127,23 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return points;
         }
+
+        // GetSpaceEquipment --------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetSpaceEquipment(Guid spaceId)
+        {
+            //return GetSpaceEquipmentAsync(spaceId).GetAwaiter().GetResult();
+            return Equipments.GetServingASpace(spaceId);
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
+        {
+            //var spaceEquipment = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment").ConfigureAwait(false);
+            //return ToMetasysObject(spaceEquipment, Version, MetasysObjectTypeEnum.Equipment);
+            return await Equipments.GetServingASpaceAsync(spaceId);
+        }
+
+        #endregion // ========================================================================================================================
 
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false)

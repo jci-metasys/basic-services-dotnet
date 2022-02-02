@@ -15,13 +15,51 @@ namespace JohnsonControls.Metasys.BasicServices
         /// The hostname of Metasys API server.
         /// </summary>
         string Hostname { get; set; }
+
         /// <summary>
         /// The Metasys server's Api version.
         /// </summary>
         ApiVersion Version { get; set; }
 
-        /// <summary>The current Culture Used for Metasys client localization.</summary>
+        /// <summary>
+        /// The current Culture Used for Metasys client localization.
+        /// </summary>
         CultureInfo Culture { get; set; }
+
+        /// <summary>
+        /// Services for Alarms.
+        /// </summary>
+        IAlarmsService Alarms { get; set; }
+
+        /// <summary>
+        /// Services for Audits.
+        /// </summary>
+        IAuditService Audits { get; set; }
+
+        /// <summary>
+        /// Services for Equipments.
+        /// </summary>
+        IEquipmentService Equipments { get; set; }
+
+        /// <summary>
+        /// Services for Network Devices.
+        /// </summary>
+        INetworkDeviceService NetworkDevices { get; set; }
+
+        /// <summary>
+        /// Services for Trends and Samples.
+        /// </summary>
+        ITrendService Trends { get; set; }
+
+        /// <summary>
+        /// Services for Spaces.
+        /// </summary>
+        ISpaceService Spaces { get; set; }
+
+        /// <summary>
+        /// Services for Streams.
+        /// </summary>
+        IStreamService Streams { get; set; }
 
         ///// <summary>
         ///// Localizes the specified resource key for the current MetasysClient locale or specified culture.
@@ -75,9 +113,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysTokenException"></exception>
         AccessToken TryLogin(string username, string password, bool refresh = true);
-
         /// <inheritdoc cref="IMetasysClient.TryLogin(string, string, bool)"/>
         Task<AccessToken> TryLoginAsync(string username, string password, bool refresh = true);
+
 
         /// <summary>
         /// Requests a new access token from the server before the current token expires.
@@ -86,21 +124,21 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysTokenException"></exception>
         AccessToken Refresh();
-
         /// <inheritdoc cref="IMetasysClient.Refresh()"/>
         Task<AccessToken> RefreshAsync();
+
 
         /// <summary>
         /// Returns the current session access token.
         /// </summary>
         /// <returns>Current session's Access Token.</returns>
         AccessToken GetAccessToken();
-
         /// <summary>
         /// Set the current session access token.
         /// </summary>
         /// <returns>Current session's Access Token.</returns>
         void SetAccessToken(AccessToken accessToken);
+
 
         /// <summary>
         /// Given the Item Reference of an object, returns the object identifier.
@@ -113,9 +151,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysGuidException"></exception>
         Guid GetObjectIdentifier(string itemReference);
-
         /// <inheritdoc cref="IMetasysClient.GetObjectIdentifier(string)"/>
         Task<Guid> GetObjectIdentifierAsync(string itemReference);
+
 
         /// <summary>
         /// Read one attribute value given the Guid of the object.
@@ -131,19 +169,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpNotFoundException"></exception>
         /// <exception cref="MetasysPropertyException"></exception>
         Variant ReadProperty(Guid id, string attributeName);
-
         /// <inheritdoc cref="IMetasysClient.ReadProperty(Guid, string)"/>
         Task<Variant> ReadPropertyAsync(Guid id, string attributeName);
+
 
         /// <summary>
         /// Read many attribute values given the Guids of the objects.
         /// </summary>
-        IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids,
-            IEnumerable<string> attributeNames);
-
+        IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids, IEnumerable<string> attributeNames);
         /// <inheritdoc cref="IMetasysClient.ReadPropertyMultiple(IEnumerable{Guid}, IEnumerable{string})"/>
-        Task<IEnumerable<VariantMultiple>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids,
-            IEnumerable<string> attributeNames);
+        Task<IEnumerable<VariantMultiple>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids, IEnumerable<string> attributeNames);
+
 
         /// <summary>
         /// Write a single attribute given the Guid of the object.
@@ -153,9 +189,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="newValue">The new value of the attribute</param>
         /// <exception cref="MetasysHttpException"></exception>
         void WriteProperty(Guid id, string attributeName, object newValue);
-
         /// <inheritdoc cref="IMetasysClient.WriteProperty(Guid, string, object)"/>
         Task WritePropertyAsync(Guid id, string attributeName, object newValue);
+
 
         /// <summary>
         /// Write to many attribute values given the Guids of the objects.
@@ -163,24 +199,18 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="ids"></param>
         /// <param name="attributeValues">The (attribute, value) pairs.</param>
         /// <exception cref="MetasysHttpException"></exception>
-        void WritePropertyMultiple(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues);
+        void WritePropertyMultiple(IEnumerable<Guid> ids, IEnumerable<(string Attribute, object Value)> attributeValues);
+        /// <inheritdoc cref="IMetasysClient.WritePropertyMultiple(IEnumerable<Guid>, IEnumerable<(string, object)>)"/>
+        void WritePropertyMultiple(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues);
 
-        /// <summary>
-        /// Write to many attribute values given the Guids of the objects.
-        /// </summary>
-        void WritePropertyMultiple(IEnumerable<Guid> ids,
-            Dictionary<string, object> attributeValues);
 
         /// <summary>
         /// Write asyncronously to many attribute values given the Guids of the objects.
         /// </summary>
-        Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues);
-
+        Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, IEnumerable<(string Attribute, object Value)> attributeValues);
         /// <inheritdoc cref="IMetasysClient.WritePropertyMultiple(IEnumerable{Guid}, Dictionary{string, object})"/>
-        Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
-            Dictionary<string, object> attributeValues);
+        Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,  Dictionary<string, object> attributeValues);
+
 
         /// <summary>
         /// Get all available commands given the Guid of the object.
@@ -188,9 +218,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <returns>List of Commands.</returns>
         IEnumerable<Command> GetCommands(Guid id);
-
         /// <inheritdoc cref="IMetasysClient.GetCommands(Guid)"/>
         Task<IEnumerable<Command>> GetCommandsAsync(Guid id);
+
 
         /// <summary>
         /// Send a command to an object.
@@ -200,9 +230,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="values"></param>
         /// <exception cref="MetasysHttpException"></exception>
         void SendCommand(Guid id, string command, IEnumerable<object> values = null);
-
         /// <inheritdoc cref="IMetasysClient.SendCommand(Guid, string, IEnumerable{object})"/>
         Task SendCommandAsync(Guid id, string command, IEnumerable<object> values = null);
+
 
         /// <summary>
         /// Gets all network devices.
@@ -214,9 +244,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         IEnumerable<MetasysObject> GetNetworkDevices(string type = null);
-
         /// <inheritdoc cref="IMetasysClient.GetNetworkDevices(string)"/>
         Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null);
+
 
         /// <summary>
         /// Gets all network devices.
@@ -225,9 +255,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         IEnumerable<MetasysObject> GetNetworkDevices(NetworkDeviceTypeEnum networkDevicetype);
-
         /// <inheritdoc cref="IMetasysClient.GetNetworkDevices(NetworkDeviceTypeEnum)"/>
         Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(NetworkDeviceTypeEnum networkDevicetype);
+
 
         /// <summary>
         /// Gets all available network device types.
@@ -235,9 +265,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         IEnumerable<MetasysObjectType> GetNetworkDeviceTypes();
-
         /// <inheritdoc cref="IMetasysClient.GetNetworkDeviceTypes()"/>
         Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync();
+
 
         /// <summary>
         /// Gets all child objects given a parent Guid.
@@ -253,14 +283,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false);
-
         /// <inheritdoc cref="IMetasysClient.GetObjects(Guid, int, bool)"/>
         Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, bool includeInternalObjects = false);
 
+        #region "SPACES" //==============================================================================================================
         // GetSpaces ---------------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// Gets all spaces.
+        /// Retrieves a collection of spaces.
         /// </summary>
+        /// <remarks>
+        /// This method is deprecated (use the corresponding one in Spaces service).
+        /// </remarks>
         /// <param name="type">Optional type ID belonging to SpaceTypeEnum.</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
@@ -268,84 +301,70 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="IMetasysClient.GetSpaces(SpaceTypeEnum?)"/>
         Task<IEnumerable<MetasysObject>> GetSpacesAsync(SpaceTypeEnum? type = null);
 
-        // GetSpaceChildren ---------------------------------------------------------------------------------------------------------------
+        // GetSpaceChildren --------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// Gets children spaces of the given space.
+        /// Retrieves the collection of spaces that are located within the specified space.
         /// </summary>
+        /// <remarks>
+        /// This method is deprecated (use the corresponding one in Spaces service).
+        /// </remarks>
         /// <param name="spaceId">The GUID of the parent space.</param>
         IEnumerable<MetasysObject> GetSpaceChildren(Guid spaceId);
         /// <inheritdoc cref="IMetasysClient.GetSpaceChildren(Guid)"/>
-        Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid id);
+        Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid spaceId);
 
+        // GetSpaceTypes -----------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// Gets all Equipment for the given space
-        /// </summary>
-        /// <param name="id"></param>
-        IEnumerable<MetasysObject> GetSpaceEquipment(Guid id);
-
-        /// <inheritdoc cref="IMetasysClient.GetSpaceEquipment(Guid)"/>
-        Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId);
-
-        /// <summary>
-        /// Gets all spaces types.
+        /// Retrieves the collection of all spaces types.
+        /// <remarks>
+        /// This method is deprecated (use the corresponding one in Spaces service).
+        /// </remarks>
         /// </summary>
         IEnumerable<MetasysObjectType> GetSpaceTypes();
-
         /// <inheritdoc cref="IMetasysClient.GetSpaceTypes()"/>
         Task<IEnumerable<MetasysObjectType>> GetSpaceTypesAsync();
+        #endregion //=====================================================================================================================
 
+        #region "EQUIPMENTS" //==========================================================================================================
+        // GetEquipment -----------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// Gets all equipment.
+        /// Retrieves a collection of equipment instances.
         /// </summary>
+        /// <remarks>
+        /// This method is deprecated (use the corresponding one in Equipments service).
+        /// </remarks>
         IEnumerable<MetasysObject> GetEquipment();
         /// <inheritdoc cref="IMetasysClient.GetEquipment()"/>
         Task<IEnumerable<MetasysObject>> GetEquipmentAsync();
 
+        // GetEquipmentPoints -----------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// Get a single equipment.
+        /// Retrieves the collection of points that are defined by the specified equipment instance
         /// </summary>
-        MetasysObject GetSingleEquipment(Guid equipmentId);
-        /// <inheritdoc cref="IMetasysClient.GetSingleEquipment(Guid)"/>
-        Task<MetasysObject> GetSingleEquipmentAsync(Guid equipmentId);
-
-
-        /// <summary>
-        /// Gets all points for the given Equipment
-        /// </summary>
+        /// <remarks>
+        /// This method is deprecated (use the corresponding one in Equipments service).
+        /// </remarks>
         /// <param name="equipmentId">The Guid of the equipment.</param>
         /// <param name="readAttributeValue">Set to false if you would not read Points Attribute Value.</param>
         /// <remarks> Reading the Attribute Value attribute could take time depending on the number of points. </remarks>
         /// <returns></returns>
         IEnumerable<MetasysPoint> GetEquipmentPoints(Guid equipmentId, bool readAttributeValue = true);
-
         /// <inheritdoc cref="IMetasysClient.GetEquipmentPoints(Guid, bool)"/>
         Task<IEnumerable<MetasysPoint>> GetEquipmentPointsAsync(Guid equipmentId, bool readAttributeValue = true);
 
+        // GetSpaceEquipment ------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// Services for Alarms.
+        /// Retrieves the collection of equipment that serve the specified space.
         /// </summary>
-        IAlarmsService Alarms { get; set; }
+        /// <remarks>
+        /// This method is deprecated (use the corresponding one in Equipments service).
+        /// </remarks>
+        /// <param name="spaceId"></param>
+        IEnumerable<MetasysObject> GetSpaceEquipment(Guid spaceId);
 
-        /// <summary>
-        /// Services for Audits.
-        /// </summary>
-        IAuditService Audits { get; set; }
-
-        /// <summary>
-        /// Services for Network Devices.
-        /// </summary>
-        INetworkDeviceService NetworkDevices { get; set; }
-
-        /// <summary>
-        /// Services for Trends and Samples.
-        /// </summary>
-        ITrendService Trends { get; set; }
-
-
-        /// <summary>
-        /// Services for Streams.
-        /// </summary>
-        IStreamService Streams { get; set; }
+        /// <inheritdoc cref="IMetasysClient.GetSpaceEquipment(Guid)"/>
+        Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId);
+        #endregion
 
         /// <summary>
         /// Attempts to login to the given host using Credential Manager and retrieve an access token.
