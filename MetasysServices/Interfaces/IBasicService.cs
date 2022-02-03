@@ -22,15 +22,15 @@ namespace JohnsonControls.Metasys.BasicServices
         CultureInfo Culture { get; set; }
 
 
-        /// <summary>
-        /// Get all the values of a specified enumeration set
-        /// </summary>
-        IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey);
+        ///// <summary>
+        ///// Get all the values of a specified enumeration set
+        ///// </summary>
+        //IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey);
 
-        /// <summary>
-        /// Get all the values of a specified enumeration set (Async)
-        /// </summary>
-        Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey);
+        ///// <summary>
+        ///// Get all the values of a specified enumeration set (Async)
+        ///// </summary>
+        //Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey);
 
 
         /// <summary>

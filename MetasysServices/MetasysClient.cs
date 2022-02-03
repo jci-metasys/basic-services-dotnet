@@ -39,6 +39,9 @@ namespace JohnsonControls.Metasys.BasicServices
         public IAuditService Audits { get; set; }
 
         /// <inheritdoc/>
+        public IEnumerationService Enumerations { get; set; }
+
+        /// <inheritdoc/>
         public IEquipmentService Equipments { get; set; }
 
         /// <inheritdoc/>
@@ -105,6 +108,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 InitFlurlClient(Hostname);
                 if (Alarms != null) { Alarms.Version = version.Value; }
                 if (Audits != null) { Audits.Version = version.Value; }
+                if (Enumerations != null) { Enumerations.Version = version.Value; }
                 if (Equipments != null) { Equipments.Version = version.Value; }
                 if (NetworkDevices != null) { NetworkDevices.Version = version.Value; }
                 if (Spaces != null) { Spaces.Version = version.Value; }
@@ -144,6 +148,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 // set all related services to the new value
                 if (Alarms != null) { Alarms.Culture = culture; }
                 if (Audits != null) { Audits.Culture = culture; }
+                if (Enumerations != null) { Enumerations.Culture = culture; }
                 if (Equipments != null) { Equipments.Culture = culture; }
                 if (NetworkDevices != null) { NetworkDevices.Culture = culture; }
                 if (Spaces != null) { Spaces.Culture = culture; }
@@ -206,6 +211,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 // Init related services
                 Alarms = new AlarmServiceProvider(Client, version, logClientErrors);
                 Audits = new AuditServiceProvider(Client, version, logClientErrors);
+                Enumerations = new EnumerationServiceProvider(Client, version, logClientErrors);
                 Equipments = new EquipmentServiceProvider(Client, version, logClientErrors);
                 NetworkDevices = new NetworkDeviceServiceProvider(Client, version, logClientErrors);
                 Spaces = new SpaceServiceProvider(Client, version, logClientErrors);
@@ -214,6 +220,8 @@ namespace JohnsonControls.Metasys.BasicServices
                     Streams = new StreamServiceProvider(Client, hostname, version);
                 }
                 Trends = new TrendServiceProvider(Client, version, logClientErrors);
+
+                base.Version = version;
             }
             catch (FlurlHttpException e)
             {
@@ -712,106 +720,6 @@ namespace JohnsonControls.Metasys.BasicServices
                 ThrowHttpException(e);
             }
         }
-
-
-        /// <inheritdoc/>
-        public IEnumerable<MetasysEnumeration> GetSiteEnumerations()
-        {
-            return GetSiteEnumerationsAsync().GetAwaiter().GetResult();
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysEnumeration>> GetSiteEnumerationsAsync()
-        {
-            List<MetasysEnumeration> enums = new List<MetasysEnumeration>() { };
-
-            if (version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(version.ToString()); }
-
-            try
-            {
-                var response = await Client.Request(new Url("enumerations"))
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
-                try
-                {
-                    var items = response["items"];
-                    dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(items.ToString());
-                    foreach (KeyValuePair<string, object> kvp in kvpList)
-                    {
-                        if (kvp.Key.Length > 0)
-                        {
-                            var itm = kvp.Value as IDictionary<string, object>;
-                            String key = kvp.Key;
-                            String name = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
-                            bool isTwoState = bool.Parse((itm.ContainsKey("isTwoState")) ? itm["isTwoState"].ToString() : Convert.ToString(false));
-                            bool isMultiState = bool.Parse((itm.ContainsKey("isMultiState")) ? itm["isMultiState"].ToString() : Convert.ToString(false));
-                            int numberOfStates = int.Parse((itm.ContainsKey("numberOfStates")) ? itm["numberOfStates"].ToString() : Convert.ToString(0));
-
-                            var enumItem = new MetasysEnumeration(key, name, isTwoState, isMultiState, numberOfStates, culture);
-                            enums.Add(enumItem);
-                        }
-                    }
-                }
-                catch (System.NullReferenceException e)
-                {
-                    throw new MetasysHttpParsingException(response.ToString(), e);
-                }
-            }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-            return enums;
-        }
-
-        ///// <inheritdoc/>
-        //public IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey)
-        //{
-        //    return GetEnumValuesAsync(enumerationKey).GetAwaiter().GetResult();
-        //}
-
-        ///// <inheritdoc/>
-        //public async Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey)
-        //{
-        //    List<MetasysEnumValue> enums = new List<MetasysEnumValue>() { };
-
-        //    if (version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(version.ToString()); }
-
-        //    try
-        //    {
-        //        var response = await Client.Request(new Url("enumerations")
-        //            .AppendPathSegment(enumerationKey))
-        //            .GetJsonAsync<JToken>()
-        //            .ConfigureAwait(false);
-        //        try
-        //        {
-        //            var item = response["item"];
-        //            var members = item["members"];
-        //            dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(members.ToString());
-        //            foreach (KeyValuePair<string, object> kvp in kvpList)
-        //            {
-        //                if (kvp.Key.Length > 0)
-        //                {
-        //                    var itm = kvp.Value as IDictionary<string, object>;
-        //                    String key = kvp.Key;
-        //                    String name = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
-        //                    int value = int.Parse((itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
-
-        //                    var enumValue = new MetasysEnumValue(key, name, value, culture);
-        //                    enums.Add(enumValue);
-        //                }
-        //            }
-        //        }
-        //        catch (System.NullReferenceException e)
-        //        {
-        //            throw new MetasysHttpParsingException(response.ToString(), e);
-        //        }
-        //    }
-        //    catch (FlurlHttpException e)
-        //    {
-        //        ThrowHttpException(e);
-        //    }
-        //    return enums;
-        //}
 
 
         #region "NETWORK DEVICES"

@@ -141,7 +141,7 @@ namespace MetasysServices_TestClient.Forms
             String objectId = TxtSendCommand_ObjectId.Text;
             String command = TxtSendCommand_Command.Text;
             String values = TxtSendCommand_Values.Text;
-            if (_client != null && objectId.Length > 0 && objectId.Length > 0)
+            if (objectId.Length > 0 && objectId.Length > 0)
             {
                 Guid id = new Guid(objectId);
                 try

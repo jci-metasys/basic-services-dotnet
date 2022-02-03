@@ -9,7 +9,6 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Defines method to provide space infos for endpoints of the Metasys Spaces API.
     /// </summary>
-
     public interface ISpaceService : IBasicService
     {
         // FindById ----------------------------------------------------------------------------------------------------------------

@@ -349,12 +349,12 @@ namespace JohnsonControls.Metasys.BasicServices
 
 
         /// <inheritdoc/>
-        public IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey)
+        protected IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey)
         {
             return GetEnumValuesAsync(enumerationKey).GetAwaiter().GetResult();
         }
         /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey)
+        protected async Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey)
         {
             List<MetasysEnumValue> enums = new List<MetasysEnumValue>() { };
 

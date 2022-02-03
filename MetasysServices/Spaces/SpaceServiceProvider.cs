@@ -18,7 +18,6 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Provide space item for the endpoints of the Metasys Spaces API.
     /// </summary>
-
     public sealed class SpaceServiceProvider : BasicServiceProvider, ISpaceService
     {
         private readonly CultureInfo _CultureInfo = new CultureInfo("en-US");

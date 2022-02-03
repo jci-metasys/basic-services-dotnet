@@ -18,8 +18,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Provide equipment item for the endpoints of the Metasys Equipments API.
     /// </summary>
-
-    class EquipmentServiceProvider : BasicServiceProvider, IEquipmentService
+    public sealed class EquipmentServiceProvider : BasicServiceProvider, IEquipmentService
     {
         private readonly CultureInfo _CultureInfo = new CultureInfo("en-US");
 
@@ -137,6 +136,34 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetHostedByNetworkDeviceAsync(Guid networkDeviceId)
         {
             var spaceEquipment = await GetAllAvailablePagesAsync("networkDevices", null, networkDeviceId.ToString(), "equipment").ConfigureAwait(false);
+            return ToMetasysObject(spaceEquipment, Version, MetasysObjectTypeEnum.Equipment);
+        }
+
+        // GetServedByEquipment -----------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetServedByEquipment(Guid equipmentId)
+        {
+            return GetServedByEquipmentAsync(equipmentId).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetServedByEquipmentAsync(Guid equipmentId)
+        {
+            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+            
+            var response = await GetAllAvailablePagesAsync("equipment", null, equipmentId.ToString(), "equipment").ConfigureAwait(false);
+            return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Equipment);
+        }
+
+        // GetServingAnEquipment --------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetServingAnEquipment(Guid equipmentId)
+        {
+            return GetServingAnEquipmentAsync(equipmentId).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetServingAnEquipmentAsync(Guid equipmentId)
+        {
+            var spaceEquipment = await GetAllAvailablePagesAsync("equipment", null, equipmentId.ToString(), "upstreamEquipment").ConfigureAwait(false);
             return ToMetasysObject(spaceEquipment, Version, MetasysObjectTypeEnum.Equipment);
         }
 

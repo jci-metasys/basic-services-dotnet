@@ -140,9 +140,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblGetTypes_TypeID.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblGetTypes_TypeID.Location = new System.Drawing.Point(23, 23);
             this.LblGetTypes_TypeID.Margin = new System.Windows.Forms.Padding(3);
-            this.LblGetTypes_TypeID.MinimumSize = new System.Drawing.Size(100, 0);
+            this.LblGetTypes_TypeID.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetTypes_TypeID.Name = "LblGetTypes_TypeID";
-            this.LblGetTypes_TypeID.Size = new System.Drawing.Size(100, 20);
+            this.LblGetTypes_TypeID.Size = new System.Drawing.Size(140, 20);
             this.LblGetTypes_TypeID.TabIndex = 0;
             this.LblGetTypes_TypeID.Text = "Type ID:";
             this.LblGetTypes_TypeID.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -150,28 +150,29 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetTypes_TypeID
             // 
             this.TxtGetTypes_TypeID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetTypes_TypeID.Location = new System.Drawing.Point(129, 23);
+            this.TxtGetTypes_TypeID.Location = new System.Drawing.Point(169, 23);
             this.TxtGetTypes_TypeID.Name = "TxtGetTypes_TypeID";
-            this.TxtGetTypes_TypeID.Size = new System.Drawing.Size(775, 20);
+            this.TxtGetTypes_TypeID.Size = new System.Drawing.Size(735, 20);
             this.TxtGetTypes_TypeID.TabIndex = 1;
             // 
             // DgvGet
             // 
             this.DgvGet.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGet.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGet.Location = new System.Drawing.Point(129, 78);
+            this.DgvGet.Location = new System.Drawing.Point(169, 78);
             this.DgvGet.Name = "DgvGet";
-            this.DgvGet.Size = new System.Drawing.Size(775, 462);
+            this.DgvGet.Size = new System.Drawing.Size(735, 462);
             this.DgvGet.TabIndex = 3;
             // 
             // BtnGet
             // 
-            this.BtnGet.Location = new System.Drawing.Point(129, 49);
+            this.BtnGet.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnGet.Location = new System.Drawing.Point(169, 49);
             this.BtnGet.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGet.Name = "BtnGet";
-            this.BtnGet.Size = new System.Drawing.Size(260, 23);
+            this.BtnGet.Size = new System.Drawing.Size(735, 23);
             this.BtnGet.TabIndex = 4;
-            this.BtnGet.Text = "GetNetworkDevices";
+            this.BtnGet.Text = "GetNetworkDevices = NetworkDevices.Get";
             this.BtnGet.UseVisualStyleBackColor = true;
             this.BtnGet.Click += new System.EventHandler(this.BtnGet_Click);
             // 
@@ -180,6 +181,7 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetTypes.Controls.Add(this.TlpGetTypes);
             this.TpgGetTypes.Location = new System.Drawing.Point(4, 29);
             this.TpgGetTypes.Name = "TpgGetTypes";
+            this.TpgGetTypes.Padding = new System.Windows.Forms.Padding(3);
             this.TpgGetTypes.Size = new System.Drawing.Size(933, 569);
             this.TpgGetTypes.TabIndex = 2;
             this.TpgGetTypes.Text = "GetNetworkDeviceTypes";
@@ -189,31 +191,31 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.TlpGetTypes.ColumnCount = 4;
             this.TlpGetTypes.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetTypes.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 106F));
+            this.TlpGetTypes.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 146F));
             this.TlpGetTypes.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TlpGetTypes.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetTypes.Controls.Add(this.BtnGetTypes, 2, 1);
             this.TlpGetTypes.Controls.Add(this.DgvGetTypes, 2, 2);
             this.TlpGetTypes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TlpGetTypes.Location = new System.Drawing.Point(0, 0);
+            this.TlpGetTypes.Location = new System.Drawing.Point(3, 3);
             this.TlpGetTypes.Name = "TlpGetTypes";
             this.TlpGetTypes.RowCount = 4;
             this.TlpGetTypes.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetTypes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetTypes.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TlpGetTypes.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetTypes.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetTypes.Size = new System.Drawing.Size(933, 569);
+            this.TlpGetTypes.Size = new System.Drawing.Size(927, 563);
             this.TlpGetTypes.TabIndex = 0;
             // 
             // BtnGetTypes
             // 
-            this.BtnGetTypes.Location = new System.Drawing.Point(129, 23);
+            this.BtnGetTypes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnGetTypes.Location = new System.Drawing.Point(169, 23);
             this.BtnGetTypes.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetTypes.Name = "BtnGetTypes";
-            this.BtnGetTypes.Size = new System.Drawing.Size(260, 23);
+            this.BtnGetTypes.Size = new System.Drawing.Size(735, 23);
             this.BtnGetTypes.TabIndex = 0;
-            this.BtnGetTypes.Text = "GetNetworkDeviceTypes";
+            this.BtnGetTypes.Text = "GetNetworkDeviceTypes = NetworkDevices.GetTypes";
             this.BtnGetTypes.UseVisualStyleBackColor = true;
             this.BtnGetTypes.Click += new System.EventHandler(this.BtnGetTypes_Click);
             // 
@@ -221,9 +223,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetTypes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetTypes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetTypes.Location = new System.Drawing.Point(129, 52);
+            this.DgvGetTypes.Location = new System.Drawing.Point(169, 52);
             this.DgvGetTypes.Name = "DgvGetTypes";
-            this.DgvGetTypes.Size = new System.Drawing.Size(781, 494);
+            this.DgvGetTypes.Size = new System.Drawing.Size(735, 488);
             this.DgvGetTypes.TabIndex = 1;
             // 
             // TpgFindById
@@ -266,8 +268,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblFindById_NetworkDeviceID.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblFindById_NetworkDeviceID.Location = new System.Drawing.Point(23, 23);
             this.LblFindById_NetworkDeviceID.Margin = new System.Windows.Forms.Padding(3);
+            this.LblFindById_NetworkDeviceID.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblFindById_NetworkDeviceID.Name = "LblFindById_NetworkDeviceID";
-            this.LblFindById_NetworkDeviceID.Size = new System.Drawing.Size(137, 20);
+            this.LblFindById_NetworkDeviceID.Size = new System.Drawing.Size(140, 20);
             this.LblFindById_NetworkDeviceID.TabIndex = 0;
             this.LblFindById_NetworkDeviceID.Text = "Network Device ID (GUID):";
             this.LblFindById_NetworkDeviceID.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -275,17 +278,18 @@ namespace MetasysServices_TestClient.Forms
             // TxtFindById_NetworkDeviceID
             // 
             this.TxtFindById_NetworkDeviceID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtFindById_NetworkDeviceID.Location = new System.Drawing.Point(166, 23);
+            this.TxtFindById_NetworkDeviceID.Location = new System.Drawing.Point(169, 23);
             this.TxtFindById_NetworkDeviceID.Name = "TxtFindById_NetworkDeviceID";
-            this.TxtFindById_NetworkDeviceID.Size = new System.Drawing.Size(738, 20);
+            this.TxtFindById_NetworkDeviceID.Size = new System.Drawing.Size(735, 20);
             this.TxtFindById_NetworkDeviceID.TabIndex = 1;
             // 
             // BtnFindById
             // 
-            this.BtnFindById.Location = new System.Drawing.Point(166, 49);
+            this.BtnFindById.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnFindById.Location = new System.Drawing.Point(169, 49);
             this.BtnFindById.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnFindById.Name = "BtnFindById";
-            this.BtnFindById.Size = new System.Drawing.Size(260, 23);
+            this.BtnFindById.Size = new System.Drawing.Size(735, 23);
             this.BtnFindById.TabIndex = 2;
             this.BtnFindById.Text = "NetworkDevices.FindById";
             this.BtnFindById.UseVisualStyleBackColor = true;
@@ -295,9 +299,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.PrgFindById.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PrgFindById.HelpVisible = false;
-            this.PrgFindById.Location = new System.Drawing.Point(166, 78);
+            this.PrgFindById.Location = new System.Drawing.Point(169, 78);
             this.PrgFindById.Name = "PrgFindById";
-            this.PrgFindById.Size = new System.Drawing.Size(738, 462);
+            this.PrgFindById.Size = new System.Drawing.Size(735, 462);
             this.PrgFindById.TabIndex = 3;
             // 
             // TpgGetChildren
@@ -340,9 +344,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblGetChildren_NetworkDeviceID.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblGetChildren_NetworkDeviceID.Location = new System.Drawing.Point(23, 23);
             this.LblGetChildren_NetworkDeviceID.Margin = new System.Windows.Forms.Padding(3);
-            this.LblGetChildren_NetworkDeviceID.MinimumSize = new System.Drawing.Size(100, 0);
+            this.LblGetChildren_NetworkDeviceID.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetChildren_NetworkDeviceID.Name = "LblGetChildren_NetworkDeviceID";
-            this.LblGetChildren_NetworkDeviceID.Size = new System.Drawing.Size(137, 20);
+            this.LblGetChildren_NetworkDeviceID.Size = new System.Drawing.Size(140, 20);
             this.LblGetChildren_NetworkDeviceID.TabIndex = 0;
             this.LblGetChildren_NetworkDeviceID.Text = "Network Device ID (GUID):";
             this.LblGetChildren_NetworkDeviceID.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -350,17 +354,18 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetChildren_NetworkDeviceID
             // 
             this.TxtGetChildren_NetworkDeviceID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetChildren_NetworkDeviceID.Location = new System.Drawing.Point(166, 23);
+            this.TxtGetChildren_NetworkDeviceID.Location = new System.Drawing.Point(169, 23);
             this.TxtGetChildren_NetworkDeviceID.Name = "TxtGetChildren_NetworkDeviceID";
-            this.TxtGetChildren_NetworkDeviceID.Size = new System.Drawing.Size(738, 20);
+            this.TxtGetChildren_NetworkDeviceID.Size = new System.Drawing.Size(735, 20);
             this.TxtGetChildren_NetworkDeviceID.TabIndex = 1;
             // 
             // BtnGetChildren
             // 
-            this.BtnGetChildren.Location = new System.Drawing.Point(166, 49);
+            this.BtnGetChildren.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnGetChildren.Location = new System.Drawing.Point(169, 49);
             this.BtnGetChildren.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetChildren.Name = "BtnGetChildren";
-            this.BtnGetChildren.Size = new System.Drawing.Size(260, 23);
+            this.BtnGetChildren.Size = new System.Drawing.Size(735, 23);
             this.BtnGetChildren.TabIndex = 2;
             this.BtnGetChildren.Text = "NetworkDevices.GetChildren";
             this.BtnGetChildren.UseVisualStyleBackColor = true;
@@ -370,9 +375,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetChildren.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetChildren.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetChildren.Location = new System.Drawing.Point(166, 78);
+            this.DgvGetChildren.Location = new System.Drawing.Point(169, 78);
             this.DgvGetChildren.Name = "DgvGetChildren";
-            this.DgvGetChildren.Size = new System.Drawing.Size(738, 462);
+            this.DgvGetChildren.Size = new System.Drawing.Size(735, 462);
             this.DgvGetChildren.TabIndex = 3;
             // 
             // TpgGetHostingAnEquipment
@@ -415,8 +420,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblGetHostingAnEquipment_EquipmentID.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblGetHostingAnEquipment_EquipmentID.Location = new System.Drawing.Point(23, 23);
             this.LblGetHostingAnEquipment_EquipmentID.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetHostingAnEquipment_EquipmentID.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetHostingAnEquipment_EquipmentID.Name = "LblGetHostingAnEquipment_EquipmentID";
-            this.LblGetHostingAnEquipment_EquipmentID.Size = new System.Drawing.Size(110, 20);
+            this.LblGetHostingAnEquipment_EquipmentID.Size = new System.Drawing.Size(140, 20);
             this.LblGetHostingAnEquipment_EquipmentID.TabIndex = 0;
             this.LblGetHostingAnEquipment_EquipmentID.Text = "Equipment ID (GUID):";
             this.LblGetHostingAnEquipment_EquipmentID.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -424,19 +430,20 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetHostingAnEquipment_EquipmentID
             // 
             this.TxtGetHostingAnEquipment_EquipmentID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetHostingAnEquipment_EquipmentID.Location = new System.Drawing.Point(139, 23);
+            this.TxtGetHostingAnEquipment_EquipmentID.Location = new System.Drawing.Point(169, 23);
             this.TxtGetHostingAnEquipment_EquipmentID.Name = "TxtGetHostingAnEquipment_EquipmentID";
-            this.TxtGetHostingAnEquipment_EquipmentID.Size = new System.Drawing.Size(765, 20);
+            this.TxtGetHostingAnEquipment_EquipmentID.Size = new System.Drawing.Size(735, 20);
             this.TxtGetHostingAnEquipment_EquipmentID.TabIndex = 1;
             // 
             // BtnGetHostingAnEquipment
             // 
-            this.BtnGetHostingAnEquipment.Location = new System.Drawing.Point(139, 49);
+            this.BtnGetHostingAnEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnGetHostingAnEquipment.Location = new System.Drawing.Point(169, 49);
             this.BtnGetHostingAnEquipment.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetHostingAnEquipment.Name = "BtnGetHostingAnEquipment";
-            this.BtnGetHostingAnEquipment.Size = new System.Drawing.Size(260, 23);
+            this.BtnGetHostingAnEquipment.Size = new System.Drawing.Size(735, 23);
             this.BtnGetHostingAnEquipment.TabIndex = 2;
-            this.BtnGetHostingAnEquipment.Text = "GetHostingAnEquipment";
+            this.BtnGetHostingAnEquipment.Text = "NetworkDevices.GetHostingAnEquipment";
             this.BtnGetHostingAnEquipment.UseVisualStyleBackColor = true;
             this.BtnGetHostingAnEquipment.Click += new System.EventHandler(this.BtnGetHostingAnEquipment_Click);
             // 
@@ -444,9 +451,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetHostingAnEquipment.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetHostingAnEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetHostingAnEquipment.Location = new System.Drawing.Point(139, 78);
+            this.DgvGetHostingAnEquipment.Location = new System.Drawing.Point(169, 78);
             this.DgvGetHostingAnEquipment.Name = "DgvGetHostingAnEquipment";
-            this.DgvGetHostingAnEquipment.Size = new System.Drawing.Size(765, 462);
+            this.DgvGetHostingAnEquipment.Size = new System.Drawing.Size(735, 462);
             this.DgvGetHostingAnEquipment.TabIndex = 3;
             // 
             // TpgGetServingASpace
@@ -454,6 +461,7 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetServingASpace.Controls.Add(this.TlpGetServingASpace);
             this.TpgGetServingASpace.Location = new System.Drawing.Point(4, 29);
             this.TpgGetServingASpace.Name = "TpgGetServingASpace";
+            this.TpgGetServingASpace.Padding = new System.Windows.Forms.Padding(3);
             this.TpgGetServingASpace.Size = new System.Drawing.Size(933, 569);
             this.TpgGetServingASpace.TabIndex = 5;
             this.TpgGetServingASpace.Text = "GetServingASpace";
@@ -471,7 +479,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetServingASpace.Controls.Add(this.BtnGetServingASpace, 2, 2);
             this.TlpGetServingASpace.Controls.Add(this.DgvGetServingASpace, 2, 3);
             this.TlpGetServingASpace.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TlpGetServingASpace.Location = new System.Drawing.Point(0, 0);
+            this.TlpGetServingASpace.Location = new System.Drawing.Point(3, 3);
             this.TlpGetServingASpace.Name = "TlpGetServingASpace";
             this.TlpGetServingASpace.RowCount = 5;
             this.TlpGetServingASpace.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -479,7 +487,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetServingASpace.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetServingASpace.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TlpGetServingASpace.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetServingASpace.Size = new System.Drawing.Size(933, 569);
+            this.TlpGetServingASpace.Size = new System.Drawing.Size(927, 563);
             this.TlpGetServingASpace.TabIndex = 0;
             // 
             // LblGetServingASpace_SpaceID
@@ -488,8 +496,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblGetServingASpace_SpaceID.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblGetServingASpace_SpaceID.Location = new System.Drawing.Point(23, 23);
             this.LblGetServingASpace_SpaceID.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetServingASpace_SpaceID.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetServingASpace_SpaceID.Name = "LblGetServingASpace_SpaceID";
-            this.LblGetServingASpace_SpaceID.Size = new System.Drawing.Size(91, 20);
+            this.LblGetServingASpace_SpaceID.Size = new System.Drawing.Size(140, 20);
             this.LblGetServingASpace_SpaceID.TabIndex = 0;
             this.LblGetServingASpace_SpaceID.Text = "Space ID (GUID):";
             this.LblGetServingASpace_SpaceID.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -497,19 +506,20 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetServingASpace_SpaceID
             // 
             this.TxtGetServingASpace_SpaceID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetServingASpace_SpaceID.Location = new System.Drawing.Point(120, 23);
+            this.TxtGetServingASpace_SpaceID.Location = new System.Drawing.Point(169, 23);
             this.TxtGetServingASpace_SpaceID.Name = "TxtGetServingASpace_SpaceID";
-            this.TxtGetServingASpace_SpaceID.Size = new System.Drawing.Size(790, 20);
+            this.TxtGetServingASpace_SpaceID.Size = new System.Drawing.Size(735, 20);
             this.TxtGetServingASpace_SpaceID.TabIndex = 1;
             // 
             // BtnGetServingASpace
             // 
-            this.BtnGetServingASpace.Location = new System.Drawing.Point(120, 49);
+            this.BtnGetServingASpace.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnGetServingASpace.Location = new System.Drawing.Point(169, 49);
             this.BtnGetServingASpace.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetServingASpace.Name = "BtnGetServingASpace";
-            this.BtnGetServingASpace.Size = new System.Drawing.Size(260, 23);
+            this.BtnGetServingASpace.Size = new System.Drawing.Size(735, 23);
             this.BtnGetServingASpace.TabIndex = 2;
-            this.BtnGetServingASpace.Text = "GetServingASpace";
+            this.BtnGetServingASpace.Text = "NetworkDevices.GetServingASpace";
             this.BtnGetServingASpace.UseVisualStyleBackColor = true;
             this.BtnGetServingASpace.Click += new System.EventHandler(this.BtnGetServingASpace_Click);
             // 
@@ -517,9 +527,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetServingASpace.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetServingASpace.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetServingASpace.Location = new System.Drawing.Point(120, 78);
+            this.DgvGetServingASpace.Location = new System.Drawing.Point(169, 78);
             this.DgvGetServingASpace.Name = "DgvGetServingASpace";
-            this.DgvGetServingASpace.Size = new System.Drawing.Size(790, 468);
+            this.DgvGetServingASpace.Size = new System.Drawing.Size(735, 462);
             this.DgvGetServingASpace.TabIndex = 3;
             // 
             // NetworkDevices

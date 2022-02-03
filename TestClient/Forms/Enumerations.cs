@@ -38,22 +38,38 @@ namespace MetasysServices_TestClient.Forms
         private void BtnGetEnumerations_Click(object sender, EventArgs e)
         {
             DgvGetSiteEnumerations.DataSource = null;
-            if (_client != null)
-            {
-                var result = _client.GetSiteEnumerations();
-                DgvGetSiteEnumerations.DataSource = result;
-            }
+            var result = _client.Enumerations.Get();
+            DgvGetSiteEnumerations.DataSource = result;
         }
 
         private void BtnGetEnumValues_Click(object sender, EventArgs e)
         {
             DgvGetEnumValues.DataSource = null;
-            if (_client != null)
-            {
-                String enumerationKey = TxtGetEnumValues_EnumKey.Text;
-                var result = _client.GetEnumValues(enumerationKey);
+            String enumerationKey = TxtGetEnumValues_EnumKey.Text.Trim();
+            if (enumerationKey.Length > 0)
+            {        
+                var result = _client.Enumerations.GetValues(enumerationKey);
                 DgvGetEnumValues.DataSource = result;
             }
+        }
+
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            TxtDeleted_Result.Text = String.Empty;
+            String enumerationId = TxtDelete_EnumerationKey.Text;
+            if (enumerationId.Length > 0)
+            {
+                try
+                {
+                    _client.Enumerations.Delete(enumerationId);
+                    TxtDeleted_Result.Text = "OK, done";
+                }
+                catch (MetasysHttpException ex)
+                {
+                    TxtDeleted_Result.Text = "Error: " + ex.Message;
+                }
+            }
+
         }
     }
 }

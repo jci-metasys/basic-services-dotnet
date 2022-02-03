@@ -190,7 +190,7 @@ namespace MetasysServices_TestClient.Forms
             TxtGetAnnotations_Result.Text = String.Empty;
             String alarmId = TxtGetAnnotations_AlarmId.Text;
 
-            if (_client != null && alarmId.Length > 0)
+            if (alarmId.Length > 0)
             {
                 Guid alarmGuid = new Guid(alarmId);
                 // call the method
@@ -211,10 +211,9 @@ namespace MetasysServices_TestClient.Forms
             String alarmId = TxtEditAlarm_AlarmId.Text;
             ActivityManagementStatusEnum action = (ActivityManagementStatusEnum)Enum.Parse(typeof(ActivityManagementStatusEnum), CmbEditAlarm_Action.Text, true); // case insensitive
             String annotationText = TxtEditAlarm_AnnotationText.Text;
-            if (_client != null && alarmId.Length > 0)
+            if (alarmId.Length > 0)
             {
                 Guid alarmGuid = new Guid(alarmId);
-                // call the method
                 try
                 {
                      _client.Alarms.EditAlarm(alarmGuid, action, annotationText);

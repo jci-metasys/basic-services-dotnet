@@ -18,7 +18,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="action">Action: Acknowledged or Discarded.</param>
         /// <param name="annotationText">Annotation Text (optional).</param>
         void EditAlarm(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null);
-
         /// <inheritdoc cref="IAlarmsService.EditAlarm(Guid, ActivityManagementStatusEnum, String)"/>
         Task EditAlarmAsync(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null);
 

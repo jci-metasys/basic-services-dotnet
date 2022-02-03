@@ -18,7 +18,6 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Provide network device item for the endpoints of the Metasys Network Devices API.
     /// </summary>
-
     public sealed class NetworkDeviceServiceProvider : BasicServiceProvider, INetworkDeviceService
     {
         private readonly CultureInfo _CultureInfo = new CultureInfo("en-US");
@@ -144,6 +143,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var devices = await GetAllAvailablePagesAsync("networkDevices").ConfigureAwait(false);
                 List<NetworkDevice> networkDevices = ToNetworkDevice(devices, Version);
                 //Get the Object Type enumeration Set (Set ID = 508)
+                
                 List<MetasysEnumValue> enums = (List<MetasysEnumValue>)GetEnumValuesAsync("objectTypeEnumSet").GetAwaiter().GetResult();
 
                 //Make the joine of the two lists in order to get only the enum values that are related to the network devices

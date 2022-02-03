@@ -388,10 +388,6 @@ namespace JohnsonControls.Metasys.BasicServices
         Task<DateTime> GetServerTimeAsync();
 
 
-        //==========================================================================================================================
-
-
-
         /// <summary>
         /// GetCOVStream.
         /// </summary>
@@ -412,7 +408,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         Task GetCOVStreamMultipleAsync(IEnumerable<Guid> ids);
 
-
         /// <summary>
         /// GetSingleStreamingChannel.
         /// </summary>
@@ -422,26 +417,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// GetSingleStreamingChannelAsync.
         /// </summary>
         Task<StreamMessage> GetSingleStreamingChannelAsync();
-
-        /// <summary>
-        /// Get all the Site Enumerations
-        /// </summary>
-         IEnumerable<MetasysEnumeration> GetSiteEnumerations();
-
-        /// <summary>
-        /// Get all the Site Enumerations (Async)
-        /// </summary>
-        Task<IEnumerable<MetasysEnumeration>> GetSiteEnumerationsAsync();
-
-        ///// <summary>
-        ///// Get all the values of a specified enumeration set
-        ///// </summary>
-        //IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey);
-
-        ///// <summary>
-        ///// Get all the values of a specified enumeration set (Async)
-        ///// </summary>
-        //Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey);
 
     }
 }

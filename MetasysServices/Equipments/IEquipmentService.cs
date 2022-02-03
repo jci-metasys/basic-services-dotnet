@@ -58,5 +58,22 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="IEquipmentService.GetServingASpace(Guid)"/>
         Task<IEnumerable<MetasysObject>> GetHostedByNetworkDeviceAsync(Guid networkDeviceId);
 
+        // GetServedByEquipment ----------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Retrieves the equipment served by the specified equipment instance.
+        /// </summary>
+        IEnumerable<MetasysObject> GetServedByEquipment(Guid equipmentId);
+        /// <inheritdoc cref="IEquipmentService.GetServedByEquipment(Guid)"/>
+        Task<IEnumerable<MetasysObject>> GetServedByEquipmentAsync(Guid equipmentId);
+
+        // GetServingAnEquipment ------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Retrieves the collection of equipment that serve the specified equipment instance.
+        /// </summary>
+        /// <param name="equipmentId"></param>
+        IEnumerable<MetasysObject> GetServingAnEquipment(Guid equipmentId);
+        /// <inheritdoc cref="IEquipmentService.GetServingAnEquipment(Guid)"/>
+        Task<IEnumerable<MetasysObject>> GetServingAnEquipmentAsync(Guid equipmentId);
+
     }
 }
