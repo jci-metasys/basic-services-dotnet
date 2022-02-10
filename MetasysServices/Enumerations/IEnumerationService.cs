@@ -23,18 +23,51 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Get an enumeration values
         /// </summary>
-        IEnumerable<MetasysEnumValue> GetValues(String enumerationKey);
-        /// <inheritdoc cref="IEnumerationService.Get()"/>
-        Task<IEnumerable<MetasysEnumValue>> GetValuesAsync(String enumerationKey);
+        /// <param name="id">The identifier of the enumeration.</param>
+        IEnumerable<MetasysEnumValue> GetValues(String id);
+        /// <inheritdoc cref="IEnumerationService.GetValues(String)"/>
+        Task<IEnumerable<MetasysEnumValue>> GetValuesAsync(String id);
 
         // Delete --------------------------------------------------------------------------------------------------------------------
         /// <summary>
         /// Delete an enumeration. Only custom enumerations may be deleted.
         /// </summary>
-        /// <param name="enumerationId">The identifier of the enumeration.</param>
-        void Delete(string enumerationId);
+        /// <param name="id">The identifier of the enumeration.</param>
+        void Delete(string id);
         /// <inheritdoc cref="IEnumerationService.Delete(String)"/>
-        Task DeleteAsync(string enumerationId);
+        Task DeleteAsync(string id);
+
+        // Create --------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Create a new custom enumeration.
+        /// </summary>
+        /// <param name="name">The name of the new custom enumeration.</param>
+        /// <param name="values">The list of values (string) included in the new custom enumeration.</param>
+        void Create(string name, IEnumerable<String> values);
+        /// <inheritdoc cref="IEnumerationService.Create(String, IEnumerable<String>)"/>
+        Task CreateAsync(string name, IEnumerable<String> values);
+
+        // Edit --------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Edit and existing custom enumeration.
+        /// </summary>
+        /// <param name="id">The identifier of the existing custom enumeration.</param>
+        /// <param name="name">The new name of the custom enumeration.</param>
+        /// <param name="values">The list of new values (string) for the existing custom enumeration.</param>
+        void Edit(string id, string name, IEnumerable<String> values);
+        /// <inheritdoc cref="IEnumerationService.Edit(String, String, IEnumerable<String>)"/>
+        Task EditAsync(string id, string name, IEnumerable<String> values);
+
+        // Replace --------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Replace and existing custom enumeration.
+        /// </summary>
+        /// <param name="id">The identifier of the existing custom enumeration.</param>
+        /// <param name="name">The new name of the custom enumeration.</param>
+        /// <param name="values">The list of new values (string) for the existing custom enumeration.</param>
+        void Replace(string id, string name, IEnumerable<String> values);
+        /// <inheritdoc cref="IEnumerationService.Replace(String, String, IEnumerable<String>)"/>
+        Task ReplaceAsync(string id, string name, IEnumerable<String> values);
 
     }
 }

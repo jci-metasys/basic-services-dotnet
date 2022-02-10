@@ -723,43 +723,36 @@ namespace JohnsonControls.Metasys.BasicServices
 
 
         #region "NETWORK DEVICES"
-
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetNetworkDevices(string type = null)
         {
-            // This the new method
             return NetworkDevices.Get(type);
         }
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
         {
-            // This the new method
             return await NetworkDevices.GetAsync(type);
         }
 
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetNetworkDevices(NetworkDeviceTypeEnum networkDevicetype)
         {
-            // This the new method
             return NetworkDevices.Get(networkDevicetype);
         }
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(NetworkDeviceTypeEnum networkDevicetype)
         {
-            // This the new method
             return await NetworkDevices.GetAsync(networkDevicetype);
         }
 
         /// <inheritdoc/>
         public IEnumerable<MetasysObjectType> GetNetworkDeviceTypes()
         {
-            // This is the new method
             return NetworkDevices.GetTypes();
         }
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync()
         {
-            // This is the new method
             return await NetworkDevices.GetTypesAsync();
         }
         #endregion
@@ -964,14 +957,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetEquipment()
         {
-            return GetEquipmentAsync().GetAwaiter().GetResult();
+            return Equipments.Get();
         }
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
         {
-            CheckVersion(Version);
-            var equipment = await GetAllAvailablePagesAsync("equipment").ConfigureAwait(false);
-            return ToMetasysObject(equipment, Version, MetasysObjectTypeEnum.Equipment);
+            return await Equipments.GetAsync();
         }
 
         // GetEquipmentPoints -------------------------------------------------------------------------------------------------------
@@ -1040,14 +1031,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetSpaceEquipment(Guid spaceId)
         {
-            //return GetSpaceEquipmentAsync(spaceId).GetAwaiter().GetResult();
             return Equipments.GetServingASpace(spaceId);
         }
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
         {
-            //var spaceEquipment = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment").ConfigureAwait(false);
-            //return ToMetasysObject(spaceEquipment, Version, MetasysObjectTypeEnum.Equipment);
             return await Equipments.GetServingASpaceAsync(spaceId);
         }
 

@@ -37,13 +37,12 @@ namespace MetasysServices_TestClient.Forms
 
         private void BtnGetTrendedAttributes_Click(object sender, EventArgs e)
         {
+            DgvGetTrendedAttributes.DataSource = null;
             String objectId = TxtGetTrendedAttributes_ObjectID.Text.Trim();
             if (! String.IsNullOrEmpty(objectId))
             {
-                DgvGetTrendedAttributes.DataSource = null;
-                List<MetasysAttribute> result;
                 Guid id = new Guid(objectId);
-                result = _client.Trends.GetTrendedAttributes(id);
+                var result = _client.Trends.GetTrendedAttributes(id);
                 DgvGetTrendedAttributes.DataSource = result;
             } else
             {
@@ -74,7 +73,52 @@ namespace MetasysServices_TestClient.Forms
             {
                 MessageBox.Show("The parameter 'Object ID' is mandatory!", "Warning");
             }
+        }
 
+        private void BtnGetNetDevTrendedAttributes_Click(object sender, EventArgs e)
+        {
+            DgvGetNetDevTrendedAttributes.DataSource = null;
+            String networkDeviceId = TxtGetNetDeTrendedAttributes_NetDevID.Text.Trim();
+            if (!String.IsNullOrEmpty(networkDeviceId))
+            {
+                Guid networkDeviceGuid = new Guid(networkDeviceId);
+                var result = _client.Trends.GetNetDevTrendedAttributes(networkDeviceGuid);
+                DgvGetNetDevTrendedAttributes.DataSource = result;
+            }
+            else
+            {
+                MessageBox.Show("The parameter 'Network Device ID' is mandatory!", "Warning");
+            }
+
+        }
+
+        private void CmbGetNetDevSamples_AttributeID_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnGetNetDevSamples_Click(object sender, EventArgs e)
+        {
+            DgvGetNetDevSamples.DataSource = null;
+            String networkDeviceId = TxtGetNetDevSamples_NetDevID.Text.Trim();
+            String attributeId = CmbGetNetDevSamples_AttributeID.Text;
+            if (!String.IsNullOrEmpty(networkDeviceId) && int.TryParse(attributeId, out int attributeInt))
+            {
+                Guid networkdeviceGuid = new Guid(networkDeviceId);
+                TimeFilter filter = new TimeFilter { StartTime = DtpGetNetDevSamples_StartTime.Value, EndTime = DtpGetNetDevSamples_EndTime.Value };
+                var result = _client.Trends.GetNetDevSamples(networkdeviceGuid, attributeInt, filter);
+                if (result != null)
+                {
+                    if (result.PageCount > 0)
+                    {
+                        DgvGetNetDevSamples.DataSource = result.Items;
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("The parameter 'Object ID' is mandatory!", "Warning");
+            }
         }
     }
 }

@@ -33,7 +33,7 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGet = new System.Windows.Forms.TabPage();
             this.TlpGet = new System.Windows.Forms.TableLayoutPanel();
             this.LblGet_Filters = new System.Windows.Forms.Label();
-            this.TlpGet_Filter = new System.Windows.Forms.TableLayoutPanel();
+            this.TlpGet_Filters = new System.Windows.Forms.TableLayoutPanel();
             this.LblGet_StartTime = new System.Windows.Forms.Label();
             this.DtpGet_StartTime = new System.Windows.Forms.DateTimePicker();
             this.LblGet_EndTime = new System.Windows.Forms.Label();
@@ -99,7 +99,7 @@ namespace MetasysServices_TestClient.Forms
             this.TabMain.SuspendLayout();
             this.TpgGet.SuspendLayout();
             this.TlpGet.SuspendLayout();
-            this.TlpGet_Filter.SuspendLayout();
+            this.TlpGet_Filters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGet)).BeginInit();
             this.TpgFindById.SuspendLayout();
             this.TlpFindById.SuspendLayout();
@@ -153,14 +153,14 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGet.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.TlpGet.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGet.Controls.Add(this.LblGet_Filters, 1, 1);
-            this.TlpGet.Controls.Add(this.TlpGet_Filter, 2, 1);
+            this.TlpGet.Controls.Add(this.TlpGet_Filters, 2, 1);
             this.TlpGet.Controls.Add(this.ChkGet_NoFilters, 3, 1);
             this.TlpGet.Controls.Add(this.BtnGet, 2, 2);
             this.TlpGet.Controls.Add(this.DgvGet, 2, 3);
             this.TlpGet.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGet.Location = new System.Drawing.Point(3, 3);
             this.TlpGet.Name = "TlpGet";
-            this.TlpGet.RowCount = 5;
+            this.TlpGet.RowCount = 4;
             this.TlpGet.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGet.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGet.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -182,29 +182,29 @@ namespace MetasysServices_TestClient.Forms
             this.LblGet_Filters.Text = "Filters:";
             this.LblGet_Filters.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // TlpGet_Filter
+            // TlpGet_Filters
             // 
-            this.TlpGet_Filter.AutoSize = true;
-            this.TlpGet_Filter.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.TlpGet_Filter.ColumnCount = 4;
-            this.TlpGet_Filter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.TlpGet_Filter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TlpGet_Filter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.TlpGet_Filter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TlpGet_Filter.Controls.Add(this.LblGet_StartTime, 0, 0);
-            this.TlpGet_Filter.Controls.Add(this.DtpGet_StartTime, 1, 0);
-            this.TlpGet_Filter.Controls.Add(this.LblGet_EndTime, 2, 0);
-            this.TlpGet_Filter.Controls.Add(this.DtpGet_EndTime, 3, 0);
-            this.TlpGet_Filter.Controls.Add(this.ChkGet_ExcludeAcknowledged, 1, 1);
-            this.TlpGet_Filter.Controls.Add(this.ChkGet_ExcludeDiscarded, 3, 1);
-            this.TlpGet_Filter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TlpGet_Filter.Location = new System.Drawing.Point(169, 23);
-            this.TlpGet_Filter.Name = "TlpGet_Filter";
-            this.TlpGet_Filter.RowCount = 2;
-            this.TlpGet_Filter.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TlpGet_Filter.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TlpGet_Filter.Size = new System.Drawing.Size(615, 52);
-            this.TlpGet_Filter.TabIndex = 1;
+            this.TlpGet_Filters.AutoSize = true;
+            this.TlpGet_Filters.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.TlpGet_Filters.ColumnCount = 4;
+            this.TlpGet_Filters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.TlpGet_Filters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TlpGet_Filters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.TlpGet_Filters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TlpGet_Filters.Controls.Add(this.LblGet_StartTime, 0, 0);
+            this.TlpGet_Filters.Controls.Add(this.DtpGet_StartTime, 1, 0);
+            this.TlpGet_Filters.Controls.Add(this.LblGet_EndTime, 2, 0);
+            this.TlpGet_Filters.Controls.Add(this.DtpGet_EndTime, 3, 0);
+            this.TlpGet_Filters.Controls.Add(this.ChkGet_ExcludeAcknowledged, 1, 1);
+            this.TlpGet_Filters.Controls.Add(this.ChkGet_ExcludeDiscarded, 3, 1);
+            this.TlpGet_Filters.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TlpGet_Filters.Location = new System.Drawing.Point(169, 23);
+            this.TlpGet_Filters.Name = "TlpGet_Filters";
+            this.TlpGet_Filters.RowCount = 2;
+            this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TlpGet_Filters.Size = new System.Drawing.Size(615, 52);
+            this.TlpGet_Filters.TabIndex = 1;
             // 
             // LblGet_StartTime
             // 
@@ -278,6 +278,7 @@ namespace MetasysServices_TestClient.Forms
             this.ChkGet_NoFilters.TabIndex = 2;
             this.ChkGet_NoFilters.Text = "No Filter";
             this.ChkGet_NoFilters.UseVisualStyleBackColor = true;
+            this.ChkGet_NoFilters.CheckedChanged += new System.EventHandler(this.ChkGet_NoFilters_CheckedChanged);
             // 
             // BtnGet
             // 
@@ -299,7 +300,7 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGet.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DgvGet.Location = new System.Drawing.Point(169, 110);
             this.DgvGet.Name = "DgvGet";
-            this.DgvGet.Size = new System.Drawing.Size(686, 461);
+            this.DgvGet.Size = new System.Drawing.Size(686, 481);
             this.DgvGet.TabIndex = 4;
             // 
             // TpgFindById
@@ -327,7 +328,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpFindById.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpFindById.Location = new System.Drawing.Point(3, 3);
             this.TlpFindById.Name = "TlpFindById";
-            this.TlpFindById.RowCount = 5;
+            this.TlpFindById.RowCount = 4;
             this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -375,7 +376,7 @@ namespace MetasysServices_TestClient.Forms
             this.PrgFindById.HelpVisible = false;
             this.PrgFindById.Location = new System.Drawing.Point(169, 78);
             this.PrgFindById.Name = "PrgFindById";
-            this.PrgFindById.Size = new System.Drawing.Size(686, 493);
+            this.PrgFindById.Size = new System.Drawing.Size(686, 513);
             this.PrgFindById.TabIndex = 3;
             // 
             // TpgGetForNetworkDevice
@@ -407,7 +408,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetForNetworkDevice.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetForNetworkDevice.Location = new System.Drawing.Point(3, 3);
             this.TlpGetForNetworkDevice.Name = "TlpGetForNetworkDevice";
-            this.TlpGetForNetworkDevice.RowCount = 6;
+            this.TlpGetForNetworkDevice.RowCount = 5;
             this.TlpGetForNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetForNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetForNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -568,7 +569,7 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetForNetworkDevice.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DgvGetForNetworkDevice.Location = new System.Drawing.Point(169, 133);
             this.DgvGetForNetworkDevice.Name = "DgvGetForNetworkDevice";
-            this.DgvGetForNetworkDevice.Size = new System.Drawing.Size(686, 438);
+            this.DgvGetForNetworkDevice.Size = new System.Drawing.Size(686, 458);
             this.DgvGetForNetworkDevice.TabIndex = 6;
             // 
             // TpgGetForObject
@@ -600,7 +601,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetForObject.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetForObject.Location = new System.Drawing.Point(3, 3);
             this.TlpGetForObject.Name = "TlpGetForObject";
-            this.TlpGetForObject.RowCount = 6;
+            this.TlpGetForObject.RowCount = 5;
             this.TlpGetForObject.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetForObject.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetForObject.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -761,7 +762,7 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetForObject.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DgvGetForObject.Location = new System.Drawing.Point(169, 133);
             this.DgvGetForObject.Name = "DgvGetForObject";
-            this.DgvGetForObject.Size = new System.Drawing.Size(686, 438);
+            this.DgvGetForObject.Size = new System.Drawing.Size(686, 458);
             this.DgvGetForObject.TabIndex = 6;
             // 
             // TpgGetAnnotations
@@ -789,7 +790,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetAnnotations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetAnnotations.Location = new System.Drawing.Point(3, 3);
             this.TlpGetAnnotations.Name = "TlpGetAnnotations";
-            this.TlpGetAnnotations.RowCount = 5;
+            this.TlpGetAnnotations.RowCount = 4;
             this.TlpGetAnnotations.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetAnnotations.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetAnnotations.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -837,7 +838,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtGetAnnotations_Result.Location = new System.Drawing.Point(169, 78);
             this.TxtGetAnnotations_Result.Multiline = true;
             this.TxtGetAnnotations_Result.Name = "TxtGetAnnotations_Result";
-            this.TxtGetAnnotations_Result.Size = new System.Drawing.Size(686, 493);
+            this.TxtGetAnnotations_Result.Size = new System.Drawing.Size(686, 513);
             this.TxtGetAnnotations_Result.TabIndex = 3;
             // 
             // TpgEditAlarm
@@ -870,7 +871,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpEditAlarm.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpEditAlarm.Location = new System.Drawing.Point(3, 3);
             this.TlpEditAlarm.Name = "TlpEditAlarm";
-            this.TlpEditAlarm.RowCount = 8;
+            this.TlpEditAlarm.RowCount = 7;
             this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -990,8 +991,8 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGet.ResumeLayout(false);
             this.TlpGet.ResumeLayout(false);
             this.TlpGet.PerformLayout();
-            this.TlpGet_Filter.ResumeLayout(false);
-            this.TlpGet_Filter.PerformLayout();
+            this.TlpGet_Filters.ResumeLayout(false);
+            this.TlpGet_Filters.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGet)).EndInit();
             this.TpgFindById.ResumeLayout(false);
             this.TlpFindById.ResumeLayout(false);
@@ -1034,7 +1035,7 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.TableLayoutPanel TlpGetAnnotations;
         private System.Windows.Forms.TableLayoutPanel TlpGet;
         private System.Windows.Forms.Label LblGet_Filters;
-        private System.Windows.Forms.TableLayoutPanel TlpGet_Filter;
+        private System.Windows.Forms.TableLayoutPanel TlpGet_Filters;
         private System.Windows.Forms.Label LblGet_StartTime;
         private System.Windows.Forms.DateTimePicker DtpGet_StartTime;
         private System.Windows.Forms.Label LblGet_EndTime;

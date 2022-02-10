@@ -226,7 +226,9 @@ namespace MetasysServices_TestClient.Forms
             }
         }
 
-
-
+        private void ChkGet_NoFilters_CheckedChanged(object sender, EventArgs e)
+        {
+            TlpGet_Filters.Enabled = !ChkGet_NoFilters.Checked;
+        }
     }
 }

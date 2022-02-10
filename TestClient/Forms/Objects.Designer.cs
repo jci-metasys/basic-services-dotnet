@@ -142,7 +142,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetObjectIdentifier.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetObjectIdentifier.Location = new System.Drawing.Point(3, 3);
             this.TlpGetObjectIdentifier.Name = "TlpGetObjectIdentifier";
-            this.TlpGetObjectIdentifier.RowCount = 6;
+            this.TlpGetObjectIdentifier.RowCount = 5;
             this.TlpGetObjectIdentifier.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetObjectIdentifier.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetObjectIdentifier.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -158,9 +158,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblGetObjectIdentifier_ObjectFQR.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblGetObjectIdentifier_ObjectFQR.Location = new System.Drawing.Point(23, 23);
             this.LblGetObjectIdentifier_ObjectFQR.Margin = new System.Windows.Forms.Padding(3);
-            this.LblGetObjectIdentifier_ObjectFQR.MinimumSize = new System.Drawing.Size(100, 0);
+            this.LblGetObjectIdentifier_ObjectFQR.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetObjectIdentifier_ObjectFQR.Name = "LblGetObjectIdentifier_ObjectFQR";
-            this.LblGetObjectIdentifier_ObjectFQR.Size = new System.Drawing.Size(100, 20);
+            this.LblGetObjectIdentifier_ObjectFQR.Size = new System.Drawing.Size(140, 20);
             this.LblGetObjectIdentifier_ObjectFQR.TabIndex = 0;
             this.LblGetObjectIdentifier_ObjectFQR.Text = "Object FQR:";
             this.LblGetObjectIdentifier_ObjectFQR.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -168,17 +168,18 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetObjectIdentifier_ObjectFQR
             // 
             this.TxtGetObjectIdentifier_ObjectFQR.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetObjectIdentifier_ObjectFQR.Location = new System.Drawing.Point(129, 23);
+            this.TxtGetObjectIdentifier_ObjectFQR.Location = new System.Drawing.Point(169, 23);
             this.TxtGetObjectIdentifier_ObjectFQR.Name = "TxtGetObjectIdentifier_ObjectFQR";
-            this.TxtGetObjectIdentifier_ObjectFQR.Size = new System.Drawing.Size(597, 20);
+            this.TxtGetObjectIdentifier_ObjectFQR.Size = new System.Drawing.Size(557, 20);
             this.TxtGetObjectIdentifier_ObjectFQR.TabIndex = 1;
             // 
             // BtnGetObjectIdentifier
             // 
-            this.BtnGetObjectIdentifier.Location = new System.Drawing.Point(129, 49);
+            this.BtnGetObjectIdentifier.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnGetObjectIdentifier.Location = new System.Drawing.Point(169, 49);
             this.BtnGetObjectIdentifier.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnGetObjectIdentifier.Name = "BtnGetObjectIdentifier";
-            this.BtnGetObjectIdentifier.Size = new System.Drawing.Size(130, 23);
+            this.BtnGetObjectIdentifier.Size = new System.Drawing.Size(557, 23);
             this.BtnGetObjectIdentifier.TabIndex = 2;
             this.BtnGetObjectIdentifier.Text = "GetObjectIdentifier";
             this.BtnGetObjectIdentifier.UseVisualStyleBackColor = true;
@@ -191,7 +192,7 @@ namespace MetasysServices_TestClient.Forms
             this.LblGetObjectIdentifier_Result.Location = new System.Drawing.Point(23, 78);
             this.LblGetObjectIdentifier_Result.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetObjectIdentifier_Result.Name = "LblGetObjectIdentifier_Result";
-            this.LblGetObjectIdentifier_Result.Size = new System.Drawing.Size(100, 20);
+            this.LblGetObjectIdentifier_Result.Size = new System.Drawing.Size(140, 20);
             this.LblGetObjectIdentifier_Result.TabIndex = 3;
             this.LblGetObjectIdentifier_Result.Text = "Result:";
             this.LblGetObjectIdentifier_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -199,10 +200,10 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetObjectIdentifier_Result
             // 
             this.TxtGetObjectIdentifier_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetObjectIdentifier_Result.Location = new System.Drawing.Point(129, 78);
+            this.TxtGetObjectIdentifier_Result.Location = new System.Drawing.Point(169, 78);
             this.TxtGetObjectIdentifier_Result.Name = "TxtGetObjectIdentifier_Result";
             this.TxtGetObjectIdentifier_Result.ReadOnly = true;
-            this.TxtGetObjectIdentifier_Result.Size = new System.Drawing.Size(597, 20);
+            this.TxtGetObjectIdentifier_Result.Size = new System.Drawing.Size(557, 20);
             this.TxtGetObjectIdentifier_Result.TabIndex = 4;
             // 
             // TpgGetObjects
@@ -230,7 +231,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetObjects.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetObjects.Location = new System.Drawing.Point(3, 3);
             this.TlpGetObjects.Name = "TlpGetObjects";
-            this.TlpGetObjects.RowCount = 5;
+            this.TlpGetObjects.RowCount = 4;
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -245,9 +246,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblGetObjects_ParentID.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblGetObjects_ParentID.Location = new System.Drawing.Point(23, 23);
             this.LblGetObjects_ParentID.Margin = new System.Windows.Forms.Padding(3);
-            this.LblGetObjects_ParentID.MinimumSize = new System.Drawing.Size(100, 0);
+            this.LblGetObjects_ParentID.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetObjects_ParentID.Name = "LblGetObjects_ParentID";
-            this.LblGetObjects_ParentID.Size = new System.Drawing.Size(100, 20);
+            this.LblGetObjects_ParentID.Size = new System.Drawing.Size(140, 20);
             this.LblGetObjects_ParentID.TabIndex = 0;
             this.LblGetObjects_ParentID.Text = "Parent ID (GUID):";
             this.LblGetObjects_ParentID.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -255,17 +256,18 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetObjects_ParentID
             // 
             this.TxtGetObjects_ParentID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetObjects_ParentID.Location = new System.Drawing.Point(129, 23);
+            this.TxtGetObjects_ParentID.Location = new System.Drawing.Point(169, 23);
             this.TxtGetObjects_ParentID.Name = "TxtGetObjects_ParentID";
-            this.TxtGetObjects_ParentID.Size = new System.Drawing.Size(597, 20);
+            this.TxtGetObjects_ParentID.Size = new System.Drawing.Size(557, 20);
             this.TxtGetObjects_ParentID.TabIndex = 1;
             // 
             // BtnGetObjects
             // 
-            this.BtnGetObjects.Location = new System.Drawing.Point(129, 49);
+            this.BtnGetObjects.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnGetObjects.Location = new System.Drawing.Point(169, 49);
             this.BtnGetObjects.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnGetObjects.Name = "BtnGetObjects";
-            this.BtnGetObjects.Size = new System.Drawing.Size(130, 23);
+            this.BtnGetObjects.Size = new System.Drawing.Size(557, 23);
             this.BtnGetObjects.TabIndex = 2;
             this.BtnGetObjects.Text = "GetObjects";
             this.BtnGetObjects.UseVisualStyleBackColor = true;
@@ -275,9 +277,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetObjects.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetObjects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetObjects.Location = new System.Drawing.Point(129, 78);
+            this.DgvGetObjects.Location = new System.Drawing.Point(169, 78);
             this.DgvGetObjects.Name = "DgvGetObjects";
-            this.DgvGetObjects.Size = new System.Drawing.Size(597, 450);
+            this.DgvGetObjects.Size = new System.Drawing.Size(557, 470);
             this.DgvGetObjects.TabIndex = 3;
             // 
             // TpgGetCommands
@@ -307,7 +309,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetCommands.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetCommands.Location = new System.Drawing.Point(3, 3);
             this.TlpGetCommands.Name = "TlpGetCommands";
-            this.TlpGetCommands.RowCount = 7;
+            this.TlpGetCommands.RowCount = 6;
             this.TlpGetCommands.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetCommands.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetCommands.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -324,9 +326,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblGetCommands_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblGetCommands_ObjectId.Location = new System.Drawing.Point(23, 23);
             this.LblGetCommands_ObjectId.Margin = new System.Windows.Forms.Padding(3);
-            this.LblGetCommands_ObjectId.MinimumSize = new System.Drawing.Size(100, 0);
+            this.LblGetCommands_ObjectId.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetCommands_ObjectId.Name = "LblGetCommands_ObjectId";
-            this.LblGetCommands_ObjectId.Size = new System.Drawing.Size(100, 20);
+            this.LblGetCommands_ObjectId.Size = new System.Drawing.Size(140, 20);
             this.LblGetCommands_ObjectId.TabIndex = 0;
             this.LblGetCommands_ObjectId.Text = "Object ID (GUID):";
             this.LblGetCommands_ObjectId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -334,17 +336,18 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetCommands_ObjectId
             // 
             this.TxtGetCommands_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetCommands_ObjectId.Location = new System.Drawing.Point(129, 23);
+            this.TxtGetCommands_ObjectId.Location = new System.Drawing.Point(169, 23);
             this.TxtGetCommands_ObjectId.Name = "TxtGetCommands_ObjectId";
-            this.TxtGetCommands_ObjectId.Size = new System.Drawing.Size(597, 20);
+            this.TxtGetCommands_ObjectId.Size = new System.Drawing.Size(557, 20);
             this.TxtGetCommands_ObjectId.TabIndex = 1;
             // 
             // BtnGetCommands
             // 
-            this.BtnGetCommands.Location = new System.Drawing.Point(129, 49);
+            this.BtnGetCommands.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnGetCommands.Location = new System.Drawing.Point(169, 49);
             this.BtnGetCommands.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnGetCommands.Name = "BtnGetCommands";
-            this.BtnGetCommands.Size = new System.Drawing.Size(130, 23);
+            this.BtnGetCommands.Size = new System.Drawing.Size(557, 23);
             this.BtnGetCommands.TabIndex = 2;
             this.BtnGetCommands.Text = "GetCommands";
             this.BtnGetCommands.UseVisualStyleBackColor = true;
@@ -360,9 +363,9 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetCommands_CommandId,
             this.DgvGetCommands_TitleEnumerationKey});
             this.DgvGetCommands.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetCommands.Location = new System.Drawing.Point(129, 78);
+            this.DgvGetCommands.Location = new System.Drawing.Point(169, 78);
             this.DgvGetCommands.Name = "DgvGetCommands";
-            this.DgvGetCommands.Size = new System.Drawing.Size(597, 207);
+            this.DgvGetCommands.Size = new System.Drawing.Size(557, 217);
             this.DgvGetCommands.TabIndex = 3;
             // 
             // DgvGetCommands_Title
@@ -388,10 +391,11 @@ namespace MetasysServices_TestClient.Forms
             // 
             // BtnGetCommands_RetrieveEnumValues
             // 
-            this.BtnGetCommands_RetrieveEnumValues.Location = new System.Drawing.Point(129, 291);
+            this.BtnGetCommands_RetrieveEnumValues.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnGetCommands_RetrieveEnumValues.Location = new System.Drawing.Point(169, 301);
             this.BtnGetCommands_RetrieveEnumValues.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetCommands_RetrieveEnumValues.Name = "BtnGetCommands_RetrieveEnumValues";
-            this.BtnGetCommands_RetrieveEnumValues.Size = new System.Drawing.Size(260, 23);
+            this.BtnGetCommands_RetrieveEnumValues.Size = new System.Drawing.Size(557, 23);
             this.BtnGetCommands_RetrieveEnumValues.TabIndex = 4;
             this.BtnGetCommands_RetrieveEnumValues.Text = "Retrieve Enumeration Values";
             this.BtnGetCommands_RetrieveEnumValues.UseVisualStyleBackColor = true;
@@ -405,9 +409,9 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetCommands_RetrieveEnumValues.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.DgvCommandEnum_TitleEnumerationKey});
             this.DgvGetCommands_RetrieveEnumValues.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetCommands_RetrieveEnumValues.Location = new System.Drawing.Point(129, 320);
+            this.DgvGetCommands_RetrieveEnumValues.Location = new System.Drawing.Point(169, 330);
             this.DgvGetCommands_RetrieveEnumValues.Name = "DgvGetCommands_RetrieveEnumValues";
-            this.DgvGetCommands_RetrieveEnumValues.Size = new System.Drawing.Size(597, 207);
+            this.DgvGetCommands_RetrieveEnumValues.Size = new System.Drawing.Size(557, 218);
             this.DgvGetCommands_RetrieveEnumValues.TabIndex = 5;
             // 
             // DgvCommandEnum_TitleEnumerationKey
@@ -444,7 +448,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetCommandEnumeration.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetCommandEnumeration.Location = new System.Drawing.Point(3, 3);
             this.TlpGetCommandEnumeration.Name = "TlpGetCommandEnumeration";
-            this.TlpGetCommandEnumeration.RowCount = 6;
+            this.TlpGetCommandEnumeration.RowCount = 5;
             this.TlpGetCommandEnumeration.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetCommandEnumeration.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetCommandEnumeration.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -460,9 +464,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblGetCommandEnumeration_EnumTitle.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblGetCommandEnumeration_EnumTitle.Location = new System.Drawing.Point(23, 23);
             this.LblGetCommandEnumeration_EnumTitle.Margin = new System.Windows.Forms.Padding(3);
-            this.LblGetCommandEnumeration_EnumTitle.MinimumSize = new System.Drawing.Size(100, 0);
+            this.LblGetCommandEnumeration_EnumTitle.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetCommandEnumeration_EnumTitle.Name = "LblGetCommandEnumeration_EnumTitle";
-            this.LblGetCommandEnumeration_EnumTitle.Size = new System.Drawing.Size(100, 20);
+            this.LblGetCommandEnumeration_EnumTitle.Size = new System.Drawing.Size(140, 20);
             this.LblGetCommandEnumeration_EnumTitle.TabIndex = 0;
             this.LblGetCommandEnumeration_EnumTitle.Text = "Enum Title (String):";
             this.LblGetCommandEnumeration_EnumTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -470,17 +474,18 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetCommandEnumeration_EnumTitle
             // 
             this.TxtGetCommandEnumeration_EnumTitle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetCommandEnumeration_EnumTitle.Location = new System.Drawing.Point(129, 23);
+            this.TxtGetCommandEnumeration_EnumTitle.Location = new System.Drawing.Point(169, 23);
             this.TxtGetCommandEnumeration_EnumTitle.Name = "TxtGetCommandEnumeration_EnumTitle";
-            this.TxtGetCommandEnumeration_EnumTitle.Size = new System.Drawing.Size(486, 20);
+            this.TxtGetCommandEnumeration_EnumTitle.Size = new System.Drawing.Size(446, 20);
             this.TxtGetCommandEnumeration_EnumTitle.TabIndex = 1;
             // 
             // BtnGetCommandEnumeration
             // 
-            this.BtnGetCommandEnumeration.Location = new System.Drawing.Point(129, 49);
-            this.BtnGetCommandEnumeration.MinimumSize = new System.Drawing.Size(260, 0);
+            this.TlpGetCommandEnumeration.SetColumnSpan(this.BtnGetCommandEnumeration, 2);
+            this.BtnGetCommandEnumeration.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnGetCommandEnumeration.Location = new System.Drawing.Point(169, 49);
             this.BtnGetCommandEnumeration.Name = "BtnGetCommandEnumeration";
-            this.BtnGetCommandEnumeration.Size = new System.Drawing.Size(260, 23);
+            this.BtnGetCommandEnumeration.Size = new System.Drawing.Size(557, 23);
             this.BtnGetCommandEnumeration.TabIndex = 2;
             this.BtnGetCommandEnumeration.Text = "GetCommandEnumeration";
             this.BtnGetCommandEnumeration.UseVisualStyleBackColor = true;
@@ -500,11 +505,12 @@ namespace MetasysServices_TestClient.Forms
             // 
             // TxtGetCommandEnumeration_Result
             // 
+            this.TlpGetCommandEnumeration.SetColumnSpan(this.TxtGetCommandEnumeration_Result, 2);
             this.TxtGetCommandEnumeration_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetCommandEnumeration_Result.Location = new System.Drawing.Point(129, 78);
+            this.TxtGetCommandEnumeration_Result.Location = new System.Drawing.Point(169, 78);
             this.TxtGetCommandEnumeration_Result.Name = "TxtGetCommandEnumeration_Result";
             this.TxtGetCommandEnumeration_Result.ReadOnly = true;
-            this.TxtGetCommandEnumeration_Result.Size = new System.Drawing.Size(486, 20);
+            this.TxtGetCommandEnumeration_Result.Size = new System.Drawing.Size(557, 20);
             this.TxtGetCommandEnumeration_Result.TabIndex = 5;
             // 
             // TpgReadProperty
@@ -535,7 +541,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpReadProperty.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpReadProperty.Location = new System.Drawing.Point(3, 3);
             this.TlpReadProperty.Name = "TlpReadProperty";
-            this.TlpReadProperty.RowCount = 7;
+            this.TlpReadProperty.RowCount = 6;
             this.TlpReadProperty.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpReadProperty.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpReadProperty.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -552,9 +558,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblReadProperty_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblReadProperty_ObjectId.Location = new System.Drawing.Point(23, 23);
             this.LblReadProperty_ObjectId.Margin = new System.Windows.Forms.Padding(3);
-            this.LblReadProperty_ObjectId.MinimumSize = new System.Drawing.Size(100, 0);
+            this.LblReadProperty_ObjectId.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblReadProperty_ObjectId.Name = "LblReadProperty_ObjectId";
-            this.LblReadProperty_ObjectId.Size = new System.Drawing.Size(100, 20);
+            this.LblReadProperty_ObjectId.Size = new System.Drawing.Size(140, 20);
             this.LblReadProperty_ObjectId.TabIndex = 0;
             this.LblReadProperty_ObjectId.Text = "Object ID (GUID):";
             this.LblReadProperty_ObjectId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -562,17 +568,17 @@ namespace MetasysServices_TestClient.Forms
             // TxtReadProperty_ObjectId
             // 
             this.TxtReadProperty_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtReadProperty_ObjectId.Location = new System.Drawing.Point(129, 23);
+            this.TxtReadProperty_ObjectId.Location = new System.Drawing.Point(169, 23);
             this.TxtReadProperty_ObjectId.Name = "TxtReadProperty_ObjectId";
-            this.TxtReadProperty_ObjectId.Size = new System.Drawing.Size(597, 20);
+            this.TxtReadProperty_ObjectId.Size = new System.Drawing.Size(557, 20);
             this.TxtReadProperty_ObjectId.TabIndex = 1;
             // 
             // TxtReadProperty_PropertyKey
             // 
             this.TxtReadProperty_PropertyKey.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtReadProperty_PropertyKey.Location = new System.Drawing.Point(129, 49);
+            this.TxtReadProperty_PropertyKey.Location = new System.Drawing.Point(169, 49);
             this.TxtReadProperty_PropertyKey.Name = "TxtReadProperty_PropertyKey";
-            this.TxtReadProperty_PropertyKey.Size = new System.Drawing.Size(597, 20);
+            this.TxtReadProperty_PropertyKey.Size = new System.Drawing.Size(557, 20);
             this.TxtReadProperty_PropertyKey.TabIndex = 2;
             this.TxtReadProperty_PropertyKey.Text = "presentValue";
             // 
@@ -583,17 +589,18 @@ namespace MetasysServices_TestClient.Forms
             this.LblReadProperty.Location = new System.Drawing.Point(23, 49);
             this.LblReadProperty.Margin = new System.Windows.Forms.Padding(3);
             this.LblReadProperty.Name = "LblReadProperty";
-            this.LblReadProperty.Size = new System.Drawing.Size(100, 20);
+            this.LblReadProperty.Size = new System.Drawing.Size(140, 20);
             this.LblReadProperty.TabIndex = 3;
             this.LblReadProperty.Text = "Property Key:";
             this.LblReadProperty.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // BtnReadProperty
             // 
-            this.BtnReadProperty.Location = new System.Drawing.Point(129, 75);
+            this.BtnReadProperty.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnReadProperty.Location = new System.Drawing.Point(169, 75);
             this.BtnReadProperty.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnReadProperty.Name = "BtnReadProperty";
-            this.BtnReadProperty.Size = new System.Drawing.Size(130, 23);
+            this.BtnReadProperty.Size = new System.Drawing.Size(557, 23);
             this.BtnReadProperty.TabIndex = 4;
             this.BtnReadProperty.Text = "ReadProperty";
             this.BtnReadProperty.UseVisualStyleBackColor = true;
@@ -606,7 +613,7 @@ namespace MetasysServices_TestClient.Forms
             this.LblReadProperty_Result.Location = new System.Drawing.Point(23, 104);
             this.LblReadProperty_Result.Margin = new System.Windows.Forms.Padding(3);
             this.LblReadProperty_Result.Name = "LblReadProperty_Result";
-            this.LblReadProperty_Result.Size = new System.Drawing.Size(100, 20);
+            this.LblReadProperty_Result.Size = new System.Drawing.Size(140, 20);
             this.LblReadProperty_Result.TabIndex = 5;
             this.LblReadProperty_Result.Text = "Result:";
             this.LblReadProperty_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -614,10 +621,10 @@ namespace MetasysServices_TestClient.Forms
             // TxtReadProperty_Result
             // 
             this.TxtReadProperty_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtReadProperty_Result.Location = new System.Drawing.Point(129, 104);
+            this.TxtReadProperty_Result.Location = new System.Drawing.Point(169, 104);
             this.TxtReadProperty_Result.Name = "TxtReadProperty_Result";
             this.TxtReadProperty_Result.ReadOnly = true;
-            this.TxtReadProperty_Result.Size = new System.Drawing.Size(597, 20);
+            this.TxtReadProperty_Result.Size = new System.Drawing.Size(557, 20);
             this.TxtReadProperty_Result.TabIndex = 6;
             // 
             // TpgSendCommand
@@ -650,7 +657,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpSendCommand.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpSendCommand.Location = new System.Drawing.Point(3, 3);
             this.TlpSendCommand.Name = "TlpSendCommand";
-            this.TlpSendCommand.RowCount = 8;
+            this.TlpSendCommand.RowCount = 7;
             this.TlpSendCommand.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpSendCommand.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpSendCommand.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -668,8 +675,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblSendCommand_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblSendCommand_ObjectId.Location = new System.Drawing.Point(23, 23);
             this.LblSendCommand_ObjectId.Margin = new System.Windows.Forms.Padding(3);
+            this.LblSendCommand_ObjectId.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblSendCommand_ObjectId.Name = "LblSendCommand_ObjectId";
-            this.LblSendCommand_ObjectId.Size = new System.Drawing.Size(100, 20);
+            this.LblSendCommand_ObjectId.Size = new System.Drawing.Size(140, 20);
             this.LblSendCommand_ObjectId.TabIndex = 0;
             this.LblSendCommand_ObjectId.Text = "Object ID (GUID):";
             this.LblSendCommand_ObjectId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -677,9 +685,9 @@ namespace MetasysServices_TestClient.Forms
             // TxtSendCommand_ObjectId
             // 
             this.TxtSendCommand_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtSendCommand_ObjectId.Location = new System.Drawing.Point(129, 23);
+            this.TxtSendCommand_ObjectId.Location = new System.Drawing.Point(169, 23);
             this.TxtSendCommand_ObjectId.Name = "TxtSendCommand_ObjectId";
-            this.TxtSendCommand_ObjectId.Size = new System.Drawing.Size(597, 20);
+            this.TxtSendCommand_ObjectId.Size = new System.Drawing.Size(557, 20);
             this.TxtSendCommand_ObjectId.TabIndex = 1;
             // 
             // LblSendCommand_Command
@@ -690,7 +698,7 @@ namespace MetasysServices_TestClient.Forms
             this.LblSendCommand_Command.Margin = new System.Windows.Forms.Padding(3);
             this.LblSendCommand_Command.MinimumSize = new System.Drawing.Size(100, 0);
             this.LblSendCommand_Command.Name = "LblSendCommand_Command";
-            this.LblSendCommand_Command.Size = new System.Drawing.Size(100, 20);
+            this.LblSendCommand_Command.Size = new System.Drawing.Size(140, 20);
             this.LblSendCommand_Command.TabIndex = 2;
             this.LblSendCommand_Command.Text = "Command (String):";
             this.LblSendCommand_Command.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -698,9 +706,9 @@ namespace MetasysServices_TestClient.Forms
             // TxtSendCommand_Command
             // 
             this.TxtSendCommand_Command.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtSendCommand_Command.Location = new System.Drawing.Point(129, 49);
+            this.TxtSendCommand_Command.Location = new System.Drawing.Point(169, 49);
             this.TxtSendCommand_Command.Name = "TxtSendCommand_Command";
-            this.TxtSendCommand_Command.Size = new System.Drawing.Size(597, 20);
+            this.TxtSendCommand_Command.Size = new System.Drawing.Size(557, 20);
             this.TxtSendCommand_Command.TabIndex = 3;
             // 
             // LblSendCommand_Values
@@ -710,7 +718,7 @@ namespace MetasysServices_TestClient.Forms
             this.LblSendCommand_Values.Location = new System.Drawing.Point(23, 75);
             this.LblSendCommand_Values.Margin = new System.Windows.Forms.Padding(3);
             this.LblSendCommand_Values.Name = "LblSendCommand_Values";
-            this.LblSendCommand_Values.Size = new System.Drawing.Size(100, 20);
+            this.LblSendCommand_Values.Size = new System.Drawing.Size(140, 20);
             this.LblSendCommand_Values.TabIndex = 4;
             this.LblSendCommand_Values.Text = "Values:";
             this.LblSendCommand_Values.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -718,17 +726,18 @@ namespace MetasysServices_TestClient.Forms
             // TxtSendCommand_Values
             // 
             this.TxtSendCommand_Values.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtSendCommand_Values.Location = new System.Drawing.Point(129, 75);
+            this.TxtSendCommand_Values.Location = new System.Drawing.Point(169, 75);
             this.TxtSendCommand_Values.Name = "TxtSendCommand_Values";
-            this.TxtSendCommand_Values.Size = new System.Drawing.Size(597, 20);
+            this.TxtSendCommand_Values.Size = new System.Drawing.Size(557, 20);
             this.TxtSendCommand_Values.TabIndex = 5;
             // 
             // BtnSendCommand
             // 
-            this.BtnSendCommand.Location = new System.Drawing.Point(129, 101);
+            this.BtnSendCommand.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnSendCommand.Location = new System.Drawing.Point(169, 101);
             this.BtnSendCommand.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnSendCommand.Name = "BtnSendCommand";
-            this.BtnSendCommand.Size = new System.Drawing.Size(130, 23);
+            this.BtnSendCommand.Size = new System.Drawing.Size(557, 23);
             this.BtnSendCommand.TabIndex = 6;
             this.BtnSendCommand.Text = "SendCommand";
             this.BtnSendCommand.UseVisualStyleBackColor = true;
@@ -741,7 +750,7 @@ namespace MetasysServices_TestClient.Forms
             this.LblSendCommand_Result.Location = new System.Drawing.Point(23, 130);
             this.LblSendCommand_Result.Margin = new System.Windows.Forms.Padding(3);
             this.LblSendCommand_Result.Name = "LblSendCommand_Result";
-            this.LblSendCommand_Result.Size = new System.Drawing.Size(100, 20);
+            this.LblSendCommand_Result.Size = new System.Drawing.Size(140, 20);
             this.LblSendCommand_Result.TabIndex = 7;
             this.LblSendCommand_Result.Text = "Result:";
             this.LblSendCommand_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -749,10 +758,10 @@ namespace MetasysServices_TestClient.Forms
             // TxtSendCommand_Result
             // 
             this.TxtSendCommand_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtSendCommand_Result.Location = new System.Drawing.Point(129, 130);
+            this.TxtSendCommand_Result.Location = new System.Drawing.Point(169, 130);
             this.TxtSendCommand_Result.Name = "TxtSendCommand_Result";
             this.TxtSendCommand_Result.ReadOnly = true;
-            this.TxtSendCommand_Result.Size = new System.Drawing.Size(597, 20);
+            this.TxtSendCommand_Result.Size = new System.Drawing.Size(557, 20);
             this.TxtSendCommand_Result.TabIndex = 8;
             // 
             // Objects

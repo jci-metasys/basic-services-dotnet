@@ -125,7 +125,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpMain.Location = new System.Drawing.Point(3, 3);
             this.TlpMain.Name = "TlpMain";
-            this.TlpMain.RowCount = 5;
+            this.TlpMain.RowCount = 4;
             this.TlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -161,7 +161,7 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGet.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DgvGet.Location = new System.Drawing.Point(169, 78);
             this.DgvGet.Name = "DgvGet";
-            this.DgvGet.Size = new System.Drawing.Size(735, 462);
+            this.DgvGet.Size = new System.Drawing.Size(735, 482);
             this.DgvGet.TabIndex = 3;
             // 
             // BtnGet
@@ -199,7 +199,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetTypes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetTypes.Location = new System.Drawing.Point(3, 3);
             this.TlpGetTypes.Name = "TlpGetTypes";
-            this.TlpGetTypes.RowCount = 4;
+            this.TlpGetTypes.RowCount = 3;
             this.TlpGetTypes.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetTypes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetTypes.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -225,7 +225,7 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetTypes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DgvGetTypes.Location = new System.Drawing.Point(169, 52);
             this.DgvGetTypes.Name = "DgvGetTypes";
-            this.DgvGetTypes.Size = new System.Drawing.Size(735, 488);
+            this.DgvGetTypes.Size = new System.Drawing.Size(735, 508);
             this.DgvGetTypes.TabIndex = 1;
             // 
             // TpgFindById
@@ -253,7 +253,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpFindById.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpFindById.Location = new System.Drawing.Point(3, 3);
             this.TlpFindById.Name = "TlpFindById";
-            this.TlpFindById.RowCount = 5;
+            this.TlpFindById.RowCount = 4;
             this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -301,7 +301,7 @@ namespace MetasysServices_TestClient.Forms
             this.PrgFindById.HelpVisible = false;
             this.PrgFindById.Location = new System.Drawing.Point(169, 78);
             this.PrgFindById.Name = "PrgFindById";
-            this.PrgFindById.Size = new System.Drawing.Size(735, 462);
+            this.PrgFindById.Size = new System.Drawing.Size(735, 482);
             this.PrgFindById.TabIndex = 3;
             // 
             // TpgGetChildren
@@ -329,7 +329,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetChildren.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetChildren.Location = new System.Drawing.Point(3, 3);
             this.TlpGetChildren.Name = "TlpGetChildren";
-            this.TlpGetChildren.RowCount = 5;
+            this.TlpGetChildren.RowCount = 4;
             this.TlpGetChildren.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetChildren.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetChildren.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -377,7 +377,7 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetChildren.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DgvGetChildren.Location = new System.Drawing.Point(169, 78);
             this.DgvGetChildren.Name = "DgvGetChildren";
-            this.DgvGetChildren.Size = new System.Drawing.Size(735, 462);
+            this.DgvGetChildren.Size = new System.Drawing.Size(735, 482);
             this.DgvGetChildren.TabIndex = 3;
             // 
             // TpgGetHostingAnEquipment
@@ -405,7 +405,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetHostingAnEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetHostingAnEquipment.Location = new System.Drawing.Point(3, 3);
             this.TlpGetHostingAnEquipment.Name = "TlpGetHostingAnEquipment";
-            this.TlpGetHostingAnEquipment.RowCount = 5;
+            this.TlpGetHostingAnEquipment.RowCount = 4;
             this.TlpGetHostingAnEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetHostingAnEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetHostingAnEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -453,7 +453,7 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetHostingAnEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DgvGetHostingAnEquipment.Location = new System.Drawing.Point(169, 78);
             this.DgvGetHostingAnEquipment.Name = "DgvGetHostingAnEquipment";
-            this.DgvGetHostingAnEquipment.Size = new System.Drawing.Size(735, 462);
+            this.DgvGetHostingAnEquipment.Size = new System.Drawing.Size(735, 482);
             this.DgvGetHostingAnEquipment.TabIndex = 3;
             // 
             // TpgGetServingASpace
@@ -481,7 +481,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetServingASpace.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetServingASpace.Location = new System.Drawing.Point(3, 3);
             this.TlpGetServingASpace.Name = "TlpGetServingASpace";
-            this.TlpGetServingASpace.RowCount = 5;
+            this.TlpGetServingASpace.RowCount = 4;
             this.TlpGetServingASpace.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetServingASpace.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetServingASpace.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -529,7 +529,7 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetServingASpace.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DgvGetServingASpace.Location = new System.Drawing.Point(169, 78);
             this.DgvGetServingASpace.Name = "DgvGetServingASpace";
-            this.DgvGetServingASpace.Size = new System.Drawing.Size(735, 462);
+            this.DgvGetServingASpace.Size = new System.Drawing.Size(735, 482);
             this.DgvGetServingASpace.TabIndex = 3;
             // 
             // NetworkDevices

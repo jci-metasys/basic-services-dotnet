@@ -139,22 +139,21 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetEquipment.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetEquipment.Controls.Add(this.BtnGetEquipment, 2, 1);
             this.TlpGetEquipment.Controls.Add(this.DgvGetEquipment, 2, 2);
-            this.TlpGetEquipment.Controls.Add(this.LblGet_Title, 2, 0);
+            this.TlpGetEquipment.Controls.Add(this.LblGet_Title, 0, 0);
             this.TlpGetEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetEquipment.Location = new System.Drawing.Point(3, 3);
             this.TlpGetEquipment.Name = "TlpGetEquipment";
-            this.TlpGetEquipment.RowCount = 4;
-            this.TlpGetEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetEquipment.RowCount = 3;
+            this.TlpGetEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpGetEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetEquipment.Size = new System.Drawing.Size(978, 519);
             this.TlpGetEquipment.TabIndex = 0;
             // 
             // BtnGetEquipment
             // 
             this.BtnGetEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGetEquipment.Location = new System.Drawing.Point(169, 23);
+            this.BtnGetEquipment.Location = new System.Drawing.Point(169, 25);
             this.BtnGetEquipment.Name = "BtnGetEquipment";
             this.BtnGetEquipment.Size = new System.Drawing.Size(786, 23);
             this.BtnGetEquipment.TabIndex = 0;
@@ -166,19 +165,22 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetEquipment.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetEquipment.Location = new System.Drawing.Point(169, 52);
+            this.DgvGetEquipment.Location = new System.Drawing.Point(169, 54);
             this.DgvGetEquipment.Name = "DgvGetEquipment";
-            this.DgvGetEquipment.Size = new System.Drawing.Size(786, 444);
+            this.DgvGetEquipment.Size = new System.Drawing.Size(786, 462);
             this.DgvGetEquipment.TabIndex = 1;
             // 
             // LblGet_Title
             // 
             this.LblGet_Title.AutoSize = true;
+            this.TlpGetEquipment.SetColumnSpan(this.LblGet_Title, 3);
             this.LblGet_Title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGet_Title.Location = new System.Drawing.Point(169, 3);
+            this.LblGet_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGet_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblGet_Title.Location = new System.Drawing.Point(3, 3);
             this.LblGet_Title.Margin = new System.Windows.Forms.Padding(3);
             this.LblGet_Title.Name = "LblGet_Title";
-            this.LblGet_Title.Size = new System.Drawing.Size(786, 14);
+            this.LblGet_Title.Size = new System.Drawing.Size(952, 16);
             this.LblGet_Title.TabIndex = 2;
             this.LblGet_Title.Text = "Retrieves a collection of equipment instances.";
             this.LblGet_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -207,17 +209,16 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetEquipmentpoints.Controls.Add(this.DgvGetEquipmentPoints, 2, 4);
             this.TlpGetEquipmentpoints.Controls.Add(this.LblReadAttributeValue, 1, 2);
             this.TlpGetEquipmentpoints.Controls.Add(this.ChkReadAttributeValue, 2, 2);
-            this.TlpGetEquipmentpoints.Controls.Add(this.LblGetPoints_Title, 2, 0);
+            this.TlpGetEquipmentpoints.Controls.Add(this.LblGetPoints_Title, 0, 0);
             this.TlpGetEquipmentpoints.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetEquipmentpoints.Location = new System.Drawing.Point(3, 3);
             this.TlpGetEquipmentpoints.Name = "TlpGetEquipmentpoints";
-            this.TlpGetEquipmentpoints.RowCount = 6;
-            this.TlpGetEquipmentpoints.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetEquipmentpoints.RowCount = 5;
+            this.TlpGetEquipmentpoints.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetEquipmentpoints.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetEquipmentpoints.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetEquipmentpoints.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetEquipmentpoints.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpGetEquipmentpoints.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetEquipmentpoints.Size = new System.Drawing.Size(978, 519);
             this.TlpGetEquipmentpoints.TabIndex = 0;
             // 
@@ -225,7 +226,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblGetEquipmentPoints_EquipID.AutoSize = true;
             this.LblGetEquipmentPoints_EquipID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetEquipmentPoints_EquipID.Location = new System.Drawing.Point(23, 23);
+            this.LblGetEquipmentPoints_EquipID.Location = new System.Drawing.Point(23, 25);
             this.LblGetEquipmentPoints_EquipID.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetEquipmentPoints_EquipID.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetEquipmentPoints_EquipID.Name = "LblGetEquipmentPoints_EquipID";
@@ -237,7 +238,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetEquipmentPoints_EquipID
             // 
             this.TxtGetEquipmentPoints_EquipID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetEquipmentPoints_EquipID.Location = new System.Drawing.Point(169, 23);
+            this.TxtGetEquipmentPoints_EquipID.Location = new System.Drawing.Point(169, 25);
             this.TxtGetEquipmentPoints_EquipID.Name = "TxtGetEquipmentPoints_EquipID";
             this.TxtGetEquipmentPoints_EquipID.Size = new System.Drawing.Size(786, 20);
             this.TxtGetEquipmentPoints_EquipID.TabIndex = 1;
@@ -245,7 +246,7 @@ namespace MetasysServices_TestClient.Forms
             // BtnGetEuipmentPoints
             // 
             this.BtnGetEuipmentPoints.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGetEuipmentPoints.Location = new System.Drawing.Point(169, 75);
+            this.BtnGetEuipmentPoints.Location = new System.Drawing.Point(169, 77);
             this.BtnGetEuipmentPoints.Name = "BtnGetEuipmentPoints";
             this.BtnGetEuipmentPoints.Size = new System.Drawing.Size(786, 23);
             this.BtnGetEuipmentPoints.TabIndex = 2;
@@ -257,16 +258,16 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetEquipmentPoints.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetEquipmentPoints.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetEquipmentPoints.Location = new System.Drawing.Point(169, 104);
+            this.DgvGetEquipmentPoints.Location = new System.Drawing.Point(169, 106);
             this.DgvGetEquipmentPoints.Name = "DgvGetEquipmentPoints";
-            this.DgvGetEquipmentPoints.Size = new System.Drawing.Size(786, 392);
+            this.DgvGetEquipmentPoints.Size = new System.Drawing.Size(786, 410);
             this.DgvGetEquipmentPoints.TabIndex = 3;
             // 
             // LblReadAttributeValue
             // 
             this.LblReadAttributeValue.AutoSize = true;
             this.LblReadAttributeValue.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblReadAttributeValue.Location = new System.Drawing.Point(23, 49);
+            this.LblReadAttributeValue.Location = new System.Drawing.Point(23, 51);
             this.LblReadAttributeValue.Margin = new System.Windows.Forms.Padding(3);
             this.LblReadAttributeValue.Name = "LblReadAttributeValue";
             this.LblReadAttributeValue.Size = new System.Drawing.Size(140, 20);
@@ -279,7 +280,7 @@ namespace MetasysServices_TestClient.Forms
             this.ChkReadAttributeValue.AutoSize = true;
             this.ChkReadAttributeValue.Checked = true;
             this.ChkReadAttributeValue.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChkReadAttributeValue.Location = new System.Drawing.Point(169, 49);
+            this.ChkReadAttributeValue.Location = new System.Drawing.Point(169, 51);
             this.ChkReadAttributeValue.MinimumSize = new System.Drawing.Size(0, 20);
             this.ChkReadAttributeValue.Name = "ChkReadAttributeValue";
             this.ChkReadAttributeValue.Size = new System.Drawing.Size(15, 20);
@@ -289,14 +290,17 @@ namespace MetasysServices_TestClient.Forms
             // LblGetPoints_Title
             // 
             this.LblGetPoints_Title.AutoSize = true;
+            this.TlpGetEquipmentpoints.SetColumnSpan(this.LblGetPoints_Title, 4);
             this.LblGetPoints_Title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetPoints_Title.Location = new System.Drawing.Point(169, 3);
+            this.LblGetPoints_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGetPoints_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblGetPoints_Title.Location = new System.Drawing.Point(3, 3);
             this.LblGetPoints_Title.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetPoints_Title.Name = "LblGetPoints_Title";
-            this.LblGetPoints_Title.Size = new System.Drawing.Size(786, 14);
+            this.LblGetPoints_Title.Size = new System.Drawing.Size(972, 16);
             this.LblGetPoints_Title.TabIndex = 6;
             this.LblGetPoints_Title.Text = "Retrieves the collection of points that are defined by the specified equipment in" +
-    "stance. Each point contains a mapping to an attribute on an object.";
+    "stance.";
             this.LblGetPoints_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // TpgFindById
@@ -321,12 +325,12 @@ namespace MetasysServices_TestClient.Forms
             this.TlpFindById.Controls.Add(this.TxtFindById_EquipmentId, 2, 1);
             this.TlpFindById.Controls.Add(this.BtnFindById, 2, 2);
             this.TlpFindById.Controls.Add(this.PrgGetFindById, 2, 3);
-            this.TlpFindById.Controls.Add(this.LblFindById_Title, 2, 0);
+            this.TlpFindById.Controls.Add(this.LblFindById_Title, 0, 0);
             this.TlpFindById.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpFindById.Location = new System.Drawing.Point(3, 3);
             this.TlpFindById.Name = "TlpFindById";
-            this.TlpFindById.RowCount = 5;
-            this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpFindById.RowCount = 4;
+            this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -338,7 +342,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblFindById_EquipmentId.AutoSize = true;
             this.LblFindById_EquipmentId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblFindById_EquipmentId.Location = new System.Drawing.Point(23, 23);
+            this.LblFindById_EquipmentId.Location = new System.Drawing.Point(23, 25);
             this.LblFindById_EquipmentId.Margin = new System.Windows.Forms.Padding(3);
             this.LblFindById_EquipmentId.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblFindById_EquipmentId.Name = "LblFindById_EquipmentId";
@@ -350,7 +354,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtFindById_EquipmentId
             // 
             this.TxtFindById_EquipmentId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtFindById_EquipmentId.Location = new System.Drawing.Point(169, 23);
+            this.TxtFindById_EquipmentId.Location = new System.Drawing.Point(169, 25);
             this.TxtFindById_EquipmentId.Name = "TxtFindById_EquipmentId";
             this.TxtFindById_EquipmentId.Size = new System.Drawing.Size(786, 20);
             this.TxtFindById_EquipmentId.TabIndex = 1;
@@ -358,7 +362,7 @@ namespace MetasysServices_TestClient.Forms
             // BtnFindById
             // 
             this.BtnFindById.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnFindById.Location = new System.Drawing.Point(169, 49);
+            this.BtnFindById.Location = new System.Drawing.Point(169, 51);
             this.BtnFindById.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnFindById.Name = "BtnFindById";
             this.BtnFindById.Size = new System.Drawing.Size(786, 23);
@@ -371,19 +375,22 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.PrgGetFindById.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PrgGetFindById.HelpVisible = false;
-            this.PrgGetFindById.Location = new System.Drawing.Point(169, 78);
+            this.PrgGetFindById.Location = new System.Drawing.Point(169, 80);
             this.PrgGetFindById.Name = "PrgGetFindById";
-            this.PrgGetFindById.Size = new System.Drawing.Size(786, 418);
+            this.PrgGetFindById.Size = new System.Drawing.Size(786, 436);
             this.PrgGetFindById.TabIndex = 3;
             // 
             // LblFindById_Title
             // 
             this.LblFindById_Title.AutoSize = true;
+            this.TlpFindById.SetColumnSpan(this.LblFindById_Title, 4);
             this.LblFindById_Title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblFindById_Title.Location = new System.Drawing.Point(169, 3);
+            this.LblFindById_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblFindById_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblFindById_Title.Location = new System.Drawing.Point(3, 3);
             this.LblFindById_Title.Margin = new System.Windows.Forms.Padding(3);
             this.LblFindById_Title.Name = "LblFindById_Title";
-            this.LblFindById_Title.Size = new System.Drawing.Size(786, 14);
+            this.LblFindById_Title.Size = new System.Drawing.Size(972, 16);
             this.LblFindById_Title.TabIndex = 4;
             this.LblFindById_Title.Text = "Retrieves the specified equipment instance.";
             this.LblFindById_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -410,16 +417,15 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetSpaceEquipment.Controls.Add(this.TxtGetSpaceEquipment_SpaceID, 2, 1);
             this.TlpGetSpaceEquipment.Controls.Add(this.BtnGetSpaceEquipment, 2, 2);
             this.TlpGetSpaceEquipment.Controls.Add(this.DgvGetSpaceEquipment, 2, 3);
-            this.TlpGetSpaceEquipment.Controls.Add(this.LblGetServingASpace_Title, 2, 0);
+            this.TlpGetSpaceEquipment.Controls.Add(this.LblGetServingASpace_Title, 0, 0);
             this.TlpGetSpaceEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetSpaceEquipment.Location = new System.Drawing.Point(3, 3);
             this.TlpGetSpaceEquipment.Name = "TlpGetSpaceEquipment";
-            this.TlpGetSpaceEquipment.RowCount = 5;
-            this.TlpGetSpaceEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetSpaceEquipment.RowCount = 4;
+            this.TlpGetSpaceEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetSpaceEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetSpaceEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetSpaceEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpGetSpaceEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetSpaceEquipment.Size = new System.Drawing.Size(978, 519);
             this.TlpGetSpaceEquipment.TabIndex = 1;
             // 
@@ -427,7 +433,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblGetSpaceEquipment_SpaceID.AutoSize = true;
             this.LblGetSpaceEquipment_SpaceID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetSpaceEquipment_SpaceID.Location = new System.Drawing.Point(23, 23);
+            this.LblGetSpaceEquipment_SpaceID.Location = new System.Drawing.Point(23, 25);
             this.LblGetSpaceEquipment_SpaceID.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetSpaceEquipment_SpaceID.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetSpaceEquipment_SpaceID.Name = "LblGetSpaceEquipment_SpaceID";
@@ -439,7 +445,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetSpaceEquipment_SpaceID
             // 
             this.TxtGetSpaceEquipment_SpaceID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetSpaceEquipment_SpaceID.Location = new System.Drawing.Point(169, 23);
+            this.TxtGetSpaceEquipment_SpaceID.Location = new System.Drawing.Point(169, 25);
             this.TxtGetSpaceEquipment_SpaceID.Name = "TxtGetSpaceEquipment_SpaceID";
             this.TxtGetSpaceEquipment_SpaceID.Size = new System.Drawing.Size(786, 20);
             this.TxtGetSpaceEquipment_SpaceID.TabIndex = 1;
@@ -447,7 +453,7 @@ namespace MetasysServices_TestClient.Forms
             // BtnGetSpaceEquipment
             // 
             this.BtnGetSpaceEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGetSpaceEquipment.Location = new System.Drawing.Point(169, 49);
+            this.BtnGetSpaceEquipment.Location = new System.Drawing.Point(169, 51);
             this.BtnGetSpaceEquipment.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetSpaceEquipment.Name = "BtnGetSpaceEquipment";
             this.BtnGetSpaceEquipment.Size = new System.Drawing.Size(786, 23);
@@ -460,19 +466,22 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetSpaceEquipment.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetSpaceEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetSpaceEquipment.Location = new System.Drawing.Point(169, 78);
+            this.DgvGetSpaceEquipment.Location = new System.Drawing.Point(169, 80);
             this.DgvGetSpaceEquipment.Name = "DgvGetSpaceEquipment";
-            this.DgvGetSpaceEquipment.Size = new System.Drawing.Size(786, 418);
+            this.DgvGetSpaceEquipment.Size = new System.Drawing.Size(786, 436);
             this.DgvGetSpaceEquipment.TabIndex = 3;
             // 
             // LblGetServingASpace_Title
             // 
             this.LblGetServingASpace_Title.AutoSize = true;
+            this.TlpGetSpaceEquipment.SetColumnSpan(this.LblGetServingASpace_Title, 4);
             this.LblGetServingASpace_Title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetServingASpace_Title.Location = new System.Drawing.Point(169, 3);
+            this.LblGetServingASpace_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGetServingASpace_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblGetServingASpace_Title.Location = new System.Drawing.Point(3, 3);
             this.LblGetServingASpace_Title.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetServingASpace_Title.Name = "LblGetServingASpace_Title";
-            this.LblGetServingASpace_Title.Size = new System.Drawing.Size(786, 14);
+            this.LblGetServingASpace_Title.Size = new System.Drawing.Size(972, 16);
             this.LblGetServingASpace_Title.TabIndex = 4;
             this.LblGetServingASpace_Title.Text = "Retrieves the collection of equipment that serve the specified space.";
             this.LblGetServingASpace_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -499,12 +508,12 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetHostedByNetworkDevice.Controls.Add(this.TxtGetHostedByNetworkDevice_NetDevID, 2, 1);
             this.TlpGetHostedByNetworkDevice.Controls.Add(this.BtnGetHostedByNetworkDevice, 2, 2);
             this.TlpGetHostedByNetworkDevice.Controls.Add(this.DgvGetHostedByNetworkDevice, 2, 3);
-            this.TlpGetHostedByNetworkDevice.Controls.Add(this.LblGetHostedByNetworkDevice_Title, 2, 0);
+            this.TlpGetHostedByNetworkDevice.Controls.Add(this.LblGetHostedByNetworkDevice_Title, 0, 0);
             this.TlpGetHostedByNetworkDevice.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetHostedByNetworkDevice.Location = new System.Drawing.Point(3, 3);
             this.TlpGetHostedByNetworkDevice.Name = "TlpGetHostedByNetworkDevice";
-            this.TlpGetHostedByNetworkDevice.RowCount = 5;
-            this.TlpGetHostedByNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetHostedByNetworkDevice.RowCount = 4;
+            this.TlpGetHostedByNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetHostedByNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetHostedByNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetHostedByNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -516,7 +525,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblGetHostedByNetworkDevice_NetDevID.AutoSize = true;
             this.LblGetHostedByNetworkDevice_NetDevID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetHostedByNetworkDevice_NetDevID.Location = new System.Drawing.Point(23, 23);
+            this.LblGetHostedByNetworkDevice_NetDevID.Location = new System.Drawing.Point(23, 25);
             this.LblGetHostedByNetworkDevice_NetDevID.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetHostedByNetworkDevice_NetDevID.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetHostedByNetworkDevice_NetDevID.Name = "LblGetHostedByNetworkDevice_NetDevID";
@@ -528,7 +537,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetHostedByNetworkDevice_NetDevID
             // 
             this.TxtGetHostedByNetworkDevice_NetDevID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetHostedByNetworkDevice_NetDevID.Location = new System.Drawing.Point(169, 23);
+            this.TxtGetHostedByNetworkDevice_NetDevID.Location = new System.Drawing.Point(169, 25);
             this.TxtGetHostedByNetworkDevice_NetDevID.Name = "TxtGetHostedByNetworkDevice_NetDevID";
             this.TxtGetHostedByNetworkDevice_NetDevID.Size = new System.Drawing.Size(786, 20);
             this.TxtGetHostedByNetworkDevice_NetDevID.TabIndex = 1;
@@ -536,7 +545,7 @@ namespace MetasysServices_TestClient.Forms
             // BtnGetHostedByNetworkDevice
             // 
             this.BtnGetHostedByNetworkDevice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGetHostedByNetworkDevice.Location = new System.Drawing.Point(169, 49);
+            this.BtnGetHostedByNetworkDevice.Location = new System.Drawing.Point(169, 51);
             this.BtnGetHostedByNetworkDevice.Name = "BtnGetHostedByNetworkDevice";
             this.BtnGetHostedByNetworkDevice.Size = new System.Drawing.Size(786, 23);
             this.BtnGetHostedByNetworkDevice.TabIndex = 2;
@@ -548,19 +557,22 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetHostedByNetworkDevice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetHostedByNetworkDevice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetHostedByNetworkDevice.Location = new System.Drawing.Point(169, 78);
+            this.DgvGetHostedByNetworkDevice.Location = new System.Drawing.Point(169, 80);
             this.DgvGetHostedByNetworkDevice.Name = "DgvGetHostedByNetworkDevice";
-            this.DgvGetHostedByNetworkDevice.Size = new System.Drawing.Size(786, 418);
+            this.DgvGetHostedByNetworkDevice.Size = new System.Drawing.Size(786, 436);
             this.DgvGetHostedByNetworkDevice.TabIndex = 3;
             // 
             // LblGetHostedByNetworkDevice_Title
             // 
             this.LblGetHostedByNetworkDevice_Title.AutoSize = true;
+            this.TlpGetHostedByNetworkDevice.SetColumnSpan(this.LblGetHostedByNetworkDevice_Title, 4);
             this.LblGetHostedByNetworkDevice_Title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetHostedByNetworkDevice_Title.Location = new System.Drawing.Point(169, 3);
+            this.LblGetHostedByNetworkDevice_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGetHostedByNetworkDevice_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblGetHostedByNetworkDevice_Title.Location = new System.Drawing.Point(3, 3);
             this.LblGetHostedByNetworkDevice_Title.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetHostedByNetworkDevice_Title.Name = "LblGetHostedByNetworkDevice_Title";
-            this.LblGetHostedByNetworkDevice_Title.Size = new System.Drawing.Size(786, 14);
+            this.LblGetHostedByNetworkDevice_Title.Size = new System.Drawing.Size(972, 16);
             this.LblGetHostedByNetworkDevice_Title.TabIndex = 4;
             this.LblGetHostedByNetworkDevice_Title.Text = "Retrieves the collection of equipment instances that are hosted by the specified " +
     "network device or its children.";
@@ -587,13 +599,13 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetServedByEquipment.Controls.Add(this.LblGetServedByEquipment_EquipmentID, 1, 1);
             this.TlpGetServedByEquipment.Controls.Add(this.TxtGetServedByEquipment_EquipmentID, 2, 1);
             this.TlpGetServedByEquipment.Controls.Add(this.BtnGetServedByEquipment, 2, 2);
-            this.TlpGetServedByEquipment.Controls.Add(this.LblGetServedByEquipment_Title, 2, 0);
+            this.TlpGetServedByEquipment.Controls.Add(this.LblGetServedByEquipment_Title, 0, 0);
             this.TlpGetServedByEquipment.Controls.Add(this.DgvGetServedByEquipment, 2, 3);
             this.TlpGetServedByEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetServedByEquipment.Location = new System.Drawing.Point(3, 3);
             this.TlpGetServedByEquipment.Name = "TlpGetServedByEquipment";
-            this.TlpGetServedByEquipment.RowCount = 5;
-            this.TlpGetServedByEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetServedByEquipment.RowCount = 4;
+            this.TlpGetServedByEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetServedByEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetServedByEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetServedByEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -605,10 +617,11 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblGetServedByEquipment_EquipmentID.AutoSize = true;
             this.LblGetServedByEquipment_EquipmentID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetServedByEquipment_EquipmentID.Location = new System.Drawing.Point(23, 23);
+            this.LblGetServedByEquipment_EquipmentID.Location = new System.Drawing.Point(23, 25);
             this.LblGetServedByEquipment_EquipmentID.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetServedByEquipment_EquipmentID.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetServedByEquipment_EquipmentID.Name = "LblGetServedByEquipment_EquipmentID";
-            this.LblGetServedByEquipment_EquipmentID.Size = new System.Drawing.Size(110, 20);
+            this.LblGetServedByEquipment_EquipmentID.Size = new System.Drawing.Size(140, 20);
             this.LblGetServedByEquipment_EquipmentID.TabIndex = 0;
             this.LblGetServedByEquipment_EquipmentID.Text = "Equipment ID (GUID):";
             this.LblGetServedByEquipment_EquipmentID.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -616,17 +629,17 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetServedByEquipment_EquipmentID
             // 
             this.TxtGetServedByEquipment_EquipmentID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetServedByEquipment_EquipmentID.Location = new System.Drawing.Point(139, 23);
+            this.TxtGetServedByEquipment_EquipmentID.Location = new System.Drawing.Point(169, 25);
             this.TxtGetServedByEquipment_EquipmentID.Name = "TxtGetServedByEquipment_EquipmentID";
-            this.TxtGetServedByEquipment_EquipmentID.Size = new System.Drawing.Size(816, 20);
+            this.TxtGetServedByEquipment_EquipmentID.Size = new System.Drawing.Size(786, 20);
             this.TxtGetServedByEquipment_EquipmentID.TabIndex = 1;
             // 
             // BtnGetServedByEquipment
             // 
             this.BtnGetServedByEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGetServedByEquipment.Location = new System.Drawing.Point(139, 49);
+            this.BtnGetServedByEquipment.Location = new System.Drawing.Point(169, 51);
             this.BtnGetServedByEquipment.Name = "BtnGetServedByEquipment";
-            this.BtnGetServedByEquipment.Size = new System.Drawing.Size(816, 23);
+            this.BtnGetServedByEquipment.Size = new System.Drawing.Size(786, 23);
             this.BtnGetServedByEquipment.TabIndex = 2;
             this.BtnGetServedByEquipment.Text = "Equipments.GetServedByEquipment";
             this.BtnGetServedByEquipment.UseVisualStyleBackColor = true;
@@ -635,11 +648,14 @@ namespace MetasysServices_TestClient.Forms
             // LblGetServedByEquipment_Title
             // 
             this.LblGetServedByEquipment_Title.AutoSize = true;
+            this.TlpGetServedByEquipment.SetColumnSpan(this.LblGetServedByEquipment_Title, 4);
             this.LblGetServedByEquipment_Title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetServedByEquipment_Title.Location = new System.Drawing.Point(139, 3);
+            this.LblGetServedByEquipment_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGetServedByEquipment_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblGetServedByEquipment_Title.Location = new System.Drawing.Point(3, 3);
             this.LblGetServedByEquipment_Title.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetServedByEquipment_Title.Name = "LblGetServedByEquipment_Title";
-            this.LblGetServedByEquipment_Title.Size = new System.Drawing.Size(816, 14);
+            this.LblGetServedByEquipment_Title.Size = new System.Drawing.Size(972, 16);
             this.LblGetServedByEquipment_Title.TabIndex = 4;
             this.LblGetServedByEquipment_Title.Text = "Retrieves the equipment served by the specified equipment instance.";
             this.LblGetServedByEquipment_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -648,9 +664,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetServedByEquipment.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetServedByEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetServedByEquipment.Location = new System.Drawing.Point(139, 78);
+            this.DgvGetServedByEquipment.Location = new System.Drawing.Point(169, 80);
             this.DgvGetServedByEquipment.Name = "DgvGetServedByEquipment";
-            this.DgvGetServedByEquipment.Size = new System.Drawing.Size(816, 418);
+            this.DgvGetServedByEquipment.Size = new System.Drawing.Size(786, 436);
             this.DgvGetServedByEquipment.TabIndex = 5;
             // 
             // TpgGetServingAnEquipment
@@ -674,13 +690,13 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetServingAnEquipment.Controls.Add(this.LblGetServingAnEquipment_EquipmentID, 1, 1);
             this.TlpGetServingAnEquipment.Controls.Add(this.TxtGetServingAnEquipment_EquipmentID, 2, 1);
             this.TlpGetServingAnEquipment.Controls.Add(this.BtnGetServingAnEquipment, 2, 2);
-            this.TlpGetServingAnEquipment.Controls.Add(this.LblGetSetrvingAnEquipment_Title, 2, 0);
+            this.TlpGetServingAnEquipment.Controls.Add(this.LblGetSetrvingAnEquipment_Title, 0, 0);
             this.TlpGetServingAnEquipment.Controls.Add(this.DgvGetServingAnEquipment, 2, 3);
             this.TlpGetServingAnEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetServingAnEquipment.Location = new System.Drawing.Point(3, 3);
             this.TlpGetServingAnEquipment.Name = "TlpGetServingAnEquipment";
-            this.TlpGetServingAnEquipment.RowCount = 5;
-            this.TlpGetServingAnEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetServingAnEquipment.RowCount = 4;
+            this.TlpGetServingAnEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetServingAnEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetServingAnEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetServingAnEquipment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -692,7 +708,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblGetServingAnEquipment_EquipmentID.AutoSize = true;
             this.LblGetServingAnEquipment_EquipmentID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetServingAnEquipment_EquipmentID.Location = new System.Drawing.Point(23, 23);
+            this.LblGetServingAnEquipment_EquipmentID.Location = new System.Drawing.Point(23, 25);
             this.LblGetServingAnEquipment_EquipmentID.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetServingAnEquipment_EquipmentID.Name = "LblGetServingAnEquipment_EquipmentID";
             this.LblGetServingAnEquipment_EquipmentID.Size = new System.Drawing.Size(110, 20);
@@ -703,7 +719,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetServingAnEquipment_EquipmentID
             // 
             this.TxtGetServingAnEquipment_EquipmentID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetServingAnEquipment_EquipmentID.Location = new System.Drawing.Point(139, 23);
+            this.TxtGetServingAnEquipment_EquipmentID.Location = new System.Drawing.Point(139, 25);
             this.TxtGetServingAnEquipment_EquipmentID.Name = "TxtGetServingAnEquipment_EquipmentID";
             this.TxtGetServingAnEquipment_EquipmentID.Size = new System.Drawing.Size(816, 20);
             this.TxtGetServingAnEquipment_EquipmentID.TabIndex = 1;
@@ -711,7 +727,7 @@ namespace MetasysServices_TestClient.Forms
             // BtnGetServingAnEquipment
             // 
             this.BtnGetServingAnEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGetServingAnEquipment.Location = new System.Drawing.Point(139, 49);
+            this.BtnGetServingAnEquipment.Location = new System.Drawing.Point(139, 51);
             this.BtnGetServingAnEquipment.Name = "BtnGetServingAnEquipment";
             this.BtnGetServingAnEquipment.Size = new System.Drawing.Size(816, 23);
             this.BtnGetServingAnEquipment.TabIndex = 2;
@@ -722,11 +738,14 @@ namespace MetasysServices_TestClient.Forms
             // LblGetSetrvingAnEquipment_Title
             // 
             this.LblGetSetrvingAnEquipment_Title.AutoSize = true;
+            this.TlpGetServingAnEquipment.SetColumnSpan(this.LblGetSetrvingAnEquipment_Title, 4);
             this.LblGetSetrvingAnEquipment_Title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetSetrvingAnEquipment_Title.Location = new System.Drawing.Point(139, 3);
+            this.LblGetSetrvingAnEquipment_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGetSetrvingAnEquipment_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblGetSetrvingAnEquipment_Title.Location = new System.Drawing.Point(3, 3);
             this.LblGetSetrvingAnEquipment_Title.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetSetrvingAnEquipment_Title.Name = "LblGetSetrvingAnEquipment_Title";
-            this.LblGetSetrvingAnEquipment_Title.Size = new System.Drawing.Size(816, 14);
+            this.LblGetSetrvingAnEquipment_Title.Size = new System.Drawing.Size(972, 16);
             this.LblGetSetrvingAnEquipment_Title.TabIndex = 3;
             this.LblGetSetrvingAnEquipment_Title.Text = "Retrieves the collection of equipment that serve the specified equipment instance" +
     ".";
@@ -736,9 +755,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetServingAnEquipment.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetServingAnEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetServingAnEquipment.Location = new System.Drawing.Point(139, 78);
+            this.DgvGetServingAnEquipment.Location = new System.Drawing.Point(139, 80);
             this.DgvGetServingAnEquipment.Name = "DgvGetServingAnEquipment";
-            this.DgvGetServingAnEquipment.Size = new System.Drawing.Size(816, 418);
+            this.DgvGetServingAnEquipment.Size = new System.Drawing.Size(816, 436);
             this.DgvGetServingAnEquipment.TabIndex = 4;
             // 
             // Equipments

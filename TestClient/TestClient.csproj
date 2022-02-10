@@ -99,6 +99,12 @@
     <Compile Include="Forms\Alarms.Designer.cs">
       <DependentUpon>Alarms.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Audits.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Audits.Designer.cs">
+      <DependentUpon>Audits.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Enumerations.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,6 +122,12 @@
     </Compile>
     <Compile Include="Forms\MainUI.Designer.cs">
       <DependentUpon>MainUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Miscellanea.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Miscellanea.Designer.cs">
+      <DependentUpon>Miscellanea.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\NetworkDevices.cs">
       <SubType>Form</SubType>
@@ -153,6 +165,9 @@
     <EmbeddedResource Include="Forms\Alarms.resx">
       <DependentUpon>Alarms.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Audits.resx">
+      <DependentUpon>Audits.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Enumerations.resx">
       <DependentUpon>Enumerations.cs</DependentUpon>
     </EmbeddedResource>
@@ -161,6 +176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainUI.resx">
       <DependentUpon>MainUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Miscellanea.resx">
+      <DependentUpon>Miscellanea.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NetworkDevices.resx">
       <DependentUpon>NetworkDevices.cs</DependentUpon>
