@@ -40,6 +40,22 @@ namespace JohnsonControls.Metasys.ComServices
         /// <exception cref="MetasysTokenException"></exception>
         IComAccessToken Refresh();
 
+        /// <summary>
+        /// Localizes the specified resource key for the current MetasysClient locale or specified culture.
+        /// </summary>
+        /// <remarks>
+        /// The resource parameter must be the key of a Metasys enumeration resource,
+        /// otherwise no translation will be found.
+        /// </remarks>
+        /// <param name="resource">The key for the localization resource.</param>
+        /// <param name="cultureInfo">Optional culture specification.</param>
+        /// <returns>
+        /// Localized string if the resource was found, the default en-US localized string if not found,
+        /// or the resource parameter value if neither resource is found.
+        /// </returns>
+        string Localize(string resource, string cultureInfo);
+
+
         #region "Alarms" //---------------------------------------------------------------------------------------------------------------------------
         /// <summary>
         /// Retrieves the specified alarm.
@@ -143,7 +159,14 @@ namespace JohnsonControls.Metasys.ComServices
 
 
         #region "Enumerations" //------------------------------------------------------------------------------------------------------------------
-
+        
+        
+        /// <summary>
+        /// Delete an enumeration. Only custom enumerations may be deleted.
+        /// </summary>
+        /// <param name="id">The identifier (name) of the custom enumeration</param>
+        /// <returns></returns>
+        void DeleteCustomEnumeration(string id);
         #endregion
 
 
@@ -242,8 +265,110 @@ namespace JohnsonControls.Metasys.ComServices
 
 
         #region "Objects" //-------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Read one attribute value given the Guid of the object.
+        /// </summary>
+        /// <returns>
+        /// Variant if the attribute exists, null if does not exist.
+        /// </returns>
+        /// <param name="id"></param>
+        /// <param name="attributeName"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpTimeoutException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <exception cref="MetasysHttpNotFoundException"></exception>
+        /// <exception cref="MetasysPropertyException"></exception>
+        IComVariant ReadProperty(string id, string attributeName);
 
+        /// <summary>
+        /// Read many attribute values given the Guids of the objects.
+        /// </summary>
+        /// <returns>
+        /// A list of VariantMultiple with all the specified attributes (if existing).
+        /// </returns>
+        /// <param name="ids"></param>
+        /// <param name="attributeNames"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysPropertyException"></exception>
+        object ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeNames);
 
+        /// <summary>
+        /// Write a single attribute given the Guid of the object.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="newValue"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        void WriteProperty(string id, string attributeName, string newValue);
+
+        /// <summary>
+        /// Write to many attribute values given the Guids of the objects.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="attributes"></param>
+        /// <param name="attributeValues">The (attribute, value) pairs split in a array.</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeValues);
+
+        /// <summary>
+        /// Get all available commands given the Guid of the object.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>List of Commands.</returns>
+        object GetCommands(string id);
+
+        /// <summary>
+        /// Send a command to an object.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="command"></param>
+        /// <param name="values"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] values = null);
+
+        /// <summary>
+        /// Gets all child objects given a parent Guid.
+        /// Level indicates how deep to retrieve objects.
+        /// </summary>
+        /// <remarks>
+        /// A level of 1 only retrieves immediate children of the parent object.
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <param name="levels">The depth of the children to retrieve.</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        object GetObjects(string id, int levels = 1);
+
+        /// <summary>
+        /// Given the Item Reference of an object, returns the object identifier.
+        /// </summary>
+        string GetObjectIdentifier(string itemReference);
+
+        /// <summary>
+        /// Attempts to get the enumeration key of a given en-US localized command.
+        /// </summary>
+        /// <remarks>
+        /// The resource parameter must be the value of a Metasys commandIdEnumSet en-US value,
+        /// otherwise no key will be found.
+        /// </remarks>
+        /// <param name="resource">The en-US value for the localization resource.</param>
+        /// <returns>
+        /// The enumeration key of the en-US command if found, original resource if not.
+        /// </returns>
+        string GetCommandEnumeration(string resource);
+
+        /// <summary>
+        /// Attempts to get the enumeration key of a given en-US localized objectType.
+        /// </summary>
+        /// <remarks>
+        /// The resource parameter must be the value of a Metasys objectTypeEnumSet en-US value,
+        /// otherwise no key will be found.
+        /// </remarks>
+        /// <param name="resource">The en-US value for the localization resource.</param>
+        /// <returns>
+        /// The enumeration key of the en-US objectType if found, original resource if not.
+        /// </returns>
+        string GetObjectTypeEnumeration(string resource);
         #endregion
 
         #region "Spaces" //--------------------------------------------------------------------------------------------------------------------------
@@ -336,144 +461,6 @@ namespace JohnsonControls.Metasys.ComServices
 
 
         #region "Streams" //---------------------------------------------------------------------------------------------------------------------------
-
-        #endregion
-
-
-        /// <summary>
-        /// Read one attribute value given the Guid of the object.
-        /// </summary>
-        /// <returns>
-        /// Variant if the attribute exists, null if does not exist.
-        /// </returns>
-        /// <param name="id"></param>
-        /// <param name="attributeName"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpTimeoutException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        /// <exception cref="MetasysHttpNotFoundException"></exception>
-        /// <exception cref="MetasysPropertyException"></exception>
-        IComVariant ReadProperty(string id, string attributeName);
-
-        /// <summary>
-        /// Read many attribute values given the Guids of the objects.
-        /// </summary>
-        /// <returns>
-        /// A list of VariantMultiple with all the specified attributes (if existing).
-        /// </returns>
-        /// <param name="ids"></param>
-        /// <param name="attributeNames"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysPropertyException"></exception>
-        object ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeNames);
-
-        /// <summary>
-        /// Write a single attribute given the Guid of the object.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="attributeName"></param>
-        /// <param name="newValue"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        void WriteProperty(string id, string attributeName, string newValue);
-
-        /// <summary>
-        /// Write to many attribute values given the Guids of the objects.
-        /// </summary>
-        /// <param name="ids"></param>
-        /// <param name="attributes"></param>
-        /// <param name="attributeValues">The (attribute, value) pairs split in a array.</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeValues);
-
-        /// <summary>
-        /// Get all available commands given the Guid of the object.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>List of Commands.</returns>
-        object GetCommands(string id);
-
-        /// <summary>
-        /// Send a command to an object.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="command"></param>
-        /// <param name="values"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] values = null);
-
-
-        /// <summary>
-        /// Gets all child objects given a parent Guid.
-        /// Level indicates how deep to retrieve objects.
-        /// </summary>
-        /// <remarks>
-        /// A level of 1 only retrieves immediate children of the parent object.
-        /// </remarks>
-        /// <param name="id"></param>
-        /// <param name="levels">The depth of the children to retrieve.</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        object GetObjects(string id, int levels = 1);
-
-        /// <summary>
-        /// Given the Item Reference of an object, returns the object identifier.
-        /// </summary>
-        string GetObjectIdentifier(string itemReference);
-
-
-
-
-
-
-
-
-
-
-
-
-        /// <summary>
-        /// Localizes the specified resource key for the current MetasysClient locale or specified culture.
-        /// </summary>
-        /// <remarks>
-        /// The resource parameter must be the key of a Metasys enumeration resource,
-        /// otherwise no translation will be found.
-        /// </remarks>
-        /// <param name="resource">The key for the localization resource.</param>
-        /// <param name="cultureInfo">Optional culture specification.</param>
-        /// <returns>
-        /// Localized string if the resource was found, the default en-US localized string if not found,
-        /// or the resource parameter value if neither resource is found.
-        /// </returns>
-        string Localize(string resource, string cultureInfo);
-
-        /// <summary>
-        /// Attempts to get the enumeration key of a given en-US localized command.
-        /// </summary>
-        /// <remarks>
-        /// The resource parameter must be the value of a Metasys commandIdEnumSet en-US value,
-        /// otherwise no key will be found.
-        /// </remarks>
-        /// <param name="resource">The en-US value for the localization resource.</param>
-        /// <returns>
-        /// The enumeration key of the en-US command if found, original resource if not.
-        /// </returns>
-        string GetCommandEnumeration(string resource);
-
-        /// <summary>
-        /// Attempts to get the enumeration key of a given en-US localized objectType.
-        /// </summary>
-        /// <remarks>
-        /// The resource parameter must be the value of a Metasys objectTypeEnumSet en-US value,
-        /// otherwise no key will be found.
-        /// </remarks>
-        /// <param name="resource">The en-US value for the localization resource.</param>
-        /// <returns>
-        /// The enumeration key of the en-US objectType if found, original resource if not.
-        /// </returns>
-        string GetObjectTypeEnumeration(string resource);
-
-        //==================================================================================================================================
-
         /// <summary>
         /// Return the list of Request IDs.
         /// </summary>
@@ -503,5 +490,24 @@ namespace JohnsonControls.Metasys.ComServices
         /// Return the list of COV values
         /// </summary>
         List<StreamMessage> GetCOVStreamValues();
+        #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //==================================================================================================================================
+
     }
 }

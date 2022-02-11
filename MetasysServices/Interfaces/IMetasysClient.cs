@@ -37,6 +37,11 @@ namespace JohnsonControls.Metasys.BasicServices
         IAuditService Audits { get; set; }
 
         /// <summary>
+        /// Services for Enumerations.
+        /// </summary>
+        IEnumerationService Enumerations { get; set; }
+
+        /// <summary>
         /// Services for Equipments.
         /// </summary>
         IEquipmentService Equipments { get; set; }

@@ -254,6 +254,11 @@ namespace JohnsonControls.Metasys.ComServices
 
         #region "Enumerations" //-----------------------------------------------------------------------------------------------------------------
 
+        /// <inheritdoc />
+        public void DeleteCustomEnumeration(string id)
+        {
+            Client.Enumerations.Delete(id);
+        }
         #endregion
 
 
@@ -262,7 +267,7 @@ namespace JohnsonControls.Metasys.ComServices
         public object GetEquipment()
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.GetEquipment();
+            var res = Client.Equipments.Get();
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
@@ -278,7 +283,7 @@ namespace JohnsonControls.Metasys.ComServices
         public object GetEquipmentPoints(string equipmentId, bool ReadAttributeValue = true)
         {
             Guid guid = new Guid(equipmentId);
-            var res = Client.GetEquipmentPoints(guid, ReadAttributeValue);
+            var res = Client.Equipments.GetPoints(guid, ReadAttributeValue);
             return Mapper.Map<IComMetasysPoint[]>(res);
         }
 
@@ -319,7 +324,7 @@ namespace JohnsonControls.Metasys.ComServices
         public object GetNetworkDevices(string type = null)
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.GetNetworkDevices(type).ToList();
+            var res = Client.NetworkDevices.Get(type).ToList();
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
@@ -350,14 +355,130 @@ namespace JohnsonControls.Metasys.ComServices
         /// <inheritdoc/>
         public object GetNetworkDeviceTypes(string type = null)
         {
-            var res = Client.GetNetworkDeviceTypes();
+            var res = Client.NetworkDevices.GetTypes();
             return Mapper.Map<IComMetasysObjectType[]>(res);
         }
         #endregion
 
 
         #region "Objects" //---------------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public string GetCommandEnumeration(string resource)
+        {
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+            return Client.GetCommandEnumeration(resource);
+        }
 
+        /// <inheritdoc/>
+        public string GetObjectTypeEnumeration(string resource)
+        {
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+            return Client.GetObjectTypeEnumeration(resource);
+        }
+
+        /// <summary>
+        /// Given the Item Reference of an object, returns the object identifier.
+        /// </summary>
+        /// <remarks>
+        /// The itemReference will be automatically URL encoded.
+        /// </remarks>
+        /// <returns>A Guid representing the id, or an empty Guid if errors occurred.</returns>
+        /// <param name="itemReference"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysGuidException"></exception>
+        public string GetObjectIdentifier(string itemReference)
+        {
+            Guid? response = Client.GetObjectIdentifier(itemReference);
+            return response?.ToString();
+        }
+
+        /// <inheritdoc/>
+        public IComVariant ReadProperty(string id, string attributeName)
+        {
+            // Parse Id and generate GUID
+            Guid guid = new Guid(id);
+            var response = Client.ReadProperty(guid, attributeName);
+            return Mapper.Map<IComVariant>(response);
+        }
+
+        /// <inheritdoc/>
+        public object ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeNames)
+        {
+            // Note: MarshalAs decorator is needed for arrays, otherwise will cause a VBA app crash
+            // Note: need a generic object as return type in order to map correctly to VBA type array
+            var guidList = new List<Guid>();
+            foreach (var id in ids)
+            {
+                guidList.Add(new Guid(id));
+            }
+            var response = Client.ReadPropertyMultiple(guidList, attributeNames);
+            return Mapper.Map<IComVariantMultiple[]>(response);
+        }
+
+        /// <inheritdoc/>
+        public void WriteProperty(string id, string attributeName, string newValue)
+        {
+            Client.WriteProperty(new Guid(id), attributeName, newValue);
+        }
+
+        /// <inheritdoc/>
+        public void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeValues)
+        {
+            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
+            var guidList = new List<Guid>();
+            foreach (var id in ids)
+            {
+                guidList.Add(new Guid(id));
+            }
+            // Convert positional arrays to Enumerable
+            var valueList = new List<(string, object)>();
+            for (int i = 0; i < attributes.Length; i++)
+            {
+                valueList.Add((attributes[i], attributeValues[i]));
+            }
+            Client.WritePropertyMultiple(guidList, valueList);
+        }
+
+        /// <inheritdoc/>
+        public object GetCommands(string id)
+        {
+            Guid guid = new Guid(id);
+            var res = Client.GetCommands(guid);
+            return Mapper.Map<IComCommand[]>(res);
+        }
+
+        /// <inheritdoc/>
+        public void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] values = null)
+        {
+            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
+            Guid guid = new Guid(id);
+
+            List<Object> objValues = null;
+            if (values != null)
+            {
+                objValues = new List<object>();
+                foreach (string s in values)
+                {
+                    if (double.TryParse(s, out double numericValue))
+                    {
+                        objValues.Add(numericValue);
+                    }
+                    else
+                    {
+                        objValues.Add(s);
+                    }
+                }
+            }
+            Client.SendCommand(guid, command, objValues);
+        }
+
+        /// <inheritdoc/>
+        public object GetObjects(string id, int levels = 1)
+        {
+            Guid guid = new Guid(id);
+            var res = Client.GetObjects(guid, levels).ToList();
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
         #endregion
 
 
@@ -372,7 +493,7 @@ namespace JohnsonControls.Metasys.ComServices
                 spaceType = (SpaceTypeEnum)Enum.Parse(typeof(SpaceTypeEnum), type);
             }
             // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.GetSpaces(spaceType);
+            var res = Client.Spaces.Get(spaceType);
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
@@ -380,7 +501,7 @@ namespace JohnsonControls.Metasys.ComServices
         public object GetSpaceChildren(string id)
         {
             Guid guid = new Guid(id);
-            var res = Client.GetSpaceChildren(guid);
+            var res = Client.Spaces.GetChildren(guid);
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
@@ -405,7 +526,7 @@ namespace JohnsonControls.Metasys.ComServices
         public object GetSpaceTypes()
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.GetSpaceTypes();
+            var res = Client.Spaces.GetTypes();
             return Mapper.Map<IComMetasysObjectType[]>(res);
         }
         #endregion
@@ -461,134 +582,8 @@ namespace JohnsonControls.Metasys.ComServices
         }
         #endregion
 
-        /// <inheritdoc/>
-        public string GetCommandEnumeration(string resource)
-        {
-            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-            return Client.GetCommandEnumeration(resource);
-        }
 
-        /// <inheritdoc/>
-        public string GetObjectTypeEnumeration(string resource)
-        {
-            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-            return Client.GetObjectTypeEnumeration(resource);
-        }
-
-        /// <summary>
-        /// Given the Item Reference of an object, returns the object identifier.
-        /// </summary>
-        /// <remarks>
-        /// The itemReference will be automatically URL encoded.
-        /// </remarks>
-        /// <returns>A Guid representing the id, or an empty Guid if errors occurred.</returns>
-        /// <param name="itemReference"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysGuidException"></exception>
-        public string GetObjectIdentifier(string itemReference)
-        {
-            Guid? response = Client.GetObjectIdentifier(itemReference);
-            return response?.ToString();
-        }
-
-        /// <inheritdoc/>
-        public IComVariant ReadProperty(string id, string attributeName)
-        {
-            // Parse Id and generate GUID
-            Guid guid = new Guid(id);
-            var response = Client.ReadProperty(guid, attributeName);
-            return Mapper.Map<IComVariant>(response);
-        }
-
-        /// <inheritdoc/>
-        public object ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributeNames)
-        {
-            // Note: MarshalAs decorator is needed for arrays, otherwise will cause a VBA app crash
-            // Note: need a generic object as return type in order to map correctly to VBA type array
-            var guidList = new List<Guid>();
-            foreach (var id in ids)
-            {
-                guidList.Add(new Guid(id));
-            }
-            var response = Client.ReadPropertyMultiple(guidList, attributeNames);
-            return Mapper.Map<IComVariantMultiple[]>(response);
-        }
-
-        /// <inheritdoc/>
-        public void WriteProperty(string id, string attributeName, string newValue)
-        {
-            Client.WriteProperty(new Guid(id), attributeName, newValue);
-        }
-
-        /// <inheritdoc/>
-        public void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributeValues)
-        {
-            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
-            var guidList = new List<Guid>();
-            foreach (var id in ids)
-            {
-                guidList.Add(new Guid(id));
-            }
-            // Convert positional arrays to Enumerable
-            var valueList = new List<(string, object)>();
-            for (int i = 0; i < attributes.Length; i++)
-            {
-                valueList.Add((attributes[i], attributeValues[i]));
-            }
-            Client.WritePropertyMultiple(guidList, valueList);
-        }
-
-        /// <inheritdoc/>
-        public object GetCommands(string id)
-        {
-            Guid guid = new Guid(id);
-            var res = Client.GetCommands(guid);
-            return Mapper.Map<IComCommand[]>(res);
-        }
-
-        /// <inheritdoc/>
-        public void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] values = null)
-        {
-            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
-            Guid guid = new Guid(id);
-
-            List<Object> objValues = null;
-            if (values != null)
-            {
-                objValues = new List<object>();
-                foreach (string s in values)
-                {
-                    if (double.TryParse(s, out double numericValue))
-                    {
-                        objValues.Add(numericValue);
-                    }
-                    else
-                    {
-                        objValues.Add(s);
-                    }
-                }
-            }
-            Client.SendCommand(guid, command, objValues);
-        }
-
-        /// <inheritdoc/>
-        public object GetObjects(string id, int levels = 1)
-        {
-            Guid guid = new Guid(id);
-            var res = Client.GetObjects(guid, levels).ToList();
-            return Mapper.Map<IComMetasysObject[]>(res);
-        }
-
-
-
-
-
-
-
-
-
-        //====================================================================================================================================
-
+        #region "Streams" //------------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public string[] GetStreamRequestIds()
         {
@@ -643,5 +638,9 @@ namespace JohnsonControls.Metasys.ComServices
         {
             return Client.Streams.GetCOVValues();
         }
+        #endregion
+
+
+
     }
 }
