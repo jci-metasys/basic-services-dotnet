@@ -40,6 +40,306 @@ namespace JohnsonControls.Metasys.ComServices
         /// <exception cref="MetasysTokenException"></exception>
         IComAccessToken Refresh();
 
+        #region "Alarms" //---------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Retrieves the specified alarm.
+        /// </summary>
+        /// <param name="alarmId">The identifier of the alarm.</param>
+        /// <returns>The specified alarm details.</returns>
+        object GetSingleAlarm(string alarmId);
+
+        /// <summary>
+        /// Retrieves a collection of alarms.
+        /// </summary>
+        /// <param name="alarmFilter">The alarm model to filter alarms.</param>
+        /// <returns>The list of alarms with details.</returns>
+        IComPagedResult GetAlarms(IComFilterAlarm alarmFilter);
+
+        /// <summary>
+        /// Retrieve a collection of Alarm Annotations.
+        /// </summary>
+        /// <param name="alarmId"></param>
+        /// <returns></returns>
+        object GetAlarmAnnotations(string alarmId);
+
+        /// <summary>
+        /// Retrieves a collection of alarms for the specified object.
+        /// </summary>
+        /// <param name="objectId">The identifier of the object.</param>
+        /// <param name="alarmFilter">The alarm model to filter alarms.</param>
+        /// <returns>The list of alarms for the specified object.</returns>
+        IComPagedResult GetAlarmsForObject(string objectId, IComFilterAlarm alarmFilter);
+
+        /// <summary>
+        /// Retrieves a collection of alarms for the specified object.
+        /// </summary>
+        /// <param name="networkDeviceId">The identifier of the network device.</param>
+        /// <param name="alarmFilter">The alarm model to filter alarms.</param>
+        /// <returns>The list of alarms for the specified object.</returns>
+        IComPagedResult GetAlarmsForNetworkDevice(string networkDeviceId, IComFilterAlarm alarmFilter);
+        #endregion
+
+
+        #region "Audits" //---------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Retrieves the specified audit.
+        /// </summary>
+        /// <param name="auditId">The identifier of the audit.</param>
+        /// <returns>The specified audit details.</returns>
+        object GetSingleAudit(string auditId);
+
+        /// <summary>
+        /// Retrieves a collection of audits.
+        /// </summary>
+        /// <param name="auditFilter">The audit model to filter audits.</param>
+        /// <returns>The list of audits with details.</returns>
+        IComPagedResult GetAudits(IComAuditFilter auditFilter);
+
+        /// <summary>
+        /// Retrieve a collection of Audit Annotations.
+        /// </summary>
+        /// <param name="auditId"></param>
+        /// <returns>The list of Audit Annotations</returns>
+        object GetAuditAnnotations(string auditId);
+
+        /// <summary>
+        /// Discard an Audit.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="annontationText"></param>
+        /// <returns></returns>
+        void DiscardAudit(string id, string annontationText);
+
+        /// <summary>
+        /// Discard many Audit given a list of requests containing the Id of the Audits and the text for the Annotations.
+        /// </summary>
+        /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to discard.</param>
+        /// <returns>A list of BatchRequestParam with all the specified attributes.</returns>
+        string[] DiscardAuditMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requests);
+
+        /// <summary>
+        /// Add an Audit Annotation.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        void AddAuditAnnotation(string id, string text);
+
+        /// <summary>
+        /// Add many Annotations given a list of requests containing the Id of the Audits and the text of the Annotations.
+        /// </summary>
+        /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to add.</param>
+        /// <returns>A list of BatchRequestParam with all the specified attributes.</returns>
+        string[] AddAuditAnnotationMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requests);
+
+        /// <summary>
+        /// Retrieves a collection of audits for the specified object.
+        /// </summary>
+        /// <param name="objectId">The identifier of the object.</param>
+        /// <param name="auditFilter">The filter to be applied to audit list.</param>
+        /// <returns>The list of audit with details.</returns>
+        IComPagedResult GetAuditsForObject(string objectId, IComAuditFilter auditFilter);
+        #endregion
+
+
+        #region "Enumerations" //------------------------------------------------------------------------------------------------------------------
+
+        #endregion
+
+
+        #region "Equipments" //-----------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Gets all network devices.
+        /// </summary>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        object GetEquipment();
+
+        /// <summary>
+        /// Retrieves the collection of equipment instances that are hosted by the specified network device or its children.
+        /// </summary>
+        /// <param name="networkDeviceId"></param>
+        /// <returns></returns>
+        object GetEquipmentsHostedByNetworkDevice(string networkDeviceId);
+
+        /// <summary>
+        /// Gets all points for the given Equipment
+        /// </summary>
+        /// <param name="equipmentId">The Guid of the equipment.</param>
+        /// <param name="ReadAttributeValue">Set to false if you would not read Points Attribute Value.</param>
+        /// <returns></returns>
+        object GetEquipmentPoints(string equipmentId, bool ReadAttributeValue = true);
+
+        /// <summary>
+        /// Retrieves the equipment served by the specified equipment instance.
+        /// </summary>
+        /// <param name="equipmentId"></param>
+        /// <returns></returns>
+        object GetEquipmentsServedByEquipment(string equipmentId);
+
+        /// <summary>
+        /// Retrieves the collection of equipments that serve the specified equipment instance.
+        /// </summary>
+        /// <param name="equipmentId"></param>
+        /// <returns></returns>
+        object GetEquipmentsServingAnEquipment(string equipmentId);
+
+        /// <summary>
+        ///  Retrieves the collection of equipment that serve the specified space.
+        /// </summary>
+        /// <param name="spaceId"></param>
+        /// <returns></returns>
+        object GetEquipmentsServingASpace(string spaceId);
+        /// <summary>
+        /// Retrieves the collection of equipment that serve the specified space.
+        /// </summary>
+        /// <param name="spaceId"></param>
+        /// <returns></returns>
+        object GetSpaceEquipment(string spaceId);
+        #endregion
+
+
+        #region "NetworkDevices" //----------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Gets all network devices.
+        /// </summary>
+        /// <param name="type">Optional type number as a string</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        object GetNetworkDevices(string type = null);
+
+        /// <summary>
+        /// Retrieves the collection of network devices that are children of the specified network device.
+        /// </summary>
+        /// <param name="networkDeviceId">The identifier (GUID) of the specified network device</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        object GetNetworkDevicesChildren(string networkDeviceId);
+
+        /// <summary>
+        /// Retrieves the collection of network devices that host the specified equipment instance, along with the parents of those network devices.
+        /// </summary>
+        /// <param name="equipmentId">The identifier (GUID) of the specified equipment instance</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        object GetNetworkDevicesHostingAnEquipment(string equipmentId);
+
+        /// <summary>
+        /// Retrieves the collection of network devices that are serving the specified space.
+        /// </summary>
+        /// <param name="spaceId">The identifier (GUID) of the specified space</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        object GetNetworkDevicesServingASpace(string spaceId);
+
+        /// <summary>
+        /// Gets all available network device types.
+        /// </summary>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        object GetNetworkDeviceTypes(string type = null);
+        #endregion
+
+
+        #region "Objects" //-------------------------------------------------------------------------------------------------------------------------
+
+
+        #endregion
+
+        #region "Spaces" //--------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Gets all network devices.
+        /// </summary>
+        /// <param name="type">Optional type number as a string</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        object GetSpaces(string type = null);
+
+        /// <summary>
+        /// Gets children spaces of the given space.
+        /// </summary>
+        /// <param name="id">The GUID of the parent space.</param>
+        object GetSpaceChildren(string id);
+
+        /// <summary>
+        /// Retrieves the collection of spaces served by the specified equipment instance.
+        /// </summary>
+        /// <param name="equipmentId">The GUID of the specified equipment instance.</param>
+        object GetSpacesServedByEquipment(string equipmentId);
+
+        /// <summary>
+        /// Retrieves the collection of spaces served by the specified network device. 
+        /// </summary>
+        /// <param name="networkDeviceId">The GUID of the specified network device.</param>
+        object GetSpacesServedByNetworkDevice(string networkDeviceId);
+
+        /// <summary>
+        /// Gets all space types.
+        /// </summary>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysObjectTypeException"></exception>
+        object GetSpaceTypes();
+        #endregion
+
+
+        #region "Trends" //----------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Retrieves a collection of attributes under the specified object for which samples are available.
+        /// </summary>
+        /// <param name="id">The identifier of the object</param>
+        /// <returns>The list of attributes for the specified object for which samples are available.</returns>
+        object GetTrendedAttributes(string id);
+
+        /// <summary>
+        /// Retrieves a collection of samples for the specified object attribute during a particular date and time range.
+        /// </summary>
+        /// <param name="objectId">The identifier of the object</param>
+        /// <param name="attributeId">The identifier of the attribute for which to retrieve sample information</param>
+        /// <param name="filter">Filter for a timeline based request</param>
+        /// <returns>The list of samples for the specified objectduring a particular date and time range.</returns>
+        IComPagedResult GetSamples(string objectId, int attributeId, IComTimeFilter filter);
+
+        /// <summary>
+        /// Retrieves a collection of samples for the specified object attribute during a particular date and time range.
+        /// </summary>
+        /// <param name="objectId">The identifier of the object</param>
+        /// <param name="attributeName">Name of the attribute for which to retrieve sample information</param>
+        /// <param name="filter">Filter for a timeline based request</param>
+        /// <returns>The list of samples for the specified objectduring a particular date and time range.</returns>
+        IComPagedResult GetSamples(string objectId, String attributeName, IComTimeFilter filter);
+
+        /// <summary>
+        /// Retrieves a collection of attributes under the specified netwok device for which samples are available.
+        /// </summary>
+        /// <param name="id">The identifier of the network device</param>
+        /// <returns>The list of attributes for the specified network device for which samples are available.</returns>
+        object GetNetDevTrendedAttributes(string id);
+
+        /// <summary>
+        /// Retrieves a collection of samples for the specified network device attribute during a particular date and time range.
+        /// </summary>
+        /// <param name="networkDeviceId">The identifier of the object</param>
+        /// <param name="attributeId">The identifier of the attribute for which to retrieve sample information</param>
+        /// <param name="filter">Filter for a timeline based request</param>
+        /// <returns>The list of samples for the specified objectduring a particular date and time range.</returns>
+        IComPagedResult GetNetDevSamples(string networkDeviceId, int attributeId, IComTimeFilter filter);
+
+        /// <summary>
+        /// Retrieves a collection of samples for the specified network device attribute during a particular date and time range.
+        /// </summary>
+        /// <param name="networkDeviceId">The identifier of the object</param>
+        /// <param name="attributeName">Name of the attribute for which to retrieve sample information</param>
+        /// <param name="filter">Filter for a timeline based request</param>
+        /// <returns>The list of samples for the specified objectduring a particular date and time range.</returns>
+        IComPagedResult GetNetDevSamples(string networkDeviceId, String attributeName, IComTimeFilter filter);
+        #endregion
+
+
+        #region "Streams" //---------------------------------------------------------------------------------------------------------------------------
+
+        #endregion
+
+
         /// <summary>
         /// Read one attribute value given the Guid of the object.
         /// </summary>
@@ -101,20 +401,6 @@ namespace JohnsonControls.Metasys.ComServices
         /// <exception cref="MetasysHttpException"></exception>
         void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] values = null);
 
-        /// <summary>
-        /// Gets all network devices.
-        /// </summary>
-        /// <param name="type">Optional type number as a string</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        object GetNetworkDevices(string type = null);
-
-        /// <summary>
-        /// Gets all available network device types.
-        /// </summary>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        object GetNetworkDeviceTypes(string type = null);
 
         /// <summary>
         /// Gets all child objects given a parent Guid.
@@ -134,171 +420,16 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         string GetObjectIdentifier(string itemReference);
 
-        /// <summary>
-        /// Gets all network devices.
-        /// </summary>
-        /// <param name="type">Optional type number as a string</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        object GetSpaces(string type = null);
-
-        /// <summary>
-        /// Gets children spaces of the given space.
-        /// </summary>
-        /// <param name="id">The GUID of the parent space.</param>
-        object GetSpaceChildren(string id);
-
-        /// <summary>
-        /// Gets all space types.
-        /// </summary>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysObjectTypeException"></exception>
-        object GetSpaceTypes();
-
-        /// <summary>
-        ///  Gets all Equipment for the given space
-        /// </summary>
-        /// <param name="spaceId"></param>
-        /// <returns></returns>
-        object GetSpaceEquipment(string spaceId);
-
-        /// <summary>
-        /// Gets all network devices.
-        /// </summary>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        object GetEquipment();
-
-        /// <summary>
-        /// Gets all points for the given Equipment
-        /// </summary>
-        /// <param name="equipmentId">The Guid of the equipment.</param>
-        /// <param name="ReadAttributeValue">Set to false if you would not read Points Attribute Value.</param>
-        /// <returns></returns>
-        object GetEquipmentPoints(string equipmentId, bool ReadAttributeValue = true);
 
 
-        /// <summary>
-        /// Retrieves the specified alarm.
-        /// </summary>
-        /// <param name="alarmId">The identifier of the alarm.</param>
-        /// <returns>The specified alarm details.</returns>
-        object GetSingleAlarm(string alarmId);
-
-        /// <summary>
-        /// Retrieves a collection of alarms.
-        /// </summary>
-        /// <param name="alarmFilter">The alarm model to filter alarms.</param>
-        /// <returns>The list of alarms with details.</returns>
-        IComPagedResult GetAlarms(IComFilterAlarm alarmFilter);
-
-        /// <summary>
-        /// Retrieve a collection of Alarm Annotations.
-        /// </summary>
-        /// <param name="alarmId"></param>
-        /// <returns></returns>
-        object GetAlarmAnnotations(string alarmId);
 
 
-        /// <summary>
-        /// Retrieves a collection of alarms for the specified object.
-        /// </summary>
-        /// <param name="objectId">The identifier of the object.</param>
-        /// <param name="alarmFilter">The alarm model to filter alarms.</param>
-        /// <returns>The list of alarms for the specified object.</returns>
-        IComPagedResult GetAlarmsForObject(string objectId, IComFilterAlarm alarmFilter);
 
-        /// <summary>
-        /// Retrieves a collection of alarms for the specified object.
-        /// </summary>
-        /// <param name="networkDeviceId">The identifier of the network device.</param>
-        /// <param name="alarmFilter">The alarm model to filter alarms.</param>
-        /// <returns>The list of alarms for the specified object.</returns>
-        IComPagedResult GetAlarmsForNetworkDevice(string networkDeviceId, IComFilterAlarm alarmFilter);
 
-        /// <summary>
-        /// Retrieves a collection of attributes under the specified object for which samples are available.
-        /// </summary>
-        /// <param name="id">The identifier of the object</param>
-        /// <returns>The list of attributes for the specified object for which samples are available.</returns>
-        object GetTrendedAttributes(string id);
 
-        /// <summary>
-        /// Retrieves a collection of samples for the specified object attribute during a particular date and time range.
-        /// </summary>
-        /// <param name="objectId">The identifier of the object</param>
-        /// <param name="attributeId">The identifier of the attribute for which to retrieve sample information</param>
-        /// <param name="filter">Filter for a timeline based request</param>
-        /// <returns>The list of samples for the specified objectduring a particular date and time range.</returns>
-        IComPagedResult GetSamples(string objectId, int attributeId, IComTimeFilter filter);
 
-        /// <summary>
-        /// Retrieves a collection of samples for the specified object attribute during a particular date and time range.
-        /// </summary>
-        /// <param name="objectId">The identifier of the object</param>
-        /// <param name="attributeName">Name of the attribute for which to retrieve sample information</param>
-        /// <param name="filter">Filter for a timeline based request</param>
-        /// <returns>The list of samples for the specified objectduring a particular date and time range.</returns>
-        IComPagedResult GetSamples(string objectId, String attributeName, IComTimeFilter filter);
 
-        /// <summary>
-        /// Retrieves the specified audit.
-        /// </summary>
-        /// <param name="auditId">The identifier of the audit.</param>
-        /// <returns>The specified audit details.</returns>
-        object GetSingleAudit(string auditId);
 
-        /// <summary>
-        /// Retrieves a collection of audits.
-        /// </summary>
-        /// <param name="auditFilter">The audit model to filter audits.</param>
-        /// <returns>The list of audits with details.</returns>
-        IComPagedResult GetAudits(IComAuditFilter auditFilter);
-
-        /// <summary>
-        /// Retrieve a collection of Audit Annotations.
-        /// </summary>
-        /// <param name="auditId"></param>
-        /// <returns>The list of Audit Annotations</returns>
-        object GetAuditAnnotations(string auditId);
-
-        /// <summary>
-        /// Discard an Audit.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="annontationText"></param>
-        /// <returns></returns>
-        void DiscardAudit(string id, string annontationText);
-
-        /// <summary>
-        /// Discard many Audit given a list of requests containing the Id of the Audits and the text for the Annotations.
-        /// </summary>
-        /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to discard.</param>
-        /// <returns>A list of BatchRequestParam with all the specified attributes.</returns>
-        string[] DiscardAuditMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requests);
-
-        /// <summary>
-        /// Add an Audit Annotation.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        void AddAuditAnnotation(string id, string text);
-
-        /// <summary>
-        /// Add many Annotations given a list of requests containing the Id of the Audits and the text of the Annotations.
-        /// </summary>
-        /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to add.</param>
-        /// <returns>A list of BatchRequestParam with all the specified attributes.</returns>
-        string[] AddAuditAnnotationMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requests);
-
-        /// <summary>
-        /// Retrieves a collection of audits for the specified object.
-        /// </summary>
-        /// <param name="objectId">The identifier of the object.</param>
-        /// <param name="auditFilter">The filter to be applied to audit list.</param>
-        /// <returns>The list of audit with details.</returns>
-        IComPagedResult GetAuditsForObject(string objectId, IComAuditFilter auditFilter);
 
         /// <summary>
         /// Localizes the specified resource key for the current MetasysClient locale or specified culture.
@@ -366,11 +497,11 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Return a single COV values (first of the list)
         /// </summary>
-        IComStreamMessage GetCOVStremValue();
+        IComStreamMessage GetCOVStreamValue();
 
         /// <summary>
         /// Return the list of COV values
         /// </summary>
-        List<StreamMessage> GetCOVStremValues();
+        List<StreamMessage> GetCOVStreamValues();
     }
 }
