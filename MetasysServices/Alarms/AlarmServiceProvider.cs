@@ -32,6 +32,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
         }
 
+        //Get ----------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public PagedResult<Alarm> Get(AlarmFilter alarmFilter)
         {
@@ -59,6 +60,7 @@ namespace JohnsonControls.Metasys.BasicServices
             return response;
         }
 
+        //FindById ------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public Alarm FindById(Guid alarmId)
         {
@@ -135,13 +137,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public void EditAlarm(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
+        public void Edit(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
         {
-            EditAlarmAsync(alarmId, action, annotationText).GetAwaiter().GetResult();
+            EditAsync(alarmId, action, annotationText).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task EditAlarmAsync(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
+        public async Task EditAsync(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
         {
             if (Version > ApiVersion.v3)
             {

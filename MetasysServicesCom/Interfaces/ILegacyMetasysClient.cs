@@ -33,6 +33,12 @@ namespace JohnsonControls.Metasys.ComServices
         IComAccessToken TryLoginWithCredMan(string target, bool refresh = true);
 
         /// <summary>
+        /// Returns the current session access token.
+        /// </summary>
+        /// <returns>Current Access Token.</returns>
+        IComAccessToken GetAccessToken();
+
+        /// <summary>
         /// Requests a new access token from the server before the current token expires.
         /// </summary>
         /// <returns>Access Token.</returns>
@@ -57,19 +63,19 @@ namespace JohnsonControls.Metasys.ComServices
 
 
         #region "Alarms" //---------------------------------------------------------------------------------------------------------------------------
-        /// <summary>
-        /// Retrieves the specified alarm.
-        /// </summary>
-        /// <param name="alarmId">The identifier of the alarm.</param>
-        /// <returns>The specified alarm details.</returns>
-        object GetSingleAlarm(string alarmId);
-
-        /// <summary>
+         /// <summary>
         /// Retrieves a collection of alarms.
         /// </summary>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms with details.</returns>
         IComPagedResult GetAlarms(IComFilterAlarm alarmFilter);
+
+       /// <summary>
+        /// Retrieves the specified alarm.
+        /// </summary>
+        /// <param name="alarmId">The identifier of the alarm.</param>
+        /// <returns>The specified alarm details.</returns>
+        object GetSingleAlarm(string alarmId);
 
         /// <summary>
         /// Retrieve a collection of Alarm Annotations.
@@ -98,18 +104,18 @@ namespace JohnsonControls.Metasys.ComServices
 
         #region "Audits" //---------------------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// Retrieves the specified audit.
-        /// </summary>
-        /// <param name="auditId">The identifier of the audit.</param>
-        /// <returns>The specified audit details.</returns>
-        object GetSingleAudit(string auditId);
-
-        /// <summary>
         /// Retrieves a collection of audits.
         /// </summary>
         /// <param name="auditFilter">The audit model to filter audits.</param>
         /// <returns>The list of audits with details.</returns>
         IComPagedResult GetAudits(IComAuditFilter auditFilter);
+
+        /// <summary>
+        /// Retrieves the specified audit.
+        /// </summary>
+        /// <param name="auditId">The identifier of the audit.</param>
+        /// <returns>The specified audit details.</returns>
+        object GetSingleAudit(string auditId);
 
         /// <summary>
         /// Retrieve a collection of Audit Annotations.
@@ -159,8 +165,48 @@ namespace JohnsonControls.Metasys.ComServices
 
 
         #region "Enumerations" //------------------------------------------------------------------------------------------------------------------
-        
-        
+        /// <summary>
+        /// Retrieve the list of all the enumeration names.
+        /// </summary>
+        /// <returns>The list of enumeration names</returns>
+        object GetEnumerations();
+
+        /// <summary>
+        /// Create a custom enumeration.
+        /// </summary>
+        /// <param name="name">The name of the new custom enumeration</param>
+        /// <param name="values">Array of string values representing the enumerated set of values of the new custom enumeration</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// The identifier of the new custom enumeration will be set automatically by the API. It can be retrieved using the method 'GetEnumerations()'.
+        /// </remarks>
+        void CreateCustomEnumeration(string name, string[] values);
+
+        /// <summary>
+        /// Retrieve the enumated values of a specific enumeration set.
+        /// </summary>
+        /// <param name="id">The identifier of the enumeration set</param>
+        /// <returns>The list of enumeratee values</returns>
+        object GetEnumerationValues(string id);
+
+        /// <summary>
+        /// Edit an existing custom enumeration.
+        /// </summary>
+        /// <param name="id">The identifier of the existing custom enumeration</param>
+        /// <param name="name">The new name of the existing custom enumeration</param>
+        /// <param name="values">Array of string values representing the new set of values of the existing custom enumeration</param>
+        /// <returns></returns>
+        void EditCustomEnumeration(string id, string name, string[] values);
+
+        /// <summary>
+        /// Replace an existing custom enumeration.
+        /// </summary>
+        /// <param name="id">The identifier of the existing custom enumeration</param>
+        /// <param name="name">The name that replaces the existing one</param>
+        /// <param name="values">Array of string values that replace the existing set of values of the existing custom enumeration</param>
+        /// <returns></returns>
+        void ReplaceCustomEnumeration(string id, string name, string[] values);
+
         /// <summary>
         /// Delete an enumeration. Only custom enumerations may be deleted.
         /// </summary>
@@ -171,6 +217,13 @@ namespace JohnsonControls.Metasys.ComServices
 
 
         #region "Equipments" //-----------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Retrieves the specified equipment.
+        /// </summary>
+        /// <param name="equipmentId">The identifier of the specific equipment.</param>
+        /// <returns>The specified equipment details.</returns>
+        object GetSingleEquipment(string equipmentId);
+
         /// <summary>
         /// Gets all network devices.
         /// </summary>
@@ -224,6 +277,13 @@ namespace JohnsonControls.Metasys.ComServices
 
         #region "NetworkDevices" //----------------------------------------------------------------------------------------------------------------
         /// <summary>
+        /// Retrieves the specified network device.
+        /// </summary>
+        /// <param name="networkDeviceId">The identifier of the specific network device.</param>
+        /// <returns>The specified network device details.</returns>
+        object GetSingleNetworkDevice(string networkDeviceId);
+
+        /// <summary>
         /// Gets all network devices.
         /// </summary>
         /// <param name="type">Optional type number as a string</param>
@@ -265,6 +325,31 @@ namespace JohnsonControls.Metasys.ComServices
 
 
         #region "Objects" //-------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Gets all child objects given a parent Guid.
+        /// Level indicates how deep to retrieve objects.
+        /// </summary>
+        /// <remarks>
+        /// A level of 1 only retrieves immediate children of the parent object.
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <param name="levels">The depth of the children to retrieve.</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>        
+        object GetObjects(string id, int levels = 1);
+
+        /// <summary>
+        /// Given the Item Reference of an object, returns the object identifier.
+        /// </summary>
+        /// <remarks>
+        /// The itemReference will be automatically URL encoded.
+        /// </remarks>
+        /// <returns>A Guid representing the id, or an empty Guid if errors occurred.</returns>
+        /// <param name="itemReference"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysGuidException"></exception>
+        string GetObjectIdentifier(string itemReference);
+
         /// <summary>
         /// Read one attribute value given the Guid of the object.
         /// </summary>
@@ -326,23 +411,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <exception cref="MetasysHttpException"></exception>
         void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] values = null);
 
-        /// <summary>
-        /// Gets all child objects given a parent Guid.
-        /// Level indicates how deep to retrieve objects.
-        /// </summary>
-        /// <remarks>
-        /// A level of 1 only retrieves immediate children of the parent object.
-        /// </remarks>
-        /// <param name="id"></param>
-        /// <param name="levels">The depth of the children to retrieve.</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        object GetObjects(string id, int levels = 1);
 
-        /// <summary>
-        /// Given the Item Reference of an object, returns the object identifier.
-        /// </summary>
-        string GetObjectIdentifier(string itemReference);
 
         /// <summary>
         /// Attempts to get the enumeration key of a given en-US localized command.
@@ -371,7 +440,15 @@ namespace JohnsonControls.Metasys.ComServices
         string GetObjectTypeEnumeration(string resource);
         #endregion
 
+
         #region "Spaces" //--------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Retrieves the specified space.
+        /// </summary>
+        /// <param name="spaceId">The identifier of the specific space.</param>
+        /// <returns>The specified space details.</returns>
+        object GetSingleSpace(string spaceId);
+
         /// <summary>
         /// Gets all network devices.
         /// </summary>
@@ -489,7 +566,37 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Return the list of COV values
         /// </summary>
-        List<StreamMessage> GetCOVStreamValues();
+        object GetCOVStreamValues();
+
+        /// <summary>
+        /// Start the method that collects the Alarms using the stream mechanism.
+        /// </summary>
+        void StartCollectingStreamAlarms();
+
+        /// <summary>
+        /// Stop the method that collects the Alarms using the stream mechanism.
+        /// </summary>
+        void StopCollectingStreamAlarms(string requestId);
+
+        /// <summary>
+        /// Return the list of Alarm events
+        /// </summary>
+        object GetAlarmStreamEvents();
+
+        /// <summary>
+        /// Start the method that collects the Audits using the stream mechanism.
+        /// </summary>
+        void StartCollectingStreamAudits();
+
+        /// <summary>
+        /// Stop the method that collects the Audits using the stream mechanism.
+        /// </summary>
+        void StopCollectingStreamAudits(string requestId);
+
+        /// <summary>
+        /// Return the list of Audit events
+        /// </summary>
+        object GetAuditStreamEvents();
         #endregion
 
 

@@ -194,6 +194,11 @@ namespace JohnsonControls.Metasys.BasicServices
                 hasNext = false;
                 parameters["page"] = page.ToString();
                 var response = await GetPagedResultsAsync<JToken>("objects", parameters, id, "objects").ConfigureAwait(false);
+                //List<JToken> listOfItems = response.Items;
+                //if (Version > ApiVersion.v3)
+                //{
+                //    listOfItems = response.Items[0].Children("Items");
+                //}
                 foreach (var item in response.Items)
                 {
                     List<TreeObject> children = null;
@@ -338,7 +343,6 @@ namespace JohnsonControls.Metasys.BasicServices
             // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
             return Utils.ResourceManager.GetObjectTypeEnumeration(resource);
         }
-
 
         /// <inheritdoc/>
         public string Localize(string resource, CultureInfo cultureInfo = null)
@@ -805,9 +809,11 @@ namespace JohnsonControls.Metasys.BasicServices
             return responseToken;
         }
 
+        /// <summary>
+        /// Check if the selected API version is supported by the SDK
+        /// </summary>
         protected void CheckVersion(ApiVersion version)
         {
-            //Check if the selected version is supported by the SDK
             if (version < MinVersionSupported || version > MaxVersionSupported)
             { throw new MetasysUnsupportedApiVersion(version.ToString()); }
         }

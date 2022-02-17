@@ -163,27 +163,24 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task DiscardAsync(Guid id, string annotationText)
         {
             try {
-                CheckVersion(Version);
+                if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); };
 
-                switch (Version)
+                if (Version < ApiVersion.v4)
                 {
-                    case ApiVersion.v3:
-                        var response_v3 = await Client.Request(new Url("audits")
-                        .AppendPathSegments(id, "discard"))
-                        .PutJsonAsync(new { annotationText })
-                        .ConfigureAwait(false);
-                        break;
-                    case ApiVersion.v4:
-                        //For v4 the endpoint and the body are different
-                        string activityManagementStatus = "discarded";
-                        var response_v4 = await Client.Request(new Url("audits")
-                        .AppendPathSegments(id))
-                        .PatchJsonAsync(new { annotationText, activityManagementStatus })
-                        .ConfigureAwait(false);
-                        break;
-                    default:
-                        throw new MetasysUnsupportedApiVersion(Version.ToString());
-                        break;
+                    //This is valid for API v3
+                    var response_v3 = await Client.Request(new Url("audits")
+                    .AppendPathSegments(id, "discard"))
+                    .PutJsonAsync(new { annotationText })
+                    .ConfigureAwait(false);
+
+                } else
+                {
+                    //For API v4 the endpoint and the body are different
+                    string activityManagementStatus = "discarded";
+                    var response_v4 = await Client.Request(new Url("audits")
+                    .AppendPathSegments(id))
+                    .PatchJsonAsync(new { annotationText, activityManagementStatus })
+                    .ConfigureAwait(false);
                 }
             } catch (FlurlHttpException e)
             {
@@ -415,7 +412,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 if (jObj != null)
                 {
-                    if ((jObj.ContainsKey(group) != null) && (jObj[group] != null) )
+                    if ((jObj.ContainsKey(group)) && (jObj[group] != null) )
                     {
                         if ((jObj[group].Contains(field)) && (jObj[group][field] != null))
                         {

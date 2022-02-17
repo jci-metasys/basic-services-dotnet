@@ -58,17 +58,6 @@ namespace JohnsonControls.Metasys.BasicServices
 
         private string hostname;
 
-
-        /// <summary>
-        /// Variable to keep the list of current Alarn stream messages
-        /// </summary>
-        private List<StreamMessage> AlarmStreamValues = new List<StreamMessage>();
-
-        /// <summary>
-        /// Variable to keep the list of current Audit stream messages
-        /// </summary>
-        private List<StreamMessage> AuditStreamValues = new List<StreamMessage>();
-
         /// <inheritdoc/>
         public string Hostname
         {
@@ -89,6 +78,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         private ApiVersion? version;
+
         /// <inheritdoc/>
         public new ApiVersion Version
         {
@@ -166,9 +156,11 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 HttpClientHandler httpClientHandler = new HttpClientHandler();
                 httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
-                HttpClient httpClient = new HttpClient(httpClientHandler);
-                httpClient.BaseAddress = new Uri($"https://{hostname}"
-                    .AppendPathSegments("api", Version));
+                HttpClient httpClient = new HttpClient(httpClientHandler)
+                {
+                    BaseAddress = new Uri($"https://{hostname}"
+                    .AppendPathSegments("api", Version))
+                };
                 Client = new FlurlClient(httpClient);
             }
             else
@@ -215,11 +207,11 @@ namespace JohnsonControls.Metasys.BasicServices
                 Equipments = new EquipmentServiceProvider(Client, version, logClientErrors);
                 NetworkDevices = new NetworkDeviceServiceProvider(Client, version, logClientErrors);
                 Spaces = new SpaceServiceProvider(Client, version, logClientErrors);
+                Trends = new TrendServiceProvider(Client, version, logClientErrors);
                 if (Version > ApiVersion.v3)
                 {
                     Streams = new StreamServiceProvider(Client, hostname, version);
                 }
-                Trends = new TrendServiceProvider(Client, version, logClientErrors);
 
                 base.Version = version;
             }
@@ -229,40 +221,13 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        ///// <inheritdoc/>
-        //public string Localize(string resource, CultureInfo cultureInfo = null)
-        //{
-        //    // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-        //    return Utils.ResourceManager.Localize(resource, cultureInfo ?? Culture);
-        //}
-
-        /// <inheritdoc/>
-        public string GetCommandEnumeration(string resource)
-        {
-            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-            return Utils.ResourceManager.GetCommandEnumeration(resource);
-        }
-
-        ///// <inheritdoc/>
-        //public string GetObjectTypeEnumeration(string resource)
-        //{
-        //    // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-        //    return Utils.ResourceManager.GetObjectTypeEnumeration(resource);
-        //}
-
-        /// <summary>Use to log an error message from an asynchronous context.</summary>
-        private async Task LogErrorAsync(String message)
-        {
-            await Console.Error.WriteLineAsync(message).ConfigureAwait(false);
-        }
-
-
+        #region "LOGIN" // ==========================================================================================================
+        // TryLogin -------------------------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public AccessToken TryLogin(string username, string password, bool refresh = true)
         {
             return TryLoginAsync(username, password, refresh).GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task<AccessToken> TryLoginAsync(string username, string password, bool refresh = true)
         {
@@ -288,12 +253,41 @@ namespace JohnsonControls.Metasys.BasicServices
             return this.AccessToken;
         }
 
+        // TryLogin (2) -------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public virtual AccessToken TryLogin(string credManTarget, bool refresh = true)
+        {
+            return TryLoginAsync(credManTarget, refresh).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public virtual async Task<AccessToken> TryLoginAsync(string credManTarget, bool refresh = true)
+        {
+            // Retrieve credentials first
+            var credentials = CredentialUtil.GetCredential(credManTarget);
+            // Get the control back to TryLogin method
+            return await TryLoginAsync(CredentialUtil.convertToUnSecureString(credentials.Username), CredentialUtil.convertToUnSecureString(credentials.Password), refresh).ConfigureAwait(false);
+        }
+
+        // GetAccessToken -----------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public AccessToken GetAccessToken()
+        {
+            return this.AccessToken;
+        }
+
+        // SetAccessToken -----------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void SetAccessToken(AccessToken accessToken)
+        {
+            this.AccessToken = accessToken;
+        }
+
+        // Refresh ------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public AccessToken Refresh()
         {
             return RefreshAsync().GetAwaiter().GetResult();
         }
-
         /// <inheritdoc/>
         public async Task<AccessToken> RefreshAsync()
         {
@@ -315,6 +309,654 @@ namespace JohnsonControls.Metasys.BasicServices
                 ThrowHttpException(e);
             }
             return this.AccessToken;
+        }
+        #endregion
+
+
+        #region "ALARMS" // =========================================================================================================
+        // The corresponding methods are defined in 'AlarmServiceProvider'
+        #endregion=
+
+
+        #region "AUDITS" // =========================================================================================================
+        // The corresponding methods are defined in 'AuditServiceProvider'
+        #endregion
+
+
+        #region "ENUMERATIONS" // ===================================================================================================
+        // The corresponding methods are defined in 'EnumerationServiceProvider'
+        #endregion
+
+
+        #region "EQUIPMENTS" // =====================================================================================================
+        // note: these methods are deprecated and kept only for backward compatibility with previous SDK version
+
+        // GetEquipment -------------------------------------------------------------------------------------------------------------
+        // Retrieves a collection of equipment instances.
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetEquipment()
+        {
+            return Equipments.Get();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
+        {
+            return await Equipments.GetAsync();
+        }
+
+        // GetEquipmentPoints -------------------------------------------------------------------------------------------------------
+        // Retrieves the collection of points that are defined by the specified equipment instance
+        /// <inheritdoc/>
+        public IEnumerable<MetasysPoint> GetEquipmentPoints(Guid equipmentId, bool readAttributeValue = true)
+        {
+            return Equipments.GetPoints(equipmentId, readAttributeValue);
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysPoint>> GetEquipmentPointsAsync(Guid equipmentId, bool readAttributeValue = true)
+        {
+            return await Equipments.GetPointsAsync(equipmentId, readAttributeValue);
+        }
+
+        // GetSpaceEquipment --------------------------------------------------------------------------------------------------------
+        // Retrieves the collection of equipment that serve the specified space.
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetSpaceEquipment(Guid spaceId)
+        {
+            return Equipments.GetServingASpace(spaceId);
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
+        {
+            return await Equipments.GetServingASpaceAsync(spaceId);
+        }
+        #endregion
+
+
+        #region "NETWORK DEVICES" // ================================================================================================
+        // note: these methods are deprecated and kept only for backward compatibility with previous SDK version
+
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetNetworkDevices(string type = null)
+        {
+            return NetworkDevices.Get(type);
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
+        {
+            return await NetworkDevices.GetAsync(type);
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetNetworkDevices(NetworkDeviceTypeEnum networkDevicetype)
+        {
+            return NetworkDevices.Get(networkDevicetype);
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(NetworkDeviceTypeEnum networkDevicetype)
+        {
+            return await NetworkDevices.GetAsync(networkDevicetype);
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObjectType> GetNetworkDeviceTypes()
+        {
+            return NetworkDevices.GetTypes();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync()
+        {
+            return await NetworkDevices.GetTypesAsync();
+        }
+        #endregion
+
+
+        #region "OBJECTS" // ========================================================================================================
+        // GetObjects ---------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false)
+        {
+            return GetObjectsAsync(id, levels, includeInternalObjects).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels, bool includeInternalObjects = false)
+        {
+            Dictionary<string, string> parameters = null;
+            if (Version == ApiVersion.v3)
+            {
+                // Since API v3 we could use the includeInternalObjects parameter
+                parameters = new Dictionary<string, string>
+                {
+                    { "includeInternalObjects", includeInternalObjects.ToString() }
+                };
+            }
+            if (Version > ApiVersion.v3)
+            {
+                // Since API v3 we could use the includeInternalObjects parameter
+                parameters = new Dictionary<string, string>();
+                parameters.Add("includeInternal", includeInternalObjects.ToString()); //This param has different name when version > v3
+                //This parameter is needed to get the data in a 'flat' way and keep consistency in the logic to retrieve the objects
+                parameters.Add("flatten", "true".ToString());
+                parameters.Add("includeExtensions", "true".ToString());
+                parameters.Add("depth", "2".ToString());
+            }
+
+            var objects = await GetObjectChildrenAsync(id, parameters, levels).ConfigureAwait(false);
+            if (Version > ApiVersion.v3 && objects.Count > 0)
+            {
+                //Due to in this case the API returns also the parent object then remove it
+                objects.Remove(objects.First());
+            }
+            return ToMetasysObject(objects, Version);
+        }
+
+        // GetObjectIdentifier ------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public Guid GetObjectIdentifier(string itemReference)
+        {
+            return GetObjectIdentifierAsync(itemReference).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<Guid> GetObjectIdentifierAsync(string itemReference)
+        {
+            // Sanitize given itemReference
+            var normalizedItemReference = itemReference.Trim().ToUpper();
+            // Returns cached value when available, otherwise perform request         
+            if (!IdentifiersDictionary.ContainsKey(normalizedItemReference))
+            {
+                JToken response = null;
+                try
+                {
+                    response = await Client.Request("objectIdentifiers")
+                        .SetQueryParam("fqr", itemReference)
+                        .GetJsonAsync<JToken>()
+                        .ConfigureAwait(false);
+                    // Stores value for caching and return
+                    IdentifiersDictionary[normalizedItemReference] = ParseObjectIdentifier(response);
+                }
+                catch (FlurlHttpException e)
+                {
+                    if (e.Call.HttpStatus == HttpStatusCode.BadRequest && response != null && response["message"] != null
+                        && response["message"].Value<string>().Contains("not found"))
+                    {
+                        // Metasys respond with "Identifier is not found." message, so make exception explicit
+                        throw new MetasysHttpNotFoundException(e);
+                    }
+                    ThrowHttpException(e);
+                }
+            }
+            return IdentifiersDictionary[normalizedItemReference];
+        }
+
+        // GetCommands --------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<Command> GetCommands(Guid id)
+        {
+            return GetCommandsAsync(id).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<Command>> GetCommandsAsync(Guid id)
+        {
+            try
+            {
+                var token = await Client.Request(new Url("objects")
+                    .AppendPathSegments(id, "commands"))
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+
+                if (!(token is JArray) && token["items"] != null)
+                {
+                    // Since API v3 response is wrapped in items property
+                    token = token["items"];
+                }
+                List<Command> commands = new List<Command>();
+                var array = token as JArray;
+
+                if (array != null)
+                {
+                    foreach (JObject command in array)
+                    {
+                        try
+                        {
+                            Command c = new Command(command, Culture, Version);
+                            commands.Add(c);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new MetasysCommandException(command.ToString(), e);
+                        }
+                    }
+                }
+
+                return commands;
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return null;
+        }
+
+        // GetObjectTypeEnumeration -------------------------------------------------------------------------------------------------
+        // note: this method has been moved to 'BasicServiceProvider'
+        ///// <inheritdoc/>
+        //public string GetObjectTypeEnumeration(string resource)
+        //{
+        //    // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+        //    return Utils.ResourceManager.GetObjectTypeEnumeration(resource);
+        //}
+
+        // GetCommandEnumeration ----------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public string GetCommandEnumeration(string resource)
+        {
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+            return Utils.ResourceManager.GetCommandEnumeration(resource);
+        }
+
+        // ReadProperty -------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public Variant ReadProperty(Guid id, string attributeName)
+        {
+            return ReadPropertyAsync(id, attributeName).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<Variant> ReadPropertyAsync(Guid id, string attributeName)
+        {
+            JToken response = null; Variant result = new Variant();
+            try
+            {
+                response = await Client.Request(new Url("objects")
+                    .AppendPathSegments(id, "attributes", attributeName))
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+                result = new Variant(id, response, attributeName, Culture, Version);
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            catch (System.NullReferenceException e)
+            {
+                throw new MetasysPropertyException(response.ToString(), e);
+            }
+            return result;
+        }
+
+        // ReadPropertyMultiple -----------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids, IEnumerable<string> attributeNames)
+        {
+            return ReadPropertyMultipleAsync(ids, attributeNames).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<VariantMultiple>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids, IEnumerable<string> attributeNames)
+        {
+            if (ids == null || attributeNames == null)
+            {
+                return null;
+            }
+            List<VariantMultiple> results = new List<VariantMultiple>();
+            if (Version > ApiVersion.v2)
+            {
+                var response = await GetBatchRequestAsync("objects", ids, attributeNames, "attributes").ConfigureAwait(false);
+                return ToVariantMultiples(response);
+            }
+            var taskList = new List<Task<Variant>>();
+            // Prepare Tasks to Read attributes list. In Metasys 11 this will be implemented server side
+            foreach (var id in ids)
+            {
+                foreach (string attributeName in attributeNames)
+                {
+                    // Much faster reading single property than the entire object, even though we have more server calls
+                    taskList.Add(ReadPropertyAsync(id, attributeName, true)); // Using internal signature with exception suppress
+                }
+            }
+            await Task.WhenAll(taskList).ConfigureAwait(false);
+            foreach (var id in ids)
+            {
+                // Get attributes of the specific Id
+                List<Task<Variant>> attributeList = taskList.Where(w =>
+                    (w.Result != null && w.Result.Id == id)).ToList();
+                List<Variant> variants = new List<Variant>();
+                foreach (var t in attributeList)
+                {
+                    if (t.Result != null) // Something went wrong if the result is unknown
+                    {
+                        variants.Add(t.Result); // Prepare variants list
+                    }
+                }
+                if (variants.Count > 0 || attributeNames.Count() == 0)
+                {
+                    // Aggregate results only when objects was found or no attributes specified
+                    results.Add(new VariantMultiple(id, variants));
+                }
+            }
+            return results.AsEnumerable();
+        }
+
+        // WriteProperty ------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void WriteProperty(Guid id, string attributeName, object newValue)
+        {
+            WritePropertyAsync(id, attributeName, newValue).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task WritePropertyAsync(Guid id, string attributeName, object newValue)
+        {
+            List<(string Attribute, object Value)> list = new List<(string Attribute, object Value)>();
+            list.Add((Attribute: attributeName, Value: newValue));
+            var item = GetWritePropertyBody(list);
+            await WritePropertyRequestAsync(id, item).ConfigureAwait(false);
+        }
+
+        // WritePropertyMultiple ----------------------------------------------------------------------------------------------------
+        ///<inheritdoc/>
+        public void WritePropertyMultiple(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues)
+        {
+            WritePropertyMultipleAsync(ids, attributeValues).GetAwaiter().GetResult();
+        }
+        ///<inheritdoc/>
+        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues)
+        {
+            if (ids == null || attributeValues == null)
+            {
+                throw new ArgumentNullException("ids and/or attributeValues.");
+            }
+            // convert dictionary to a list of tuples and use existing overload
+            await WritePropertyMultipleAsync(ids, attributeValues.Select(x => (x.Key, x.Value)));
+        }
+
+        // WritePropertyMultiple (2) ------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void WritePropertyMultiple(IEnumerable<Guid> ids,
+            IEnumerable<(string Attribute, object Value)> attributeValues)
+        {
+            WritePropertyMultipleAsync(ids, attributeValues).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
+            IEnumerable<(string Attribute, object Value)> attributeValues)
+        {
+            if (ids == null || attributeValues == null)
+            {
+                throw new ArgumentNullException("ids and/or attributeValues.");
+            }
+
+            var item = GetWritePropertyBody(attributeValues);
+            var taskList = new List<Task>();
+
+            foreach (var id in ids)
+            {
+                taskList.Add(WritePropertyRequestAsync(id, item));
+            }
+            await Task.WhenAll(taskList).ConfigureAwait(false);
+        }
+
+        // SendCommand --------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void SendCommand(Guid id, string command, IEnumerable<object> values = null)
+        {
+            SendCommandAsync(id, command, values).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task SendCommandAsync(Guid id, string command, IEnumerable<object> values = null)
+        {
+            if (values == null)
+            {
+                await SendCommandRequestAsync(id, command, new string[0]).ConfigureAwait(false);
+            }
+            else
+            {
+                await SendCommandRequestAsync(id, command, values).ConfigureAwait(false);
+            }
+        }
+        #endregion
+
+
+        #region "SPACES" //==========================================================================================================
+        // note: these methods are deprecated and kept only for backward compatibility with previous SDK version
+
+        // GetSpaces ----------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetSpaces(SpaceTypeEnum? type = null)
+        {
+            return Spaces.Get(type);
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetSpacesAsync(SpaceTypeEnum? type = null)
+        {            
+            return await Spaces.GetAsync(type);
+        }
+
+        // GetSpaceChildren --------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetSpaceChildren(Guid spaceId)
+        {
+            return Spaces.GetChildren(spaceId);
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid spaceId)
+        {
+            return await Spaces.GetChildrenAsync(spaceId);
+        }
+
+        // GetSpaceTypes ----------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObjectType> GetSpaceTypes()
+        {
+            return Spaces.GetTypes();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObjectType>> GetSpaceTypesAsync()
+        {
+            return await Spaces.GetTypesAsync();
+        }
+        #endregion //==============================================================================================================
+
+
+        #region "STREAMS" // ========================================================================================================
+        /// <inheritdoc />
+        public void GetCOVStream(Guid id)
+        {
+            GetCOVStreamAsync(id).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc />
+        public async Task GetCOVStreamAsync(Guid id)
+        {
+            try
+            {
+                Streams.LoadCOVSubscriptions(id);
+                await Streams.ConnectAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.Message);
+            }
+        }
+
+        /// <inheritdoc />
+        public void GetCOVStreamMultiple(IEnumerable<Guid> ids)
+        {
+            GetCOVStreamMultipleAsync(ids).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc />
+        public async Task GetCOVStreamMultipleAsync(IEnumerable<Guid> ids)
+        {
+            try
+            {
+                Streams.LoadCOVSubscriptions(ids);
+                await Streams.ConnectAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.Message);
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task GetAlarmStreamAsync()
+        {
+            try
+            {
+                Streams.LoadActivitySubscriptions("Alarm");
+                await Streams.ConnectAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.Message);
+            }
+        }
+        /// <inheritdoc />
+        public async Task GetAuditStreamAsync()
+        {
+            try
+            {
+                Streams.LoadActivitySubscriptions("Audit");
+                await Streams.ConnectAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.Message);
+            }
+        }
+
+        /// <inheritdoc />
+        public StreamMessage GetSingleStreamingChannel()
+        {
+            return GetSingleStreamingChannelAsync().GetAwaiter().GetResult();
+        }
+        /// <inheritdoc />
+        public async Task<StreamMessage> GetSingleStreamingChannelAsync()
+        {
+            var result = await Streams.ResultChannel.ReadAsync();
+            return result;
+        }
+        #endregion
+
+
+        #region "TRENDS" // =========================================================================================================
+        // The corresponding methods are defined in 'TrendServiceProvider'
+        #endregion
+
+
+        #region "MISCELLANEA" // ====================================================================================================
+        // GetServerTime ------------------------------------------------------------------------------------------------------------
+        ///<inheritdoc/>
+        public DateTime GetServerTime()
+        {
+            return GetServerTimeAsync().GetAwaiter().GetResult();
+        }
+        ///<inheritdoc/>
+        public async Task<DateTime> GetServerTimeAsync()
+        {
+            // Using the RefreshToken call to read the HTTP header
+            DateTime? serverTime = null;
+            try
+            {
+                HttpResponseMessage response = await Client.Request("refreshToken").GetAsync().ConfigureAwait(false);
+                var date = response.Headers.Date;
+                if (date == null)
+                {
+                    throw new MetasysHttpException("Cannot read date time from HTTP response of Metasys Server.", response.ToString());
+                }
+                serverTime = date.Value.UtcDateTime;
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return serverTime.Value;
+        }
+
+        // Localize -----------------------------------------------------------------------------------------------------------------
+        // note: this method has been moved to 'BasicServiceProvider'
+        ///// <inheritdoc/>
+        //public string Localize(string resource, CultureInfo cultureInfo = null)
+        //{
+        //    // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+        //    return Utils.ResourceManager.Localize(resource, cultureInfo ?? Culture);
+        //}
+
+
+        //// GetResourceTypesAsync ----------------------------------------------------------------------------------------------------
+        ///// <summary>
+        ///// Gets all resource types asynchronously.
+        ///// </summary>
+        ///// <exception cref="MetasysHttpException"></exception>
+        ///// <exception cref="MetasysHttpParsingException"></exception>
+        //public async Task<IEnumerable<MetasysObjectType>> _GetResourceTypesAsync(string resource, string pathSegment)
+        //{
+        //    List<MetasysObjectType> types = new List<MetasysObjectType>() { };
+
+        //    try
+        //    {
+        //        var response = await Client.Request(new Url(resource)
+        //            .AppendPathSegment(pathSegment))
+        //            .GetJsonAsync<JToken>()
+        //            .ConfigureAwait(false);
+        //        try
+        //        {
+        //            if (Version < ApiVersion.v4)
+        //            {
+        //                // The response is a list of typeUrls, not the type data
+        //                var list = response["items"] as JArray;
+        //                foreach (var item in list)
+        //                {
+        //                    try
+        //                    {
+        //                        JToken typeToken = item;
+        //                        // Retrieve type token from url (when available) and construct Metasys Object Type
+        //                        if (item["typeUrl"] != null)
+        //                        {
+        //                            var url = item["typeUrl"].Value<string>();
+        //                            typeToken = await GetWithFullUrl(url).ConfigureAwait(false);
+        //                        }
+        //                        var type = GetType(typeToken);
+        //                        types.Add(type);
+        //                    }
+        //                    catch (System.ArgumentNullException e)
+        //                    {
+        //                        throw new MetasysHttpParsingException(response.ToString(), e);
+        //                    }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                var item = response["item"];
+        //                var members = item["members"];
+        //                dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(members.ToString());
+        //                foreach (KeyValuePair<string, object> kvp in kvpList)
+        //                {
+        //                    if (kvp.Key.Length > 0)
+        //                    {
+        //                        var itm = kvp.Value as IDictionary<string, object>;
+        //                        String description = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
+        //                        int id = int.Parse((itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
+
+        //                        var type = GetType(id, description, kvp.Key);
+        //                        types.Add(type);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        catch (System.NullReferenceException e)
+        //        {
+        //            throw new MetasysHttpParsingException(response.ToString(), e);
+        //        }
+        //    }
+        //    catch (FlurlHttpException e)
+        //    {
+        //        ThrowHttpException(e);
+        //    }
+        //    return types;
+        //}
+        #endregion
+
+
+        /// <summary>Use to log an error message from an asynchronous context.</summary>
+        private async Task LogErrorAsync(String message)
+        {
+            await Console.Error.WriteLineAsync(message).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -379,86 +1021,6 @@ namespace JohnsonControls.Metasys.BasicServices
             System.Threading.Tasks.Task.Delay(delayms).ContinueWith(_ => Refresh());
         }
 
-        /// <inheritdoc/>
-        public AccessToken GetAccessToken()
-        {
-            return this.AccessToken;
-        }
-
-        /// <inheritdoc/>
-        public void SetAccessToken(AccessToken accessToken)
-        {
-            this.AccessToken = accessToken;
-        }
-
-
-
-        /// <inheritdoc/>
-        public Guid GetObjectIdentifier(string itemReference)
-        {
-            return GetObjectIdentifierAsync(itemReference).GetAwaiter().GetResult();
-        }
-        /// <inheritdoc/>
-        public async Task<Guid> GetObjectIdentifierAsync(string itemReference)
-        {
-            // Sanitize given itemReference
-            var normalizedItemReference = itemReference.Trim().ToUpper();
-            // Returns cached value when available, otherwise perform request         
-            if (!IdentifiersDictionary.ContainsKey(normalizedItemReference))
-            {
-                JToken response = null;
-                try
-                {
-                    response = await Client.Request("objectIdentifiers")
-                        .SetQueryParam("fqr", itemReference)
-                        .GetJsonAsync<JToken>()
-                        .ConfigureAwait(false);
-                    // Stores value for caching and return
-                    IdentifiersDictionary[normalizedItemReference] = ParseObjectIdentifier(response);
-                }
-                catch (FlurlHttpException e)
-                {
-                    if (e.Call.HttpStatus == HttpStatusCode.BadRequest && response != null && response["message"] != null
-                        && response["message"].Value<string>().Contains("not found"))
-                    {
-                        // Metasys respond with "Identifier is not found." message, so make exception explicit
-                        throw new MetasysHttpNotFoundException(e);
-                    }
-                    ThrowHttpException(e);
-                }
-            }
-            return IdentifiersDictionary[normalizedItemReference];
-        }
-
-
-        /// <inheritdoc/>
-        public Variant ReadProperty(Guid id, string attributeName)
-        {
-            return ReadPropertyAsync(id, attributeName).GetAwaiter().GetResult();
-        }
-        /// <inheritdoc/>
-        public async Task<Variant> ReadPropertyAsync(Guid id, string attributeName)
-        {
-            JToken response = null; Variant result = new Variant();
-            try
-            {
-                response = await Client.Request(new Url("objects")
-                    .AppendPathSegments(id, "attributes", attributeName))
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
-                result = new Variant(id, response, attributeName, Culture, Version);
-            }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-            catch (System.NullReferenceException e)
-            {
-                throw new MetasysPropertyException(response.ToString(), e);
-            }
-            return result;
-        }
-
         /// <summary>
         /// Overload of ReadPropertyAsync for internal use where Exception suppress is needed, e.g. ReadPropertyMultiple 
         /// </summary>
@@ -466,7 +1028,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeName"></param>
         /// <param name="suppressNotFoundException"></param>
         /// <returns></returns>
-        protected async Task<Variant> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException = true)
+        private async Task<Variant> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException = true)
         {
             try
             {
@@ -476,107 +1038,6 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 return null;
             }
-        }
-
-        /// <summary>
-        /// Read many attribute values given the Guids of the objects.
-        /// </summary>
-        /// <returns>
-        /// A list of VariantMultiple with all the specified attributes (if existing).        
-        /// </returns>
-        /// <param name="ids"></param>
-        /// <param name="attributeNames"></param>        
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysPropertyException"></exception>
-        public IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids, IEnumerable<string> attributeNames)
-        {
-            return ReadPropertyMultipleAsync(ids, attributeNames).GetAwaiter().GetResult();
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<VariantMultiple>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids, IEnumerable<string> attributeNames)
-        {
-            if (ids == null || attributeNames == null)
-            {
-                return null;
-            }
-            List<VariantMultiple> results = new List<VariantMultiple>();
-            if (Version > ApiVersion.v2)
-            {
-                var response = await GetBatchRequestAsync("objects", ids, attributeNames, "attributes").ConfigureAwait(false);
-                return ToVariantMultiples(response);
-            }
-            var taskList = new List<Task<Variant>>();
-            // Prepare Tasks to Read attributes list. In Metasys 11 this will be implemented server side
-            foreach (var id in ids)
-            {
-                foreach (string attributeName in attributeNames)
-                {
-                    // Much faster reading single property than the entire object, even though we have more server calls
-                    taskList.Add(ReadPropertyAsync(id, attributeName, true)); // Using internal signature with exception suppress
-                }
-            }
-            await Task.WhenAll(taskList).ConfigureAwait(false);
-            foreach (var id in ids)
-            {
-                // Get attributes of the specific Id
-                List<Task<Variant>> attributeList = taskList.Where(w =>
-                    (w.Result != null && w.Result.Id == id)).ToList();
-                List<Variant> variants = new List<Variant>();
-                foreach (var t in attributeList)
-                {
-                    if (t.Result != null) // Something went wrong if the result is unknown
-                    {
-                        variants.Add(t.Result); // Prepare variants list
-                    }
-                }
-                if (variants.Count > 0 || attributeNames.Count() == 0)
-                {
-                    // Aggregate results only when objects was found or no attributes specified
-                    results.Add(new VariantMultiple(id, variants));
-                }
-            }
-            return results.AsEnumerable();
-        }
-
-
-        /// <inheritdoc/>
-        public void WriteProperty(Guid id, string attributeName, object newValue)
-        {
-            WritePropertyAsync(id, attributeName, newValue).GetAwaiter().GetResult();
-        }
-        /// <inheritdoc/>
-        public async Task WritePropertyAsync(Guid id, string attributeName, object newValue)
-        {
-            List<(string Attribute, object Value)> list = new List<(string Attribute, object Value)>();
-            list.Add((Attribute: attributeName, Value: newValue));
-            var item = GetWritePropertyBody(list);
-            await WritePropertyRequestAsync(id, item).ConfigureAwait(false);
-        }
-
-
-        /// <inheritdoc/>
-        public void WritePropertyMultiple(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues)
-        {
-            WritePropertyMultipleAsync(ids, attributeValues).GetAwaiter().GetResult();
-        }
-        /// <inheritdoc/>
-        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues)
-        {
-            if (ids == null || attributeValues == null)
-            {
-                throw new ArgumentNullException("ids and/or attributeValues.");
-            }
-
-            var item = GetWritePropertyBody(attributeValues);
-            var taskList = new List<Task>();
-
-            foreach (var id in ids)
-            {
-                taskList.Add(WritePropertyRequestAsync(id, item));
-            }
-            await Task.WhenAll(taskList).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -590,7 +1051,7 @@ namespace JohnsonControls.Metasys.BasicServices
             foreach (var attribute in attributeValues)
             {
                 pairs.Add(attribute.Attribute, attribute.Value);
-            }          
+            }
             return pairs;
         }
 
@@ -618,223 +1079,13 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        /// <inheritdoc/>
-        public IEnumerable<Command> GetCommands(Guid id)
-        {
-            return GetCommandsAsync(id).GetAwaiter().GetResult();
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<Command>> GetCommandsAsync(Guid id)
-        {
-            try
-            {
-                var token = await Client.Request(new Url("objects")
-                    .AppendPathSegments(id, "commands"))
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
-
-                if (!(token is JArray) && token["items"] != null)
-                {
-                    // Since API v3 response is wrapped in items property
-                    token = token["items"];
-                }
-                List<Command> commands = new List<Command>();
-                var array = token as JArray;
-
-                if (array != null)
-                {
-                    foreach (JObject command in array)
-                    {
-                        try
-                        {
-                            Command c = new Command(command, Culture, Version);
-                            commands.Add(c);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new MetasysCommandException(command.ToString(), e);
-                        }
-                    }
-                }
-
-                return commands;
-            }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-            return null;
-        }
-
-
-        /// <inheritdoc/>
-        public void SendCommand(Guid id, string command, IEnumerable<object> values = null)
-        {
-            SendCommandAsync(id, command, values).GetAwaiter().GetResult();
-        }
-        /// <inheritdoc/>
-        public async Task SendCommandAsync(Guid id, string command, IEnumerable<object> values = null)
-        {
-            if (values == null)
-            {
-                await SendCommandRequestAsync(id, command, new string[0]).ConfigureAwait(false);
-            }
-            else
-            {
-                await SendCommandRequestAsync(id, command, values).ConfigureAwait(false);
-            }
-        }
-
-        /// <summary>
-        /// Send a command to an object asynchronously.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="command"></param>
-        /// <param name="values"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <returns>Asynchronous Task Result.</returns>
-        private async Task SendCommandRequestAsync(Guid id, string command, IEnumerable<object> values)
-        {
-            try
-            {
-                if (Version > ApiVersion.v3)
-                {
-                    JProperty propParams = new JProperty("parameters", "commandIdEnumSet.state1Command");
-                    JObject jsonValues = new JObject(propParams);
-
-                    var response = await Client.Request(new Url("objects")
-                                                                .AppendPathSegments(id, "commands", command))
-                                                                .PutJsonAsync(jsonValues)
-                                                                .ConfigureAwait(false);
-                }
-                else
-                {
-                    var response = await Client.Request(new Url("objects")
-                                                                .AppendPathSegments(id, "commands", command))
-                                                                .PutJsonAsync(values)
-                                                                .ConfigureAwait(false);
-                }
-            }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-        }
-
-
-        #region "NETWORK DEVICES"
-        /// <inheritdoc/>
-        public IEnumerable<MetasysObject> GetNetworkDevices(string type = null)
-        {
-            return NetworkDevices.Get(type);
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null)
-        {
-            return await NetworkDevices.GetAsync(type);
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<MetasysObject> GetNetworkDevices(NetworkDeviceTypeEnum networkDevicetype)
-        {
-            return NetworkDevices.Get(networkDevicetype);
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(NetworkDeviceTypeEnum networkDevicetype)
-        {
-            return await NetworkDevices.GetAsync(networkDevicetype);
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<MetasysObjectType> GetNetworkDeviceTypes()
-        {
-            return NetworkDevices.GetTypes();
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync()
-        {
-            return await NetworkDevices.GetTypesAsync();
-        }
-        #endregion
-
-        /// <summary>
-        /// Gets all resource types asynchronously.
-        /// </summary>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        public async Task<IEnumerable<MetasysObjectType>> GetResourceTypesAsync(string resource, string pathSegment)
-        {
-            List<MetasysObjectType> types = new List<MetasysObjectType>() { };
-
-            try
-            {
-                var response = await Client.Request(new Url(resource)
-                    .AppendPathSegment(pathSegment))
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
-                try
-                {
-                    if (Version < ApiVersion.v4)
-                    {
-                        // The response is a list of typeUrls, not the type data
-                        var list = response["items"] as JArray;
-                        foreach (var item in list)
-                        {
-                            try
-                            {
-                                JToken typeToken = item;
-                                // Retrieve type token from url (when available) and construct Metasys Object Type
-                                if (item["typeUrl"] != null)
-                                {
-                                    var url = item["typeUrl"].Value<string>();
-                                    typeToken = await GetWithFullUrl(url).ConfigureAwait(false);
-                                }
-                                var type = GetType(typeToken);
-                                types.Add(type);
-                            }
-                            catch (System.ArgumentNullException e)
-                            {
-                                throw new MetasysHttpParsingException(response.ToString(), e);
-                            }
-                        }
-                    } else
-                    {
-                        var item = response["item"];
-                        var members = item["members"];
-                        dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(members.ToString());
-                        foreach (KeyValuePair<string, object> kvp in kvpList)
-                        {
-                            if (kvp.Key.Length > 0)
-                            {
-                                var itm = kvp.Value as IDictionary<string, object>;
-                                String description = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
-                                int id = int.Parse( (itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
-                                
-                                var type = GetType(id, description, kvp.Key);
-                                types.Add(type);
-                            }
-                        }
-                    }
-                }
-                catch (System.NullReferenceException e)
-                {
-                    throw new MetasysHttpParsingException(response.ToString(), e);
-                }
-            }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-            return types;
-        }
-
         /// <summary>
         /// Gets the type from a token retrieved from a typeUrl 
         /// </summary>
         /// <param name="typeToken"></param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysObjectTypeException"></exception>
-        protected MetasysObjectType GetType(JToken typeToken)
+        private MetasysObjectType GetType(JToken typeToken)
         {
             try
             {
@@ -879,7 +1130,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="key"></param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysObjectTypeException"></exception>
-        protected MetasysObjectType GetType(int id, String description, String key)
+        private MetasysObjectType GetType(int id, String description, String key)
         {
             try
             {
@@ -912,175 +1163,12 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-
-        #region "SPACES" //==========================================================================================================
-        
-        // GetSpaces ----------------------------------------------------------------------------------------------------------------
-        /// <inheritdoc/>
-        public IEnumerable<MetasysObject> GetSpaces(SpaceTypeEnum? type = null)
-        {
-            return Spaces.Get(type);
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetSpacesAsync(SpaceTypeEnum? type = null)
-        {            
-            return await Spaces.GetAsync(type);
-        }
-
-        // GetSpaceChildren --------------------------------------------------------------------------------------------------------
-        /// <inheritdoc/>
-        public IEnumerable<MetasysObject> GetSpaceChildren(Guid spaceId)
-        {
-            return Spaces.GetChildren(spaceId);
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetSpaceChildrenAsync(Guid spaceId)
-        {
-            return await  Spaces.GetChildrenAsync(spaceId);
-        }
-
-        // GetSpaceTypes ----------------------------------------------------------------------------------------------------------
-        /// <inheritdoc/>
-        public IEnumerable<MetasysObjectType> GetSpaceTypes()
-        {
-            return Spaces.GetTypes();
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObjectType>> GetSpaceTypesAsync()
-        {
-            return await Spaces.GetTypesAsync();
-        }
-        #endregion //==============================================================================================================
-
-        #region "EQUIPMENTS" // =====================================================================================================
-        // GetEquipment -------------------------------------------------------------------------------------------------------------
-        /// <inheritdoc/>
-        public IEnumerable<MetasysObject> GetEquipment()
-        {
-            return Equipments.Get();
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetEquipmentAsync()
-        {
-            return await Equipments.GetAsync();
-        }
-
-        // GetEquipmentPoints -------------------------------------------------------------------------------------------------------
-        /// <inheritdoc/>
-        public IEnumerable<MetasysPoint> GetEquipmentPoints(Guid equipmentId, bool readAttributeValue = true)
-        {
-            //return GetEquipmentPointsAsync(equipmentId, readAttributeValue).GetAwaiter().GetResult();
-            return Equipments.GetPoints(equipmentId, readAttributeValue);
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysPoint>> GetEquipmentPointsAsync(Guid equipmentId, bool readAttributeValue = true)
-        {
-            List<MetasysPoint> points = new List<MetasysPoint>() { }; List<Guid> guids = new List<Guid>();
-            List<MetasysPoint> pointsWithAttribute = new List<MetasysPoint>() { };
-            var response = await GetAllAvailablePagesAsync("equipment", null, equipmentId.ToString(), "points").ConfigureAwait(false);
-            try
-            {
-                foreach (var item in response)
-                {
-                    MetasysPoint point = new MetasysPoint(item);
-                    // Retrieve object Id from full URL 
-                    string objectId = point.ObjectUrl.Split('/').Last();
-                    point.ObjectId = ParseObjectIdentifier(objectId);
-                    // Retrieve attribute Id from full URL 
-                    string attributeId = (point.Attribute != null) ? point.Attribute.Split('.').Last() : String.Empty;
-                    if (attributeId == String.Empty)
-                    {
-                        attributeId = (point.AttributeUrl != null) ? point.AttributeUrl.Split('/').Last() : String.Empty;
-                    }
-                    if (point.ObjectId != Guid.Empty) // Sometime can happen that there are empty Guids.
-                    {
-                        // Collect Guids to perform read property multiple in "one call" (supporting only presentValue so far)
-                        if ((attributeId == "85" | attributeId == "presentValue") && readAttributeValue)
-                        {
-                            guids.Add(point.ObjectId);
-                            pointsWithAttribute.Add(point);
-                        }
-                        else
-                        {
-                            points.Add(point);
-                        }
-                    }
-                }
-            }
-            catch (System.NullReferenceException e)
-            {
-                throw new MetasysHttpParsingException(response.ToString(), e);
-            }
-            if (readAttributeValue && guids.Count > 0)
-            {
-                // Try to Read Present Value when available. Note: can't read attribute ID from attribute full URL of point since we got only the description.
-                var results = await ReadPropertyMultipleAsync(guids, new List<string> { "presentValue" }).ConfigureAwait(false);
-                foreach (var r in results)
-                {
-                    var point = pointsWithAttribute.SingleOrDefault(s => s.ObjectId == r.Id);
-                    // Assign present values back from the attribute collection
-                    point.PresentValue = r.Values?.SingleOrDefault(s => s.Attribute == "presentValue");
-                    // Finally add the point back to the original list
-                    points.Add(point);
-                }
-            }
-            return points;
-        }
-
-        // GetSpaceEquipment --------------------------------------------------------------------------------------------------------
-        /// <inheritdoc/>
-        public IEnumerable<MetasysObject> GetSpaceEquipment(Guid spaceId)
-        {
-            return Equipments.GetServingASpace(spaceId);
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId)
-        {
-            return await Equipments.GetServingASpaceAsync(spaceId);
-        }
-
-        #endregion // ========================================================================================================================
-
-        /// <inheritdoc/>
-        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false)
-        {
-            return GetObjectsAsync(id, levels, includeInternalObjects).GetAwaiter().GetResult();
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels, bool includeInternalObjects = false)
-        {
-            Dictionary<string, string> parameters = null;
-            if (Version > ApiVersion.v2)
-            {
-                // Since API v3 we could use the includeInternalObjects parameter
-                parameters = new Dictionary<string, string>();
-                parameters.Add("includeInternalObjects", includeInternalObjects.ToString());
-            }
-            var objects = await GetObjectChildrenAsync(id, parameters, levels).ConfigureAwait(false);
-            return ToMetasysObject(objects, Version);
-        }
-
-        /// <inheritdoc/>
-        public virtual AccessToken TryLogin(string credManTarget, bool refresh = true)
-        {
-            return TryLoginAsync(credManTarget, refresh).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc/>
-        public virtual async Task<AccessToken> TryLoginAsync(string credManTarget, bool refresh = true)
-        {
-            // Retrieve credentials first
-            var credentials = CredentialUtil.GetCredential(credManTarget);
-            // Get the control back to TryLogin method
-            return await TryLoginAsync(CredentialUtil.convertToUnSecureString(credentials.Username), CredentialUtil.convertToUnSecureString(credentials.Password), refresh).ConfigureAwait(false);
-        }
-
         /// <summary>
         /// Convert a JToken batch request response into VariantMultiple.
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        protected IEnumerable<VariantMultiple> ToVariantMultiples(JToken response)
+        private IEnumerable<VariantMultiple> ToVariantMultiples(JToken response)
         {
             List<VariantMultiple> multiples = new List<VariantMultiple>();
             foreach (var r in response["responses"])
@@ -1110,148 +1198,41 @@ namespace JohnsonControls.Metasys.BasicServices
             return multiples;
         }
 
-        ///<inheritdoc/>
-        public void WritePropertyMultiple(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues)
+        /// <summary>
+        /// Send a command to an object asynchronously.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="command"></param>
+        /// <param name="values"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <returns>Asynchronous Task Result.</returns>
+        private async Task SendCommandRequestAsync(Guid id, string command, IEnumerable<object> values)
         {
-            WritePropertyMultipleAsync(ids, attributeValues).GetAwaiter().GetResult();
-        }
-
-        ///<inheritdoc/>
-        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues)
-        {
-            if (ids == null || attributeValues == null)
-            {
-                throw new ArgumentNullException("ids and/or attributeValues.");
-            }
-            // convert dictionary to a list of tuples and use existing overload
-            await WritePropertyMultipleAsync(ids, attributeValues.Select(x => (x.Key, x.Value)));
-        }
-
-        ///<inheritdoc/>
-        public DateTime GetServerTime()
-        {
-            return GetServerTimeAsync().GetAwaiter().GetResult();
-        }
-
-        ///<inheritdoc/>
-        public async Task<DateTime> GetServerTimeAsync()
-        {
-            // Using the RefreshToken call to read the HTTP header
-            DateTime? serverTime = null;
             try
             {
-                HttpResponseMessage response = await Client.Request("refreshToken").GetAsync().ConfigureAwait(false);
-                var date = response.Headers.Date;
-                if (date == null)
+                if (Version > ApiVersion.v3)
                 {
-                    throw new MetasysHttpException("Cannot read date time from HTTP response of Metasys Server.", response.ToString());
-                }  
-                serverTime= date.Value.UtcDateTime;
+                    JProperty propParams = new JProperty("parameters", "commandIdEnumSet.state1Command");
+                    JObject jsonValues = new JObject(propParams);
+
+                    var response = await Client.Request(new Url("objects")
+                                                                .AppendPathSegments(id, "commands", command))
+                                                                .PutJsonAsync(jsonValues)
+                                                                .ConfigureAwait(false);
+                }
+                else
+                {
+                    var response = await Client.Request(new Url("objects")
+                                                                .AppendPathSegments(id, "commands", command))
+                                                                .PutJsonAsync(values)
+                                                                .ConfigureAwait(false);
+                }
             }
             catch (FlurlHttpException e)
             {
                 ThrowHttpException(e);
             }
-            return serverTime.Value;
         }
-
-
-
-
-        /// <inheritdoc />
-        public void GetCOVStream(Guid id)
-        {
-            GetCOVStreamAsync(id).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc />
-        public async Task GetCOVStreamAsync(Guid id)
-        {
-            try
-            {
-                Streams.LoadCOVSubscriptions(id);
-                await Streams.ConnectAsync();
-            }
-            catch (Exception ex)
-            {
-                Debug.Write(ex.Message);
-            }
-        }
-
-        /// <inheritdoc />
-        public void GetCOVStreamMultiple(IEnumerable<Guid> ids)
-        {
-            GetCOVStreamMultipleAsync(ids).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc />
-        public async Task GetCOVStreamMultipleAsync(IEnumerable<Guid> ids)
-        {
-            try
-            {
-                Streams.LoadCOVSubscriptions(ids);
-                await Streams.ConnectAsync();
-            }
-            catch (Exception ex)
-            {
-                Debug.Write(ex.Message);
-            }
-        }
-
-        /// <inheritdoc />
-        public async Task GetAlarmStreamAsync()
-        {
-            try
-            {
-                Streams.LoadActivitySubscriptions("Alarm");
-                await Streams.ConnectAsync();
-            }
-            catch (Exception ex)
-            {
-                Debug.Write(ex.Message);
-            }
-        }
-
-        /// <inheritdoc />
-        public async Task GetAuditStreamAsync()
-        {
-            try
-            {
-                Streams.LoadActivitySubscriptions("Audit");
-                await Streams.ConnectAsync();
-            }
-            catch (Exception ex)
-            {
-                Debug.Write(ex.Message);
-            }
-        }
-
-        /// <inheritdoc />
-        public StreamMessage GetSingleStreamingChannel()
-        {
-            return GetSingleStreamingChannelAsync().GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc />
-        public async Task<StreamMessage> GetSingleStreamingChannelAsync()
-        {
-            var result = await Streams.ResultChannel.ReadAsync();
-            return result;
-        }
-
-        ///// <inheritdoc />
-        //public void StartReadingCOVStreamValue(Guid id)
-        //{
-        //    System.Threading.Tasks.Task.Run(() =>
-        //    {
-        //        COVStreamValues.Clear();
-        //        KeepCOVStreamAlive = true;
-        //        GetCOVStream(id);
-        //        UpdateCOVStreamValue();
-        //    });
-        //}
-
-
 
 
     }

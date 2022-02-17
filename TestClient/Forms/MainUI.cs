@@ -147,11 +147,10 @@ namespace MetasysServices_TestClient
             }
         }
 
-        private static string FormatJson(object obj)
-        {
-            //dynamic parsedJson = JsonConvert.DeserializeObject(json);
-            return JsonConvert.SerializeObject(obj, Formatting.Indented);
-        }
-
+        //private static string FormatJson(object obj)
+        //{
+        //    //dynamic parsedJson = JsonConvert.DeserializeObject(json);
+        //    return JsonConvert.SerializeObject(obj, Formatting.Indented);
+        //}
     }
 }

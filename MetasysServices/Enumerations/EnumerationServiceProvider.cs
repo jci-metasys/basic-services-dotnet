@@ -83,49 +83,13 @@ namespace JohnsonControls.Metasys.BasicServices
             return enums;
         }
 
-
-        // GetValues ------------------------------------------------------------------------------------------------------------------------------------
-        /// <inheritdoc/>
-        public IEnumerable<MetasysEnumValue> GetValues(String id)
-        {
-            return GetEnumValues(id);
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysEnumValue>> GetValuesAsync(String id)
-        {
-            return await GetEnumValuesAsync(id);
-        }
-
-
-        // Delete ----------------------------------------------------------------------------------------------------------------------------------------
-        /// <inheritdoc/>
-        public void Delete(string id)
-        {
-            DeleteAsync(id).GetAwaiter().GetResult();
-        }
-        public async Task DeleteAsync(string id)
-        {
-            try
-            {
-                if (Version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(Version.ToString());}
-               var response = await Client.Request(new Url("enumerations")
-                                                            .AppendPathSegments(id))
-                                                            .DeleteAsync()
-                                                            .ConfigureAwait(false);
-            }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-        }
-
-
         // Create ----------------------------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public void Create(string name, IEnumerable<String> values)
         {
             CreateAsync(name, values).GetAwaiter().GetResult();
         }
+        /// <inheritdoc/>
         public async Task CreateAsync(string name, IEnumerable<String> values)
         {
             try
@@ -138,7 +102,8 @@ namespace JohnsonControls.Metasys.BasicServices
                     JObject item = new JObject();
                     JArray members = new JArray();
                     item.Add(propertyName: "name", value: name);
-                    foreach (String v in values) {
+                    foreach (String v in values)
+                    {
                         members.Add(v.ToString());
                     }
                     item.Add(propertyName: "members", value: members);
@@ -156,12 +121,25 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+        // GetValues ------------------------------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<MetasysEnumValue> GetValues(String id)
+        {
+            return GetEnumValues(id);
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysEnumValue>> GetValuesAsync(String id)
+        {
+            return await GetEnumValuesAsync(id);
+        }
+
         // Edit ----------------------------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public void Edit(String id, string name, IEnumerable<String> values)
         {
             EditAsync(id, name, values).GetAwaiter().GetResult();
         }
+        /// <inheritdoc/>
         public async Task EditAsync(String id, string name, IEnumerable<String> values)
         {
             try
@@ -174,9 +152,9 @@ namespace JohnsonControls.Metasys.BasicServices
                     JObject item = new JObject();
                     JObject members = new JObject();
                     item.Add(propertyName: "name", value: name);
-                    for (int i=0; i < values.Count(); i++)
+                    for (int i = 0; i < values.Count(); i++)
                     {
-                        members.Add(propertyName: id + "." + i.ToString(), value: JObject.FromObject( new { name = values.ToList()[i] }));
+                        members.Add(propertyName: id + "." + i.ToString(), value: JObject.FromObject(new { name = values.ToList()[i] }));
                     }
                     item.Add(propertyName: "members", value: members);
                     body.Add(propertyName: "item", value: item);
@@ -199,6 +177,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             ReplaceAsync(id, name, values).GetAwaiter().GetResult();
         }
+        /// <inheritdoc/>
         public async Task ReplaceAsync(String id, string name, IEnumerable<String> values)
         {
             try
@@ -223,6 +202,29 @@ namespace JohnsonControls.Metasys.BasicServices
                                                     .PutJsonAsync(body)
                                                     .ConfigureAwait(false);
                 }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+        }
+
+        // Delete ----------------------------------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void Delete(string id)
+        {
+            DeleteAsync(id).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task DeleteAsync(string id)
+        {
+            try
+            {
+                if (Version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(Version.ToString());}
+               var response = await Client.Request(new Url("enumerations")
+                                                            .AppendPathSegments(id))
+                                                            .DeleteAsync()
+                                                            .ConfigureAwait(false);
             }
             catch (FlurlHttpException e)
             {

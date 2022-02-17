@@ -60,13 +60,21 @@ namespace JohnsonControls.Metasys.BasicServices
                     // Since API v3 response is wrapped in an result object
                     response = response["result"];
                 }
-                Total = response["total"].Value<int>();
+                if (response["total"] != null)
+                {
+                    Total = response["total"].Value<int>();
+                }
                 // Retrieve current page and page size from self url
                 Uri selfUri = new Uri(response["self"].Value<string>());
                 string page = HttpUtility.ParseQueryString(selfUri.Query).Get("page");
                 string pageSize = HttpUtility.ParseQueryString(selfUri.Query).Get("pageSize");
                 // Try to get from next url if it is not specified in the self url
-                var nextUrl = response["next"].Value<string>();
+                //var nextUrl = response["next"].Value<string>();
+                string nextUrl = null;
+                if (response["next"] != null)
+                {
+                    nextUrl = response["next"].Value<string>();
+                }
                 if (pageSize == null && nextUrl != null)
                 {
                     Uri nextUri = new Uri(nextUrl);

@@ -166,7 +166,6 @@ namespace JohnsonControls.Metasys.BasicServices
             _ = Parallel.ForEach(
                 subscriptionInfos,
                 new ParallelOptions() { MaxDegreeOfParallelism = 5 }, // parallelize, but don't overwhelm the Metasys host
-#pragma warning disable VSTHRD101 // Avoid unsupported async delegates
                 async (s) =>
                 {
                     try
@@ -178,8 +177,6 @@ namespace JohnsonControls.Metasys.BasicServices
                        
                     }
                 });
-#pragma warning restore VSTHRD101 // Avoid unsupported async delegates
-
             
             _channel.Writer.Complete();
         }
@@ -661,7 +658,7 @@ namespace JohnsonControls.Metasys.BasicServices
         #endregion
 
 
-        #region "COV Values"
+#region "COV Values" ========================================================================================================
         /// <summary>
         /// Variable to keep the list of current COV stream messages
         /// </summary>
@@ -671,6 +668,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         private bool KeepCOVReading = true;
 
+        //StartReadingCOVValueAsync -------------------------------------------------------------------------------------------------
         /// <inheritdoc />
         public async Task StartReadingCOVValueAsync(Guid id)
         {
@@ -681,6 +679,7 @@ namespace JohnsonControls.Metasys.BasicServices
             UpdateCOVValues();
         }
 
+        //StartReadingCOVValuesAsync ------------------------------------------------------------------------------------------------
         /// <inheritdoc />
         public async Task StartReadingCOVValuesAsync(IEnumerable<Guid> ids)
         {
@@ -690,6 +689,37 @@ namespace JohnsonControls.Metasys.BasicServices
             await ConnectAsync();
             UpdateCOVValues();
         }
+
+        //StopReadingCOVValues ------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public void StopReadingCOVValues(Guid requestId)
+        {
+            KeepCOVReading = false;
+            _ = UnsubscribeAsync(requestId);
+        }
+
+        //GetCOVValues --------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public List<StreamMessage> GetCOVValues()
+        {
+            return COVValues;
+        }
+
+        //GetCOVValue ---------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public StreamMessage GetCOVValue()
+        {
+            return COVValues.FirstOrDefault();
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<StreamEventArgs> COVValueChanged;
+        /// <inheritdoc />
+        private void OnCOVValueChanged(StreamEventArgs e)
+        {
+            COVValueChanged?.Invoke(this, e);
+        }
+
         private async void UpdateCOVValues()
         {
             while (KeepCOVReading)
@@ -702,30 +732,9 @@ namespace JohnsonControls.Metasys.BasicServices
                 OnCOVValueChanged(arg);
             }
         }
-
-        /// <inheritdoc />
-        public void StopReadingCOVValues(Guid requestId)
-        {
-            KeepCOVReading = false;
-            UnsubscribeAsync(requestId);
-        }
-
-        /// <inheritdoc />
-        public List<StreamMessage> GetCOVValues()
-        {
-            return COVValues;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<StreamEventArgs> COVValueChanged;
-        /// <inheritdoc />
-        protected void OnCOVValueChanged(StreamEventArgs e)
-        {
-            COVValueChanged?.Invoke(this, e);
-        }
 #endregion
 
-#region "Alarm Events"
+#region "Alarm Events" ======================================================================================================
         /// <summary>
         /// Variable to keep the list of current Alarm event messages
         /// </summary>
@@ -735,6 +744,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         private bool KeepAlarmCollecting = true;
 
+        //StartCollectingAlarmsAsync ------------------------------------------------------------------------------------------------
         /// <inheritdoc />
         public async Task StartCollectingAlarmsAsync(int maxNumber = 100)
         {
@@ -753,13 +763,15 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+        //StopCollectingAlarms ------------------------------------------------------------------------------------------------------
         /// <inheritdoc />
         public void StopCollectingAlarms(Guid requestId)
         {
             KeepAlarmCollecting = false;
-            UnsubscribeAsync(requestId);
+            _ = UnsubscribeAsync(requestId);
         }
 
+        //GetAlarmEvents ------------------------------------------------------------------------------------------------------------
         /// <inheritdoc />
         public List<StreamMessage> GetAlarmEvents()
         {
@@ -808,7 +820,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public void StopCollectingAudits(Guid requestId)
         {
             KeepAuditCollecting = false;
-            UnsubscribeAsync(requestId);
+            _ = UnsubscribeAsync(requestId);
         }
 
         /// <inheritdoc />

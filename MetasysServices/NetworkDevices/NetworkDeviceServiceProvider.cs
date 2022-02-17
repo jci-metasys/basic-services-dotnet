@@ -91,6 +91,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         // GetChildren ---------------------------------------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetChildren(Guid networkDeviceId)
         {
             return GetChildrenAsync(networkDeviceId).GetAwaiter().GetResult();
@@ -105,6 +106,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         // GetHostingAnEquipment ---------------------------------------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetHostingAnEquipment(Guid equipmentId)
         {
             return GetHostingAnEquipmentAsync(equipmentId).GetAwaiter().GetResult();
@@ -119,6 +121,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         // GetServingASpace ---------------------------------------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetServingASpace(Guid spaceId)
         {
             return GetServingASpaceAsync(spaceId).GetAwaiter().GetResult();

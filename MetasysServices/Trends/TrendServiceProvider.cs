@@ -400,6 +400,5 @@ namespace JohnsonControls.Metasys.BasicServices
                 Total = response.Total
             };
         }
-
     }
 }

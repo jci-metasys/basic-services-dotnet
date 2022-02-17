@@ -82,6 +82,10 @@ namespace MetasysServices_TestClient.Forms
             this.BtnSendCommand = new System.Windows.Forms.Button();
             this.LblSendCommand_Result = new System.Windows.Forms.Label();
             this.TxtSendCommand_Result = new System.Windows.Forms.TextBox();
+            this.LblGetObjects_IncludeInternalObjects = new System.Windows.Forms.Label();
+            this.ChkGetObjects_IncludeInternalObjects = new System.Windows.Forms.CheckBox();
+            this.LblGetObjects_Levels = new System.Windows.Forms.Label();
+            this.NupGetObject_Levels = new System.Windows.Forms.NumericUpDown();
             this.TabMain.SuspendLayout();
             this.TpgGetObjectIdentifier.SuspendLayout();
             this.TlpGetObjectIdentifier.SuspendLayout();
@@ -98,6 +102,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpReadProperty.SuspendLayout();
             this.TpgSendCommand.SuspendLayout();
             this.TlpSendCommand.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NupGetObject_Levels)).BeginInit();
             this.SuspendLayout();
             // 
             // TabMain
@@ -113,7 +118,7 @@ namespace MetasysServices_TestClient.Forms
             this.TabMain.Location = new System.Drawing.Point(12, 12);
             this.TabMain.Name = "TabMain";
             this.TabMain.SelectedIndex = 0;
-            this.TabMain.Size = new System.Drawing.Size(763, 590);
+            this.TabMain.Size = new System.Drawing.Size(937, 590);
             this.TabMain.TabIndex = 0;
             // 
             // TpgGetObjectIdentifier
@@ -226,17 +231,22 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetObjects.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetObjects.Controls.Add(this.LblGetObjects_ParentID, 1, 1);
             this.TlpGetObjects.Controls.Add(this.TxtGetObjects_ParentID, 2, 1);
-            this.TlpGetObjects.Controls.Add(this.BtnGetObjects, 2, 2);
-            this.TlpGetObjects.Controls.Add(this.DgvGetObjects, 2, 3);
+            this.TlpGetObjects.Controls.Add(this.BtnGetObjects, 2, 4);
+            this.TlpGetObjects.Controls.Add(this.DgvGetObjects, 2, 5);
+            this.TlpGetObjects.Controls.Add(this.LblGetObjects_IncludeInternalObjects, 1, 3);
+            this.TlpGetObjects.Controls.Add(this.ChkGetObjects_IncludeInternalObjects, 2, 3);
+            this.TlpGetObjects.Controls.Add(this.LblGetObjects_Levels, 1, 2);
+            this.TlpGetObjects.Controls.Add(this.NupGetObject_Levels, 2, 2);
             this.TlpGetObjects.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetObjects.Location = new System.Drawing.Point(3, 3);
             this.TlpGetObjects.Name = "TlpGetObjects";
-            this.TlpGetObjects.RowCount = 4;
+            this.TlpGetObjects.RowCount = 6;
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetObjects.Size = new System.Drawing.Size(749, 551);
             this.TlpGetObjects.TabIndex = 0;
             // 
@@ -264,7 +274,7 @@ namespace MetasysServices_TestClient.Forms
             // BtnGetObjects
             // 
             this.BtnGetObjects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGetObjects.Location = new System.Drawing.Point(169, 49);
+            this.BtnGetObjects.Location = new System.Drawing.Point(169, 101);
             this.BtnGetObjects.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnGetObjects.Name = "BtnGetObjects";
             this.BtnGetObjects.Size = new System.Drawing.Size(557, 23);
@@ -277,9 +287,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetObjects.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetObjects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetObjects.Location = new System.Drawing.Point(169, 78);
+            this.DgvGetObjects.Location = new System.Drawing.Point(169, 130);
             this.DgvGetObjects.Name = "DgvGetObjects";
-            this.DgvGetObjects.Size = new System.Drawing.Size(557, 470);
+            this.DgvGetObjects.Size = new System.Drawing.Size(557, 418);
             this.DgvGetObjects.TabIndex = 3;
             // 
             // TpgGetCommands
@@ -633,7 +643,7 @@ namespace MetasysServices_TestClient.Forms
             this.TpgSendCommand.Location = new System.Drawing.Point(4, 29);
             this.TpgSendCommand.Name = "TpgSendCommand";
             this.TpgSendCommand.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgSendCommand.Size = new System.Drawing.Size(755, 557);
+            this.TpgSendCommand.Size = new System.Drawing.Size(929, 557);
             this.TpgSendCommand.TabIndex = 5;
             this.TpgSendCommand.Text = "SendCommand";
             this.TpgSendCommand.UseVisualStyleBackColor = true;
@@ -666,7 +676,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpSendCommand.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpSendCommand.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TlpSendCommand.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpSendCommand.Size = new System.Drawing.Size(749, 551);
+            this.TlpSendCommand.Size = new System.Drawing.Size(923, 551);
             this.TlpSendCommand.TabIndex = 0;
             // 
             // LblSendCommand_ObjectId
@@ -687,7 +697,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtSendCommand_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TxtSendCommand_ObjectId.Location = new System.Drawing.Point(169, 23);
             this.TxtSendCommand_ObjectId.Name = "TxtSendCommand_ObjectId";
-            this.TxtSendCommand_ObjectId.Size = new System.Drawing.Size(557, 20);
+            this.TxtSendCommand_ObjectId.Size = new System.Drawing.Size(731, 20);
             this.TxtSendCommand_ObjectId.TabIndex = 1;
             // 
             // LblSendCommand_Command
@@ -708,7 +718,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtSendCommand_Command.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TxtSendCommand_Command.Location = new System.Drawing.Point(169, 49);
             this.TxtSendCommand_Command.Name = "TxtSendCommand_Command";
-            this.TxtSendCommand_Command.Size = new System.Drawing.Size(557, 20);
+            this.TxtSendCommand_Command.Size = new System.Drawing.Size(731, 20);
             this.TxtSendCommand_Command.TabIndex = 3;
             // 
             // LblSendCommand_Values
@@ -728,7 +738,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtSendCommand_Values.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TxtSendCommand_Values.Location = new System.Drawing.Point(169, 75);
             this.TxtSendCommand_Values.Name = "TxtSendCommand_Values";
-            this.TxtSendCommand_Values.Size = new System.Drawing.Size(557, 20);
+            this.TxtSendCommand_Values.Size = new System.Drawing.Size(731, 20);
             this.TxtSendCommand_Values.TabIndex = 5;
             // 
             // BtnSendCommand
@@ -737,7 +747,7 @@ namespace MetasysServices_TestClient.Forms
             this.BtnSendCommand.Location = new System.Drawing.Point(169, 101);
             this.BtnSendCommand.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnSendCommand.Name = "BtnSendCommand";
-            this.BtnSendCommand.Size = new System.Drawing.Size(557, 23);
+            this.BtnSendCommand.Size = new System.Drawing.Size(731, 23);
             this.BtnSendCommand.TabIndex = 6;
             this.BtnSendCommand.Text = "SendCommand";
             this.BtnSendCommand.UseVisualStyleBackColor = true;
@@ -761,14 +771,72 @@ namespace MetasysServices_TestClient.Forms
             this.TxtSendCommand_Result.Location = new System.Drawing.Point(169, 130);
             this.TxtSendCommand_Result.Name = "TxtSendCommand_Result";
             this.TxtSendCommand_Result.ReadOnly = true;
-            this.TxtSendCommand_Result.Size = new System.Drawing.Size(557, 20);
+            this.TxtSendCommand_Result.Size = new System.Drawing.Size(731, 20);
             this.TxtSendCommand_Result.TabIndex = 8;
+            // 
+            // LblGetObjects_IncludeInternalObjects
+            // 
+            this.LblGetObjects_IncludeInternalObjects.AutoSize = true;
+            this.LblGetObjects_IncludeInternalObjects.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGetObjects_IncludeInternalObjects.Location = new System.Drawing.Point(23, 75);
+            this.LblGetObjects_IncludeInternalObjects.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetObjects_IncludeInternalObjects.Name = "LblGetObjects_IncludeInternalObjects";
+            this.LblGetObjects_IncludeInternalObjects.Size = new System.Drawing.Size(140, 20);
+            this.LblGetObjects_IncludeInternalObjects.TabIndex = 4;
+            this.LblGetObjects_IncludeInternalObjects.Text = "Include Internal Objects:";
+            this.LblGetObjects_IncludeInternalObjects.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // ChkGetObjects_IncludeInternalObjects
+            // 
+            this.ChkGetObjects_IncludeInternalObjects.AutoSize = true;
+            this.ChkGetObjects_IncludeInternalObjects.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ChkGetObjects_IncludeInternalObjects.Location = new System.Drawing.Point(169, 75);
+            this.ChkGetObjects_IncludeInternalObjects.MinimumSize = new System.Drawing.Size(0, 20);
+            this.ChkGetObjects_IncludeInternalObjects.Name = "ChkGetObjects_IncludeInternalObjects";
+            this.ChkGetObjects_IncludeInternalObjects.Size = new System.Drawing.Size(557, 20);
+            this.ChkGetObjects_IncludeInternalObjects.TabIndex = 5;
+            this.ChkGetObjects_IncludeInternalObjects.UseVisualStyleBackColor = true;
+            // 
+            // LblGetObjects_Levels
+            // 
+            this.LblGetObjects_Levels.AutoSize = true;
+            this.LblGetObjects_Levels.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGetObjects_Levels.Location = new System.Drawing.Point(23, 49);
+            this.LblGetObjects_Levels.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetObjects_Levels.Name = "LblGetObjects_Levels";
+            this.LblGetObjects_Levels.Size = new System.Drawing.Size(140, 20);
+            this.LblGetObjects_Levels.TabIndex = 6;
+            this.LblGetObjects_Levels.Text = "Levels:";
+            this.LblGetObjects_Levels.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // NupGetObject_Levels
+            // 
+            this.NupGetObject_Levels.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NupGetObject_Levels.Location = new System.Drawing.Point(169, 49);
+            this.NupGetObject_Levels.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.NupGetObject_Levels.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NupGetObject_Levels.Name = "NupGetObject_Levels";
+            this.NupGetObject_Levels.Size = new System.Drawing.Size(557, 20);
+            this.NupGetObject_Levels.TabIndex = 7;
+            this.NupGetObject_Levels.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // Objects
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(787, 614);
+            this.ClientSize = new System.Drawing.Size(961, 614);
             this.Controls.Add(this.TabMain);
             this.Name = "Objects";
             this.Text = "Objects";
@@ -794,6 +862,7 @@ namespace MetasysServices_TestClient.Forms
             this.TpgSendCommand.ResumeLayout(false);
             this.TlpSendCommand.ResumeLayout(false);
             this.TlpSendCommand.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NupGetObject_Levels)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -853,5 +922,9 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.Button BtnSendCommand;
         private System.Windows.Forms.Label LblSendCommand_Result;
         private System.Windows.Forms.TextBox TxtSendCommand_Result;
+        private System.Windows.Forms.Label LblGetObjects_IncludeInternalObjects;
+        private System.Windows.Forms.CheckBox ChkGetObjects_IncludeInternalObjects;
+        private System.Windows.Forms.Label LblGetObjects_Levels;
+        private System.Windows.Forms.NumericUpDown NupGetObject_Levels;
     }
 }

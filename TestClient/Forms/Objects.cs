@@ -49,10 +49,12 @@ namespace MetasysServices_TestClient.Forms
         {
             DgvGetObjects.DataSource = null;
             string guid = TxtGetObjects_ParentID.Text;
+            int levels = (int)NupGetObject_Levels.Value;
+            bool includeInternalObjects = ChkGetObjects_IncludeInternalObjects.Checked;
             if (_client != null && guid.Length > 0)
             {
                 Guid parentId = new Guid(guid);
-                var result = _client.GetObjects(parentId);
+                var result = _client.GetObjects(parentId, levels, includeInternalObjects);
                 DgvGetObjects.DataSource = result;
             }
         }

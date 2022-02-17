@@ -39,7 +39,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             Id = id;
             ItemReference = itemReference;
-            name = name;
+            Name = name;
             ObjectType = objectType;
         }
 

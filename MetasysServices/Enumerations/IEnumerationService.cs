@@ -44,7 +44,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="name">The name of the new custom enumeration.</param>
         /// <param name="values">The list of values (string) included in the new custom enumeration.</param>
         void Create(string name, IEnumerable<String> values);
-        /// <inheritdoc cref="IEnumerationService.Create(String, IEnumerable<String>)"/>
+        /// <summary>
+        /// Create a new custom enumeration.
+        /// </summary>
+        /// <param name="name">The name of the new custom enumeration.</param>
+        /// <param name="values">The list of values (string) included in the new custom enumeration.</param>
         Task CreateAsync(string name, IEnumerable<String> values);
 
         // Edit --------------------------------------------------------------------------------------------------------------------
@@ -55,7 +59,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="name">The new name of the custom enumeration.</param>
         /// <param name="values">The list of new values (string) for the existing custom enumeration.</param>
         void Edit(string id, string name, IEnumerable<String> values);
-        /// <inheritdoc cref="IEnumerationService.Edit(String, String, IEnumerable<String>)"/>
+        /// <summary>
+        /// Edit and existing custom enumeration.
+        /// </summary>
+        /// <param name="id">The identifier of the existing custom enumeration.</param>
+        /// <param name="name">The new name of the custom enumeration.</param>
+        /// <param name="values">The list of new values (string) for the existing custom enumeration.</param>
         Task EditAsync(string id, string name, IEnumerable<String> values);
 
         // Replace --------------------------------------------------------------------------------------------------------------------
@@ -66,7 +75,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="name">The new name of the custom enumeration.</param>
         /// <param name="values">The list of new values (string) for the existing custom enumeration.</param>
         void Replace(string id, string name, IEnumerable<String> values);
-        /// <inheritdoc cref="IEnumerationService.Replace(String, String, IEnumerable<String>)"/>
+        /// <summary>
+        /// Replace and existing custom enumeration.
+        /// </summary>
+        /// <param name="id">The identifier of the existing custom enumeration.</param>
+        /// <param name="name">The new name of the custom enumeration.</param>
+        /// <param name="values">The list of new values (string) for the existing custom enumeration.</param>
         Task ReplaceAsync(string id, string name, IEnumerable<String> values);
 
     }

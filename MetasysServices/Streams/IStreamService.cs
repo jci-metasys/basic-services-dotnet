@@ -62,6 +62,11 @@ namespace JohnsonControls.Metasys.BasicServices
         List<StreamMessage> GetCOVValues();
 
         /// <summary>
+        /// Return the first value of COV values
+        /// </summary>
+        StreamMessage GetCOVValue();
+
+        /// <summary>
         /// Event fired when a COV value changes
         /// </summary>
         event EventHandler<StreamEventArgs> COVValueChanged;

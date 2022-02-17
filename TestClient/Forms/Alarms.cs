@@ -216,7 +216,7 @@ namespace MetasysServices_TestClient.Forms
                 Guid alarmGuid = new Guid(alarmId);
                 try
                 {
-                     _client.Alarms.EditAlarm(alarmGuid, action, annotationText);
+                     _client.Alarms.Edit(alarmGuid, action, annotationText);
                     TxtEditAlarm_Result.Text = "OK, done";
                 }
                 catch (MetasysHttpException ex)

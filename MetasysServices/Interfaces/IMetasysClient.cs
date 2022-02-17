@@ -181,6 +181,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Read many attribute values given the Guids of the objects.
         /// </summary>
+        /// <returns>
+        /// A list of VariantMultiple with all the specified attributes (if existing).        
+        /// </returns>
+        /// <param name="ids"></param>
+        /// <param name="attributeNames"></param>        
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysPropertyException"></exception>
         IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids, IEnumerable<string> attributeNames);
         /// <inheritdoc cref="IMetasysClient.ReadPropertyMultiple(IEnumerable{Guid}, IEnumerable{string})"/>
         Task<IEnumerable<VariantMultiple>> ReadPropertyMultipleAsync(IEnumerable<Guid> ids, IEnumerable<string> attributeNames);
@@ -205,7 +212,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeValues">The (attribute, value) pairs.</param>
         /// <exception cref="MetasysHttpException"></exception>
         void WritePropertyMultiple(IEnumerable<Guid> ids, IEnumerable<(string Attribute, object Value)> attributeValues);
-        /// <inheritdoc cref="IMetasysClient.WritePropertyMultiple(IEnumerable<Guid>, IEnumerable<(string, object)>)"/>
+        /// <summary>
+        /// Write to many attribute values given the Guids of the objects.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="attributeValues">The (attribute, value) pairs.</param>
+        /// <exception cref="MetasysHttpException"></exception>
         void WritePropertyMultiple(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues);
 
 
@@ -366,7 +378,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </remarks>
         /// <param name="spaceId"></param>
         IEnumerable<MetasysObject> GetSpaceEquipment(Guid spaceId);
-
         /// <inheritdoc cref="IMetasysClient.GetSpaceEquipment(Guid)"/>
         Task<IEnumerable<MetasysObject>> GetSpaceEquipmentAsync(Guid spaceId);
         #endregion

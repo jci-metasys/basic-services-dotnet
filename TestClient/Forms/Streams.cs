@@ -60,11 +60,11 @@ namespace MetasysServices_TestClient.Forms
 
         }
 
-        #region "Event Handler"
+        #region "Event Handler" 
         private void COVValue_Changed(object sender, EventArgs e)
         {
             _COVValues = _client.Streams.GetCOVValues();
-            _COVValue = (_COVValues != null) ? _COVValues.FirstOrDefault() : null;
+            _COVValue = _COVValues?.FirstOrDefault();
 
             var requestId = _client.Streams.GetRequestIds().FirstOrDefault();
             TxtCOVValues_RequestID.Text = requestId.ToString();
@@ -75,7 +75,7 @@ namespace MetasysServices_TestClient.Forms
         private void Alarm_Occurred(object sender, EventArgs e)
         {
             _AlarmEvents = _client.Streams.GetAlarmEvents();
-            _AlarmEvent = (_AlarmEvents != null) ? _AlarmEvents.FirstOrDefault() : null;
+            _AlarmEvent = _AlarmEvents?.FirstOrDefault();
 
             var requestId = _client.Streams.GetRequestIds().FirstOrDefault();
             TxtAlarmEvents_RequestID.Text = requestId.ToString();
@@ -86,7 +86,7 @@ namespace MetasysServices_TestClient.Forms
         private void Audit_Occurred(object sender, EventArgs e)
         {
             _AuditEvents = _client.Streams.GetAuditEvents();
-            _AuditEvent = (_AuditEvents != null) ? _AuditEvents.FirstOrDefault() : null;
+            _AuditEvent = _AuditEvents?.FirstOrDefault();
             //TmrRefreshAuditEvents.Enabled = true;
 
             var requestId = _client.Streams.GetRequestIds().FirstOrDefault();
@@ -107,13 +107,12 @@ namespace MetasysServices_TestClient.Forms
         {
             var requestid = new Guid(TxtCOVValue_RequestID.Text);
             _client.Streams.StopReadingCOVValues(requestid);
-            //TmrRefreshCOVStreamValue.Enabled = false;
         }
 
         private void BtnCOVValue_GetCOVValues_Click(object sender, EventArgs e)
         {
             _COVValues = _client.Streams.GetCOVValues();
-            _COVValue = (_COVValues != null) ? _COVValues.First() : null;
+            _COVValue = _COVValues?.FirstOrDefault();
 
             var str = (_COVValue is null) ? String.Empty : _COVValue.Data;
             MessageBox.Show(str);

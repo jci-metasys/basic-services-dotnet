@@ -97,21 +97,8 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        // GetServedByNetworkDevice ------------------------------------------------------------------------------------------------------
-        public IEnumerable<MetasysObject> GetServedByNetworkDevice(Guid networkDeviceId)
-        {
-            return GetServedByNetworkDeviceAsync(networkDeviceId).GetAwaiter().GetResult();
-        }
-        /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetServedByNetworkDeviceAsync(Guid networkDeviceId)
-        {
-            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
-
-            var response = await GetAllAvailablePagesAsync("networkDevices", null, networkDeviceId.ToString(), "spaces").ConfigureAwait(false);
-            return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Space);
-        }
-
         // GetServedByEquipment ------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetServedByEquipment(Guid equipmentId)
         {
             return GetServedByEquipmentAsync(equipmentId).GetAwaiter().GetResult();
@@ -125,5 +112,19 @@ namespace JohnsonControls.Metasys.BasicServices
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Space);
         }
 
+        // GetServedByNetworkDevice ------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetServedByNetworkDevice(Guid networkDeviceId)
+        {
+            return GetServedByNetworkDeviceAsync(networkDeviceId).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetServedByNetworkDeviceAsync(Guid networkDeviceId)
+        {
+            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+
+            var response = await GetAllAvailablePagesAsync("networkDevices", null, networkDeviceId.ToString(), "spaces").ConfigureAwait(false);
+            return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Space);
+        }
     }
 }
