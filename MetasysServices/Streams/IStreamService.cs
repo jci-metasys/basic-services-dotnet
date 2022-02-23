@@ -11,34 +11,63 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Defines methods to provide Streams infos for endpoints of the Metasys Stream API.
     /// </summary>
-
     public interface IStreamService : IBasicService
     {
+        /// <summary>
+        /// Stream channel result
+        /// </summary>
         ChannelReader<StreamMessage> ResultChannel { get; }
 
+        /// <summary>
+        /// Connect method
+        /// </summary>
         Task<bool> ConnectAsync();
 
+        /// <summary>
+        /// Subscribe method
+        /// </summary>
         Task<string> SubscribeAsync(Guid requestId, string method, string relativeUrl, Dictionary<string, string> query = null, dynamic body = null);
 
+        /// <summary>
+        /// Unsubscribe method
+        /// </summary>
         Task UnsubscribeAsync(Guid requestId);
 
+        /// <summary>
+        /// Access Token
+        /// </summary>
         AccessToken AccessToken { get; set; }
 
-        string _token { get; set; }
-
+        /// <summary>
+        /// Add a subscription for a COV (presentValue).
+        /// </summary>
         void LoadCOVSubscriptions(Guid id);
 
+        /// <summary>
+        /// Add a list of subscriptions for COV (presentValue).
+        /// </summary>
         void LoadCOVSubscriptions(IEnumerable<Guid> ids);
 
+        /// <summary>
+        /// Add a subscription for an Activity according to the ActivityType
+        /// </summary>
         void LoadActivitySubscriptions(string activityType);
 
+        /// <summary>
+        /// Return the list of request Ids
+        /// </summary>
         List<Guid> GetRequestIds();
 
-        List<StreamMessage> UpdateCOVStreamValuesList(List<StreamMessage> values, StreamMessage msg);
+        /// <summary>
+        /// Dispose method
+        /// </summary>
+        void Dispose();
 
-        List<StreamMessage> UpdateAlarmStreamValuesList(List<StreamMessage> values, StreamMessage msg, int maxNumber);
+        //List<StreamMessage> UpdateCOVStreamValuesList(List<StreamMessage> values, StreamMessage msg);
 
-        List<StreamMessage> UpdateAuditStreamValuesList(List<StreamMessage> values, StreamMessage msg, int maxNumber);
+        //List<StreamMessage> UpdateAlarmStreamValuesList(List<StreamMessage> values, StreamMessage msg, int maxNumber);
+
+        //List<StreamMessage> UpdateAuditStreamValuesList(List<StreamMessage> values, StreamMessage msg, int maxNumber);
 
 
         /// <summary>
@@ -71,7 +100,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         event EventHandler<StreamEventArgs> COVValueChanged;
 
-
         /// <summary>
         /// Start collecting the Alarm events from the stream
         /// </summary>
@@ -91,7 +119,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Event fired when an Alarm event occurs
         /// </summary>
         event EventHandler<StreamEventArgs> AlarmOccurred;
-
 
         /// <summary>
         /// Start collecting the Audit events from the stream

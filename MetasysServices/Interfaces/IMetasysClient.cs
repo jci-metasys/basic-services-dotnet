@@ -16,15 +16,15 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         string Hostname { get; set; }
 
-        /// <summary>
-        /// The Metasys server's Api version.
-        /// </summary>
-        ApiVersion Version { get; set; }
+        ///// <summary>
+        ///// The Metasys server's Api version.
+        ///// </summary>
+        //ApiVersion Version { get; set; }
 
-        /// <summary>
-        /// The current Culture Used for Metasys client localization.
-        /// </summary>
-        CultureInfo Culture { get; set; }
+        ///// <summary>
+        ///// The current Culture Used for Metasys client localization.
+        ///// </summary>
+        //CultureInfo Culture { get; set; }
 
         /// <summary>
         /// Services for Alarms.

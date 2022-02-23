@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Globalization;
 using JohnsonControls.Metasys.BasicServices;
 using Newtonsoft.Json;
+using MetasysServices_TestClient.Forms;
 
 namespace MetasysServices_TestClient
 {
@@ -18,16 +19,16 @@ namespace MetasysServices_TestClient
         private MetasysClient _client;
 
         private Boolean _enableTabs = false;
-        private Forms.Alarms _frmAlarms;
-        private Forms.Audits _frmAudits;
-        private Forms.Enumerations _frmEnumerations;
-        private Forms.Equipments _frmEquipments;
-        private Forms.NetworkDevices _frmNetworkDevices;
-        private Forms.Objects _frmObjects;
-        private Forms.Streams _frmStreams;
-        private Forms.Spaces _frmSpaces;
-        private Forms.Trends _frmTrends;
-        private Forms.Miscellanea _frmMiscellanea;
+        private readonly Alarms _frmAlarms = new Alarms();
+        private readonly Audits _frmAudits = new Audits();
+        private readonly Enumerations _frmEnumerations = new Enumerations();
+        private readonly Equipments _frmEquipments = new Equipments();
+        private readonly NetworkDevices _frmNetworkDevices = new NetworkDevices();
+        private readonly Objects _frmObjects = new Objects();
+        private readonly Streams _frmStreams = new Streams();
+        private readonly Spaces _frmSpaces = new Spaces();
+        private readonly Trends _frmTrends = new Trends();
+        private readonly Miscellanea _frmMiscellanea = new Miscellanea();
 
         public MainUI()
         {
@@ -45,35 +46,15 @@ namespace MetasysServices_TestClient
             ToolTip.SetToolTip(BtnRefresh, "Use method: 'Refresh()'");
             ToolTip.SetToolTip(BtnGetAccessToken, "Use method: 'GetAccessToken()'");
 
-
-            _frmAlarms = new Forms.Alarms();
             _frmAlarms.InitForm(_client, TpgAlarm);
-
-            _frmAudits = new Forms.Audits();
             _frmAudits.InitForm(_client, TpgAudit);
-
-            _frmEnumerations = new Forms.Enumerations();
             _frmEnumerations.InitForm(_client, TpgEnumeration);
-
-            _frmEquipments = new Forms.Equipments();
             _frmEquipments.InitForm(_client, TpgEquipment);
-
-            _frmNetworkDevices = new Forms.NetworkDevices();
             _frmNetworkDevices.InitForm(_client, TpgNetworkDevice);
-
-            _frmObjects = new Forms.Objects();
             _frmObjects.InitForm(_client, TpgObject);
-
-            _frmStreams = new Forms.Streams();
             _frmStreams.InitForm(_client, TpgStream);
-
-            _frmSpaces = new Forms.Spaces();
             _frmSpaces.InitForm(_client, TpgSpace);
-
-            _frmTrends = new Forms.Trends();
             _frmTrends.InitForm(_client, TpgTrend);
-
-            _frmMiscellanea = new Forms.Miscellanea();
             _frmMiscellanea.InitForm(_client, TpgMiscellanea);
         }
 

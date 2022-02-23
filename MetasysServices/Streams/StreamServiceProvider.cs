@@ -30,18 +30,14 @@ namespace JohnsonControls.Metasys.BasicServices
     {
         private bool _isDisposed = false;
 
-        
-        protected IFlurlClient _client;
+        private IFlurlClient _client;
         private readonly string _serverUrl;
-      
-        //private readonly IAuthTokenProvider _tokenProvider;
-        private readonly HttpClientHandler _handler;
 
+        private readonly HttpClientHandler _handler;
         private readonly Dictionary<Guid, SubscriptionInfo> _requestIdToSubscriptionMap = new Dictionary<Guid, SubscriptionInfo>();
         private readonly Dictionary<string, Guid> _subscriptionIdToRequestIdMap = new Dictionary<string, Guid>();
         private readonly Dictionary<string, List<Guid>> _objectAndAttrToRequestIdsMap = new Dictionary<string, List<Guid>>();
         private  List<Subscription> _subscriptionRequest = new List<Subscription>();
-
         private readonly List<Guid> _requestIds = new List<Guid>();
         private TaskCompletionSource<bool> _initializeStreamTaskSource = new TaskCompletionSource<bool>();
         private readonly Channel<StreamMessage> _channel = Channel.CreateUnbounded<StreamMessage>(new UnboundedChannelOptions()
@@ -49,33 +45,43 @@ namespace JohnsonControls.Metasys.BasicServices
             SingleReader = true,
             SingleWriter = true
         });
-
-        public ChannelReader<StreamMessage> ResultChannel => _channel.Reader;
-
-        public ApiVersion Version { get; set; }
-        public CultureInfo Culture { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public AccessToken AccessToken { get; set; }
-
-        public string _token { get; set; }
-
-        public List<Subscription> Subscriptions
-        {
-            get { return _subscriptionRequest; }
-            set { _subscriptionRequest = value; }
-        }
-
-
+        private string _token { get; set; }
         private EventSourceReader _source;
         private string _streamId;
         private System.Timers.Timer _timer;
 
+        private AccessToken accessToken;
 
-        public StreamServiceProvider(IFlurlClient client, string serverUrl, ApiVersion version)
+        /// <summary>
+        /// Channel result
+        /// </summary>
+        public ChannelReader<StreamMessage> ResultChannel => _channel.Reader;
+
+        /// <summary>
+        /// Access Token
+        /// </summary>
+        public  AccessToken AccessToken
+        {
+            get
+            {
+                return accessToken;
+            }
+            set
+            {
+                accessToken = value;
+                if (accessToken != null)
+                {
+                    // set the local variable with the token value
+                    _token = AccessToken.Token.Replace("Bearer ", "");
+                }
+            }
+        }
+
+
+        public StreamServiceProvider(IFlurlClient client, string serverUrl, ApiVersion version, bool logClientErrors = true) : base(client, version, logClientErrors)
         {
             _client = client;
-            _serverUrl = $"https://{serverUrl}";
-            //_tokenProvider = new TokenProvider(_serverUrl, version, "APIUser", "4S!SEurope10");
+            _serverUrl = client.BaseUrl;
             Version = version;
 
             FlurlHttp.ConfigureClient(_serverUrl, x => x.Settings.HttpClientFactory = new UntrustedCertClientFactory());
@@ -83,9 +89,9 @@ namespace JohnsonControls.Metasys.BasicServices
             httpClientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
             _handler = httpClientHandler;
-            //_subscriptionRequest = LoadSubscriptions();
         }
 
+        /// <inheritdoc/>
         public void LoadCOVSubscriptions(Guid id)
         {
             if (id != null)
@@ -100,6 +106,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+        /// <inheritdoc/>
         public void LoadCOVSubscriptions(IEnumerable<Guid> ids)
         {
             if ((ids != null) && (ids.Count() > 0)) 
@@ -131,6 +138,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+        /// <inheritdoc/>
         public void LoadActivitySubscriptions(string activityType)
         {
             var subscription = new Subscription();
@@ -143,11 +151,13 @@ namespace JohnsonControls.Metasys.BasicServices
             _subscriptionRequest.Add(subscription);
         }
 
+        /// <inheritdoc/>
         public List<Guid> GetRequestIds()
         {
             return _requestIds;
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             _isDisposed = true;
@@ -156,13 +166,12 @@ namespace JohnsonControls.Metasys.BasicServices
                 // networking issues can cause a delayed exception                
                 _source.Dispose();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                
+                Debug.Write(ex.Message);
             }
 
             var subscriptionInfos = _requestIdToSubscriptionMap.Values.ToList();
-
             _ = Parallel.ForEach(
                 subscriptionInfos,
                 new ParallelOptions() { MaxDegreeOfParallelism = 5 }, // parallelize, but don't overwhelm the Metasys host
@@ -172,15 +181,16 @@ namespace JohnsonControls.Metasys.BasicServices
                     {
                         await UnsubscribeInternalAsync(s);
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
-                       
+                        Debug.Write(ex.Message);
                     }
                 });
             
             _channel.Writer.Complete();
         }
 
+        /// <inheritdoc/>
         public async Task<bool> ConnectAsync()
         {
             if (_isDisposed) throw new ObjectDisposedException($"StreamingClient for server url {_serverUrl}");
@@ -197,10 +207,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 //var tokenResponse = await _tokenProvider.GetAccessTokenAsync();
                 //_token = tokenResponse.AccessToken;
                 
-                if (AccessToken != null)
+                if (accessToken != null)
                 {
-                    _token = AccessToken.Token.Replace("Bearer ", "");
-
                     var uri = new Uri(_serverUrl.AppendPathSegments("api", Version, "stream").SetQueryParam("access_token", _token));
                     _source = new EventSourceReader(uri, _handler);
                     _source.MessageReceived += Stream_MessageReceived;
@@ -215,35 +223,22 @@ namespace JohnsonControls.Metasys.BasicServices
             return await initializeStreamTask;
         }
 
+        /// <inheritdoc/>
         public async Task<string> SubscribeAsync(Guid requestId, string method, string relativeUrl, Dictionary<string, string> query = null, dynamic body= null)
         {
             string bodyContent = body != null ? JsonConvert.SerializeObject(body) : null;
             string subscriptionInfoId = "";
-
             try
             {
                 var content = bodyContent != null
                                      ? new StringContent(bodyContent, Encoding.UTF8, "application/json")
                                      : null;
 
-                string token = _token;
-
-                if (String.IsNullOrEmpty(_token))
-                {
-                    //var tokenResponse = await _tokenProvider.GetAccessTokenAsync();
-                    //token = tokenResponse.AccessToken;
-
-                    if (AccessToken != null)
-                    {
-                        _token = AccessToken.Token.Replace("Bearer ", "");
-                    }
-                }
-
                 HttpResponseMessage response = await _serverUrl
                     .AppendPathSegment(relativeUrl)
                     .SetQueryParams(query)
                     .WithHeader("METASYS-SUBSCRIBE", _streamId)
-                    .WithOAuthBearerToken(token)
+                    .WithOAuthBearerToken(_token)
                     .SendAsync(new HttpMethod(method), content);
 
                 response.EnsureSuccessStatusCode();
@@ -276,10 +271,10 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 Debug.Write(ex.Message);
             }
-
             return subscriptionInfoId;
         }
 
+        /// <inheritdoc/>
         public async Task UnsubscribeAsync(Guid requestId)
         {
             if (_isDisposed) throw new ObjectDisposedException($"StreamingClient for server url {_serverUrl}");
@@ -327,22 +322,15 @@ namespace JohnsonControls.Metasys.BasicServices
 
             _timer.Elapsed += async (object sender, ElapsedEventArgs e) =>
             {
-               // _logger.LogDebug($"Trying to refresh the connection  for the user on server {_serverUrl}");
-                
+                // _logger.LogDebug($"Trying to refresh the connection  for the user on server {_serverUrl}");    
                 //var refreshToken = await _tokenProvider.GetRefreshTokenAsync(_token);
                 //_token = refreshToken.AccessToken;
-
-                if (AccessToken != null)
-                {
-                    _token = AccessToken.Token.Replace("Bearer ", "");
-                }
 
                 HttpResponseMessage response = await _serverUrl
                                         .AppendPathSegments("api", Version, "stream", "keepalive")
                                         .WithOAuthBearerToken(_token)
                                         .SendAsync(HttpMethod.Get);
 
-                // response.ResponseMessage.EnsureSuccessStatusCode();
                 response.EnsureSuccessStatusCode();               
             };
         }
@@ -495,7 +483,7 @@ namespace JohnsonControls.Metasys.BasicServices
             return res;
         }
 
-        public List<StreamMessage> UpdateCOVStreamValuesList(List<StreamMessage> values, StreamMessage msg)
+        private List<StreamMessage> UpdateCOVStreamValuesList(List<StreamMessage> values, StreamMessage msg)
         {
             if (values.Count == 0)
             {
@@ -517,7 +505,8 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return values;
         }
-        public List<StreamMessage> UpdateAlarmStreamValuesList(List<StreamMessage> values, StreamMessage msg, int maxNumber)
+
+        private List<StreamMessage> UpdateAlarmStreamValuesList(List<StreamMessage> values, StreamMessage msg, int maxNumber)
         {
             if (values.Count < maxNumber)
             {
@@ -530,7 +519,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return values;
         }
-        public List<StreamMessage> UpdateAuditStreamValuesList(List<StreamMessage> values, StreamMessage msg, int maxNumber)
+        private List<StreamMessage> UpdateAuditStreamValuesList(List<StreamMessage> values, StreamMessage msg, int maxNumber)
         {
             if (values.Count < maxNumber)
             {
@@ -569,18 +558,8 @@ namespace JohnsonControls.Metasys.BasicServices
 
         private async Task UnsubscribeInternalAsync(SubscriptionInfo subscriptionInfo)
         {
-            string token = _token;
-            if (String.IsNullOrEmpty(_token))
-            {
-                //var tokenResponse = await _tokenProvider.GetAccessTokenAsync();
-                //token = tokenResponse.AccessToken;
-                if (AccessToken != null)
-                    {
-                        _token = AccessToken.Token.Replace("Bearer ", "");
-                    }
-            }
             var response = await subscriptionInfo.Url
-                                            .WithOAuthBearerToken(token)
+                                            .WithOAuthBearerToken(_token)
                                             .SendAsync(HttpMethod.Delete);       
         }
 
@@ -618,15 +597,6 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
             }
         }
-
-        //private static List<Subscription> LoadSubscriptions()
-        //{
-        //    using StreamReader r = new StreamReader(@"Agent\Configuration\SubscriptionConfig.json");
-        //    string json = r.ReadToEnd();
-        //    SubscriptionModel SubscriptionModel = JsonConvert.DeserializeObject<SubscriptionModel>(json);
-        //    return SubscriptionModel.Subscriptions;
-        //}
-
 
         private static int GetDelayMS(DateTime expireTime)
         {

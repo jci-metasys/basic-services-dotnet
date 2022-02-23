@@ -43,6 +43,10 @@ namespace MetasysServices_TestClient.Forms
             this.TxtGetObjects_ParentID = new System.Windows.Forms.TextBox();
             this.BtnGetObjects = new System.Windows.Forms.Button();
             this.DgvGetObjects = new System.Windows.Forms.DataGridView();
+            this.LblGetObjects_IncludeInternalObjects = new System.Windows.Forms.Label();
+            this.ChkGetObjects_IncludeInternalObjects = new System.Windows.Forms.CheckBox();
+            this.LblGetObjects_Levels = new System.Windows.Forms.Label();
+            this.NupGetObject_Levels = new System.Windows.Forms.NumericUpDown();
             this.TpgGetCommands = new System.Windows.Forms.TabPage();
             this.TlpGetCommands = new System.Windows.Forms.TableLayoutPanel();
             this.LblGetCommands_ObjectId = new System.Windows.Forms.Label();
@@ -66,11 +70,18 @@ namespace MetasysServices_TestClient.Forms
             this.TlpReadProperty = new System.Windows.Forms.TableLayoutPanel();
             this.LblReadProperty_ObjectId = new System.Windows.Forms.Label();
             this.TxtReadProperty_ObjectId = new System.Windows.Forms.TextBox();
-            this.TxtReadProperty_PropertyKey = new System.Windows.Forms.TextBox();
-            this.LblReadProperty = new System.Windows.Forms.Label();
+            this.TxtReadProperty_AttributeName = new System.Windows.Forms.TextBox();
+            this.LblReadProperty_AttributeName = new System.Windows.Forms.Label();
             this.BtnReadProperty = new System.Windows.Forms.Button();
             this.LblReadProperty_Result = new System.Windows.Forms.Label();
             this.TxtReadProperty_Result = new System.Windows.Forms.TextBox();
+            this.TpgReadPropertyMultiple = new System.Windows.Forms.TabPage();
+            this.TlpReadPropertyMultiple = new System.Windows.Forms.TableLayoutPanel();
+            this.LblReadPropertyMultiple_Params = new System.Windows.Forms.Label();
+            this.TpgWriteProperty = new System.Windows.Forms.TabPage();
+            this.TlpWriteProperty = new System.Windows.Forms.TableLayoutPanel();
+            this.TpgWritePropertyMultiple = new System.Windows.Forms.TabPage();
+            this.TlpWritePropertyMultiple = new System.Windows.Forms.TableLayoutPanel();
             this.TpgSendCommand = new System.Windows.Forms.TabPage();
             this.TlpSendCommand = new System.Windows.Forms.TableLayoutPanel();
             this.LblSendCommand_ObjectId = new System.Windows.Forms.Label();
@@ -82,16 +93,39 @@ namespace MetasysServices_TestClient.Forms
             this.BtnSendCommand = new System.Windows.Forms.Button();
             this.LblSendCommand_Result = new System.Windows.Forms.Label();
             this.TxtSendCommand_Result = new System.Windows.Forms.TextBox();
-            this.LblGetObjects_IncludeInternalObjects = new System.Windows.Forms.Label();
-            this.ChkGetObjects_IncludeInternalObjects = new System.Windows.Forms.CheckBox();
-            this.LblGetObjects_Levels = new System.Windows.Forms.Label();
-            this.NupGetObject_Levels = new System.Windows.Forms.NumericUpDown();
+            this.DgvReadPropertyMultiple_Ids = new System.Windows.Forms.DataGridView();
+            this.BtnReadPropertyMultiple = new System.Windows.Forms.Button();
+            this.DgvReadPropertyMultiple_Result = new System.Windows.Forms.DataGridView();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.DgvReadPropertyMultiple_Ids_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DgvReadPropertyMultiple_Attrs = new System.Windows.Forms.DataGridView();
+            this.LblWriteProperty_ObjectId = new System.Windows.Forms.Label();
+            this.TxtWriteProperty_ObjectId = new System.Windows.Forms.TextBox();
+            this.LblWriteProperty_AttributeName = new System.Windows.Forms.Label();
+            this.TxtWriteProperty_AttributeName = new System.Windows.Forms.TextBox();
+            this.LblWriteProperty_NewValue = new System.Windows.Forms.Label();
+            this.TxtWriteProperty_NewValue = new System.Windows.Forms.TextBox();
+            this.BtnWriteProperty = new System.Windows.Forms.Button();
+            this.LblWriteProperty_Result = new System.Windows.Forms.Label();
+            this.DgvReadPropertyMultiple_Attrs_Attribute = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TxtWriteProperty_Result = new System.Windows.Forms.TextBox();
+            this.LblWritePropertyMultiple_Params = new System.Windows.Forms.Label();
+            this.TlpWritepropertyMultiple_Params = new System.Windows.Forms.TableLayoutPanel();
+            this.DgvWritePropertyMultiple_Ids = new System.Windows.Forms.DataGridView();
+            this.DgvWritePropertyMultiple_Attrs = new System.Windows.Forms.DataGridView();
+            this.DgvWritePropertyMultiple_Ids_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DgvWritePropertyMultiple_Attrs_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DgvWritePropertyMultiple_Attrs_Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BtnWritePropertyMultiple = new System.Windows.Forms.Button();
+            this.LblWritePropertMultiple_Result = new System.Windows.Forms.Label();
+            this.TxtWritePropertyMultiple_Result = new System.Windows.Forms.TextBox();
             this.TabMain.SuspendLayout();
             this.TpgGetObjectIdentifier.SuspendLayout();
             this.TlpGetObjectIdentifier.SuspendLayout();
             this.TpgGetObjects.SuspendLayout();
             this.TlpGetObjects.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetObjects)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NupGetObject_Levels)).BeginInit();
             this.TpgGetCommands.SuspendLayout();
             this.TlpGetCommands.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetCommands)).BeginInit();
@@ -100,9 +134,21 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetCommandEnumeration.SuspendLayout();
             this.TpgReadProperty.SuspendLayout();
             this.TlpReadProperty.SuspendLayout();
+            this.TpgReadPropertyMultiple.SuspendLayout();
+            this.TlpReadPropertyMultiple.SuspendLayout();
+            this.TpgWriteProperty.SuspendLayout();
+            this.TlpWriteProperty.SuspendLayout();
+            this.TpgWritePropertyMultiple.SuspendLayout();
+            this.TlpWritePropertyMultiple.SuspendLayout();
             this.TpgSendCommand.SuspendLayout();
             this.TlpSendCommand.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.NupGetObject_Levels)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Ids)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Result)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Attrs)).BeginInit();
+            this.TlpWritepropertyMultiple_Params.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvWritePropertyMultiple_Ids)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvWritePropertyMultiple_Attrs)).BeginInit();
             this.SuspendLayout();
             // 
             // TabMain
@@ -113,6 +159,9 @@ namespace MetasysServices_TestClient.Forms
             this.TabMain.Controls.Add(this.TpgGetCommands);
             this.TabMain.Controls.Add(this.TpgGetCommandEnumeration);
             this.TabMain.Controls.Add(this.TpgReadProperty);
+            this.TabMain.Controls.Add(this.TpgReadPropertyMultiple);
+            this.TabMain.Controls.Add(this.TpgWriteProperty);
+            this.TabMain.Controls.Add(this.TpgWritePropertyMultiple);
             this.TabMain.Controls.Add(this.TpgSendCommand);
             this.TabMain.ItemSize = new System.Drawing.Size(58, 25);
             this.TabMain.Location = new System.Drawing.Point(12, 12);
@@ -127,7 +176,7 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetObjectIdentifier.Location = new System.Drawing.Point(4, 29);
             this.TpgGetObjectIdentifier.Name = "TpgGetObjectIdentifier";
             this.TpgGetObjectIdentifier.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgGetObjectIdentifier.Size = new System.Drawing.Size(755, 557);
+            this.TpgGetObjectIdentifier.Size = new System.Drawing.Size(929, 557);
             this.TpgGetObjectIdentifier.TabIndex = 0;
             this.TpgGetObjectIdentifier.Text = "GetObjectidentifier";
             this.TpgGetObjectIdentifier.UseVisualStyleBackColor = true;
@@ -154,7 +203,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetObjectIdentifier.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetObjectIdentifier.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TlpGetObjectIdentifier.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetObjectIdentifier.Size = new System.Drawing.Size(749, 551);
+            this.TlpGetObjectIdentifier.Size = new System.Drawing.Size(923, 551);
             this.TlpGetObjectIdentifier.TabIndex = 0;
             // 
             // LblGetObjectIdentifier_ObjectFQR
@@ -175,7 +224,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtGetObjectIdentifier_ObjectFQR.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TxtGetObjectIdentifier_ObjectFQR.Location = new System.Drawing.Point(169, 23);
             this.TxtGetObjectIdentifier_ObjectFQR.Name = "TxtGetObjectIdentifier_ObjectFQR";
-            this.TxtGetObjectIdentifier_ObjectFQR.Size = new System.Drawing.Size(557, 20);
+            this.TxtGetObjectIdentifier_ObjectFQR.Size = new System.Drawing.Size(731, 20);
             this.TxtGetObjectIdentifier_ObjectFQR.TabIndex = 1;
             // 
             // BtnGetObjectIdentifier
@@ -184,7 +233,7 @@ namespace MetasysServices_TestClient.Forms
             this.BtnGetObjectIdentifier.Location = new System.Drawing.Point(169, 49);
             this.BtnGetObjectIdentifier.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnGetObjectIdentifier.Name = "BtnGetObjectIdentifier";
-            this.BtnGetObjectIdentifier.Size = new System.Drawing.Size(557, 23);
+            this.BtnGetObjectIdentifier.Size = new System.Drawing.Size(731, 23);
             this.BtnGetObjectIdentifier.TabIndex = 2;
             this.BtnGetObjectIdentifier.Text = "GetObjectIdentifier";
             this.BtnGetObjectIdentifier.UseVisualStyleBackColor = true;
@@ -208,7 +257,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtGetObjectIdentifier_Result.Location = new System.Drawing.Point(169, 78);
             this.TxtGetObjectIdentifier_Result.Name = "TxtGetObjectIdentifier_Result";
             this.TxtGetObjectIdentifier_Result.ReadOnly = true;
-            this.TxtGetObjectIdentifier_Result.Size = new System.Drawing.Size(557, 20);
+            this.TxtGetObjectIdentifier_Result.Size = new System.Drawing.Size(731, 20);
             this.TxtGetObjectIdentifier_Result.TabIndex = 4;
             // 
             // TpgGetObjects
@@ -217,7 +266,7 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetObjects.Location = new System.Drawing.Point(4, 29);
             this.TpgGetObjects.Name = "TpgGetObjects";
             this.TpgGetObjects.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgGetObjects.Size = new System.Drawing.Size(755, 557);
+            this.TpgGetObjects.Size = new System.Drawing.Size(929, 557);
             this.TpgGetObjects.TabIndex = 1;
             this.TpgGetObjects.Text = "GetObjects";
             this.TpgGetObjects.UseVisualStyleBackColor = true;
@@ -247,7 +296,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpGetObjects.Size = new System.Drawing.Size(749, 551);
+            this.TlpGetObjects.Size = new System.Drawing.Size(923, 551);
             this.TlpGetObjects.TabIndex = 0;
             // 
             // LblGetObjects_ParentID
@@ -268,7 +317,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtGetObjects_ParentID.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TxtGetObjects_ParentID.Location = new System.Drawing.Point(169, 23);
             this.TxtGetObjects_ParentID.Name = "TxtGetObjects_ParentID";
-            this.TxtGetObjects_ParentID.Size = new System.Drawing.Size(557, 20);
+            this.TxtGetObjects_ParentID.Size = new System.Drawing.Size(731, 20);
             this.TxtGetObjects_ParentID.TabIndex = 1;
             // 
             // BtnGetObjects
@@ -277,7 +326,7 @@ namespace MetasysServices_TestClient.Forms
             this.BtnGetObjects.Location = new System.Drawing.Point(169, 101);
             this.BtnGetObjects.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnGetObjects.Name = "BtnGetObjects";
-            this.BtnGetObjects.Size = new System.Drawing.Size(557, 23);
+            this.BtnGetObjects.Size = new System.Drawing.Size(731, 23);
             this.BtnGetObjects.TabIndex = 2;
             this.BtnGetObjects.Text = "GetObjects";
             this.BtnGetObjects.UseVisualStyleBackColor = true;
@@ -289,8 +338,66 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetObjects.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DgvGetObjects.Location = new System.Drawing.Point(169, 130);
             this.DgvGetObjects.Name = "DgvGetObjects";
-            this.DgvGetObjects.Size = new System.Drawing.Size(557, 418);
+            this.DgvGetObjects.Size = new System.Drawing.Size(731, 418);
             this.DgvGetObjects.TabIndex = 3;
+            // 
+            // LblGetObjects_IncludeInternalObjects
+            // 
+            this.LblGetObjects_IncludeInternalObjects.AutoSize = true;
+            this.LblGetObjects_IncludeInternalObjects.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGetObjects_IncludeInternalObjects.Location = new System.Drawing.Point(23, 75);
+            this.LblGetObjects_IncludeInternalObjects.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetObjects_IncludeInternalObjects.Name = "LblGetObjects_IncludeInternalObjects";
+            this.LblGetObjects_IncludeInternalObjects.Size = new System.Drawing.Size(140, 20);
+            this.LblGetObjects_IncludeInternalObjects.TabIndex = 4;
+            this.LblGetObjects_IncludeInternalObjects.Text = "Include Internal Objects:";
+            this.LblGetObjects_IncludeInternalObjects.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // ChkGetObjects_IncludeInternalObjects
+            // 
+            this.ChkGetObjects_IncludeInternalObjects.AutoSize = true;
+            this.ChkGetObjects_IncludeInternalObjects.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ChkGetObjects_IncludeInternalObjects.Location = new System.Drawing.Point(169, 75);
+            this.ChkGetObjects_IncludeInternalObjects.MinimumSize = new System.Drawing.Size(0, 20);
+            this.ChkGetObjects_IncludeInternalObjects.Name = "ChkGetObjects_IncludeInternalObjects";
+            this.ChkGetObjects_IncludeInternalObjects.Size = new System.Drawing.Size(731, 20);
+            this.ChkGetObjects_IncludeInternalObjects.TabIndex = 5;
+            this.ChkGetObjects_IncludeInternalObjects.UseVisualStyleBackColor = true;
+            // 
+            // LblGetObjects_Levels
+            // 
+            this.LblGetObjects_Levels.AutoSize = true;
+            this.LblGetObjects_Levels.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGetObjects_Levels.Location = new System.Drawing.Point(23, 49);
+            this.LblGetObjects_Levels.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetObjects_Levels.Name = "LblGetObjects_Levels";
+            this.LblGetObjects_Levels.Size = new System.Drawing.Size(140, 20);
+            this.LblGetObjects_Levels.TabIndex = 6;
+            this.LblGetObjects_Levels.Text = "Levels:";
+            this.LblGetObjects_Levels.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // NupGetObject_Levels
+            // 
+            this.NupGetObject_Levels.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NupGetObject_Levels.Location = new System.Drawing.Point(169, 49);
+            this.NupGetObject_Levels.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.NupGetObject_Levels.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NupGetObject_Levels.Name = "NupGetObject_Levels";
+            this.NupGetObject_Levels.Size = new System.Drawing.Size(731, 20);
+            this.NupGetObject_Levels.TabIndex = 7;
+            this.NupGetObject_Levels.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // TpgGetCommands
             // 
@@ -298,7 +405,7 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetCommands.Location = new System.Drawing.Point(4, 29);
             this.TpgGetCommands.Name = "TpgGetCommands";
             this.TpgGetCommands.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgGetCommands.Size = new System.Drawing.Size(755, 557);
+            this.TpgGetCommands.Size = new System.Drawing.Size(929, 557);
             this.TpgGetCommands.TabIndex = 2;
             this.TpgGetCommands.Text = "GetCommands";
             this.TpgGetCommands.UseVisualStyleBackColor = true;
@@ -327,7 +434,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetCommands.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetCommands.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.TlpGetCommands.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetCommands.Size = new System.Drawing.Size(749, 551);
+            this.TlpGetCommands.Size = new System.Drawing.Size(923, 551);
             this.TlpGetCommands.TabIndex = 0;
             // 
             // LblGetCommands_ObjectId
@@ -348,7 +455,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtGetCommands_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TxtGetCommands_ObjectId.Location = new System.Drawing.Point(169, 23);
             this.TxtGetCommands_ObjectId.Name = "TxtGetCommands_ObjectId";
-            this.TxtGetCommands_ObjectId.Size = new System.Drawing.Size(557, 20);
+            this.TxtGetCommands_ObjectId.Size = new System.Drawing.Size(731, 20);
             this.TxtGetCommands_ObjectId.TabIndex = 1;
             // 
             // BtnGetCommands
@@ -357,7 +464,7 @@ namespace MetasysServices_TestClient.Forms
             this.BtnGetCommands.Location = new System.Drawing.Point(169, 49);
             this.BtnGetCommands.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnGetCommands.Name = "BtnGetCommands";
-            this.BtnGetCommands.Size = new System.Drawing.Size(557, 23);
+            this.BtnGetCommands.Size = new System.Drawing.Size(731, 23);
             this.BtnGetCommands.TabIndex = 2;
             this.BtnGetCommands.Text = "GetCommands";
             this.BtnGetCommands.UseVisualStyleBackColor = true;
@@ -375,7 +482,7 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetCommands.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DgvGetCommands.Location = new System.Drawing.Point(169, 78);
             this.DgvGetCommands.Name = "DgvGetCommands";
-            this.DgvGetCommands.Size = new System.Drawing.Size(557, 217);
+            this.DgvGetCommands.Size = new System.Drawing.Size(731, 217);
             this.DgvGetCommands.TabIndex = 3;
             // 
             // DgvGetCommands_Title
@@ -405,7 +512,7 @@ namespace MetasysServices_TestClient.Forms
             this.BtnGetCommands_RetrieveEnumValues.Location = new System.Drawing.Point(169, 301);
             this.BtnGetCommands_RetrieveEnumValues.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetCommands_RetrieveEnumValues.Name = "BtnGetCommands_RetrieveEnumValues";
-            this.BtnGetCommands_RetrieveEnumValues.Size = new System.Drawing.Size(557, 23);
+            this.BtnGetCommands_RetrieveEnumValues.Size = new System.Drawing.Size(731, 23);
             this.BtnGetCommands_RetrieveEnumValues.TabIndex = 4;
             this.BtnGetCommands_RetrieveEnumValues.Text = "Retrieve Enumeration Values";
             this.BtnGetCommands_RetrieveEnumValues.UseVisualStyleBackColor = true;
@@ -421,7 +528,7 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetCommands_RetrieveEnumValues.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DgvGetCommands_RetrieveEnumValues.Location = new System.Drawing.Point(169, 330);
             this.DgvGetCommands_RetrieveEnumValues.Name = "DgvGetCommands_RetrieveEnumValues";
-            this.DgvGetCommands_RetrieveEnumValues.Size = new System.Drawing.Size(557, 218);
+            this.DgvGetCommands_RetrieveEnumValues.Size = new System.Drawing.Size(731, 218);
             this.DgvGetCommands_RetrieveEnumValues.TabIndex = 5;
             // 
             // DgvCommandEnum_TitleEnumerationKey
@@ -437,7 +544,7 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetCommandEnumeration.Location = new System.Drawing.Point(4, 29);
             this.TpgGetCommandEnumeration.Name = "TpgGetCommandEnumeration";
             this.TpgGetCommandEnumeration.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgGetCommandEnumeration.Size = new System.Drawing.Size(755, 557);
+            this.TpgGetCommandEnumeration.Size = new System.Drawing.Size(929, 557);
             this.TpgGetCommandEnumeration.TabIndex = 3;
             this.TpgGetCommandEnumeration.Text = "GetCommandEnumeration";
             this.TpgGetCommandEnumeration.UseVisualStyleBackColor = true;
@@ -465,7 +572,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetCommandEnumeration.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetCommandEnumeration.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TlpGetCommandEnumeration.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpGetCommandEnumeration.Size = new System.Drawing.Size(749, 551);
+            this.TlpGetCommandEnumeration.Size = new System.Drawing.Size(923, 551);
             this.TlpGetCommandEnumeration.TabIndex = 0;
             // 
             // LblGetCommandEnumeration_EnumTitle
@@ -486,7 +593,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtGetCommandEnumeration_EnumTitle.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TxtGetCommandEnumeration_EnumTitle.Location = new System.Drawing.Point(169, 23);
             this.TxtGetCommandEnumeration_EnumTitle.Name = "TxtGetCommandEnumeration_EnumTitle";
-            this.TxtGetCommandEnumeration_EnumTitle.Size = new System.Drawing.Size(446, 20);
+            this.TxtGetCommandEnumeration_EnumTitle.Size = new System.Drawing.Size(620, 20);
             this.TxtGetCommandEnumeration_EnumTitle.TabIndex = 1;
             // 
             // BtnGetCommandEnumeration
@@ -495,7 +602,7 @@ namespace MetasysServices_TestClient.Forms
             this.BtnGetCommandEnumeration.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BtnGetCommandEnumeration.Location = new System.Drawing.Point(169, 49);
             this.BtnGetCommandEnumeration.Name = "BtnGetCommandEnumeration";
-            this.BtnGetCommandEnumeration.Size = new System.Drawing.Size(557, 23);
+            this.BtnGetCommandEnumeration.Size = new System.Drawing.Size(731, 23);
             this.BtnGetCommandEnumeration.TabIndex = 2;
             this.BtnGetCommandEnumeration.Text = "GetCommandEnumeration";
             this.BtnGetCommandEnumeration.UseVisualStyleBackColor = true;
@@ -505,7 +612,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblExample_EnumTitle.AutoSize = true;
             this.LblExample_EnumTitle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblExample_EnumTitle.Location = new System.Drawing.Point(621, 23);
+            this.LblExample_EnumTitle.Location = new System.Drawing.Point(795, 23);
             this.LblExample_EnumTitle.Margin = new System.Windows.Forms.Padding(3);
             this.LblExample_EnumTitle.Name = "LblExample_EnumTitle";
             this.LblExample_EnumTitle.Size = new System.Drawing.Size(105, 20);
@@ -520,7 +627,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtGetCommandEnumeration_Result.Location = new System.Drawing.Point(169, 78);
             this.TxtGetCommandEnumeration_Result.Name = "TxtGetCommandEnumeration_Result";
             this.TxtGetCommandEnumeration_Result.ReadOnly = true;
-            this.TxtGetCommandEnumeration_Result.Size = new System.Drawing.Size(557, 20);
+            this.TxtGetCommandEnumeration_Result.Size = new System.Drawing.Size(731, 20);
             this.TxtGetCommandEnumeration_Result.TabIndex = 5;
             // 
             // TpgReadProperty
@@ -529,7 +636,7 @@ namespace MetasysServices_TestClient.Forms
             this.TpgReadProperty.Location = new System.Drawing.Point(4, 29);
             this.TpgReadProperty.Name = "TpgReadProperty";
             this.TpgReadProperty.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgReadProperty.Size = new System.Drawing.Size(755, 557);
+            this.TpgReadProperty.Size = new System.Drawing.Size(929, 557);
             this.TpgReadProperty.TabIndex = 4;
             this.TpgReadProperty.Text = "ReadProperty";
             this.TpgReadProperty.UseVisualStyleBackColor = true;
@@ -543,8 +650,8 @@ namespace MetasysServices_TestClient.Forms
             this.TlpReadProperty.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpReadProperty.Controls.Add(this.LblReadProperty_ObjectId, 1, 1);
             this.TlpReadProperty.Controls.Add(this.TxtReadProperty_ObjectId, 2, 1);
-            this.TlpReadProperty.Controls.Add(this.TxtReadProperty_PropertyKey, 2, 2);
-            this.TlpReadProperty.Controls.Add(this.LblReadProperty, 1, 2);
+            this.TlpReadProperty.Controls.Add(this.TxtReadProperty_AttributeName, 2, 2);
+            this.TlpReadProperty.Controls.Add(this.LblReadProperty_AttributeName, 1, 2);
             this.TlpReadProperty.Controls.Add(this.BtnReadProperty, 2, 3);
             this.TlpReadProperty.Controls.Add(this.LblReadProperty_Result, 1, 4);
             this.TlpReadProperty.Controls.Add(this.TxtReadProperty_Result, 2, 4);
@@ -559,7 +666,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpReadProperty.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpReadProperty.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TlpReadProperty.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpReadProperty.Size = new System.Drawing.Size(749, 551);
+            this.TlpReadProperty.Size = new System.Drawing.Size(923, 551);
             this.TlpReadProperty.TabIndex = 0;
             // 
             // LblReadProperty_ObjectId
@@ -580,29 +687,29 @@ namespace MetasysServices_TestClient.Forms
             this.TxtReadProperty_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TxtReadProperty_ObjectId.Location = new System.Drawing.Point(169, 23);
             this.TxtReadProperty_ObjectId.Name = "TxtReadProperty_ObjectId";
-            this.TxtReadProperty_ObjectId.Size = new System.Drawing.Size(557, 20);
+            this.TxtReadProperty_ObjectId.Size = new System.Drawing.Size(731, 20);
             this.TxtReadProperty_ObjectId.TabIndex = 1;
             // 
-            // TxtReadProperty_PropertyKey
+            // TxtReadProperty_AttributeName
             // 
-            this.TxtReadProperty_PropertyKey.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtReadProperty_PropertyKey.Location = new System.Drawing.Point(169, 49);
-            this.TxtReadProperty_PropertyKey.Name = "TxtReadProperty_PropertyKey";
-            this.TxtReadProperty_PropertyKey.Size = new System.Drawing.Size(557, 20);
-            this.TxtReadProperty_PropertyKey.TabIndex = 2;
-            this.TxtReadProperty_PropertyKey.Text = "presentValue";
+            this.TxtReadProperty_AttributeName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtReadProperty_AttributeName.Location = new System.Drawing.Point(169, 49);
+            this.TxtReadProperty_AttributeName.Name = "TxtReadProperty_AttributeName";
+            this.TxtReadProperty_AttributeName.Size = new System.Drawing.Size(731, 20);
+            this.TxtReadProperty_AttributeName.TabIndex = 2;
+            this.TxtReadProperty_AttributeName.Text = "presentValue";
             // 
-            // LblReadProperty
+            // LblReadProperty_AttributeName
             // 
-            this.LblReadProperty.AutoSize = true;
-            this.LblReadProperty.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblReadProperty.Location = new System.Drawing.Point(23, 49);
-            this.LblReadProperty.Margin = new System.Windows.Forms.Padding(3);
-            this.LblReadProperty.Name = "LblReadProperty";
-            this.LblReadProperty.Size = new System.Drawing.Size(140, 20);
-            this.LblReadProperty.TabIndex = 3;
-            this.LblReadProperty.Text = "Property Key:";
-            this.LblReadProperty.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LblReadProperty_AttributeName.AutoSize = true;
+            this.LblReadProperty_AttributeName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblReadProperty_AttributeName.Location = new System.Drawing.Point(23, 49);
+            this.LblReadProperty_AttributeName.Margin = new System.Windows.Forms.Padding(3);
+            this.LblReadProperty_AttributeName.Name = "LblReadProperty_AttributeName";
+            this.LblReadProperty_AttributeName.Size = new System.Drawing.Size(140, 20);
+            this.LblReadProperty_AttributeName.TabIndex = 3;
+            this.LblReadProperty_AttributeName.Text = "Property Name:";
+            this.LblReadProperty_AttributeName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // BtnReadProperty
             // 
@@ -610,7 +717,7 @@ namespace MetasysServices_TestClient.Forms
             this.BtnReadProperty.Location = new System.Drawing.Point(169, 75);
             this.BtnReadProperty.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnReadProperty.Name = "BtnReadProperty";
-            this.BtnReadProperty.Size = new System.Drawing.Size(557, 23);
+            this.BtnReadProperty.Size = new System.Drawing.Size(731, 23);
             this.BtnReadProperty.TabIndex = 4;
             this.BtnReadProperty.Text = "ReadProperty";
             this.BtnReadProperty.UseVisualStyleBackColor = true;
@@ -634,8 +741,130 @@ namespace MetasysServices_TestClient.Forms
             this.TxtReadProperty_Result.Location = new System.Drawing.Point(169, 104);
             this.TxtReadProperty_Result.Name = "TxtReadProperty_Result";
             this.TxtReadProperty_Result.ReadOnly = true;
-            this.TxtReadProperty_Result.Size = new System.Drawing.Size(557, 20);
+            this.TxtReadProperty_Result.Size = new System.Drawing.Size(731, 20);
             this.TxtReadProperty_Result.TabIndex = 6;
+            // 
+            // TpgReadPropertyMultiple
+            // 
+            this.TpgReadPropertyMultiple.Controls.Add(this.TlpReadPropertyMultiple);
+            this.TpgReadPropertyMultiple.Location = new System.Drawing.Point(4, 29);
+            this.TpgReadPropertyMultiple.Name = "TpgReadPropertyMultiple";
+            this.TpgReadPropertyMultiple.Padding = new System.Windows.Forms.Padding(3);
+            this.TpgReadPropertyMultiple.Size = new System.Drawing.Size(929, 557);
+            this.TpgReadPropertyMultiple.TabIndex = 6;
+            this.TpgReadPropertyMultiple.Text = "ReadPropertyMultiple";
+            this.TpgReadPropertyMultiple.UseVisualStyleBackColor = true;
+            // 
+            // TlpReadPropertyMultiple
+            // 
+            this.TlpReadPropertyMultiple.ColumnCount = 4;
+            this.TlpReadPropertyMultiple.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpReadPropertyMultiple.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.TlpReadPropertyMultiple.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpReadPropertyMultiple.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpReadPropertyMultiple.Controls.Add(this.LblReadPropertyMultiple_Params, 1, 1);
+            this.TlpReadPropertyMultiple.Controls.Add(this.BtnReadPropertyMultiple, 2, 2);
+            this.TlpReadPropertyMultiple.Controls.Add(this.DgvReadPropertyMultiple_Result, 2, 3);
+            this.TlpReadPropertyMultiple.Controls.Add(this.tableLayoutPanel1, 2, 1);
+            this.TlpReadPropertyMultiple.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TlpReadPropertyMultiple.Location = new System.Drawing.Point(3, 3);
+            this.TlpReadPropertyMultiple.Name = "TlpReadPropertyMultiple";
+            this.TlpReadPropertyMultiple.RowCount = 4;
+            this.TlpReadPropertyMultiple.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpReadPropertyMultiple.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.TlpReadPropertyMultiple.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpReadPropertyMultiple.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpReadPropertyMultiple.Size = new System.Drawing.Size(923, 551);
+            this.TlpReadPropertyMultiple.TabIndex = 0;
+            // 
+            // LblReadPropertyMultiple_Params
+            // 
+            this.LblReadPropertyMultiple_Params.AutoSize = true;
+            this.LblReadPropertyMultiple_Params.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblReadPropertyMultiple_Params.Location = new System.Drawing.Point(23, 23);
+            this.LblReadPropertyMultiple_Params.Margin = new System.Windows.Forms.Padding(3);
+            this.LblReadPropertyMultiple_Params.MinimumSize = new System.Drawing.Size(140, 0);
+            this.LblReadPropertyMultiple_Params.Name = "LblReadPropertyMultiple_Params";
+            this.LblReadPropertyMultiple_Params.Size = new System.Drawing.Size(140, 94);
+            this.LblReadPropertyMultiple_Params.TabIndex = 0;
+            this.LblReadPropertyMultiple_Params.Text = "Parameters:";
+            this.LblReadPropertyMultiple_Params.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TpgWriteProperty
+            // 
+            this.TpgWriteProperty.Controls.Add(this.TlpWriteProperty);
+            this.TpgWriteProperty.Location = new System.Drawing.Point(4, 29);
+            this.TpgWriteProperty.Name = "TpgWriteProperty";
+            this.TpgWriteProperty.Padding = new System.Windows.Forms.Padding(3);
+            this.TpgWriteProperty.Size = new System.Drawing.Size(929, 557);
+            this.TpgWriteProperty.TabIndex = 7;
+            this.TpgWriteProperty.Text = "WriteProperty";
+            this.TpgWriteProperty.UseVisualStyleBackColor = true;
+            // 
+            // TlpWriteProperty
+            // 
+            this.TlpWriteProperty.ColumnCount = 4;
+            this.TlpWriteProperty.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpWriteProperty.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.TlpWriteProperty.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpWriteProperty.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpWriteProperty.Controls.Add(this.LblWriteProperty_ObjectId, 1, 1);
+            this.TlpWriteProperty.Controls.Add(this.TxtWriteProperty_ObjectId, 2, 1);
+            this.TlpWriteProperty.Controls.Add(this.LblWriteProperty_AttributeName, 1, 2);
+            this.TlpWriteProperty.Controls.Add(this.TxtWriteProperty_AttributeName, 2, 2);
+            this.TlpWriteProperty.Controls.Add(this.LblWriteProperty_NewValue, 1, 3);
+            this.TlpWriteProperty.Controls.Add(this.TxtWriteProperty_NewValue, 2, 3);
+            this.TlpWriteProperty.Controls.Add(this.BtnWriteProperty, 2, 4);
+            this.TlpWriteProperty.Controls.Add(this.LblWriteProperty_Result, 1, 5);
+            this.TlpWriteProperty.Controls.Add(this.TxtWriteProperty_Result, 2, 5);
+            this.TlpWriteProperty.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TlpWriteProperty.Location = new System.Drawing.Point(3, 3);
+            this.TlpWriteProperty.Name = "TlpWriteProperty";
+            this.TlpWriteProperty.RowCount = 7;
+            this.TlpWriteProperty.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpWriteProperty.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpWriteProperty.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpWriteProperty.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpWriteProperty.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpWriteProperty.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpWriteProperty.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpWriteProperty.Size = new System.Drawing.Size(923, 551);
+            this.TlpWriteProperty.TabIndex = 0;
+            // 
+            // TpgWritePropertyMultiple
+            // 
+            this.TpgWritePropertyMultiple.Controls.Add(this.TlpWritePropertyMultiple);
+            this.TpgWritePropertyMultiple.Location = new System.Drawing.Point(4, 29);
+            this.TpgWritePropertyMultiple.Name = "TpgWritePropertyMultiple";
+            this.TpgWritePropertyMultiple.Padding = new System.Windows.Forms.Padding(3);
+            this.TpgWritePropertyMultiple.Size = new System.Drawing.Size(929, 557);
+            this.TpgWritePropertyMultiple.TabIndex = 8;
+            this.TpgWritePropertyMultiple.Text = "WritePropertyMultiple";
+            this.TpgWritePropertyMultiple.UseVisualStyleBackColor = true;
+            // 
+            // TlpWritePropertyMultiple
+            // 
+            this.TlpWritePropertyMultiple.ColumnCount = 4;
+            this.TlpWritePropertyMultiple.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpWritePropertyMultiple.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.TlpWritePropertyMultiple.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpWritePropertyMultiple.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpWritePropertyMultiple.Controls.Add(this.LblWritePropertyMultiple_Params, 1, 1);
+            this.TlpWritePropertyMultiple.Controls.Add(this.TlpWritepropertyMultiple_Params, 2, 1);
+            this.TlpWritePropertyMultiple.Controls.Add(this.BtnWritePropertyMultiple, 2, 2);
+            this.TlpWritePropertyMultiple.Controls.Add(this.LblWritePropertMultiple_Result, 1, 3);
+            this.TlpWritePropertyMultiple.Controls.Add(this.TxtWritePropertyMultiple_Result, 2, 3);
+            this.TlpWritePropertyMultiple.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TlpWritePropertyMultiple.Location = new System.Drawing.Point(3, 3);
+            this.TlpWritePropertyMultiple.Name = "TlpWritePropertyMultiple";
+            this.TlpWritePropertyMultiple.RowCount = 5;
+            this.TlpWritePropertyMultiple.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpWritePropertyMultiple.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.TlpWritePropertyMultiple.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpWritePropertyMultiple.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpWritePropertyMultiple.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpWritePropertyMultiple.Size = new System.Drawing.Size(923, 551);
+            this.TlpWritePropertyMultiple.TabIndex = 0;
             // 
             // TpgSendCommand
             // 
@@ -774,63 +1003,273 @@ namespace MetasysServices_TestClient.Forms
             this.TxtSendCommand_Result.Size = new System.Drawing.Size(731, 20);
             this.TxtSendCommand_Result.TabIndex = 8;
             // 
-            // LblGetObjects_IncludeInternalObjects
+            // DgvReadPropertyMultiple_Ids
             // 
-            this.LblGetObjects_IncludeInternalObjects.AutoSize = true;
-            this.LblGetObjects_IncludeInternalObjects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetObjects_IncludeInternalObjects.Location = new System.Drawing.Point(23, 75);
-            this.LblGetObjects_IncludeInternalObjects.Margin = new System.Windows.Forms.Padding(3);
-            this.LblGetObjects_IncludeInternalObjects.Name = "LblGetObjects_IncludeInternalObjects";
-            this.LblGetObjects_IncludeInternalObjects.Size = new System.Drawing.Size(140, 20);
-            this.LblGetObjects_IncludeInternalObjects.TabIndex = 4;
-            this.LblGetObjects_IncludeInternalObjects.Text = "Include Internal Objects:";
-            this.LblGetObjects_IncludeInternalObjects.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.DgvReadPropertyMultiple_Ids.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvReadPropertyMultiple_Ids.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DgvReadPropertyMultiple_Ids_Id});
+            this.DgvReadPropertyMultiple_Ids.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvReadPropertyMultiple_Ids.Location = new System.Drawing.Point(3, 3);
+            this.DgvReadPropertyMultiple_Ids.Name = "DgvReadPropertyMultiple_Ids";
+            this.DgvReadPropertyMultiple_Ids.Size = new System.Drawing.Size(359, 88);
+            this.DgvReadPropertyMultiple_Ids.TabIndex = 1;
             // 
-            // ChkGetObjects_IncludeInternalObjects
+            // BtnReadPropertyMultiple
             // 
-            this.ChkGetObjects_IncludeInternalObjects.AutoSize = true;
-            this.ChkGetObjects_IncludeInternalObjects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChkGetObjects_IncludeInternalObjects.Location = new System.Drawing.Point(169, 75);
-            this.ChkGetObjects_IncludeInternalObjects.MinimumSize = new System.Drawing.Size(0, 20);
-            this.ChkGetObjects_IncludeInternalObjects.Name = "ChkGetObjects_IncludeInternalObjects";
-            this.ChkGetObjects_IncludeInternalObjects.Size = new System.Drawing.Size(557, 20);
-            this.ChkGetObjects_IncludeInternalObjects.TabIndex = 5;
-            this.ChkGetObjects_IncludeInternalObjects.UseVisualStyleBackColor = true;
+            this.BtnReadPropertyMultiple.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnReadPropertyMultiple.Location = new System.Drawing.Point(169, 123);
+            this.BtnReadPropertyMultiple.Name = "BtnReadPropertyMultiple";
+            this.BtnReadPropertyMultiple.Size = new System.Drawing.Size(731, 23);
+            this.BtnReadPropertyMultiple.TabIndex = 2;
+            this.BtnReadPropertyMultiple.Text = "ReadPropertyMultiple";
+            this.BtnReadPropertyMultiple.UseVisualStyleBackColor = true;
+            this.BtnReadPropertyMultiple.Click += new System.EventHandler(this.BtnReadPropertyMultiple_Click);
             // 
-            // LblGetObjects_Levels
+            // DgvReadPropertyMultiple_Result
             // 
-            this.LblGetObjects_Levels.AutoSize = true;
-            this.LblGetObjects_Levels.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetObjects_Levels.Location = new System.Drawing.Point(23, 49);
-            this.LblGetObjects_Levels.Margin = new System.Windows.Forms.Padding(3);
-            this.LblGetObjects_Levels.Name = "LblGetObjects_Levels";
-            this.LblGetObjects_Levels.Size = new System.Drawing.Size(140, 20);
-            this.LblGetObjects_Levels.TabIndex = 6;
-            this.LblGetObjects_Levels.Text = "Levels:";
-            this.LblGetObjects_Levels.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.DgvReadPropertyMultiple_Result.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvReadPropertyMultiple_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvReadPropertyMultiple_Result.Location = new System.Drawing.Point(169, 152);
+            this.DgvReadPropertyMultiple_Result.Name = "DgvReadPropertyMultiple_Result";
+            this.DgvReadPropertyMultiple_Result.Size = new System.Drawing.Size(731, 396);
+            this.DgvReadPropertyMultiple_Result.TabIndex = 3;
             // 
-            // NupGetObject_Levels
+            // tableLayoutPanel1
             // 
-            this.NupGetObject_Levels.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.NupGetObject_Levels.Location = new System.Drawing.Point(169, 49);
-            this.NupGetObject_Levels.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.NupGetObject_Levels.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.NupGetObject_Levels.Name = "NupGetObject_Levels";
-            this.NupGetObject_Levels.Size = new System.Drawing.Size(557, 20);
-            this.NupGetObject_Levels.TabIndex = 7;
-            this.NupGetObject_Levels.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.DgvReadPropertyMultiple_Ids, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.DgvReadPropertyMultiple_Attrs, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(169, 23);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(731, 94);
+            this.tableLayoutPanel1.TabIndex = 4;
+            // 
+            // DgvReadPropertyMultiple_Ids_Id
+            // 
+            this.DgvReadPropertyMultiple_Ids_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DgvReadPropertyMultiple_Ids_Id.HeaderText = "Object ID (GUID)";
+            this.DgvReadPropertyMultiple_Ids_Id.MinimumWidth = 140;
+            this.DgvReadPropertyMultiple_Ids_Id.Name = "DgvReadPropertyMultiple_Ids_Id";
+            // 
+            // DgvReadPropertyMultiple_Attrs
+            // 
+            this.DgvReadPropertyMultiple_Attrs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvReadPropertyMultiple_Attrs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DgvReadPropertyMultiple_Attrs_Attribute});
+            this.DgvReadPropertyMultiple_Attrs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvReadPropertyMultiple_Attrs.Location = new System.Drawing.Point(368, 3);
+            this.DgvReadPropertyMultiple_Attrs.Name = "DgvReadPropertyMultiple_Attrs";
+            this.DgvReadPropertyMultiple_Attrs.Size = new System.Drawing.Size(360, 88);
+            this.DgvReadPropertyMultiple_Attrs.TabIndex = 2;
+            // 
+            // LblWriteProperty_ObjectId
+            // 
+            this.LblWriteProperty_ObjectId.AutoSize = true;
+            this.LblWriteProperty_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblWriteProperty_ObjectId.Location = new System.Drawing.Point(23, 23);
+            this.LblWriteProperty_ObjectId.Margin = new System.Windows.Forms.Padding(3);
+            this.LblWriteProperty_ObjectId.MinimumSize = new System.Drawing.Size(140, 0);
+            this.LblWriteProperty_ObjectId.Name = "LblWriteProperty_ObjectId";
+            this.LblWriteProperty_ObjectId.Size = new System.Drawing.Size(140, 20);
+            this.LblWriteProperty_ObjectId.TabIndex = 0;
+            this.LblWriteProperty_ObjectId.Text = "Object ID (GUID):";
+            this.LblWriteProperty_ObjectId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtWriteProperty_ObjectId
+            // 
+            this.TxtWriteProperty_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtWriteProperty_ObjectId.Location = new System.Drawing.Point(169, 23);
+            this.TxtWriteProperty_ObjectId.Name = "TxtWriteProperty_ObjectId";
+            this.TxtWriteProperty_ObjectId.Size = new System.Drawing.Size(731, 20);
+            this.TxtWriteProperty_ObjectId.TabIndex = 1;
+            // 
+            // LblWriteProperty_AttributeName
+            // 
+            this.LblWriteProperty_AttributeName.AutoSize = true;
+            this.LblWriteProperty_AttributeName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblWriteProperty_AttributeName.Location = new System.Drawing.Point(23, 49);
+            this.LblWriteProperty_AttributeName.Margin = new System.Windows.Forms.Padding(3);
+            this.LblWriteProperty_AttributeName.Name = "LblWriteProperty_AttributeName";
+            this.LblWriteProperty_AttributeName.Size = new System.Drawing.Size(140, 20);
+            this.LblWriteProperty_AttributeName.TabIndex = 2;
+            this.LblWriteProperty_AttributeName.Text = "Property Name:";
+            this.LblWriteProperty_AttributeName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtWriteProperty_AttributeName
+            // 
+            this.TxtWriteProperty_AttributeName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtWriteProperty_AttributeName.Location = new System.Drawing.Point(169, 49);
+            this.TxtWriteProperty_AttributeName.Name = "TxtWriteProperty_AttributeName";
+            this.TxtWriteProperty_AttributeName.Size = new System.Drawing.Size(731, 20);
+            this.TxtWriteProperty_AttributeName.TabIndex = 3;
+            // 
+            // LblWriteProperty_NewValue
+            // 
+            this.LblWriteProperty_NewValue.AutoSize = true;
+            this.LblWriteProperty_NewValue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblWriteProperty_NewValue.Location = new System.Drawing.Point(23, 75);
+            this.LblWriteProperty_NewValue.Margin = new System.Windows.Forms.Padding(3);
+            this.LblWriteProperty_NewValue.Name = "LblWriteProperty_NewValue";
+            this.LblWriteProperty_NewValue.Size = new System.Drawing.Size(140, 20);
+            this.LblWriteProperty_NewValue.TabIndex = 4;
+            this.LblWriteProperty_NewValue.Text = "New Value:";
+            this.LblWriteProperty_NewValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtWriteProperty_NewValue
+            // 
+            this.TxtWriteProperty_NewValue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtWriteProperty_NewValue.Location = new System.Drawing.Point(169, 75);
+            this.TxtWriteProperty_NewValue.Name = "TxtWriteProperty_NewValue";
+            this.TxtWriteProperty_NewValue.Size = new System.Drawing.Size(731, 20);
+            this.TxtWriteProperty_NewValue.TabIndex = 5;
+            // 
+            // BtnWriteProperty
+            // 
+            this.BtnWriteProperty.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnWriteProperty.Location = new System.Drawing.Point(169, 101);
+            this.BtnWriteProperty.Name = "BtnWriteProperty";
+            this.BtnWriteProperty.Size = new System.Drawing.Size(731, 23);
+            this.BtnWriteProperty.TabIndex = 6;
+            this.BtnWriteProperty.Text = "WriteProperty";
+            this.BtnWriteProperty.UseVisualStyleBackColor = true;
+            this.BtnWriteProperty.Click += new System.EventHandler(this.BtnWriteProperty_Click);
+            // 
+            // LblWriteProperty_Result
+            // 
+            this.LblWriteProperty_Result.AutoSize = true;
+            this.LblWriteProperty_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblWriteProperty_Result.Location = new System.Drawing.Point(23, 130);
+            this.LblWriteProperty_Result.Margin = new System.Windows.Forms.Padding(3);
+            this.LblWriteProperty_Result.Name = "LblWriteProperty_Result";
+            this.LblWriteProperty_Result.Size = new System.Drawing.Size(140, 20);
+            this.LblWriteProperty_Result.TabIndex = 7;
+            this.LblWriteProperty_Result.Text = "Result:";
+            this.LblWriteProperty_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // DgvReadPropertyMultiple_Attrs_Attribute
+            // 
+            this.DgvReadPropertyMultiple_Attrs_Attribute.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DgvReadPropertyMultiple_Attrs_Attribute.HeaderText = "Object Property";
+            this.DgvReadPropertyMultiple_Attrs_Attribute.Name = "DgvReadPropertyMultiple_Attrs_Attribute";
+            // 
+            // TxtWriteProperty_Result
+            // 
+            this.TxtWriteProperty_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtWriteProperty_Result.Location = new System.Drawing.Point(169, 130);
+            this.TxtWriteProperty_Result.Name = "TxtWriteProperty_Result";
+            this.TxtWriteProperty_Result.ReadOnly = true;
+            this.TxtWriteProperty_Result.Size = new System.Drawing.Size(731, 20);
+            this.TxtWriteProperty_Result.TabIndex = 8;
+            // 
+            // LblWritePropertyMultiple_Params
+            // 
+            this.LblWritePropertyMultiple_Params.AutoSize = true;
+            this.LblWritePropertyMultiple_Params.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblWritePropertyMultiple_Params.Location = new System.Drawing.Point(23, 23);
+            this.LblWritePropertyMultiple_Params.Margin = new System.Windows.Forms.Padding(3);
+            this.LblWritePropertyMultiple_Params.MinimumSize = new System.Drawing.Size(140, 0);
+            this.LblWritePropertyMultiple_Params.Name = "LblWritePropertyMultiple_Params";
+            this.LblWritePropertyMultiple_Params.Size = new System.Drawing.Size(140, 94);
+            this.LblWritePropertyMultiple_Params.TabIndex = 0;
+            this.LblWritePropertyMultiple_Params.Text = "Parameters:";
+            this.LblWritePropertyMultiple_Params.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TlpWritepropertyMultiple_Params
+            // 
+            this.TlpWritepropertyMultiple_Params.ColumnCount = 2;
+            this.TlpWritepropertyMultiple_Params.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TlpWritepropertyMultiple_Params.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TlpWritepropertyMultiple_Params.Controls.Add(this.DgvWritePropertyMultiple_Ids, 0, 0);
+            this.TlpWritepropertyMultiple_Params.Controls.Add(this.DgvWritePropertyMultiple_Attrs, 1, 0);
+            this.TlpWritepropertyMultiple_Params.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TlpWritepropertyMultiple_Params.Location = new System.Drawing.Point(169, 23);
+            this.TlpWritepropertyMultiple_Params.Name = "TlpWritepropertyMultiple_Params";
+            this.TlpWritepropertyMultiple_Params.RowCount = 1;
+            this.TlpWritepropertyMultiple_Params.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpWritepropertyMultiple_Params.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpWritepropertyMultiple_Params.Size = new System.Drawing.Size(731, 94);
+            this.TlpWritepropertyMultiple_Params.TabIndex = 1;
+            // 
+            // DgvWritePropertyMultiple_Ids
+            // 
+            this.DgvWritePropertyMultiple_Ids.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvWritePropertyMultiple_Ids.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DgvWritePropertyMultiple_Ids_Id});
+            this.DgvWritePropertyMultiple_Ids.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvWritePropertyMultiple_Ids.Location = new System.Drawing.Point(3, 3);
+            this.DgvWritePropertyMultiple_Ids.Name = "DgvWritePropertyMultiple_Ids";
+            this.DgvWritePropertyMultiple_Ids.Size = new System.Drawing.Size(359, 88);
+            this.DgvWritePropertyMultiple_Ids.TabIndex = 0;
+            // 
+            // DgvWritePropertyMultiple_Attrs
+            // 
+            this.DgvWritePropertyMultiple_Attrs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvWritePropertyMultiple_Attrs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DgvWritePropertyMultiple_Attrs_Name,
+            this.DgvWritePropertyMultiple_Attrs_Value});
+            this.DgvWritePropertyMultiple_Attrs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvWritePropertyMultiple_Attrs.Location = new System.Drawing.Point(368, 3);
+            this.DgvWritePropertyMultiple_Attrs.Name = "DgvWritePropertyMultiple_Attrs";
+            this.DgvWritePropertyMultiple_Attrs.Size = new System.Drawing.Size(360, 88);
+            this.DgvWritePropertyMultiple_Attrs.TabIndex = 1;
+            // 
+            // DgvWritePropertyMultiple_Ids_Id
+            // 
+            this.DgvWritePropertyMultiple_Ids_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DgvWritePropertyMultiple_Ids_Id.HeaderText = "Object ID (GUID)";
+            this.DgvWritePropertyMultiple_Ids_Id.Name = "DgvWritePropertyMultiple_Ids_Id";
+            // 
+            // DgvWritePropertyMultiple_Attrs_Name
+            // 
+            this.DgvWritePropertyMultiple_Attrs_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.DgvWritePropertyMultiple_Attrs_Name.HeaderText = "Property Name";
+            this.DgvWritePropertyMultiple_Attrs_Name.MinimumWidth = 140;
+            this.DgvWritePropertyMultiple_Attrs_Name.Name = "DgvWritePropertyMultiple_Attrs_Name";
+            this.DgvWritePropertyMultiple_Attrs_Name.Width = 140;
+            // 
+            // DgvWritePropertyMultiple_Attrs_Value
+            // 
+            this.DgvWritePropertyMultiple_Attrs_Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DgvWritePropertyMultiple_Attrs_Value.HeaderText = "Property New Value";
+            this.DgvWritePropertyMultiple_Attrs_Value.Name = "DgvWritePropertyMultiple_Attrs_Value";
+            // 
+            // BtnWritePropertyMultiple
+            // 
+            this.BtnWritePropertyMultiple.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnWritePropertyMultiple.Location = new System.Drawing.Point(169, 123);
+            this.BtnWritePropertyMultiple.Name = "BtnWritePropertyMultiple";
+            this.BtnWritePropertyMultiple.Size = new System.Drawing.Size(731, 23);
+            this.BtnWritePropertyMultiple.TabIndex = 2;
+            this.BtnWritePropertyMultiple.Text = "WritePropertyMultiple";
+            this.BtnWritePropertyMultiple.UseVisualStyleBackColor = true;
+            this.BtnWritePropertyMultiple.Click += new System.EventHandler(this.BtnWritePropertyMultiple_Click);
+            // 
+            // LblWritePropertMultiple_Result
+            // 
+            this.LblWritePropertMultiple_Result.AutoSize = true;
+            this.LblWritePropertMultiple_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblWritePropertMultiple_Result.Location = new System.Drawing.Point(23, 152);
+            this.LblWritePropertMultiple_Result.Margin = new System.Windows.Forms.Padding(3);
+            this.LblWritePropertMultiple_Result.Name = "LblWritePropertMultiple_Result";
+            this.LblWritePropertMultiple_Result.Size = new System.Drawing.Size(140, 20);
+            this.LblWritePropertMultiple_Result.TabIndex = 3;
+            this.LblWritePropertMultiple_Result.Text = "Result:";
+            this.LblWritePropertMultiple_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtWritePropertyMultiple_Result
+            // 
+            this.TxtWritePropertyMultiple_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtWritePropertyMultiple_Result.Location = new System.Drawing.Point(169, 152);
+            this.TxtWritePropertyMultiple_Result.Name = "TxtWritePropertyMultiple_Result";
+            this.TxtWritePropertyMultiple_Result.ReadOnly = true;
+            this.TxtWritePropertyMultiple_Result.Size = new System.Drawing.Size(731, 20);
+            this.TxtWritePropertyMultiple_Result.TabIndex = 4;
             // 
             // Objects
             // 
@@ -848,6 +1287,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetObjects.ResumeLayout(false);
             this.TlpGetObjects.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetObjects)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NupGetObject_Levels)).EndInit();
             this.TpgGetCommands.ResumeLayout(false);
             this.TlpGetCommands.ResumeLayout(false);
             this.TlpGetCommands.PerformLayout();
@@ -859,10 +1299,25 @@ namespace MetasysServices_TestClient.Forms
             this.TpgReadProperty.ResumeLayout(false);
             this.TlpReadProperty.ResumeLayout(false);
             this.TlpReadProperty.PerformLayout();
+            this.TpgReadPropertyMultiple.ResumeLayout(false);
+            this.TlpReadPropertyMultiple.ResumeLayout(false);
+            this.TlpReadPropertyMultiple.PerformLayout();
+            this.TpgWriteProperty.ResumeLayout(false);
+            this.TlpWriteProperty.ResumeLayout(false);
+            this.TlpWriteProperty.PerformLayout();
+            this.TpgWritePropertyMultiple.ResumeLayout(false);
+            this.TlpWritePropertyMultiple.ResumeLayout(false);
+            this.TlpWritePropertyMultiple.PerformLayout();
             this.TpgSendCommand.ResumeLayout(false);
             this.TlpSendCommand.ResumeLayout(false);
             this.TlpSendCommand.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.NupGetObject_Levels)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Ids)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Result)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Attrs)).EndInit();
+            this.TlpWritepropertyMultiple_Params.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DgvWritePropertyMultiple_Ids)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvWritePropertyMultiple_Attrs)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -901,8 +1356,8 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.TableLayoutPanel TlpReadProperty;
         private System.Windows.Forms.Label LblReadProperty_ObjectId;
         private System.Windows.Forms.TextBox TxtReadProperty_ObjectId;
-        private System.Windows.Forms.TextBox TxtReadProperty_PropertyKey;
-        private System.Windows.Forms.Label LblReadProperty;
+        private System.Windows.Forms.TextBox TxtReadProperty_AttributeName;
+        private System.Windows.Forms.Label LblReadProperty_AttributeName;
         private System.Windows.Forms.Button BtnReadProperty;
         private System.Windows.Forms.Label LblReadProperty_Result;
         private System.Windows.Forms.TextBox TxtReadProperty_Result;
@@ -926,5 +1381,38 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.CheckBox ChkGetObjects_IncludeInternalObjects;
         private System.Windows.Forms.Label LblGetObjects_Levels;
         private System.Windows.Forms.NumericUpDown NupGetObject_Levels;
+        private System.Windows.Forms.TabPage TpgReadPropertyMultiple;
+        private System.Windows.Forms.TableLayoutPanel TlpReadPropertyMultiple;
+        private System.Windows.Forms.TabPage TpgWriteProperty;
+        private System.Windows.Forms.TabPage TpgWritePropertyMultiple;
+        private System.Windows.Forms.TableLayoutPanel TlpWriteProperty;
+        private System.Windows.Forms.TableLayoutPanel TlpWritePropertyMultiple;
+        private System.Windows.Forms.Label LblReadPropertyMultiple_Params;
+        private System.Windows.Forms.DataGridView DgvReadPropertyMultiple_Ids;
+        private System.Windows.Forms.Button BtnReadPropertyMultiple;
+        private System.Windows.Forms.DataGridView DgvReadPropertyMultiple_Result;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DgvReadPropertyMultiple_Ids_Id;
+        private System.Windows.Forms.DataGridView DgvReadPropertyMultiple_Attrs;
+        private System.Windows.Forms.Label LblWriteProperty_ObjectId;
+        private System.Windows.Forms.TextBox TxtWriteProperty_ObjectId;
+        private System.Windows.Forms.Label LblWriteProperty_AttributeName;
+        private System.Windows.Forms.TextBox TxtWriteProperty_AttributeName;
+        private System.Windows.Forms.Label LblWriteProperty_NewValue;
+        private System.Windows.Forms.TextBox TxtWriteProperty_NewValue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DgvReadPropertyMultiple_Attrs_Attribute;
+        private System.Windows.Forms.Button BtnWriteProperty;
+        private System.Windows.Forms.Label LblWriteProperty_Result;
+        private System.Windows.Forms.TextBox TxtWriteProperty_Result;
+        private System.Windows.Forms.Label LblWritePropertyMultiple_Params;
+        private System.Windows.Forms.TableLayoutPanel TlpWritepropertyMultiple_Params;
+        private System.Windows.Forms.DataGridView DgvWritePropertyMultiple_Ids;
+        private System.Windows.Forms.DataGridView DgvWritePropertyMultiple_Attrs;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DgvWritePropertyMultiple_Ids_Id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DgvWritePropertyMultiple_Attrs_Name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DgvWritePropertyMultiple_Attrs_Value;
+        private System.Windows.Forms.Button BtnWritePropertyMultiple;
+        private System.Windows.Forms.Label LblWritePropertMultiple_Result;
+        private System.Windows.Forms.TextBox TxtWritePropertyMultiple_Result;
     }
 }

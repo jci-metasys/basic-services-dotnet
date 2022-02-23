@@ -94,6 +94,8 @@ namespace MetasysServices_TestClient.Forms
             this.TpgAddAnnotationMultiple = new System.Windows.Forms.TabPage();
             this.AddAnnotationMultiple = new System.Windows.Forms.TableLayoutPanel();
             this.DgvAddAnnotationMultiple_Params = new System.Windows.Forms.DataGridView();
+            this.DgvAddAnnotationMultiple_AuditID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DgvAddAnnotationMultiple_AnnotationText = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LblAddAnnotationMultiple_Params = new System.Windows.Forms.Label();
             this.BtnAddAnnotationMultiple = new System.Windows.Forms.Button();
             this.LblAddAnnotationMultiple_Result = new System.Windows.Forms.Label();
@@ -113,8 +115,6 @@ namespace MetasysServices_TestClient.Forms
             this.DgvDiscardMultiple_Params = new System.Windows.Forms.DataGridView();
             this.DgvDiscardMultiple_AuditID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DgvDiscardMultiple_AnnotationText = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DgvAddAnnotationMultiple_AuditID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DgvAddAnnotationMultiple_AnnotationText = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BtnDiscardMultiple = new System.Windows.Forms.Button();
             this.LblDiscardMultiple_Result = new System.Windows.Forms.Label();
             this.TxtDiscardMultiple_Result = new System.Windows.Forms.TextBox();
@@ -204,8 +204,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblGet_Filters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblGet_Filters.Location = new System.Drawing.Point(23, 23);
             this.LblGet_Filters.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGet_Filters.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGet_Filters.Name = "LblGet_Filters";
-            this.LblGet_Filters.Size = new System.Drawing.Size(37, 95);
+            this.LblGet_Filters.Size = new System.Drawing.Size(140, 95);
             this.LblGet_Filters.TabIndex = 0;
             this.LblGet_Filters.Text = "Filters:";
             this.LblGet_Filters.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -229,14 +230,14 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGet_Filters.Controls.Add(this.LblGet_ActionTypes, 0, 3);
             this.TlpGet_Filters.Controls.Add(this.TlpGet_ActionTypes, 1, 3);
             this.TlpGet_Filters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TlpGet_Filters.Location = new System.Drawing.Point(66, 23);
+            this.TlpGet_Filters.Location = new System.Drawing.Point(169, 23);
             this.TlpGet_Filters.Name = "TlpGet_Filters";
             this.TlpGet_Filters.RowCount = 4;
             this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TlpGet_Filters.Size = new System.Drawing.Size(733, 95);
+            this.TlpGet_Filters.Size = new System.Drawing.Size(630, 95);
             this.TlpGet_Filters.TabIndex = 1;
             // 
             // LblGet_StartTime
@@ -255,7 +256,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblGet_EndTime.AutoSize = true;
             this.LblGet_EndTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGet_EndTime.Location = new System.Drawing.Point(388, 3);
+            this.LblGet_EndTime.Location = new System.Drawing.Point(336, 3);
             this.LblGet_EndTime.Margin = new System.Windows.Forms.Padding(3);
             this.LblGet_EndTime.Name = "LblGet_EndTime";
             this.LblGet_EndTime.Size = new System.Drawing.Size(52, 20);
@@ -268,15 +269,15 @@ namespace MetasysServices_TestClient.Forms
             this.DtpGet_StartTime.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DtpGet_StartTime.Location = new System.Drawing.Point(98, 3);
             this.DtpGet_StartTime.Name = "DtpGet_StartTime";
-            this.DtpGet_StartTime.Size = new System.Drawing.Size(284, 20);
+            this.DtpGet_StartTime.Size = new System.Drawing.Size(232, 20);
             this.DtpGet_StartTime.TabIndex = 2;
             // 
             // DtpGet_EndTime
             // 
             this.DtpGet_EndTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DtpGet_EndTime.Location = new System.Drawing.Point(446, 3);
+            this.DtpGet_EndTime.Location = new System.Drawing.Point(394, 3);
             this.DtpGet_EndTime.Name = "DtpGet_EndTime";
-            this.DtpGet_EndTime.Size = new System.Drawing.Size(284, 20);
+            this.DtpGet_EndTime.Size = new System.Drawing.Size(233, 20);
             this.DtpGet_EndTime.TabIndex = 3;
             // 
             // ChkGet_ExcludeDiscarded
@@ -285,7 +286,7 @@ namespace MetasysServices_TestClient.Forms
             this.ChkGet_ExcludeDiscarded.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ChkGet_ExcludeDiscarded.Location = new System.Drawing.Point(98, 29);
             this.ChkGet_ExcludeDiscarded.Name = "ChkGet_ExcludeDiscarded";
-            this.ChkGet_ExcludeDiscarded.Size = new System.Drawing.Size(284, 17);
+            this.ChkGet_ExcludeDiscarded.Size = new System.Drawing.Size(232, 17);
             this.ChkGet_ExcludeDiscarded.TabIndex = 4;
             this.ChkGet_ExcludeDiscarded.Text = "Exclude Dscarded";
             this.ChkGet_ExcludeDiscarded.UseVisualStyleBackColor = true;
@@ -313,7 +314,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGet_OriginApplication.Name = "TlpGet_OriginApplication";
             this.TlpGet_OriginApplication.RowCount = 1;
             this.TlpGet_OriginApplication.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TlpGet_OriginApplication.Size = new System.Drawing.Size(638, 23);
+            this.TlpGet_OriginApplication.Size = new System.Drawing.Size(535, 23);
             this.TlpGet_OriginApplication.TabIndex = 5;
             // 
             // ChkGet_AlarmEvent
@@ -420,7 +421,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGet_ActionTypes.Name = "TlpGet_ActionTypes";
             this.TlpGet_ActionTypes.RowCount = 1;
             this.TlpGet_ActionTypes.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpGet_ActionTypes.Size = new System.Drawing.Size(638, 23);
+            this.TlpGet_ActionTypes.Size = new System.Drawing.Size(535, 23);
             this.TlpGet_ActionTypes.TabIndex = 8;
             // 
             // ChkGet_Write
@@ -505,9 +506,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.TlpGet.SetColumnSpan(this.BtnGet, 2);
             this.BtnGet.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGet.Location = new System.Drawing.Point(66, 124);
+            this.BtnGet.Location = new System.Drawing.Point(169, 124);
             this.BtnGet.Name = "BtnGet";
-            this.BtnGet.Size = new System.Drawing.Size(809, 23);
+            this.BtnGet.Size = new System.Drawing.Size(706, 23);
             this.BtnGet.TabIndex = 3;
             this.BtnGet.Text = "Audits.Get";
             this.BtnGet.UseVisualStyleBackColor = true;
@@ -518,9 +519,9 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGet.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.TlpGet.SetColumnSpan(this.DgvGet, 2);
             this.DgvGet.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGet.Location = new System.Drawing.Point(66, 153);
+            this.DgvGet.Location = new System.Drawing.Point(169, 153);
             this.DgvGet.Name = "DgvGet";
-            this.DgvGet.Size = new System.Drawing.Size(809, 390);
+            this.DgvGet.Size = new System.Drawing.Size(706, 390);
             this.DgvGet.TabIndex = 4;
             // 
             // TpgFindById
@@ -993,6 +994,21 @@ namespace MetasysServices_TestClient.Forms
             this.DgvAddAnnotationMultiple_Params.Size = new System.Drawing.Size(706, 94);
             this.DgvAddAnnotationMultiple_Params.TabIndex = 0;
             // 
+            // DgvAddAnnotationMultiple_AuditID
+            // 
+            this.DgvAddAnnotationMultiple_AuditID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.DgvAddAnnotationMultiple_AuditID.FillWeight = 40F;
+            this.DgvAddAnnotationMultiple_AuditID.HeaderText = "Audit ID (GUID)";
+            this.DgvAddAnnotationMultiple_AuditID.MinimumWidth = 140;
+            this.DgvAddAnnotationMultiple_AuditID.Name = "DgvAddAnnotationMultiple_AuditID";
+            this.DgvAddAnnotationMultiple_AuditID.Width = 140;
+            // 
+            // DgvAddAnnotationMultiple_AnnotationText
+            // 
+            this.DgvAddAnnotationMultiple_AnnotationText.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DgvAddAnnotationMultiple_AnnotationText.HeaderText = "Annotation Text";
+            this.DgvAddAnnotationMultiple_AnnotationText.Name = "DgvAddAnnotationMultiple_AnnotationText";
+            // 
             // LblAddAnnotationMultiple_Params
             // 
             this.LblAddAnnotationMultiple_Params.AutoSize = true;
@@ -1222,21 +1238,6 @@ namespace MetasysServices_TestClient.Forms
             this.DgvDiscardMultiple_AnnotationText.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.DgvDiscardMultiple_AnnotationText.HeaderText = "Annotation Text";
             this.DgvDiscardMultiple_AnnotationText.Name = "DgvDiscardMultiple_AnnotationText";
-            // 
-            // DgvAddAnnotationMultiple_AuditID
-            // 
-            this.DgvAddAnnotationMultiple_AuditID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.DgvAddAnnotationMultiple_AuditID.FillWeight = 40F;
-            this.DgvAddAnnotationMultiple_AuditID.HeaderText = "Audit ID (GUID)";
-            this.DgvAddAnnotationMultiple_AuditID.MinimumWidth = 140;
-            this.DgvAddAnnotationMultiple_AuditID.Name = "DgvAddAnnotationMultiple_AuditID";
-            this.DgvAddAnnotationMultiple_AuditID.Width = 140;
-            // 
-            // DgvAddAnnotationMultiple_AnnotationText
-            // 
-            this.DgvAddAnnotationMultiple_AnnotationText.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.DgvAddAnnotationMultiple_AnnotationText.HeaderText = "Annotation Text";
-            this.DgvAddAnnotationMultiple_AnnotationText.Name = "DgvAddAnnotationMultiple_AnnotationText";
             // 
             // BtnDiscardMultiple
             // 

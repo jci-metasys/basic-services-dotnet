@@ -210,7 +210,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 Trends = new TrendServiceProvider(Client, version, logClientErrors);
                 if (Version > ApiVersion.v3)
                 {
-                    Streams = new StreamServiceProvider(Client, hostname, version);
+                    Streams = new StreamServiceProvider(Client, hostname, version, logClientErrors);
                 }
 
                 base.Version = version;
@@ -602,13 +602,13 @@ namespace JohnsonControls.Metasys.BasicServices
                 return ToVariantMultiples(response);
             }
             var taskList = new List<Task<Variant>>();
-            // Prepare Tasks to Read attributes list. In Metasys 11 this will be implemented server side
+            // Prepare Tasks to Read attributes list. In Metasys 11 this will be implemented server side.
             foreach (var id in ids)
             {
                 foreach (string attributeName in attributeNames)
                 {
-                    // Much faster reading single property than the entire object, even though we have more server calls
-                    taskList.Add(ReadPropertyAsync(id, attributeName, true)); // Using internal signature with exception suppress
+                    // Much faster reading single property than the entire object, even though we have more server calls.
+                    taskList.Add(ReadPropertyAsync(id, attributeName, true)); // Using internal signature with exception suppress.
                 }
             }
             await Task.WhenAll(taskList).ConfigureAwait(false);
@@ -620,14 +620,14 @@ namespace JohnsonControls.Metasys.BasicServices
                 List<Variant> variants = new List<Variant>();
                 foreach (var t in attributeList)
                 {
-                    if (t.Result != null) // Something went wrong if the result is unknown
+                    if (t.Result != null) // Something went wrong if the result is unknown.
                     {
                         variants.Add(t.Result); // Prepare variants list
                     }
                 }
                 if (variants.Count > 0 || attributeNames.Count() == 0)
                 {
-                    // Aggregate results only when objects was found or no attributes specified
+                    // Aggregate results only when objects was found or no attributes specified.
                     results.Add(new VariantMultiple(id, variants));
                 }
             }
@@ -663,19 +663,17 @@ namespace JohnsonControls.Metasys.BasicServices
                 throw new ArgumentNullException("ids and/or attributeValues.");
             }
             // convert dictionary to a list of tuples and use existing overload
-            await WritePropertyMultipleAsync(ids, attributeValues.Select(x => (x.Key, x.Value)));
+            await WritePropertyMultipleAsync(ids, attributeValues.Select(x => (x.Key, x.Value))).ConfigureAwait(false);
         }
 
         // WritePropertyMultiple (2) ------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public void WritePropertyMultiple(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues)
+        public void WritePropertyMultiple(IEnumerable<Guid> ids, IEnumerable<(string Attribute, object Value)> attributeValues)
         {
             WritePropertyMultipleAsync(ids, attributeValues).GetAwaiter().GetResult();
         }
         /// <inheritdoc/>
-        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,
-            IEnumerable<(string Attribute, object Value)> attributeValues)
+        public async Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, IEnumerable<(string Attribute, object Value)> attributeValues)
         {
             if (ids == null || attributeValues == null)
             {
@@ -868,88 +866,6 @@ namespace JohnsonControls.Metasys.BasicServices
             return serverTime.Value;
         }
 
-        // Localize -----------------------------------------------------------------------------------------------------------------
-        // note: this method has been moved to 'BasicServiceProvider'
-        ///// <inheritdoc/>
-        //public string Localize(string resource, CultureInfo cultureInfo = null)
-        //{
-        //    // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-        //    return Utils.ResourceManager.Localize(resource, cultureInfo ?? Culture);
-        //}
-
-
-        //// GetResourceTypesAsync ----------------------------------------------------------------------------------------------------
-        ///// <summary>
-        ///// Gets all resource types asynchronously.
-        ///// </summary>
-        ///// <exception cref="MetasysHttpException"></exception>
-        ///// <exception cref="MetasysHttpParsingException"></exception>
-        //public async Task<IEnumerable<MetasysObjectType>> _GetResourceTypesAsync(string resource, string pathSegment)
-        //{
-        //    List<MetasysObjectType> types = new List<MetasysObjectType>() { };
-
-        //    try
-        //    {
-        //        var response = await Client.Request(new Url(resource)
-        //            .AppendPathSegment(pathSegment))
-        //            .GetJsonAsync<JToken>()
-        //            .ConfigureAwait(false);
-        //        try
-        //        {
-        //            if (Version < ApiVersion.v4)
-        //            {
-        //                // The response is a list of typeUrls, not the type data
-        //                var list = response["items"] as JArray;
-        //                foreach (var item in list)
-        //                {
-        //                    try
-        //                    {
-        //                        JToken typeToken = item;
-        //                        // Retrieve type token from url (when available) and construct Metasys Object Type
-        //                        if (item["typeUrl"] != null)
-        //                        {
-        //                            var url = item["typeUrl"].Value<string>();
-        //                            typeToken = await GetWithFullUrl(url).ConfigureAwait(false);
-        //                        }
-        //                        var type = GetType(typeToken);
-        //                        types.Add(type);
-        //                    }
-        //                    catch (System.ArgumentNullException e)
-        //                    {
-        //                        throw new MetasysHttpParsingException(response.ToString(), e);
-        //                    }
-        //                }
-        //            }
-        //            else
-        //            {
-        //                var item = response["item"];
-        //                var members = item["members"];
-        //                dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(members.ToString());
-        //                foreach (KeyValuePair<string, object> kvp in kvpList)
-        //                {
-        //                    if (kvp.Key.Length > 0)
-        //                    {
-        //                        var itm = kvp.Value as IDictionary<string, object>;
-        //                        String description = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
-        //                        int id = int.Parse((itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
-
-        //                        var type = GetType(id, description, kvp.Key);
-        //                        types.Add(type);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        catch (System.NullReferenceException e)
-        //        {
-        //            throw new MetasysHttpParsingException(response.ToString(), e);
-        //        }
-        //    }
-        //    catch (FlurlHttpException e)
-        //    {
-        //        ThrowHttpException(e);
-        //    }
-        //    return types;
-        //}
         #endregion
 
 
@@ -1079,89 +995,89 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        /// <summary>
-        /// Gets the type from a token retrieved from a typeUrl 
-        /// </summary>
-        /// <param name="typeToken"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysObjectTypeException"></exception>
-        private MetasysObjectType GetType(JToken typeToken)
-        {
-            try
-            {
-                if (typeToken != null || typeToken == null)
-                {
-                    //string description = (typeToken.Contains("description") && typeToken["description"] != null) ? typeToken["description"].Value<string>(): "";
-                    //int id = (typeToken.Contains("id") && typeToken["id"] != null) ?  typeToken["id"].Value<int>() : -1;
-                    //string key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
-                    string description = typeToken["description"].Value<string>();
-                    int id = typeToken["id"].Value<int>();
-                    //string key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
-                    string key = GetObjectTypeEnumeration(description);
+        ///// <summary>
+        ///// Gets the type from a token retrieved from a typeUrl 
+        ///// </summary>
+        ///// <param name="typeToken"></param>
+        ///// <exception cref="MetasysHttpException"></exception>
+        ///// <exception cref="MetasysObjectTypeException"></exception>
+        //private MetasysObjectType GetType(JToken typeToken)
+        //{
+        //    try
+        //    {
+        //        if (typeToken != null || typeToken == null)
+        //        {
+        //            //string description = (typeToken.Contains("description") && typeToken["description"] != null) ? typeToken["description"].Value<string>(): "";
+        //            //int id = (typeToken.Contains("id") && typeToken["id"] != null) ?  typeToken["id"].Value<int>() : -1;
+        //            //string key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
+        //            string description = typeToken["description"].Value<string>();
+        //            int id = typeToken["id"].Value<int>();
+        //            //string key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
+        //            string key = GetObjectTypeEnumeration(description);
 
-                    if (key.Length > 0)
-                    {
-                        string translation = Localize(key);
-                        if (translation != key)
-                        {
-                            // A translation was found
-                            description = translation;
-                        }
-                    }
-                    return new MetasysObjectType(id, key, description);
-                }
-                else
-                {
-                    return new MetasysObjectType(-1, "", "");
-                }
-            }
-            catch (Exception e) when (e is System.ArgumentNullException
-                || e is System.NullReferenceException || e is System.FormatException)
-            {
-                throw new MetasysObjectTypeException(typeToken.ToString(), e);
-            }
-        }
+        //            if (key.Length > 0)
+        //            {
+        //                string translation = Localize(key);
+        //                if (translation != key)
+        //                {
+        //                    // A translation was found
+        //                    description = translation;
+        //                }
+        //            }
+        //            return new MetasysObjectType(id, key, description);
+        //        }
+        //        else
+        //        {
+        //            return new MetasysObjectType(-1, "", "");
+        //        }
+        //    }
+        //    catch (Exception e) when (e is System.ArgumentNullException
+        //        || e is System.NullReferenceException || e is System.FormatException)
+        //    {
+        //        throw new MetasysObjectTypeException(typeToken.ToString(), e);
+        //    }
+        //}
 
-        /// <summary>
-        /// Gets the type from the values of the paramenters
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="description"></param>
-        /// <param name="key"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysObjectTypeException"></exception>
-        private MetasysObjectType GetType(int id, String description, String key)
-        {
-            try
-            {
-                if (id >= 0 && description.Length > 0)
-                {
-                    if (String.IsNullOrEmpty(key))
-                    {
-                        key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
-                    }
-                    if (key.Length > 0)
-                    {
-                        string translation = Localize(key);
-                        if (translation != key)
-                        {
-                            // A translation was found
-                            description = translation;
-                        }
-                    }
-                    return new MetasysObjectType(id, key, description);
-                }
-                else
-                {
-                    return new MetasysObjectType(-1, "", "");
-                }
-            }
-            catch (Exception e) when (e is System.ArgumentNullException
-                || e is System.NullReferenceException || e is System.FormatException)
-            {
-                throw new MetasysObjectTypeException(id.ToString() + " " + description, e);
-            }
-        }
+        ///// <summary>
+        ///// Gets the type from the values of the paramenters
+        ///// </summary>
+        ///// <param name="id"></param>
+        ///// <param name="description"></param>
+        ///// <param name="key"></param>
+        ///// <exception cref="MetasysHttpException"></exception>
+        ///// <exception cref="MetasysObjectTypeException"></exception>
+        //private MetasysObjectType GetType(int id, String description, String key)
+        //{
+        //    try
+        //    {
+        //        if (id >= 0 && description.Length > 0)
+        //        {
+        //            if (String.IsNullOrEmpty(key))
+        //            {
+        //                key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
+        //            }
+        //            if (key.Length > 0)
+        //            {
+        //                string translation = Localize(key);
+        //                if (translation != key)
+        //                {
+        //                    // A translation was found
+        //                    description = translation;
+        //                }
+        //            }
+        //            return new MetasysObjectType(id, key, description);
+        //        }
+        //        else
+        //        {
+        //            return new MetasysObjectType(-1, "", "");
+        //        }
+        //    }
+        //    catch (Exception e) when (e is System.ArgumentNullException
+        //        || e is System.NullReferenceException || e is System.FormatException)
+        //    {
+        //        throw new MetasysObjectTypeException(id.ToString() + " " + description, e);
+        //    }
+        //}
 
         /// <summary>
         /// Convert a JToken batch request response into VariantMultiple.

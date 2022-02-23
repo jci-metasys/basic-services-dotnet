@@ -119,7 +119,7 @@ There are four optional parameters when creating a new client:
   
   **WARNING: You should not ignore certificate errors on a production site. Doing so puts your server at risk of a man-in-the-middle attack.**  
 
-- apiVersion: If your server is not a current 10.1 Metasys server or later this SDK will not function correctly. The version parameter takes in an ApiVersion enumeration value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is v2, for Metasys 11 the api version is v3.
+- apiVersion: If your server is not a current 10.1 Metasys server or later this SDK will not function correctly. The version parameter takes in an ApiVersion enumeration value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is v2, for Metasys 11 the api version is v3, for Metasys 12 the api version is v4.
 - cultureInfo: To set the language for localization specify the target culture with a CultureInfo object. The default culture is en-US.
 - logClientErrors: Set this flag to false to disable logging of client errors. By default the library logs any communication error with the Metasys Server in this path: "C:\ProgramData\Johnson Controls\Metasys Services\Logs".
   

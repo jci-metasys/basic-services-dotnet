@@ -131,9 +131,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is Alarm)
+            if (obj != null && obj is Alarm alarm)
             {
-                var o = (Alarm)obj;
+                var o = alarm;
                 // Compare each properties one by one for better performance
                 return this.Id == o.Id && this.IsAcknowledged == o.IsAcknowledged && this.IsAckRequired == o.IsAckRequired
                     && this.IsDiscarded == o.IsDiscarded && this.ItemReference == o.ItemReference && this.Message == o.Message

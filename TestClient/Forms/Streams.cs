@@ -17,12 +17,12 @@ namespace MetasysServices_TestClient.Forms
         private MetasysClient _client;
 
         private Guid _requestId = Guid.Empty;
-        private StreamMessage _COVValue = null;
-        private List<StreamMessage> _COVValues;
-        private StreamMessage _AlarmEvent = null;
-        private List<StreamMessage> _AlarmEvents;
-        private StreamMessage _AuditEvent = null;
-        private List<StreamMessage> _AuditEvents;
+        private StreamMessage _covValue = null;
+        private List<StreamMessage> _covValues;
+        private StreamMessage _alarmEvent = null;
+        private List<StreamMessage> _alarmEvents;
+        private StreamMessage _auditEvent = null;
+        private List<StreamMessage> _auditEvents;
 
         public Streams()
         {
@@ -41,6 +41,7 @@ namespace MetasysServices_TestClient.Forms
                 {
                     if (_client.Version == ApiVersion.v4)
                     {
+                        //Add the events handler
                         _client.Streams.COVValueChanged += COVValue_Changed;
                         _client.Streams.AlarmOccurred += Alarm_Occurred;
                         _client.Streams.AuditOccurred += Audit_Occurred;
@@ -52,47 +53,44 @@ namespace MetasysServices_TestClient.Forms
         public void InitForm(MetasysClient client, TabPage container)
         {
             _client = client;
-
             TabMain.Visible = false;
             TabMain.Parent = container;
             TabMain.Dock = DockStyle.Fill;
             TabMain.Visible = true;
-
         }
 
         #region "Event Handler" 
         private void COVValue_Changed(object sender, EventArgs e)
         {
-            _COVValues = _client.Streams.GetCOVValues();
-            _COVValue = _COVValues?.FirstOrDefault();
+            _covValues = _client.Streams.GetCOVValues();
+            _covValue = _covValues?.FirstOrDefault();
 
             var requestId = _client.Streams.GetRequestIds().FirstOrDefault();
             TxtCOVValues_RequestID.Text = requestId.ToString();
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = _COVValues;
+            dataGridView1.DataSource = _covValues.ToList();
         }
 
         private void Alarm_Occurred(object sender, EventArgs e)
         {
-            _AlarmEvents = _client.Streams.GetAlarmEvents();
-            _AlarmEvent = _AlarmEvents?.FirstOrDefault();
+            _alarmEvents = _client.Streams.GetAlarmEvents();
+            _alarmEvent = _alarmEvents?.FirstOrDefault();
 
             var requestId = _client.Streams.GetRequestIds().FirstOrDefault();
             TxtAlarmEvents_RequestID.Text = requestId.ToString();
             DgvAlarmEvents.DataSource = null;
-            DgvAlarmEvents.DataSource = _AlarmEvents;
+            DgvAlarmEvents.DataSource = _alarmEvents.ToList();
         }
 
         private void Audit_Occurred(object sender, EventArgs e)
         {
-            _AuditEvents = _client.Streams.GetAuditEvents();
-            _AuditEvent = _AuditEvents?.FirstOrDefault();
+            _auditEvents = _client.Streams.GetAuditEvents();
+            _auditEvent = _auditEvents?.FirstOrDefault();
             //TmrRefreshAuditEvents.Enabled = true;
 
             var requestId = _client.Streams.GetRequestIds().FirstOrDefault();
             TxtAuditEvents_RequestID.Text = requestId.ToString();
             DgvAuditEvents.DataSource = null;
-            DgvAuditEvents.DataSource = _AuditEvents;
+            DgvAuditEvents.DataSource = _auditEvents.ToList();
         }
         #endregion
 
@@ -111,15 +109,15 @@ namespace MetasysServices_TestClient.Forms
 
         private void BtnCOVValue_GetCOVValues_Click(object sender, EventArgs e)
         {
-            _COVValues = _client.Streams.GetCOVValues();
-            _COVValue = _COVValues?.FirstOrDefault();
+            _covValues = _client.Streams.GetCOVValues();
+            _covValue = _covValues?.FirstOrDefault();
 
-            var str = (_COVValue is null) ? String.Empty : _COVValue.Data;
+            var str = (_covValue is null) ? String.Empty : _covValue.Data;
             MessageBox.Show(str);
-            PrgCOVValue.SelectedObject = _COVValue;
+            PrgCOVValue.SelectedObject = _covValue;
             RtbCOVValue.Text = str;
             DgvCOVValue.DataSource = null;
-            DgvCOVValue.DataSource = _COVValues;
+            DgvCOVValue.DataSource = _covValues;
         }
 
         private void TmrRefreshCOVValue_Tick(object sender, EventArgs e)
@@ -127,16 +125,11 @@ namespace MetasysServices_TestClient.Forms
             var requestId = _client.Streams.GetRequestIds().FirstOrDefault();
             TxtCOVValue_RequestID.Text = requestId.ToString();
 
-            PrgCOVValue.SelectedObject = _COVValue;
-            RtbCOVValue.Text = (_COVValue is null) ? String.Empty : FormatJson(_COVValue.Data);
+            PrgCOVValue.SelectedObject = _covValue;
+            RtbCOVValue.Text = (_covValue is null) ? String.Empty : FormatJson(_covValue.Data);
 
             DgvCOVValue.DataSource = null;
-            DgvCOVValue.DataSource = _COVValues;
-        }
-
-        private void BtnStreamMulti_StartCollCOVStreamValue_Click(object sender, EventArgs e)
-        {
-
+            DgvCOVValue.DataSource = _covValues.ToList();
         }
 
         private void BtnCOVValues_StartReadingCOVValues_Click(object sender, EventArgs e)
@@ -148,7 +141,6 @@ namespace MetasysServices_TestClient.Forms
             ids.Add(id2);
 
             _ = _client.Streams.StartReadingCOVValuesAsync(ids);
-            //TmrRefreshCOVValues.Enabled = true;
         }
 
         private void TmrRefreshCOVValues_Tick(object sender, EventArgs e)
@@ -157,7 +149,7 @@ namespace MetasysServices_TestClient.Forms
             TxtCOVValues_RequestID.Text = requestId.ToString();
 
             dataGridView1.DataSource = null;
-            dataGridView1.DataSource = _COVValues;
+            dataGridView1.DataSource = _covValues;
         }
 
         private void BtnCOVValues_StopReadingCOVValues_Click(object sender, EventArgs e)

@@ -21,7 +21,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         CultureInfo Culture { get; set; }
 
-
         ///// <summary>
         ///// Get all the values of a specified enumeration set
         ///// </summary>

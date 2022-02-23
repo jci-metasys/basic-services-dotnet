@@ -9,7 +9,6 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Provides stream COV Item
     /// </summary>
-
     class StreamCOV
     {
         /// <summary>
@@ -47,9 +46,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         [JsonProperty(Required = Required.Always)]
         public StreamMessage Message { get; set; }
-
-
-
 
         /// <summary>
         /// Return a pretty JSON string of the current object.

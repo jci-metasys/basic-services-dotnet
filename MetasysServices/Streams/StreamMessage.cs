@@ -5,6 +5,9 @@ using Newtonsoft.Json.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
+    /// <summary>
+    /// Provides Stream message data
+    /// </summary>
     public class StreamMessage
     {
         private Guid _requestId = Guid.Empty;

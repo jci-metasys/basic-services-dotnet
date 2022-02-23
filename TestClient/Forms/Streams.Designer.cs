@@ -62,7 +62,6 @@ namespace MetasysServices_TestClient.Forms
             this.TxtAuditEvents_RequestID = new System.Windows.Forms.TextBox();
             this.LblAuditEvents_RequestID = new System.Windows.Forms.Label();
             this.TmrRefreshCOVValue = new System.Windows.Forms.Timer(this.components);
-            this.TmrRefreshCOVValues = new System.Windows.Forms.Timer(this.components);
             this.TabMain.SuspendLayout();
             this.TpgCOVValue.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValue)).BeginInit();
@@ -160,7 +159,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtCOVValue_ObjectID.Name = "TxtCOVValue_ObjectID";
             this.TxtCOVValue_ObjectID.Size = new System.Drawing.Size(236, 20);
             this.TxtCOVValue_ObjectID.TabIndex = 15;
-            this.TxtCOVValue_ObjectID.Text = "453be0a5-2027-5b01-a088-b16ea8a45556";
+            this.TxtCOVValue_ObjectID.Text = "aee0fc68-fff2-56e9-98dd-653ab333b7af";
             // 
             // BtnCOVValue_GetCOVValues
             // 
@@ -235,7 +234,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtCOVValues_ObjectID2.Name = "TxtCOVValues_ObjectID2";
             this.TxtCOVValues_ObjectID2.Size = new System.Drawing.Size(236, 20);
             this.TxtCOVValues_ObjectID2.TabIndex = 28;
-            this.TxtCOVValues_ObjectID2.Text = "16580b9f-b82c-5040-9ab4-e68766f9b306";
+            this.TxtCOVValues_ObjectID2.Text = "45f59181-eccb-5cd9-9622-d5df098c48f6";
             // 
             // TxtCOVValues_RequestID
             // 
@@ -269,7 +268,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtCOVValues_ObjectID1.Name = "TxtCOVValues_ObjectID1";
             this.TxtCOVValues_ObjectID1.Size = new System.Drawing.Size(236, 20);
             this.TxtCOVValues_ObjectID1.TabIndex = 23;
-            this.TxtCOVValues_ObjectID1.Text = "453be0a5-2027-5b01-a088-b16ea8a45556";
+            this.TxtCOVValues_ObjectID1.Text = "aee0fc68-fff2-56e9-98dd-653ab333b7af";
             // 
             // BtnCOVValues_StopReadingCOVValues
             // 
@@ -392,11 +391,6 @@ namespace MetasysServices_TestClient.Forms
             this.TmrRefreshCOVValue.Interval = 1000;
             this.TmrRefreshCOVValue.Tick += new System.EventHandler(this.TmrRefreshCOVValue_Tick);
             // 
-            // TmrRefreshCOVValues
-            // 
-            this.TmrRefreshCOVValues.Interval = 1000;
-            this.TmrRefreshCOVValues.Tick += new System.EventHandler(this.TmrRefreshCOVValues_Tick);
-            // 
             // Streams
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -440,7 +434,6 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.Button BtnCOVValue_StopReadingCOVValue;
         private System.Windows.Forms.Button BtnCOVValue_StartReadingValue;
         private System.Windows.Forms.Timer TmrRefreshCOVValue;
-        private System.Windows.Forms.Timer TmrRefreshCOVValues;
         private System.Windows.Forms.TextBox TxtCOVValues_ObjectID2;
         private System.Windows.Forms.TextBox TxtCOVValues_RequestID;
         private System.Windows.Forms.Label LblCOVValues_RequestID;
