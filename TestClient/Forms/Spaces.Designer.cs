@@ -152,12 +152,13 @@ namespace MetasysServices_TestClient.Forms
             // 
             // BtnGetSpaces
             // 
+            this.BtnGetSpaces.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BtnGetSpaces.Location = new System.Drawing.Point(169, 50);
             this.BtnGetSpaces.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetSpaces.Name = "BtnGetSpaces";
-            this.BtnGetSpaces.Size = new System.Drawing.Size(260, 23);
+            this.BtnGetSpaces.Size = new System.Drawing.Size(804, 23);
             this.BtnGetSpaces.TabIndex = 2;
-            this.BtnGetSpaces.Text = "GetSpaces | Spaces.Get";
+            this.BtnGetSpaces.Text = "GetSpaces = Spaces.Get";
             this.BtnGetSpaces.UseVisualStyleBackColor = true;
             this.BtnGetSpaces.Click += new System.EventHandler(this.BtnGetSpaces_Click);
             // 
@@ -247,12 +248,13 @@ namespace MetasysServices_TestClient.Forms
             // 
             // BtnGetSpaceChildren
             // 
+            this.BtnGetSpaceChildren.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BtnGetSpaceChildren.Location = new System.Drawing.Point(169, 49);
             this.BtnGetSpaceChildren.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetSpaceChildren.Name = "BtnGetSpaceChildren";
-            this.BtnGetSpaceChildren.Size = new System.Drawing.Size(260, 23);
+            this.BtnGetSpaceChildren.Size = new System.Drawing.Size(854, 23);
             this.BtnGetSpaceChildren.TabIndex = 1;
-            this.BtnGetSpaceChildren.Text = "GetSpaceChildren | Spaces.GetChildren";
+            this.BtnGetSpaceChildren.Text = "GetSpaceChildren = Spaces.GetChildren";
             this.BtnGetSpaceChildren.UseVisualStyleBackColor = true;
             this.BtnGetSpaceChildren.Click += new System.EventHandler(this.BtnGetSpaceChildren_Click);
             // 
@@ -306,12 +308,13 @@ namespace MetasysServices_TestClient.Forms
             // 
             // BtnGetSpaceTypes
             // 
+            this.BtnGetSpaceTypes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BtnGetSpaceTypes.Location = new System.Drawing.Point(169, 23);
             this.BtnGetSpaceTypes.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetSpaceTypes.Name = "BtnGetSpaceTypes";
-            this.BtnGetSpaceTypes.Size = new System.Drawing.Size(260, 23);
+            this.BtnGetSpaceTypes.Size = new System.Drawing.Size(854, 23);
             this.BtnGetSpaceTypes.TabIndex = 0;
-            this.BtnGetSpaceTypes.Text = "GetSpaceTypes | Spaces.GetTypes";
+            this.BtnGetSpaceTypes.Text = "GetSpaceTypes = Spaces.GetTypes";
             this.BtnGetSpaceTypes.UseVisualStyleBackColor = true;
             this.BtnGetSpaceTypes.Click += new System.EventHandler(this.BtnGetSpaceTypes_Click);
             // 
@@ -381,10 +384,11 @@ namespace MetasysServices_TestClient.Forms
             // 
             // BtnFindById
             // 
+            this.BtnFindById.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BtnFindById.Location = new System.Drawing.Point(169, 49);
             this.BtnFindById.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnFindById.Name = "BtnFindById";
-            this.BtnFindById.Size = new System.Drawing.Size(260, 23);
+            this.BtnFindById.Size = new System.Drawing.Size(854, 23);
             this.BtnFindById.TabIndex = 2;
             this.BtnFindById.Text = "Spaces.FindById";
             this.BtnFindById.UseVisualStyleBackColor = true;
@@ -456,10 +460,11 @@ namespace MetasysServices_TestClient.Forms
             // 
             // BtnGetServedByNetworkDevice
             // 
+            this.BtnGetServedByNetworkDevice.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BtnGetServedByNetworkDevice.Location = new System.Drawing.Point(169, 49);
             this.BtnGetServedByNetworkDevice.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetServedByNetworkDevice.Name = "BtnGetServedByNetworkDevice";
-            this.BtnGetServedByNetworkDevice.Size = new System.Drawing.Size(260, 23);
+            this.BtnGetServedByNetworkDevice.Size = new System.Drawing.Size(854, 23);
             this.BtnGetServedByNetworkDevice.TabIndex = 2;
             this.BtnGetServedByNetworkDevice.Text = "Spaces.GetServedByNetworkDevice";
             this.BtnGetServedByNetworkDevice.UseVisualStyleBackColor = true;
@@ -531,10 +536,11 @@ namespace MetasysServices_TestClient.Forms
             // 
             // BtnGetServedByEquipment
             // 
+            this.BtnGetServedByEquipment.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BtnGetServedByEquipment.Location = new System.Drawing.Point(169, 49);
             this.BtnGetServedByEquipment.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetServedByEquipment.Name = "BtnGetServedByEquipment";
-            this.BtnGetServedByEquipment.Size = new System.Drawing.Size(260, 23);
+            this.BtnGetServedByEquipment.Size = new System.Drawing.Size(854, 23);
             this.BtnGetServedByEquipment.TabIndex = 2;
             this.BtnGetServedByEquipment.Text = "Spaces.GetServedByEquipment";
             this.BtnGetServedByEquipment.UseVisualStyleBackColor = true;

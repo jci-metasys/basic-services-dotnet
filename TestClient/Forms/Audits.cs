@@ -178,13 +178,13 @@ namespace MetasysServices_TestClient.Forms
                 var batchRequests = new List<BatchRequestParam>();
                 foreach (DataGridViewRow dr in DgvAddAnnotationMultiple_Params.Rows)
                 {
-                    String auditID = dr.Cells[DgvAddAnnotationMultiple_AuditID.Name].Value.ToString();
-                    String annotationText = dr.Cells[DgvAddAnnotationMultiple_AnnotationText.Name].Value.ToString();
+                    var auditID = dr.Cells[DgvAddAnnotationMultiple_AuditID.Name].Value;
+                    var annotationText = dr.Cells[DgvAddAnnotationMultiple_AnnotationText.Name].Value;
 
-                    if (auditID.Length > 0 && annotationText.Length > 0)
+                    if (auditID != null && auditID.ToString().Length > 0 && annotationText != null && annotationText.ToString().Length > 0)
                     {
-                        Guid auditGuid = new Guid(auditID);
-                        BatchRequestParam batchReq = new BatchRequestParam { ObjectId = auditGuid, Resource = annotationText };
+                        Guid auditGuid = new Guid(auditID.ToString());
+                        BatchRequestParam batchReq = new BatchRequestParam { ObjectId = auditGuid, Resource = annotationText.ToString() };
                         batchRequests.Add(batchReq);
                     }
                 }

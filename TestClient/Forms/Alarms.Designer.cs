@@ -85,7 +85,7 @@ namespace MetasysServices_TestClient.Forms
             this.TxtGetAnnotations_AlarmId = new System.Windows.Forms.TextBox();
             this.BtnGetAnnotations = new System.Windows.Forms.Button();
             this.TxtGetAnnotations_Result = new System.Windows.Forms.TextBox();
-            this.TpgEditAlarm = new System.Windows.Forms.TabPage();
+            this.TpgEdit = new System.Windows.Forms.TabPage();
             this.TlpEditAlarm = new System.Windows.Forms.TableLayoutPanel();
             this.LblEditAlarm_AlarmId = new System.Windows.Forms.Label();
             this.TxtEditAlarm_AlarmId = new System.Windows.Forms.TextBox();
@@ -96,6 +96,12 @@ namespace MetasysServices_TestClient.Forms
             this.BtnEditAlarm = new System.Windows.Forms.Button();
             this.TxtEditAlarm_Result = new System.Windows.Forms.TextBox();
             this.LblEditAlarm_Result = new System.Windows.Forms.Label();
+            this.LblFindById_Title = new System.Windows.Forms.Label();
+            this.LblEdit_Title = new System.Windows.Forms.Label();
+            this.LblGet_Title = new System.Windows.Forms.Label();
+            this.LblGetForNetworkDevice_Title = new System.Windows.Forms.Label();
+            this.LblGetForObject_Title = new System.Windows.Forms.Label();
+            this.GetAnnotations_Title = new System.Windows.Forms.Label();
             this.TabMain.SuspendLayout();
             this.TpgGet.SuspendLayout();
             this.TlpGet.SuspendLayout();
@@ -113,7 +119,7 @@ namespace MetasysServices_TestClient.Forms
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetForObject)).BeginInit();
             this.TpgGetAnnotations.SuspendLayout();
             this.TlpGetAnnotations.SuspendLayout();
-            this.TpgEditAlarm.SuspendLayout();
+            this.TpgEdit.SuspendLayout();
             this.TlpEditAlarm.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -125,7 +131,7 @@ namespace MetasysServices_TestClient.Forms
             this.TabMain.Controls.Add(this.TpgGetForNetworkDevice);
             this.TabMain.Controls.Add(this.TpgGetForObject);
             this.TabMain.Controls.Add(this.TpgGetAnnotations);
-            this.TabMain.Controls.Add(this.TpgEditAlarm);
+            this.TabMain.Controls.Add(this.TpgEdit);
             this.TabMain.ItemSize = new System.Drawing.Size(58, 25);
             this.TabMain.Location = new System.Drawing.Point(12, 12);
             this.TabMain.Name = "TabMain";
@@ -157,15 +163,15 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGet.Controls.Add(this.ChkGet_NoFilters, 3, 1);
             this.TlpGet.Controls.Add(this.BtnGet, 2, 2);
             this.TlpGet.Controls.Add(this.DgvGet, 2, 3);
+            this.TlpGet.Controls.Add(this.LblGet_Title, 0, 0);
             this.TlpGet.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGet.Location = new System.Drawing.Point(3, 3);
             this.TlpGet.Name = "TlpGet";
             this.TlpGet.RowCount = 4;
-            this.TlpGet.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGet.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGet.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGet.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGet.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpGet.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGet.Size = new System.Drawing.Size(878, 594);
             this.TlpGet.TabIndex = 0;
             // 
@@ -173,7 +179,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblGet_Filters.AutoSize = true;
             this.LblGet_Filters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGet_Filters.Location = new System.Drawing.Point(23, 23);
+            this.LblGet_Filters.Location = new System.Drawing.Point(23, 25);
             this.LblGet_Filters.Margin = new System.Windows.Forms.Padding(3);
             this.LblGet_Filters.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGet_Filters.Name = "LblGet_Filters";
@@ -198,7 +204,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGet_Filters.Controls.Add(this.ChkGet_ExcludeAcknowledged, 1, 1);
             this.TlpGet_Filters.Controls.Add(this.ChkGet_ExcludeDiscarded, 3, 1);
             this.TlpGet_Filters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TlpGet_Filters.Location = new System.Drawing.Point(169, 23);
+            this.TlpGet_Filters.Location = new System.Drawing.Point(169, 25);
             this.TlpGet_Filters.Name = "TlpGet_Filters";
             this.TlpGet_Filters.RowCount = 2;
             this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -272,7 +278,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.ChkGet_NoFilters.AutoSize = true;
             this.ChkGet_NoFilters.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ChkGet_NoFilters.Location = new System.Drawing.Point(790, 23);
+            this.ChkGet_NoFilters.Location = new System.Drawing.Point(790, 25);
             this.ChkGet_NoFilters.Name = "ChkGet_NoFilters";
             this.ChkGet_NoFilters.Size = new System.Drawing.Size(65, 52);
             this.ChkGet_NoFilters.TabIndex = 2;
@@ -284,7 +290,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.TlpGet.SetColumnSpan(this.BtnGet, 2);
             this.BtnGet.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGet.Location = new System.Drawing.Point(169, 81);
+            this.BtnGet.Location = new System.Drawing.Point(169, 83);
             this.BtnGet.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnGet.Name = "BtnGet";
             this.BtnGet.Size = new System.Drawing.Size(686, 23);
@@ -298,9 +304,9 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGet.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.TlpGet.SetColumnSpan(this.DgvGet, 2);
             this.DgvGet.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGet.Location = new System.Drawing.Point(169, 110);
+            this.DgvGet.Location = new System.Drawing.Point(169, 112);
             this.DgvGet.Name = "DgvGet";
-            this.DgvGet.Size = new System.Drawing.Size(686, 481);
+            this.DgvGet.Size = new System.Drawing.Size(686, 479);
             this.DgvGet.TabIndex = 4;
             // 
             // TpgFindById
@@ -325,15 +331,15 @@ namespace MetasysServices_TestClient.Forms
             this.TlpFindById.Controls.Add(this.TxtFindById_AlarmId, 2, 1);
             this.TlpFindById.Controls.Add(this.BtnFindById, 2, 2);
             this.TlpFindById.Controls.Add(this.PrgFindById, 2, 3);
+            this.TlpFindById.Controls.Add(this.LblFindById_Title, 0, 0);
             this.TlpFindById.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpFindById.Location = new System.Drawing.Point(3, 3);
             this.TlpFindById.Name = "TlpFindById";
             this.TlpFindById.RowCount = 4;
-            this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpFindById.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpFindById.Size = new System.Drawing.Size(878, 594);
             this.TlpFindById.TabIndex = 0;
             // 
@@ -341,7 +347,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblFindById_AlarmId.AutoSize = true;
             this.LblFindById_AlarmId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblFindById_AlarmId.Location = new System.Drawing.Point(23, 23);
+            this.LblFindById_AlarmId.Location = new System.Drawing.Point(23, 25);
             this.LblFindById_AlarmId.Margin = new System.Windows.Forms.Padding(3);
             this.LblFindById_AlarmId.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblFindById_AlarmId.Name = "LblFindById_AlarmId";
@@ -353,7 +359,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtFindById_AlarmId
             // 
             this.TxtFindById_AlarmId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtFindById_AlarmId.Location = new System.Drawing.Point(169, 23);
+            this.TxtFindById_AlarmId.Location = new System.Drawing.Point(169, 25);
             this.TxtFindById_AlarmId.Name = "TxtFindById_AlarmId";
             this.TxtFindById_AlarmId.Size = new System.Drawing.Size(686, 20);
             this.TxtFindById_AlarmId.TabIndex = 1;
@@ -361,7 +367,7 @@ namespace MetasysServices_TestClient.Forms
             // BtnFindById
             // 
             this.BtnFindById.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnFindById.Location = new System.Drawing.Point(169, 49);
+            this.BtnFindById.Location = new System.Drawing.Point(169, 51);
             this.BtnFindById.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnFindById.Name = "BtnFindById";
             this.BtnFindById.Size = new System.Drawing.Size(686, 23);
@@ -374,9 +380,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.PrgFindById.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PrgFindById.HelpVisible = false;
-            this.PrgFindById.Location = new System.Drawing.Point(169, 78);
+            this.PrgFindById.Location = new System.Drawing.Point(169, 80);
             this.PrgFindById.Name = "PrgFindById";
-            this.PrgFindById.Size = new System.Drawing.Size(686, 513);
+            this.PrgFindById.Size = new System.Drawing.Size(686, 511);
             this.PrgFindById.TabIndex = 3;
             // 
             // TpgGetForNetworkDevice
@@ -405,16 +411,16 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetForNetworkDevice.Controls.Add(this.ChkGetForNetworkDevice_NoFilters, 3, 2);
             this.TlpGetForNetworkDevice.Controls.Add(this.BtnGetForNetworkDevice, 2, 3);
             this.TlpGetForNetworkDevice.Controls.Add(this.DgvGetForNetworkDevice, 2, 4);
+            this.TlpGetForNetworkDevice.Controls.Add(this.LblGetForNetworkDevice_Title, 0, 0);
             this.TlpGetForNetworkDevice.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetForNetworkDevice.Location = new System.Drawing.Point(3, 3);
             this.TlpGetForNetworkDevice.Name = "TlpGetForNetworkDevice";
             this.TlpGetForNetworkDevice.RowCount = 5;
-            this.TlpGetForNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetForNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetForNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetForNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetForNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetForNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpGetForNetworkDevice.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetForNetworkDevice.Size = new System.Drawing.Size(878, 594);
             this.TlpGetForNetworkDevice.TabIndex = 0;
             // 
@@ -422,7 +428,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblGetForNetworkDevice_DeviceId.AutoSize = true;
             this.LblGetForNetworkDevice_DeviceId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetForNetworkDevice_DeviceId.Location = new System.Drawing.Point(23, 23);
+            this.LblGetForNetworkDevice_DeviceId.Location = new System.Drawing.Point(23, 25);
             this.LblGetForNetworkDevice_DeviceId.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetForNetworkDevice_DeviceId.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetForNetworkDevice_DeviceId.Name = "LblGetForNetworkDevice_DeviceId";
@@ -435,7 +441,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.TlpGetForNetworkDevice.SetColumnSpan(this.TxtGetForNetworkDevice_DeviceId, 2);
             this.TxtGetForNetworkDevice_DeviceId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetForNetworkDevice_DeviceId.Location = new System.Drawing.Point(169, 23);
+            this.TxtGetForNetworkDevice_DeviceId.Location = new System.Drawing.Point(169, 25);
             this.TxtGetForNetworkDevice_DeviceId.Name = "TxtGetForNetworkDevice_DeviceId";
             this.TxtGetForNetworkDevice_DeviceId.Size = new System.Drawing.Size(686, 20);
             this.TxtGetForNetworkDevice_DeviceId.TabIndex = 1;
@@ -444,7 +450,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblGetForNetworkDevice_Filters.AutoSize = true;
             this.LblGetForNetworkDevice_Filters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetForNetworkDevice_Filters.Location = new System.Drawing.Point(23, 49);
+            this.LblGetForNetworkDevice_Filters.Location = new System.Drawing.Point(23, 51);
             this.LblGetForNetworkDevice_Filters.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetForNetworkDevice_Filters.Name = "LblGetForNetworkDevice_Filters";
             this.LblGetForNetworkDevice_Filters.Size = new System.Drawing.Size(140, 49);
@@ -468,7 +474,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetForNetworkDevice_Filters.Controls.Add(this.ChkGetForNetworkDevice_ExcludeAcknowledged, 1, 1);
             this.TlpGetForNetworkDevice_Filters.Controls.Add(this.ChkGetForNetworkDevice_ExcludeDiscarded, 3, 1);
             this.TlpGetForNetworkDevice_Filters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TlpGetForNetworkDevice_Filters.Location = new System.Drawing.Point(169, 49);
+            this.TlpGetForNetworkDevice_Filters.Location = new System.Drawing.Point(169, 51);
             this.TlpGetForNetworkDevice_Filters.Name = "TlpGetForNetworkDevice_Filters";
             this.TlpGetForNetworkDevice_Filters.RowCount = 2;
             this.TlpGetForNetworkDevice_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -542,7 +548,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.ChkGetForNetworkDevice_NoFilters.AutoSize = true;
             this.ChkGetForNetworkDevice_NoFilters.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ChkGetForNetworkDevice_NoFilters.Location = new System.Drawing.Point(785, 49);
+            this.ChkGetForNetworkDevice_NoFilters.Location = new System.Drawing.Point(785, 51);
             this.ChkGetForNetworkDevice_NoFilters.Name = "ChkGetForNetworkDevice_NoFilters";
             this.ChkGetForNetworkDevice_NoFilters.Size = new System.Drawing.Size(70, 49);
             this.ChkGetForNetworkDevice_NoFilters.TabIndex = 4;
@@ -553,7 +559,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.TlpGetForNetworkDevice.SetColumnSpan(this.BtnGetForNetworkDevice, 2);
             this.BtnGetForNetworkDevice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGetForNetworkDevice.Location = new System.Drawing.Point(169, 104);
+            this.BtnGetForNetworkDevice.Location = new System.Drawing.Point(169, 106);
             this.BtnGetForNetworkDevice.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetForNetworkDevice.Name = "BtnGetForNetworkDevice";
             this.BtnGetForNetworkDevice.Size = new System.Drawing.Size(686, 23);
@@ -567,9 +573,9 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetForNetworkDevice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.TlpGetForNetworkDevice.SetColumnSpan(this.DgvGetForNetworkDevice, 2);
             this.DgvGetForNetworkDevice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetForNetworkDevice.Location = new System.Drawing.Point(169, 133);
+            this.DgvGetForNetworkDevice.Location = new System.Drawing.Point(169, 135);
             this.DgvGetForNetworkDevice.Name = "DgvGetForNetworkDevice";
-            this.DgvGetForNetworkDevice.Size = new System.Drawing.Size(686, 458);
+            this.DgvGetForNetworkDevice.Size = new System.Drawing.Size(686, 456);
             this.DgvGetForNetworkDevice.TabIndex = 6;
             // 
             // TpgGetForObject
@@ -598,16 +604,16 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetForObject.Controls.Add(this.ChkGetForObject_NoFilters, 3, 2);
             this.TlpGetForObject.Controls.Add(this.BtnGetForObject, 2, 3);
             this.TlpGetForObject.Controls.Add(this.DgvGetForObject, 2, 4);
+            this.TlpGetForObject.Controls.Add(this.LblGetForObject_Title, 0, 0);
             this.TlpGetForObject.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetForObject.Location = new System.Drawing.Point(3, 3);
             this.TlpGetForObject.Name = "TlpGetForObject";
             this.TlpGetForObject.RowCount = 5;
-            this.TlpGetForObject.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetForObject.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetForObject.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetForObject.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetForObject.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetForObject.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpGetForObject.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetForObject.Size = new System.Drawing.Size(878, 594);
             this.TlpGetForObject.TabIndex = 0;
             // 
@@ -615,7 +621,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblGetForObject_ObjectId.AutoSize = true;
             this.LblGetForObject_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetForObject_ObjectId.Location = new System.Drawing.Point(23, 23);
+            this.LblGetForObject_ObjectId.Location = new System.Drawing.Point(23, 25);
             this.LblGetForObject_ObjectId.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetForObject_ObjectId.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetForObject_ObjectId.Name = "LblGetForObject_ObjectId";
@@ -628,7 +634,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.TlpGetForObject.SetColumnSpan(this.TxtGetForObject_ObjectId, 2);
             this.TxtGetForObject_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetForObject_ObjectId.Location = new System.Drawing.Point(169, 23);
+            this.TxtGetForObject_ObjectId.Location = new System.Drawing.Point(169, 25);
             this.TxtGetForObject_ObjectId.Name = "TxtGetForObject_ObjectId";
             this.TxtGetForObject_ObjectId.Size = new System.Drawing.Size(686, 20);
             this.TxtGetForObject_ObjectId.TabIndex = 1;
@@ -637,7 +643,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblGetForObject_Filters.AutoSize = true;
             this.LblGetForObject_Filters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetForObject_Filters.Location = new System.Drawing.Point(23, 49);
+            this.LblGetForObject_Filters.Location = new System.Drawing.Point(23, 51);
             this.LblGetForObject_Filters.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetForObject_Filters.Name = "LblGetForObject_Filters";
             this.LblGetForObject_Filters.Size = new System.Drawing.Size(140, 49);
@@ -661,7 +667,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetForObject_Filters.Controls.Add(this.ChkGetForObject_ExcludeAcknowledged, 1, 1);
             this.TlpGetForObject_Filters.Controls.Add(this.ChkGetForObject_ExcludeDiscarded, 3, 1);
             this.TlpGetForObject_Filters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TlpGetForObject_Filters.Location = new System.Drawing.Point(169, 49);
+            this.TlpGetForObject_Filters.Location = new System.Drawing.Point(169, 51);
             this.TlpGetForObject_Filters.Name = "TlpGetForObject_Filters";
             this.TlpGetForObject_Filters.RowCount = 2;
             this.TlpGetForObject_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -735,7 +741,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.ChkGetForObject_NoFilters.AutoSize = true;
             this.ChkGetForObject_NoFilters.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ChkGetForObject_NoFilters.Location = new System.Drawing.Point(785, 49);
+            this.ChkGetForObject_NoFilters.Location = new System.Drawing.Point(785, 51);
             this.ChkGetForObject_NoFilters.Name = "ChkGetForObject_NoFilters";
             this.ChkGetForObject_NoFilters.Size = new System.Drawing.Size(70, 49);
             this.ChkGetForObject_NoFilters.TabIndex = 4;
@@ -746,7 +752,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.TlpGetForObject.SetColumnSpan(this.BtnGetForObject, 2);
             this.BtnGetForObject.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGetForObject.Location = new System.Drawing.Point(169, 104);
+            this.BtnGetForObject.Location = new System.Drawing.Point(169, 106);
             this.BtnGetForObject.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetForObject.Name = "BtnGetForObject";
             this.BtnGetForObject.Size = new System.Drawing.Size(686, 23);
@@ -760,9 +766,9 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetForObject.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.TlpGetForObject.SetColumnSpan(this.DgvGetForObject, 2);
             this.DgvGetForObject.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetForObject.Location = new System.Drawing.Point(169, 133);
+            this.DgvGetForObject.Location = new System.Drawing.Point(169, 135);
             this.DgvGetForObject.Name = "DgvGetForObject";
-            this.DgvGetForObject.Size = new System.Drawing.Size(686, 458);
+            this.DgvGetForObject.Size = new System.Drawing.Size(686, 456);
             this.DgvGetForObject.TabIndex = 6;
             // 
             // TpgGetAnnotations
@@ -787,15 +793,15 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetAnnotations.Controls.Add(this.TxtGetAnnotations_AlarmId, 2, 1);
             this.TlpGetAnnotations.Controls.Add(this.BtnGetAnnotations, 2, 2);
             this.TlpGetAnnotations.Controls.Add(this.TxtGetAnnotations_Result, 2, 3);
+            this.TlpGetAnnotations.Controls.Add(this.GetAnnotations_Title, 0, 0);
             this.TlpGetAnnotations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetAnnotations.Location = new System.Drawing.Point(3, 3);
             this.TlpGetAnnotations.Name = "TlpGetAnnotations";
             this.TlpGetAnnotations.RowCount = 4;
-            this.TlpGetAnnotations.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetAnnotations.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetAnnotations.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetAnnotations.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetAnnotations.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpGetAnnotations.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetAnnotations.Size = new System.Drawing.Size(878, 594);
             this.TlpGetAnnotations.TabIndex = 0;
             // 
@@ -803,7 +809,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblGetAnnotations_AlarmId.AutoSize = true;
             this.LblGetAnnotations_AlarmId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetAnnotations_AlarmId.Location = new System.Drawing.Point(23, 23);
+            this.LblGetAnnotations_AlarmId.Location = new System.Drawing.Point(23, 25);
             this.LblGetAnnotations_AlarmId.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetAnnotations_AlarmId.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGetAnnotations_AlarmId.Name = "LblGetAnnotations_AlarmId";
@@ -815,7 +821,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetAnnotations_AlarmId
             // 
             this.TxtGetAnnotations_AlarmId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetAnnotations_AlarmId.Location = new System.Drawing.Point(169, 23);
+            this.TxtGetAnnotations_AlarmId.Location = new System.Drawing.Point(169, 25);
             this.TxtGetAnnotations_AlarmId.Name = "TxtGetAnnotations_AlarmId";
             this.TxtGetAnnotations_AlarmId.Size = new System.Drawing.Size(686, 20);
             this.TxtGetAnnotations_AlarmId.TabIndex = 1;
@@ -823,7 +829,7 @@ namespace MetasysServices_TestClient.Forms
             // BtnGetAnnotations
             // 
             this.BtnGetAnnotations.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGetAnnotations.Location = new System.Drawing.Point(169, 49);
+            this.BtnGetAnnotations.Location = new System.Drawing.Point(169, 51);
             this.BtnGetAnnotations.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetAnnotations.Name = "BtnGetAnnotations";
             this.BtnGetAnnotations.Size = new System.Drawing.Size(686, 23);
@@ -835,22 +841,22 @@ namespace MetasysServices_TestClient.Forms
             // TxtGetAnnotations_Result
             // 
             this.TxtGetAnnotations_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtGetAnnotations_Result.Location = new System.Drawing.Point(169, 78);
+            this.TxtGetAnnotations_Result.Location = new System.Drawing.Point(169, 80);
             this.TxtGetAnnotations_Result.Multiline = true;
             this.TxtGetAnnotations_Result.Name = "TxtGetAnnotations_Result";
-            this.TxtGetAnnotations_Result.Size = new System.Drawing.Size(686, 513);
+            this.TxtGetAnnotations_Result.Size = new System.Drawing.Size(686, 511);
             this.TxtGetAnnotations_Result.TabIndex = 3;
             // 
-            // TpgEditAlarm
+            // TpgEdit
             // 
-            this.TpgEditAlarm.Controls.Add(this.TlpEditAlarm);
-            this.TpgEditAlarm.Location = new System.Drawing.Point(4, 29);
-            this.TpgEditAlarm.Name = "TpgEditAlarm";
-            this.TpgEditAlarm.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgEditAlarm.Size = new System.Drawing.Size(884, 600);
-            this.TpgEditAlarm.TabIndex = 0;
-            this.TpgEditAlarm.Text = "EditAlarm";
-            this.TpgEditAlarm.UseVisualStyleBackColor = true;
+            this.TpgEdit.Controls.Add(this.TlpEditAlarm);
+            this.TpgEdit.Location = new System.Drawing.Point(4, 29);
+            this.TpgEdit.Name = "TpgEdit";
+            this.TpgEdit.Padding = new System.Windows.Forms.Padding(3);
+            this.TpgEdit.Size = new System.Drawing.Size(884, 600);
+            this.TpgEdit.TabIndex = 0;
+            this.TpgEdit.Text = "Edit";
+            this.TpgEdit.UseVisualStyleBackColor = true;
             // 
             // TlpEditAlarm
             // 
@@ -868,18 +874,18 @@ namespace MetasysServices_TestClient.Forms
             this.TlpEditAlarm.Controls.Add(this.BtnEditAlarm, 2, 4);
             this.TlpEditAlarm.Controls.Add(this.TxtEditAlarm_Result, 2, 5);
             this.TlpEditAlarm.Controls.Add(this.LblEditAlarm_Result, 1, 5);
+            this.TlpEditAlarm.Controls.Add(this.LblEdit_Title, 0, 0);
             this.TlpEditAlarm.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpEditAlarm.Location = new System.Drawing.Point(3, 3);
             this.TlpEditAlarm.Name = "TlpEditAlarm";
             this.TlpEditAlarm.RowCount = 7;
-            this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpEditAlarm.Size = new System.Drawing.Size(878, 594);
             this.TlpEditAlarm.TabIndex = 0;
             // 
@@ -887,7 +893,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblEditAlarm_AlarmId.AutoSize = true;
             this.LblEditAlarm_AlarmId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEditAlarm_AlarmId.Location = new System.Drawing.Point(23, 23);
+            this.LblEditAlarm_AlarmId.Location = new System.Drawing.Point(23, 25);
             this.LblEditAlarm_AlarmId.Margin = new System.Windows.Forms.Padding(3);
             this.LblEditAlarm_AlarmId.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblEditAlarm_AlarmId.Name = "LblEditAlarm_AlarmId";
@@ -899,7 +905,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtEditAlarm_AlarmId
             // 
             this.TxtEditAlarm_AlarmId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtEditAlarm_AlarmId.Location = new System.Drawing.Point(169, 23);
+            this.TxtEditAlarm_AlarmId.Location = new System.Drawing.Point(169, 25);
             this.TxtEditAlarm_AlarmId.Name = "TxtEditAlarm_AlarmId";
             this.TxtEditAlarm_AlarmId.Size = new System.Drawing.Size(686, 20);
             this.TxtEditAlarm_AlarmId.TabIndex = 1;
@@ -908,7 +914,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblEditAlarm_Action.AutoSize = true;
             this.LblEditAlarm_Action.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEditAlarm_Action.Location = new System.Drawing.Point(23, 49);
+            this.LblEditAlarm_Action.Location = new System.Drawing.Point(23, 51);
             this.LblEditAlarm_Action.Margin = new System.Windows.Forms.Padding(3);
             this.LblEditAlarm_Action.Name = "LblEditAlarm_Action";
             this.LblEditAlarm_Action.Size = new System.Drawing.Size(140, 21);
@@ -921,7 +927,7 @@ namespace MetasysServices_TestClient.Forms
             this.CmbEditAlarm_Action.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CmbEditAlarm_Action.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CmbEditAlarm_Action.FormattingEnabled = true;
-            this.CmbEditAlarm_Action.Location = new System.Drawing.Point(169, 49);
+            this.CmbEditAlarm_Action.Location = new System.Drawing.Point(169, 51);
             this.CmbEditAlarm_Action.Name = "CmbEditAlarm_Action";
             this.CmbEditAlarm_Action.Size = new System.Drawing.Size(686, 21);
             this.CmbEditAlarm_Action.TabIndex = 3;
@@ -930,7 +936,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblEditAlarm_AnnotationText.AutoSize = true;
             this.LblEditAlarm_AnnotationText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEditAlarm_AnnotationText.Location = new System.Drawing.Point(23, 76);
+            this.LblEditAlarm_AnnotationText.Location = new System.Drawing.Point(23, 78);
             this.LblEditAlarm_AnnotationText.Margin = new System.Windows.Forms.Padding(3);
             this.LblEditAlarm_AnnotationText.Name = "LblEditAlarm_AnnotationText";
             this.LblEditAlarm_AnnotationText.Size = new System.Drawing.Size(140, 20);
@@ -941,7 +947,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtEditAlarm_AnnotationText
             // 
             this.TxtEditAlarm_AnnotationText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtEditAlarm_AnnotationText.Location = new System.Drawing.Point(169, 76);
+            this.TxtEditAlarm_AnnotationText.Location = new System.Drawing.Point(169, 78);
             this.TxtEditAlarm_AnnotationText.Name = "TxtEditAlarm_AnnotationText";
             this.TxtEditAlarm_AnnotationText.Size = new System.Drawing.Size(686, 20);
             this.TxtEditAlarm_AnnotationText.TabIndex = 5;
@@ -949,19 +955,19 @@ namespace MetasysServices_TestClient.Forms
             // BtnEditAlarm
             // 
             this.BtnEditAlarm.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnEditAlarm.Location = new System.Drawing.Point(169, 102);
+            this.BtnEditAlarm.Location = new System.Drawing.Point(169, 104);
             this.BtnEditAlarm.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnEditAlarm.Name = "BtnEditAlarm";
             this.BtnEditAlarm.Size = new System.Drawing.Size(686, 23);
             this.BtnEditAlarm.TabIndex = 6;
-            this.BtnEditAlarm.Text = "Alarms.EditAlarm";
+            this.BtnEditAlarm.Text = "Alarms.Edit";
             this.BtnEditAlarm.UseVisualStyleBackColor = true;
             this.BtnEditAlarm.Click += new System.EventHandler(this.BtnEditAlarm_Click);
             // 
             // TxtEditAlarm_Result
             // 
             this.TxtEditAlarm_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtEditAlarm_Result.Location = new System.Drawing.Point(169, 131);
+            this.TxtEditAlarm_Result.Location = new System.Drawing.Point(169, 133);
             this.TxtEditAlarm_Result.Name = "TxtEditAlarm_Result";
             this.TxtEditAlarm_Result.ReadOnly = true;
             this.TxtEditAlarm_Result.Size = new System.Drawing.Size(686, 20);
@@ -971,13 +977,102 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblEditAlarm_Result.AutoSize = true;
             this.LblEditAlarm_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEditAlarm_Result.Location = new System.Drawing.Point(23, 131);
+            this.LblEditAlarm_Result.Location = new System.Drawing.Point(23, 133);
             this.LblEditAlarm_Result.Margin = new System.Windows.Forms.Padding(3);
             this.LblEditAlarm_Result.Name = "LblEditAlarm_Result";
             this.LblEditAlarm_Result.Size = new System.Drawing.Size(140, 20);
             this.LblEditAlarm_Result.TabIndex = 8;
             this.LblEditAlarm_Result.Text = "Result:";
             this.LblEditAlarm_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LblFindById_Title
+            // 
+            this.LblFindById_Title.AutoSize = true;
+            this.TlpFindById.SetColumnSpan(this.LblFindById_Title, 4);
+            this.LblFindById_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblFindById_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblFindById_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblFindById_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblFindById_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblFindById_Title.Name = "LblFindById_Title";
+            this.LblFindById_Title.Size = new System.Drawing.Size(872, 16);
+            this.LblFindById_Title.TabIndex = 4;
+            this.LblFindById_Title.Text = "Retrieves the specified alarm.";
+            this.LblFindById_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LblEdit_Title
+            // 
+            this.LblEdit_Title.AutoSize = true;
+            this.TlpEditAlarm.SetColumnSpan(this.LblEdit_Title, 4);
+            this.LblEdit_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblEdit_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblEdit_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblEdit_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblEdit_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblEdit_Title.Name = "LblEdit_Title";
+            this.LblEdit_Title.Size = new System.Drawing.Size(872, 16);
+            this.LblEdit_Title.TabIndex = 9;
+            this.LblEdit_Title.Text = "Allows for acknowledging or discarding an alarm.";
+            this.LblEdit_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LblGet_Title
+            // 
+            this.LblGet_Title.AutoSize = true;
+            this.TlpGet.SetColumnSpan(this.LblGet_Title, 4);
+            this.LblGet_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGet_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGet_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblGet_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblGet_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGet_Title.Name = "LblGet_Title";
+            this.LblGet_Title.Size = new System.Drawing.Size(852, 16);
+            this.LblGet_Title.TabIndex = 5;
+            this.LblGet_Title.Text = "Retrieves a collection of alarms.";
+            this.LblGet_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LblGetForNetworkDevice_Title
+            // 
+            this.LblGetForNetworkDevice_Title.AutoSize = true;
+            this.TlpGetForNetworkDevice.SetColumnSpan(this.LblGetForNetworkDevice_Title, 4);
+            this.LblGetForNetworkDevice_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGetForNetworkDevice_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGetForNetworkDevice_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblGetForNetworkDevice_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblGetForNetworkDevice_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetForNetworkDevice_Title.Name = "LblGetForNetworkDevice_Title";
+            this.LblGetForNetworkDevice_Title.Size = new System.Drawing.Size(852, 16);
+            this.LblGetForNetworkDevice_Title.TabIndex = 7;
+            this.LblGetForNetworkDevice_Title.Text = "Retrieves a collection of alarms for the specified network device.";
+            // 
+            // LblGetForObject_Title
+            // 
+            this.LblGetForObject_Title.AutoSize = true;
+            this.TlpGetForObject.SetColumnSpan(this.LblGetForObject_Title, 4);
+            this.LblGetForObject_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGetForObject_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGetForObject_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblGetForObject_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblGetForObject_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetForObject_Title.Name = "LblGetForObject_Title";
+            this.LblGetForObject_Title.Size = new System.Drawing.Size(852, 16);
+            this.LblGetForObject_Title.TabIndex = 7;
+            this.LblGetForObject_Title.Text = "Retrieves a collection of alarms for the specified object.";
+            this.LblGetForObject_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // GetAnnotations_Title
+            // 
+            this.GetAnnotations_Title.AutoSize = true;
+            this.TlpGetAnnotations.SetColumnSpan(this.GetAnnotations_Title, 4);
+            this.GetAnnotations_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GetAnnotations_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GetAnnotations_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.GetAnnotations_Title.Location = new System.Drawing.Point(3, 3);
+            this.GetAnnotations_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.GetAnnotations_Title.Name = "GetAnnotations_Title";
+            this.GetAnnotations_Title.Size = new System.Drawing.Size(872, 16);
+            this.GetAnnotations_Title.TabIndex = 4;
+            this.GetAnnotations_Title.Text = "Retrieves the collection of annotations available for the specified alarm.";
+            this.GetAnnotations_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Alarms
             // 
@@ -1012,7 +1107,7 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetAnnotations.ResumeLayout(false);
             this.TlpGetAnnotations.ResumeLayout(false);
             this.TlpGetAnnotations.PerformLayout();
-            this.TpgEditAlarm.ResumeLayout(false);
+            this.TpgEdit.ResumeLayout(false);
             this.TlpEditAlarm.ResumeLayout(false);
             this.TlpEditAlarm.PerformLayout();
             this.ResumeLayout(false);
@@ -1022,7 +1117,7 @@ namespace MetasysServices_TestClient.Forms
         #endregion
 
         private System.Windows.Forms.TabControl TabMain;
-        private System.Windows.Forms.TabPage TpgEditAlarm;
+        private System.Windows.Forms.TabPage TpgEdit;
         private System.Windows.Forms.TabPage TpgFindById;
         private System.Windows.Forms.TableLayoutPanel TlpEditAlarm;
         private System.Windows.Forms.TabPage TpgGetForNetworkDevice;
@@ -1088,5 +1183,11 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.Button BtnEditAlarm;
         private System.Windows.Forms.TextBox TxtEditAlarm_Result;
         private System.Windows.Forms.Label LblEditAlarm_Result;
+        private System.Windows.Forms.Label LblFindById_Title;
+        private System.Windows.Forms.Label LblEdit_Title;
+        private System.Windows.Forms.Label LblGet_Title;
+        private System.Windows.Forms.Label LblGetForNetworkDevice_Title;
+        private System.Windows.Forms.Label LblGetForObject_Title;
+        private System.Windows.Forms.Label GetAnnotations_Title;
     }
 }

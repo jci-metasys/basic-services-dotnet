@@ -80,10 +80,13 @@ namespace MetasysServices_TestClient.Forms
             this.TxtReplace_Name = new System.Windows.Forms.TextBox();
             this.LblReplace_Values = new System.Windows.Forms.Label();
             this.DgvReplace_Values = new System.Windows.Forms.DataGridView();
+            this.DgvReplace_Values_Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BtnReplace = new System.Windows.Forms.Button();
             this.LblReplace_Result = new System.Windows.Forms.Label();
             this.TxtReplace_Result = new System.Windows.Forms.TextBox();
-            this.DgvReplace_Values_Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LblCreate_Title = new System.Windows.Forms.Label();
+            this.LblEdit_Title = new System.Windows.Forms.Label();
+            this.LblReplace_Title = new System.Windows.Forms.Label();
             this.TabMain.SuspendLayout();
             this.TpgGet.SuspendLayout();
             this.TlpGetSiteEnumerations.SuspendLayout();
@@ -374,12 +377,13 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblDelete_Title.AutoSize = true;
             this.TlpDelete.SetColumnSpan(this.LblDelete_Title, 4);
+            this.LblDelete_Title.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LblDelete_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LblDelete_Title.ForeColor = System.Drawing.Color.RoyalBlue;
             this.LblDelete_Title.Location = new System.Drawing.Point(3, 3);
             this.LblDelete_Title.Margin = new System.Windows.Forms.Padding(3);
             this.LblDelete_Title.Name = "LblDelete_Title";
-            this.LblDelete_Title.Size = new System.Drawing.Size(469, 16);
+            this.LblDelete_Title.Size = new System.Drawing.Size(907, 16);
             this.LblDelete_Title.TabIndex = 5;
             this.LblDelete_Title.Text = "Delete an enumeration. Only custom enumerations may be deleted.";
             this.LblDelete_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -409,11 +413,12 @@ namespace MetasysServices_TestClient.Forms
             this.TlpCreate.Controls.Add(this.BtnCreate, 2, 3);
             this.TlpCreate.Controls.Add(this.LblCreate_Result, 1, 4);
             this.TlpCreate.Controls.Add(this.TxtCreate_Result, 2, 4);
+            this.TlpCreate.Controls.Add(this.LblCreate_Title, 0, 0);
             this.TlpCreate.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpCreate.Location = new System.Drawing.Point(3, 3);
             this.TlpCreate.Name = "TlpCreate";
             this.TlpCreate.RowCount = 6;
-            this.TlpCreate.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpCreate.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpCreate.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpCreate.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.TlpCreate.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -426,7 +431,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblCreate_Name.AutoSize = true;
             this.LblCreate_Name.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblCreate_Name.Location = new System.Drawing.Point(23, 23);
+            this.LblCreate_Name.Location = new System.Drawing.Point(23, 25);
             this.LblCreate_Name.Margin = new System.Windows.Forms.Padding(3);
             this.LblCreate_Name.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblCreate_Name.Name = "LblCreate_Name";
@@ -438,7 +443,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtCreate_Name
             // 
             this.TxtCreate_Name.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtCreate_Name.Location = new System.Drawing.Point(169, 23);
+            this.TxtCreate_Name.Location = new System.Drawing.Point(169, 25);
             this.TxtCreate_Name.Name = "TxtCreate_Name";
             this.TxtCreate_Name.Size = new System.Drawing.Size(721, 20);
             this.TxtCreate_Name.TabIndex = 1;
@@ -447,7 +452,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblCreate_Values.AutoSize = true;
             this.LblCreate_Values.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblCreate_Values.Location = new System.Drawing.Point(23, 49);
+            this.LblCreate_Values.Location = new System.Drawing.Point(23, 51);
             this.LblCreate_Values.Margin = new System.Windows.Forms.Padding(3);
             this.LblCreate_Values.Name = "LblCreate_Values";
             this.LblCreate_Values.Size = new System.Drawing.Size(140, 94);
@@ -461,7 +466,7 @@ namespace MetasysServices_TestClient.Forms
             this.DgvCreate_Values.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.DgvCreate_Values_Value});
             this.DgvCreate_Values.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvCreate_Values.Location = new System.Drawing.Point(169, 49);
+            this.DgvCreate_Values.Location = new System.Drawing.Point(169, 51);
             this.DgvCreate_Values.Name = "DgvCreate_Values";
             this.DgvCreate_Values.Size = new System.Drawing.Size(721, 94);
             this.DgvCreate_Values.TabIndex = 3;
@@ -475,7 +480,7 @@ namespace MetasysServices_TestClient.Forms
             // BtnCreate
             // 
             this.BtnCreate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnCreate.Location = new System.Drawing.Point(169, 149);
+            this.BtnCreate.Location = new System.Drawing.Point(169, 151);
             this.BtnCreate.Name = "BtnCreate";
             this.BtnCreate.Size = new System.Drawing.Size(721, 23);
             this.BtnCreate.TabIndex = 4;
@@ -487,7 +492,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblCreate_Result.AutoSize = true;
             this.LblCreate_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblCreate_Result.Location = new System.Drawing.Point(23, 178);
+            this.LblCreate_Result.Location = new System.Drawing.Point(23, 180);
             this.LblCreate_Result.Margin = new System.Windows.Forms.Padding(3);
             this.LblCreate_Result.Name = "LblCreate_Result";
             this.LblCreate_Result.Size = new System.Drawing.Size(140, 20);
@@ -498,7 +503,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtCreate_Result
             // 
             this.TxtCreate_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtCreate_Result.Location = new System.Drawing.Point(169, 178);
+            this.TxtCreate_Result.Location = new System.Drawing.Point(169, 180);
             this.TxtCreate_Result.Name = "TxtCreate_Result";
             this.TxtCreate_Result.ReadOnly = true;
             this.TxtCreate_Result.Size = new System.Drawing.Size(721, 20);
@@ -531,11 +536,12 @@ namespace MetasysServices_TestClient.Forms
             this.TlpEdit.Controls.Add(this.BtnEdit, 2, 4);
             this.TlpEdit.Controls.Add(this.LblEdit_Result, 1, 5);
             this.TlpEdit.Controls.Add(this.TxtEdit_Result, 2, 5);
+            this.TlpEdit.Controls.Add(this.LblEdit_Title, 0, 0);
             this.TlpEdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpEdit.Location = new System.Drawing.Point(3, 3);
             this.TlpEdit.Name = "TlpEdit";
             this.TlpEdit.RowCount = 7;
-            this.TlpEdit.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpEdit.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpEdit.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpEdit.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpEdit.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
@@ -549,7 +555,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblEdit_Id.AutoSize = true;
             this.LblEdit_Id.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEdit_Id.Location = new System.Drawing.Point(23, 23);
+            this.LblEdit_Id.Location = new System.Drawing.Point(23, 25);
             this.LblEdit_Id.Margin = new System.Windows.Forms.Padding(3);
             this.LblEdit_Id.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblEdit_Id.Name = "LblEdit_Id";
@@ -562,7 +568,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblEdit_Name.AutoSize = true;
             this.LblEdit_Name.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEdit_Name.Location = new System.Drawing.Point(23, 49);
+            this.LblEdit_Name.Location = new System.Drawing.Point(23, 51);
             this.LblEdit_Name.Margin = new System.Windows.Forms.Padding(3);
             this.LblEdit_Name.Name = "LblEdit_Name";
             this.LblEdit_Name.Size = new System.Drawing.Size(140, 20);
@@ -573,7 +579,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtEdit_Id
             // 
             this.TxtEdit_Id.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtEdit_Id.Location = new System.Drawing.Point(169, 23);
+            this.TxtEdit_Id.Location = new System.Drawing.Point(169, 25);
             this.TxtEdit_Id.Name = "TxtEdit_Id";
             this.TxtEdit_Id.Size = new System.Drawing.Size(721, 20);
             this.TxtEdit_Id.TabIndex = 2;
@@ -581,7 +587,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtEdit_Name
             // 
             this.TxtEdit_Name.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtEdit_Name.Location = new System.Drawing.Point(169, 49);
+            this.TxtEdit_Name.Location = new System.Drawing.Point(169, 51);
             this.TxtEdit_Name.Name = "TxtEdit_Name";
             this.TxtEdit_Name.Size = new System.Drawing.Size(721, 20);
             this.TxtEdit_Name.TabIndex = 3;
@@ -590,7 +596,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblEdit_Values.AutoSize = true;
             this.LblEdit_Values.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEdit_Values.Location = new System.Drawing.Point(23, 75);
+            this.LblEdit_Values.Location = new System.Drawing.Point(23, 77);
             this.LblEdit_Values.Margin = new System.Windows.Forms.Padding(3);
             this.LblEdit_Values.Name = "LblEdit_Values";
             this.LblEdit_Values.Size = new System.Drawing.Size(140, 94);
@@ -604,7 +610,7 @@ namespace MetasysServices_TestClient.Forms
             this.DgvEdit_Values.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.DgvEdit_Values_Value});
             this.DgvEdit_Values.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvEdit_Values.Location = new System.Drawing.Point(169, 75);
+            this.DgvEdit_Values.Location = new System.Drawing.Point(169, 77);
             this.DgvEdit_Values.Name = "DgvEdit_Values";
             this.DgvEdit_Values.Size = new System.Drawing.Size(721, 94);
             this.DgvEdit_Values.TabIndex = 5;
@@ -618,7 +624,7 @@ namespace MetasysServices_TestClient.Forms
             // BtnEdit
             // 
             this.BtnEdit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnEdit.Location = new System.Drawing.Point(169, 175);
+            this.BtnEdit.Location = new System.Drawing.Point(169, 177);
             this.BtnEdit.Name = "BtnEdit";
             this.BtnEdit.Size = new System.Drawing.Size(721, 23);
             this.BtnEdit.TabIndex = 6;
@@ -630,7 +636,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblEdit_Result.AutoSize = true;
             this.LblEdit_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEdit_Result.Location = new System.Drawing.Point(23, 204);
+            this.LblEdit_Result.Location = new System.Drawing.Point(23, 206);
             this.LblEdit_Result.Margin = new System.Windows.Forms.Padding(3);
             this.LblEdit_Result.Name = "LblEdit_Result";
             this.LblEdit_Result.Size = new System.Drawing.Size(140, 20);
@@ -641,7 +647,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtEdit_Result
             // 
             this.TxtEdit_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtEdit_Result.Location = new System.Drawing.Point(169, 204);
+            this.TxtEdit_Result.Location = new System.Drawing.Point(169, 206);
             this.TxtEdit_Result.Name = "TxtEdit_Result";
             this.TxtEdit_Result.ReadOnly = true;
             this.TxtEdit_Result.Size = new System.Drawing.Size(721, 20);
@@ -674,11 +680,12 @@ namespace MetasysServices_TestClient.Forms
             this.TlpReplace.Controls.Add(this.BtnReplace, 2, 4);
             this.TlpReplace.Controls.Add(this.LblReplace_Result, 1, 5);
             this.TlpReplace.Controls.Add(this.TxtReplace_Result, 2, 5);
+            this.TlpReplace.Controls.Add(this.LblReplace_Title, 0, 0);
             this.TlpReplace.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpReplace.Location = new System.Drawing.Point(3, 3);
             this.TlpReplace.Name = "TlpReplace";
             this.TlpReplace.RowCount = 7;
-            this.TlpReplace.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpReplace.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpReplace.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpReplace.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpReplace.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
@@ -692,7 +699,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblReplace_Id.AutoSize = true;
             this.LblReplace_Id.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblReplace_Id.Location = new System.Drawing.Point(23, 23);
+            this.LblReplace_Id.Location = new System.Drawing.Point(23, 25);
             this.LblReplace_Id.Margin = new System.Windows.Forms.Padding(3);
             this.LblReplace_Id.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblReplace_Id.Name = "LblReplace_Id";
@@ -704,7 +711,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtReplace_Id
             // 
             this.TxtReplace_Id.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtReplace_Id.Location = new System.Drawing.Point(169, 23);
+            this.TxtReplace_Id.Location = new System.Drawing.Point(169, 25);
             this.TxtReplace_Id.Name = "TxtReplace_Id";
             this.TxtReplace_Id.Size = new System.Drawing.Size(721, 20);
             this.TxtReplace_Id.TabIndex = 1;
@@ -713,7 +720,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblReplace_Name.AutoSize = true;
             this.LblReplace_Name.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblReplace_Name.Location = new System.Drawing.Point(23, 49);
+            this.LblReplace_Name.Location = new System.Drawing.Point(23, 51);
             this.LblReplace_Name.Margin = new System.Windows.Forms.Padding(3);
             this.LblReplace_Name.Name = "LblReplace_Name";
             this.LblReplace_Name.Size = new System.Drawing.Size(140, 20);
@@ -724,7 +731,7 @@ namespace MetasysServices_TestClient.Forms
             // TxtReplace_Name
             // 
             this.TxtReplace_Name.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtReplace_Name.Location = new System.Drawing.Point(169, 49);
+            this.TxtReplace_Name.Location = new System.Drawing.Point(169, 51);
             this.TxtReplace_Name.Name = "TxtReplace_Name";
             this.TxtReplace_Name.Size = new System.Drawing.Size(721, 20);
             this.TxtReplace_Name.TabIndex = 3;
@@ -733,7 +740,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblReplace_Values.AutoSize = true;
             this.LblReplace_Values.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblReplace_Values.Location = new System.Drawing.Point(23, 75);
+            this.LblReplace_Values.Location = new System.Drawing.Point(23, 77);
             this.LblReplace_Values.Margin = new System.Windows.Forms.Padding(3);
             this.LblReplace_Values.Name = "LblReplace_Values";
             this.LblReplace_Values.Size = new System.Drawing.Size(140, 94);
@@ -747,15 +754,21 @@ namespace MetasysServices_TestClient.Forms
             this.DgvReplace_Values.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.DgvReplace_Values_Value});
             this.DgvReplace_Values.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvReplace_Values.Location = new System.Drawing.Point(169, 75);
+            this.DgvReplace_Values.Location = new System.Drawing.Point(169, 77);
             this.DgvReplace_Values.Name = "DgvReplace_Values";
             this.DgvReplace_Values.Size = new System.Drawing.Size(721, 94);
             this.DgvReplace_Values.TabIndex = 5;
             // 
+            // DgvReplace_Values_Value
+            // 
+            this.DgvReplace_Values_Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DgvReplace_Values_Value.HeaderText = "Value (string)";
+            this.DgvReplace_Values_Value.Name = "DgvReplace_Values_Value";
+            // 
             // BtnReplace
             // 
             this.BtnReplace.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnReplace.Location = new System.Drawing.Point(169, 175);
+            this.BtnReplace.Location = new System.Drawing.Point(169, 177);
             this.BtnReplace.Name = "BtnReplace";
             this.BtnReplace.Size = new System.Drawing.Size(721, 23);
             this.BtnReplace.TabIndex = 6;
@@ -767,7 +780,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.LblReplace_Result.AutoSize = true;
             this.LblReplace_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblReplace_Result.Location = new System.Drawing.Point(23, 204);
+            this.LblReplace_Result.Location = new System.Drawing.Point(23, 206);
             this.LblReplace_Result.Margin = new System.Windows.Forms.Padding(3);
             this.LblReplace_Result.Name = "LblReplace_Result";
             this.LblReplace_Result.Size = new System.Drawing.Size(140, 20);
@@ -778,17 +791,57 @@ namespace MetasysServices_TestClient.Forms
             // TxtReplace_Result
             // 
             this.TxtReplace_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtReplace_Result.Location = new System.Drawing.Point(169, 204);
+            this.TxtReplace_Result.Location = new System.Drawing.Point(169, 206);
             this.TxtReplace_Result.Name = "TxtReplace_Result";
             this.TxtReplace_Result.ReadOnly = true;
             this.TxtReplace_Result.Size = new System.Drawing.Size(721, 20);
             this.TxtReplace_Result.TabIndex = 8;
             // 
-            // DgvReplace_Values_Value
+            // LblCreate_Title
             // 
-            this.DgvReplace_Values_Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.DgvReplace_Values_Value.HeaderText = "Value (string)";
-            this.DgvReplace_Values_Value.Name = "DgvReplace_Values_Value";
+            this.LblCreate_Title.AutoSize = true;
+            this.TlpCreate.SetColumnSpan(this.LblCreate_Title, 4);
+            this.LblCreate_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblCreate_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblCreate_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblCreate_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblCreate_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblCreate_Title.Name = "LblCreate_Title";
+            this.LblCreate_Title.Size = new System.Drawing.Size(907, 16);
+            this.LblCreate_Title.TabIndex = 7;
+            this.LblCreate_Title.Text = "Create a custom enumeration with members of your choice.";
+            this.LblCreate_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LblEdit_Title
+            // 
+            this.LblEdit_Title.AutoSize = true;
+            this.TlpEdit.SetColumnSpan(this.LblEdit_Title, 4);
+            this.LblEdit_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblEdit_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblEdit_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblEdit_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblEdit_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblEdit_Title.Name = "LblEdit_Title";
+            this.LblEdit_Title.Size = new System.Drawing.Size(907, 16);
+            this.LblEdit_Title.TabIndex = 9;
+            this.LblEdit_Title.Text = "Can be used to modify the name of the enumeration and the values of any of the me" +
+    "mber strings.";
+            this.LblEdit_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LblReplace_Title
+            // 
+            this.LblReplace_Title.AutoSize = true;
+            this.TlpReplace.SetColumnSpan(this.LblReplace_Title, 4);
+            this.LblReplace_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblReplace_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblReplace_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblReplace_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblReplace_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblReplace_Title.Name = "LblReplace_Title";
+            this.LblReplace_Title.Size = new System.Drawing.Size(907, 16);
+            this.LblReplace_Title.TabIndex = 9;
+            this.LblReplace_Title.Text = "Replace an enumeration with a new definition.";
+            this.LblReplace_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Enumerations
             // 
@@ -883,5 +936,8 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.Label LblReplace_Result;
         private System.Windows.Forms.TextBox TxtReplace_Result;
         private System.Windows.Forms.DataGridViewTextBoxColumn DgvReplace_Values_Value;
+        private System.Windows.Forms.Label LblCreate_Title;
+        private System.Windows.Forms.Label LblEdit_Title;
+        private System.Windows.Forms.Label LblReplace_Title;
     }
 }

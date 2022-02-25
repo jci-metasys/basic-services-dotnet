@@ -77,7 +77,6 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-
         public StreamServiceProvider(IFlurlClient client, string serverUrl, ApiVersion version, bool logClientErrors = true) : base(client, version, logClientErrors)
         {
             _client = client;
@@ -147,7 +146,7 @@ namespace JohnsonControls.Metasys.BasicServices
             subscription.Params = new Dictionary<string, string> { {"ActivityType", activityType } };
             subscription.Body = null;
 
-            _subscriptionRequest.Clear();
+            //_subscriptionRequest.Clear();
             _subscriptionRequest.Add(subscription);
         }
 
@@ -357,7 +356,6 @@ namespace JohnsonControls.Metasys.BasicServices
 
                 case "object.values.update":
                     _ = HandleAttibuteValueSubscriptionAsync(e);
-                    //_ = HandleAttibuteValueSubscription2Async(e);
                     break;
 
                 case "activity.audit.new":
@@ -545,15 +543,23 @@ namespace JohnsonControls.Metasys.BasicServices
 
         private void SubscribeAllRequest()
         {
-            _subscriptionRequest.ForEach(async request =>
+            try
             {
-                var requestId = Guid.NewGuid();
-                _ = await SubscribeAsync(requestId, request.Method, request.RelativeUrl, request.Params, request.Body);
-                _requestIds.Add(requestId);
-            });
+                _subscriptionRequest.ForEach(async request =>
+                {
+                    var requestId = Guid.NewGuid();
+                    _ = await SubscribeAsync(requestId, request.Method, request.RelativeUrl, request.Params, request.Body);
+                
+                    _requestIds.Add(requestId);
+                });
 
-            Thread.Sleep(3000);// wait for subcriptions to complete
-            //_initializeStreamTaskSource.TrySetResult(true);
+                Thread.Sleep(3000);// wait for subcriptions to complete
+                //_initializeStreamTaskSource.TrySetResult(true);
+
+            }catch(Exception ex)
+            {
+                var e = ex.Message;
+            }
         }
 
         private async Task UnsubscribeInternalAsync(SubscriptionInfo subscriptionInfo)
@@ -656,7 +662,15 @@ namespace JohnsonControls.Metasys.BasicServices
             COVValues.Clear();
             KeepCOVReading = true;
             LoadCOVSubscriptions(ids);
-            await ConnectAsync();
+            if (_source == null)
+            {
+                await ConnectAsync();
+            }
+            else
+            {
+                SubscribeAllRequest();
+            }
+
             UpdateCOVValues();
         }
 
@@ -721,7 +735,14 @@ namespace JohnsonControls.Metasys.BasicServices
             AlarmEvents.Clear();
             KeepAlarmCollecting = true;
             LoadActivitySubscriptions("Alarm");
-            await ConnectAsync();
+            if (_source == null)
+            {
+                await ConnectAsync();
+            }
+            else
+            {
+                SubscribeAllRequest();
+            }
             while (KeepAlarmCollecting)
             {
                 StreamMessage streamMsg = await ResultChannel.ReadAsync(); ;
@@ -774,7 +795,14 @@ namespace JohnsonControls.Metasys.BasicServices
             AuditEvents.Clear();
             KeepAuditCollecting = true;
             LoadActivitySubscriptions("Audit");
-            await ConnectAsync();
+            if (_source == null)
+            {
+                await ConnectAsync();
+            }
+            else
+            {
+                SubscribeAllRequest();
+            }
             while (KeepAuditCollecting)
             {
                 StreamMessage streamMsg = await ResultChannel.ReadAsync(); ;

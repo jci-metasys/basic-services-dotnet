@@ -67,7 +67,7 @@ namespace MetasysServices_TestClient.Forms
 
             var requestId = _client.Streams.GetRequestIds().FirstOrDefault();
             TxtCOVValues_RequestID.Text = requestId.ToString();
-            dataGridView1.DataSource = _covValues.ToList();
+            DgvCOVValues.DataSource = _covValues.ToList();
         }
 
         private void Alarm_Occurred(object sender, EventArgs e)
@@ -97,7 +97,7 @@ namespace MetasysServices_TestClient.Forms
         private void BtnCOVValue_StartReadingValue_Click(object sender, EventArgs e)
         {
             var id = new Guid(TxtCOVValue_ObjectID.Text);
-            _ = _client.Streams.StartReadingCOVValueAsync(id);
+            _client.Streams.StartReadingCOVValueAsync(id);
             TmrRefreshCOVValue.Enabled = true;
         }
 
@@ -134,13 +134,21 @@ namespace MetasysServices_TestClient.Forms
 
         private void BtnCOVValues_StartReadingCOVValues_Click(object sender, EventArgs e)
         {
+            // Prepare the list of Ids
             var ids = new List<Guid>();
-            var id1 = new Guid(TxtCOVValues_ObjectID1.Text);
-            ids.Add(id1);
-            var id2 = new Guid(TxtCOVValues_ObjectID2.Text);
-            ids.Add(id2);
-
-            _ = _client.Streams.StartReadingCOVValuesAsync(ids);
+            foreach (DataGridViewRow dr in DgvCOVValues_Params.Rows)
+            {
+                var id = dr.Cells[DgvCOVValues_Params_Id.Name].Value;
+                if (id != null && id.ToString().Length > 0)
+                {
+                    Guid guid = new Guid(id.ToString());
+                    ids.Add(guid);
+                }
+            }
+            if (ids.Count > 0 )
+            {
+                _client.Streams.StartReadingCOVValuesAsync(ids);
+            }
         }
 
         private void TmrRefreshCOVValues_Tick(object sender, EventArgs e)
@@ -148,18 +156,24 @@ namespace MetasysServices_TestClient.Forms
             var requestId = _client.Streams.GetRequestIds().FirstOrDefault();
             TxtCOVValues_RequestID.Text = requestId.ToString();
 
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = _covValues;
+            DgvCOVValues.DataSource = null;
+            DgvCOVValues.DataSource = _covValues;
         }
 
         private void BtnCOVValues_StopReadingCOVValues_Click(object sender, EventArgs e)
         {
-
+            String requestId = TxtCOVValues_RequestID.Text;
+            if (requestId.Length > 0)
+            {
+                Guid id = new Guid(requestId);
+                _client.Streams.StopReadingCOVValues(id);
+            }
         }
 
         private void BtnAlarmEvent_StartCollectingAlarms_Click(object sender, EventArgs e)
         {
-            _ = _client.Streams.StartCollectingAlarmsAsync(3);
+            int maxNumber = int.Parse(TxtAlarmEvents_MaxNumber.Text);
+            _ = _client.Streams.StartCollectingAlarmsAsync(maxNumber);
         }
 
         private void TmrRefreshAlarmEvents_Tick(object sender, EventArgs e)
@@ -168,12 +182,33 @@ namespace MetasysServices_TestClient.Forms
 
         private void BtnAuditEvent_StartCollectingAudits_Click(object sender, EventArgs e)
         {
-            _ = _client.Streams.StartCollectingAuditsAsync(3);
+            int maxNumber = int.Parse(TxtAuditEvents_MaxNumber.Text);
+            _ = _client.Streams.StartCollectingAuditsAsync(maxNumber);
         }
         private static string FormatJson(string json)
         {
             dynamic parsedJson = JsonConvert.DeserializeObject(json);
             return JsonConvert.SerializeObject(parsedJson, Formatting.Indented);
+        }
+
+        private void BtnAlarmEvent_StopCollectingAlarms_Click(object sender, EventArgs e)
+        {
+            String requestId = TxtAlarmEvents_RequestID.Text;
+            if (requestId.Length > 0)
+            {
+                Guid id = new Guid(requestId);
+                _client.Streams.StopCollectingAlarms(id);
+            }
+        }
+
+        private void BtnAuditEvent_StopCollectingAudits_Click(object sender, EventArgs e)
+        {
+            String requestId = TxtAuditEvents_RequestID.Text;
+            if (requestId.Length > 0)
+            {
+                Guid id = new Guid(requestId);
+                _client.Streams.StopCollectingAudits(id);
+            }
         }
     }
 }
