@@ -305,6 +305,25 @@ namespace JohnsonControls.Metasys.BasicServices
             await UnsubscribeInternalAsync(subscriptionInfo);
         }
 
+        /// <inheritdoc/>
+        public async Task KeepAlive(AccessToken accessToken)
+        {
+            if (accessToken != null)
+            {
+                // set the local variable with the token value
+                _token = accessToken.Token.Replace("Bearer ", "");
+            }
+
+            HttpResponseMessage response = await _serverUrl
+                        .AppendPathSegments("api", Version, "stream", "keepalive")
+                        .WithOAuthBearerToken(_token)
+                        .SendAsync(HttpMethod.Get);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+
+
         #region private methods
 
         private void KeepStreamAlive(AccessTokenResponse tokenResponse)
@@ -368,8 +387,9 @@ namespace JohnsonControls.Metasys.BasicServices
                     break;
                 
                 case "object.values.heartbeat":
-                   // _logger.LogDebug($"Heartbeat \"{e.Event}\" received with timestamp {e.Message}.");
+                    // _logger.LogDebug($"Heartbeat \"{e.Event}\" received with timestamp {e.Message}.");
                     // todo: act if heartbeat stops
+                    OnHeartBeatOccurred(e);
                     break;
                 
                 default:
@@ -835,7 +855,16 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             AuditOccurred?.Invoke(this, e);
         }
-#endregion
+
+        /// <inheritdoc />
+        public event EventHandler<EventSourceMessageEventArgs> HeartBeatOccurred;
+        /// <inheritdoc />
+        void OnHeartBeatOccurred(EventSourceMessageEventArgs e)
+        {
+            HeartBeatOccurred?.Invoke(this, e);
+        }
+
+        #endregion
 
     }
 }

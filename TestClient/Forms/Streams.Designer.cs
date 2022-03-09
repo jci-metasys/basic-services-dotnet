@@ -43,43 +43,49 @@ namespace MetasysServices_TestClient.Forms
             this.BtnCOVValue_StopReadingCOVValue = new System.Windows.Forms.Button();
             this.BtnCOVValue_StartReadingValue = new System.Windows.Forms.Button();
             this.TpgCOVValues = new System.Windows.Forms.TabPage();
+            this.TlpCOVvalues = new System.Windows.Forms.TableLayoutPanel();
+            this.LblCOVValues_Params = new System.Windows.Forms.Label();
             this.DgvCOVValues = new System.Windows.Forms.DataGridView();
-            this.TxtCOVValues_RequestID = new System.Windows.Forms.TextBox();
             this.LblCOVValues_RequestID = new System.Windows.Forms.Label();
-            this.BtnCOVValues_StopReadingCOVValues = new System.Windows.Forms.Button();
+            this.TxtCOVValues_RequestID = new System.Windows.Forms.TextBox();
+            this.DgvCOVValues_Params = new System.Windows.Forms.DataGridView();
+            this.DgvCOVValues_Params_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BtnCOVValues_StartReadingCOVValues = new System.Windows.Forms.Button();
+            this.BtnCOVValues_StopReadingCOVValues = new System.Windows.Forms.Button();
+            this.LblCOVValues_Heartbeat = new System.Windows.Forms.Label();
+            this.TxtCOVValues_Heartbeat = new System.Windows.Forms.TextBox();
             this.TpgAlarmEvents = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.TxtAlarmEvents_MaxNumber = new System.Windows.Forms.TextBox();
+            this.BtnAlarmEvent_StopCollectingAlarms = new System.Windows.Forms.Button();
             this.DgvAlarmEvents = new System.Windows.Forms.DataGridView();
             this.TxtAlarmEvents_RequestID = new System.Windows.Forms.TextBox();
             this.LblAlarmEvents_RequestID = new System.Windows.Forms.Label();
             this.BtnAlarmEvent_StartCollectingAlarms = new System.Windows.Forms.Button();
             this.TpgAuditEvents = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.TxtAuditEvents_MaxNumber = new System.Windows.Forms.TextBox();
+            this.BtnAuditEvent_StopCollectingAudits = new System.Windows.Forms.Button();
             this.BtnAuditEvent_StartCollectingAudits = new System.Windows.Forms.Button();
             this.DgvAuditEvents = new System.Windows.Forms.DataGridView();
             this.TxtAuditEvents_RequestID = new System.Windows.Forms.TextBox();
             this.LblAuditEvents_RequestID = new System.Windows.Forms.Label();
             this.TmrRefreshCOVValue = new System.Windows.Forms.Timer(this.components);
-            this.TlpCOVvalues = new System.Windows.Forms.TableLayoutPanel();
-            this.LblCOVValues_Params = new System.Windows.Forms.Label();
-            this.DgvCOVValues_Params = new System.Windows.Forms.DataGridView();
-            this.DgvCOVValues_Params_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BtnAlarmEvent_StopCollectingAlarms = new System.Windows.Forms.Button();
-            this.TxtAlarmEvents_MaxNumber = new System.Windows.Forms.TextBox();
-            this.BtnAuditEvent_StopCollectingAudits = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.TxtAuditEvents_MaxNumber = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.BtnCOVValues_KeepAlive = new System.Windows.Forms.Button();
+            this.LblCOVValues_StartTime = new System.Windows.Forms.Label();
+            this.TxtCOVValues_StartTime = new System.Windows.Forms.TextBox();
+            this.TmrStreamCheck = new System.Windows.Forms.Timer(this.components);
             this.TabMain.SuspendLayout();
             this.TpgCOVValue.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValue)).BeginInit();
             this.TpgCOVValues.SuspendLayout();
+            this.TlpCOVvalues.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValues)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValues_Params)).BeginInit();
             this.TpgAlarmEvents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvAlarmEvents)).BeginInit();
             this.TpgAuditEvents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvAuditEvents)).BeginInit();
-            this.TlpCOVvalues.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValues_Params)).BeginInit();
             this.SuspendLayout();
             // 
             // TabMain
@@ -218,27 +224,64 @@ namespace MetasysServices_TestClient.Forms
             this.TpgCOVValues.Text = "Get COV Values (multiple)";
             this.TpgCOVValues.UseVisualStyleBackColor = true;
             // 
+            // TlpCOVvalues
+            // 
+            this.TlpCOVvalues.ColumnCount = 6;
+            this.TlpCOVvalues.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpCOVvalues.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.TlpCOVvalues.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.TlpCOVvalues.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.TlpCOVvalues.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.TlpCOVvalues.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpCOVvalues.Controls.Add(this.LblCOVValues_Params, 1, 1);
+            this.TlpCOVvalues.Controls.Add(this.DgvCOVValues, 2, 5);
+            this.TlpCOVvalues.Controls.Add(this.LblCOVValues_RequestID, 1, 3);
+            this.TlpCOVvalues.Controls.Add(this.TxtCOVValues_RequestID, 2, 3);
+            this.TlpCOVvalues.Controls.Add(this.DgvCOVValues_Params, 2, 1);
+            this.TlpCOVvalues.Controls.Add(this.BtnCOVValues_StartReadingCOVValues, 2, 2);
+            this.TlpCOVvalues.Controls.Add(this.BtnCOVValues_StopReadingCOVValues, 4, 2);
+            this.TlpCOVvalues.Controls.Add(this.LblCOVValues_Heartbeat, 1, 4);
+            this.TlpCOVvalues.Controls.Add(this.TxtCOVValues_Heartbeat, 2, 4);
+            this.TlpCOVvalues.Controls.Add(this.BtnCOVValues_KeepAlive, 3, 2);
+            this.TlpCOVvalues.Controls.Add(this.LblCOVValues_StartTime, 3, 4);
+            this.TlpCOVvalues.Controls.Add(this.TxtCOVValues_StartTime, 4, 4);
+            this.TlpCOVvalues.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TlpCOVvalues.Location = new System.Drawing.Point(3, 3);
+            this.TlpCOVvalues.Name = "TlpCOVvalues";
+            this.TlpCOVvalues.RowCount = 6;
+            this.TlpCOVvalues.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpCOVvalues.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.TlpCOVvalues.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpCOVvalues.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpCOVvalues.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpCOVvalues.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpCOVvalues.Size = new System.Drawing.Size(1054, 502);
+            this.TlpCOVvalues.TabIndex = 30;
+            // 
+            // LblCOVValues_Params
+            // 
+            this.LblCOVValues_Params.AutoSize = true;
+            this.LblCOVValues_Params.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblCOVValues_Params.Location = new System.Drawing.Point(23, 23);
+            this.LblCOVValues_Params.Margin = new System.Windows.Forms.Padding(3);
+            this.LblCOVValues_Params.MinimumSize = new System.Drawing.Size(140, 0);
+            this.LblCOVValues_Params.Name = "LblCOVValues_Params";
+            this.LblCOVValues_Params.Size = new System.Drawing.Size(140, 94);
+            this.LblCOVValues_Params.TabIndex = 0;
+            this.LblCOVValues_Params.Text = "Parameters:";
+            this.LblCOVValues_Params.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // DgvCOVValues
             // 
             this.DgvCOVValues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DgvCOVValues.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.TlpCOVvalues.SetColumnSpan(this.DgvCOVValues, 2);
-            this.DgvCOVValues.Location = new System.Drawing.Point(169, 178);
+            this.TlpCOVvalues.SetColumnSpan(this.DgvCOVValues, 3);
+            this.DgvCOVValues.Location = new System.Drawing.Point(169, 204);
             this.DgvCOVValues.Name = "DgvCOVValues";
-            this.DgvCOVValues.Size = new System.Drawing.Size(862, 321);
+            this.DgvCOVValues.Size = new System.Drawing.Size(861, 295);
             this.DgvCOVValues.TabIndex = 29;
-            // 
-            // TxtCOVValues_RequestID
-            // 
-            this.TlpCOVvalues.SetColumnSpan(this.TxtCOVValues_RequestID, 2);
-            this.TxtCOVValues_RequestID.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtCOVValues_RequestID.Location = new System.Drawing.Point(169, 152);
-            this.TxtCOVValues_RequestID.Name = "TxtCOVValues_RequestID";
-            this.TxtCOVValues_RequestID.ReadOnly = true;
-            this.TxtCOVValues_RequestID.Size = new System.Drawing.Size(862, 20);
-            this.TxtCOVValues_RequestID.TabIndex = 26;
             // 
             // LblCOVValues_RequestID
             // 
@@ -252,27 +295,76 @@ namespace MetasysServices_TestClient.Forms
             this.LblCOVValues_RequestID.Text = "Request ID:";
             this.LblCOVValues_RequestID.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // BtnCOVValues_StopReadingCOVValues
+            // TxtCOVValues_RequestID
             // 
-            this.BtnCOVValues_StopReadingCOVValues.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnCOVValues_StopReadingCOVValues.Location = new System.Drawing.Point(603, 123);
-            this.BtnCOVValues_StopReadingCOVValues.Name = "BtnCOVValues_StopReadingCOVValues";
-            this.BtnCOVValues_StopReadingCOVValues.Size = new System.Drawing.Size(428, 23);
-            this.BtnCOVValues_StopReadingCOVValues.TabIndex = 22;
-            this.BtnCOVValues_StopReadingCOVValues.Text = "StopReadingCOVValues";
-            this.BtnCOVValues_StopReadingCOVValues.UseVisualStyleBackColor = true;
-            this.BtnCOVValues_StopReadingCOVValues.Click += new System.EventHandler(this.BtnCOVValues_StopReadingCOVValues_Click);
+            this.TlpCOVvalues.SetColumnSpan(this.TxtCOVValues_RequestID, 3);
+            this.TxtCOVValues_RequestID.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtCOVValues_RequestID.Location = new System.Drawing.Point(169, 152);
+            this.TxtCOVValues_RequestID.Name = "TxtCOVValues_RequestID";
+            this.TxtCOVValues_RequestID.ReadOnly = true;
+            this.TxtCOVValues_RequestID.Size = new System.Drawing.Size(861, 20);
+            this.TxtCOVValues_RequestID.TabIndex = 26;
+            // 
+            // DgvCOVValues_Params
+            // 
+            this.DgvCOVValues_Params.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvCOVValues_Params.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DgvCOVValues_Params_Id});
+            this.TlpCOVvalues.SetColumnSpan(this.DgvCOVValues_Params, 3);
+            this.DgvCOVValues_Params.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvCOVValues_Params.Location = new System.Drawing.Point(169, 23);
+            this.DgvCOVValues_Params.Name = "DgvCOVValues_Params";
+            this.DgvCOVValues_Params.Size = new System.Drawing.Size(861, 94);
+            this.DgvCOVValues_Params.TabIndex = 1;
+            // 
+            // DgvCOVValues_Params_Id
+            // 
+            this.DgvCOVValues_Params_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DgvCOVValues_Params_Id.HeaderText = "Object ID (GUID)";
+            this.DgvCOVValues_Params_Id.Name = "DgvCOVValues_Params_Id";
             // 
             // BtnCOVValues_StartReadingCOVValues
             // 
             this.BtnCOVValues_StartReadingCOVValues.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BtnCOVValues_StartReadingCOVValues.Location = new System.Drawing.Point(169, 123);
             this.BtnCOVValues_StartReadingCOVValues.Name = "BtnCOVValues_StartReadingCOVValues";
-            this.BtnCOVValues_StartReadingCOVValues.Size = new System.Drawing.Size(428, 23);
+            this.BtnCOVValues_StartReadingCOVValues.Size = new System.Drawing.Size(283, 23);
             this.BtnCOVValues_StartReadingCOVValues.TabIndex = 21;
             this.BtnCOVValues_StartReadingCOVValues.Text = "StartReadingCOVValues";
             this.BtnCOVValues_StartReadingCOVValues.UseVisualStyleBackColor = true;
             this.BtnCOVValues_StartReadingCOVValues.Click += new System.EventHandler(this.BtnCOVValues_StartReadingCOVValues_Click);
+            // 
+            // BtnCOVValues_StopReadingCOVValues
+            // 
+            this.BtnCOVValues_StopReadingCOVValues.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnCOVValues_StopReadingCOVValues.Location = new System.Drawing.Point(747, 123);
+            this.BtnCOVValues_StopReadingCOVValues.Name = "BtnCOVValues_StopReadingCOVValues";
+            this.BtnCOVValues_StopReadingCOVValues.Size = new System.Drawing.Size(283, 23);
+            this.BtnCOVValues_StopReadingCOVValues.TabIndex = 22;
+            this.BtnCOVValues_StopReadingCOVValues.Text = "StopReadingCOVValues";
+            this.BtnCOVValues_StopReadingCOVValues.UseVisualStyleBackColor = true;
+            this.BtnCOVValues_StopReadingCOVValues.Click += new System.EventHandler(this.BtnCOVValues_StopReadingCOVValues_Click);
+            // 
+            // LblCOVValues_Heartbeat
+            // 
+            this.LblCOVValues_Heartbeat.AutoSize = true;
+            this.LblCOVValues_Heartbeat.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblCOVValues_Heartbeat.Location = new System.Drawing.Point(23, 178);
+            this.LblCOVValues_Heartbeat.Margin = new System.Windows.Forms.Padding(3);
+            this.LblCOVValues_Heartbeat.Name = "LblCOVValues_Heartbeat";
+            this.LblCOVValues_Heartbeat.Size = new System.Drawing.Size(140, 20);
+            this.LblCOVValues_Heartbeat.TabIndex = 30;
+            this.LblCOVValues_Heartbeat.Text = "HeartBeat:";
+            this.LblCOVValues_Heartbeat.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtCOVValues_Heartbeat
+            // 
+            this.TxtCOVValues_Heartbeat.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtCOVValues_Heartbeat.Location = new System.Drawing.Point(169, 178);
+            this.TxtCOVValues_Heartbeat.Name = "TxtCOVValues_Heartbeat";
+            this.TxtCOVValues_Heartbeat.ReadOnly = true;
+            this.TxtCOVValues_Heartbeat.Size = new System.Drawing.Size(283, 20);
+            this.TxtCOVValues_Heartbeat.TabIndex = 31;
             // 
             // TpgAlarmEvents
             // 
@@ -289,6 +381,33 @@ namespace MetasysServices_TestClient.Forms
             this.TpgAlarmEvents.TabIndex = 2;
             this.TpgAlarmEvents.Text = "Alarm Events";
             this.TpgAlarmEvents.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(73, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(116, 13);
+            this.label1.TabIndex = 29;
+            this.label1.Text = "Max Number of Alarms:";
+            // 
+            // TxtAlarmEvents_MaxNumber
+            // 
+            this.TxtAlarmEvents_MaxNumber.Location = new System.Drawing.Point(195, 19);
+            this.TxtAlarmEvents_MaxNumber.Name = "TxtAlarmEvents_MaxNumber";
+            this.TxtAlarmEvents_MaxNumber.Size = new System.Drawing.Size(845, 20);
+            this.TxtAlarmEvents_MaxNumber.TabIndex = 28;
+            this.TxtAlarmEvents_MaxNumber.Text = "10";
+            // 
+            // BtnAlarmEvent_StopCollectingAlarms
+            // 
+            this.BtnAlarmEvent_StopCollectingAlarms.Location = new System.Drawing.Point(606, 45);
+            this.BtnAlarmEvent_StopCollectingAlarms.Name = "BtnAlarmEvent_StopCollectingAlarms";
+            this.BtnAlarmEvent_StopCollectingAlarms.Size = new System.Drawing.Size(434, 23);
+            this.BtnAlarmEvent_StopCollectingAlarms.TabIndex = 27;
+            this.BtnAlarmEvent_StopCollectingAlarms.Text = "StopCollectingAlarms";
+            this.BtnAlarmEvent_StopCollectingAlarms.UseVisualStyleBackColor = true;
+            this.BtnAlarmEvent_StopCollectingAlarms.Click += new System.EventHandler(this.BtnAlarmEvent_StopCollectingAlarms_Click);
             // 
             // DgvAlarmEvents
             // 
@@ -341,6 +460,33 @@ namespace MetasysServices_TestClient.Forms
             this.TpgAuditEvents.Text = "Audit Events";
             this.TpgAuditEvents.UseVisualStyleBackColor = true;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(75, 27);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(114, 13);
+            this.label2.TabIndex = 31;
+            this.label2.Text = "Max Number of Audits:";
+            // 
+            // TxtAuditEvents_MaxNumber
+            // 
+            this.TxtAuditEvents_MaxNumber.Location = new System.Drawing.Point(197, 24);
+            this.TxtAuditEvents_MaxNumber.Name = "TxtAuditEvents_MaxNumber";
+            this.TxtAuditEvents_MaxNumber.Size = new System.Drawing.Size(849, 20);
+            this.TxtAuditEvents_MaxNumber.TabIndex = 30;
+            this.TxtAuditEvents_MaxNumber.Text = "20";
+            // 
+            // BtnAuditEvent_StopCollectingAudits
+            // 
+            this.BtnAuditEvent_StopCollectingAudits.Location = new System.Drawing.Point(641, 50);
+            this.BtnAuditEvent_StopCollectingAudits.Name = "BtnAuditEvent_StopCollectingAudits";
+            this.BtnAuditEvent_StopCollectingAudits.Size = new System.Drawing.Size(405, 22);
+            this.BtnAuditEvent_StopCollectingAudits.TabIndex = 29;
+            this.BtnAuditEvent_StopCollectingAudits.Text = "StopCollectingAudits";
+            this.BtnAuditEvent_StopCollectingAudits.UseVisualStyleBackColor = true;
+            this.BtnAuditEvent_StopCollectingAudits.Click += new System.EventHandler(this.BtnAuditEvent_StopCollectingAudits_Click);
+            // 
             // BtnAuditEvent_StartCollectingAudits
             // 
             this.BtnAuditEvent_StartCollectingAudits.Location = new System.Drawing.Point(197, 50);
@@ -381,117 +527,42 @@ namespace MetasysServices_TestClient.Forms
             this.TmrRefreshCOVValue.Interval = 1000;
             this.TmrRefreshCOVValue.Tick += new System.EventHandler(this.TmrRefreshCOVValue_Tick);
             // 
-            // TlpCOVvalues
+            // BtnCOVValues_KeepAlive
             // 
-            this.TlpCOVvalues.ColumnCount = 5;
-            this.TlpCOVvalues.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpCOVvalues.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.TlpCOVvalues.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TlpCOVvalues.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TlpCOVvalues.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpCOVvalues.Controls.Add(this.LblCOVValues_Params, 1, 1);
-            this.TlpCOVvalues.Controls.Add(this.DgvCOVValues, 2, 4);
-            this.TlpCOVvalues.Controls.Add(this.LblCOVValues_RequestID, 1, 3);
-            this.TlpCOVvalues.Controls.Add(this.TxtCOVValues_RequestID, 2, 3);
-            this.TlpCOVvalues.Controls.Add(this.DgvCOVValues_Params, 2, 1);
-            this.TlpCOVvalues.Controls.Add(this.BtnCOVValues_StartReadingCOVValues, 2, 2);
-            this.TlpCOVvalues.Controls.Add(this.BtnCOVValues_StopReadingCOVValues, 3, 2);
-            this.TlpCOVvalues.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TlpCOVvalues.Location = new System.Drawing.Point(3, 3);
-            this.TlpCOVvalues.Name = "TlpCOVvalues";
-            this.TlpCOVvalues.RowCount = 5;
-            this.TlpCOVvalues.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpCOVvalues.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.TlpCOVvalues.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TlpCOVvalues.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TlpCOVvalues.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpCOVvalues.Size = new System.Drawing.Size(1054, 502);
-            this.TlpCOVvalues.TabIndex = 30;
+            this.BtnCOVValues_KeepAlive.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnCOVValues_KeepAlive.Location = new System.Drawing.Point(458, 123);
+            this.BtnCOVValues_KeepAlive.Name = "BtnCOVValues_KeepAlive";
+            this.BtnCOVValues_KeepAlive.Size = new System.Drawing.Size(283, 23);
+            this.BtnCOVValues_KeepAlive.TabIndex = 32;
+            this.BtnCOVValues_KeepAlive.Text = "Streams.KeepAlive";
+            this.BtnCOVValues_KeepAlive.UseVisualStyleBackColor = true;
+            this.BtnCOVValues_KeepAlive.Click += new System.EventHandler(this.BtnCOVValues_KeepAlive_Click);
             // 
-            // LblCOVValues_Params
+            // LblCOVValues_StartTime
             // 
-            this.LblCOVValues_Params.AutoSize = true;
-            this.LblCOVValues_Params.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblCOVValues_Params.Location = new System.Drawing.Point(23, 23);
-            this.LblCOVValues_Params.Margin = new System.Windows.Forms.Padding(3);
-            this.LblCOVValues_Params.MinimumSize = new System.Drawing.Size(140, 0);
-            this.LblCOVValues_Params.Name = "LblCOVValues_Params";
-            this.LblCOVValues_Params.Size = new System.Drawing.Size(140, 94);
-            this.LblCOVValues_Params.TabIndex = 0;
-            this.LblCOVValues_Params.Text = "Parameters:";
-            this.LblCOVValues_Params.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LblCOVValues_StartTime.AutoSize = true;
+            this.LblCOVValues_StartTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblCOVValues_StartTime.Location = new System.Drawing.Point(458, 178);
+            this.LblCOVValues_StartTime.Margin = new System.Windows.Forms.Padding(3);
+            this.LblCOVValues_StartTime.Name = "LblCOVValues_StartTime";
+            this.LblCOVValues_StartTime.Size = new System.Drawing.Size(283, 20);
+            this.LblCOVValues_StartTime.TabIndex = 33;
+            this.LblCOVValues_StartTime.Text = "Start Time:";
+            this.LblCOVValues_StartTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // DgvCOVValues_Params
+            // TxtCOVValues_StartTime
             // 
-            this.DgvCOVValues_Params.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvCOVValues_Params.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.DgvCOVValues_Params_Id});
-            this.TlpCOVvalues.SetColumnSpan(this.DgvCOVValues_Params, 2);
-            this.DgvCOVValues_Params.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvCOVValues_Params.Location = new System.Drawing.Point(169, 23);
-            this.DgvCOVValues_Params.Name = "DgvCOVValues_Params";
-            this.DgvCOVValues_Params.Size = new System.Drawing.Size(862, 94);
-            this.DgvCOVValues_Params.TabIndex = 1;
+            this.TxtCOVValues_StartTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtCOVValues_StartTime.Location = new System.Drawing.Point(747, 178);
+            this.TxtCOVValues_StartTime.Name = "TxtCOVValues_StartTime";
+            this.TxtCOVValues_StartTime.ReadOnly = true;
+            this.TxtCOVValues_StartTime.Size = new System.Drawing.Size(283, 20);
+            this.TxtCOVValues_StartTime.TabIndex = 34;
             // 
-            // DgvCOVValues_Params_Id
+            // TmrStreamCheck
             // 
-            this.DgvCOVValues_Params_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.DgvCOVValues_Params_Id.HeaderText = "Object ID (GUID)";
-            this.DgvCOVValues_Params_Id.Name = "DgvCOVValues_Params_Id";
-            // 
-            // BtnAlarmEvent_StopCollectingAlarms
-            // 
-            this.BtnAlarmEvent_StopCollectingAlarms.Location = new System.Drawing.Point(606, 45);
-            this.BtnAlarmEvent_StopCollectingAlarms.Name = "BtnAlarmEvent_StopCollectingAlarms";
-            this.BtnAlarmEvent_StopCollectingAlarms.Size = new System.Drawing.Size(434, 23);
-            this.BtnAlarmEvent_StopCollectingAlarms.TabIndex = 27;
-            this.BtnAlarmEvent_StopCollectingAlarms.Text = "StopCollectingAlarms";
-            this.BtnAlarmEvent_StopCollectingAlarms.UseVisualStyleBackColor = true;
-            this.BtnAlarmEvent_StopCollectingAlarms.Click += new System.EventHandler(this.BtnAlarmEvent_StopCollectingAlarms_Click);
-            // 
-            // TxtAlarmEvents_MaxNumber
-            // 
-            this.TxtAlarmEvents_MaxNumber.Location = new System.Drawing.Point(195, 19);
-            this.TxtAlarmEvents_MaxNumber.Name = "TxtAlarmEvents_MaxNumber";
-            this.TxtAlarmEvents_MaxNumber.Size = new System.Drawing.Size(845, 20);
-            this.TxtAlarmEvents_MaxNumber.TabIndex = 28;
-            this.TxtAlarmEvents_MaxNumber.Text = "10";
-            // 
-            // BtnAuditEvent_StopCollectingAudits
-            // 
-            this.BtnAuditEvent_StopCollectingAudits.Location = new System.Drawing.Point(641, 50);
-            this.BtnAuditEvent_StopCollectingAudits.Name = "BtnAuditEvent_StopCollectingAudits";
-            this.BtnAuditEvent_StopCollectingAudits.Size = new System.Drawing.Size(405, 22);
-            this.BtnAuditEvent_StopCollectingAudits.TabIndex = 29;
-            this.BtnAuditEvent_StopCollectingAudits.Text = "StopCollectingAudits";
-            this.BtnAuditEvent_StopCollectingAudits.UseVisualStyleBackColor = true;
-            this.BtnAuditEvent_StopCollectingAudits.Click += new System.EventHandler(this.BtnAuditEvent_StopCollectingAudits_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(73, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(116, 13);
-            this.label1.TabIndex = 29;
-            this.label1.Text = "Max Number of Alarms:";
-            // 
-            // TxtAuditEvents_MaxNumber
-            // 
-            this.TxtAuditEvents_MaxNumber.Location = new System.Drawing.Point(197, 24);
-            this.TxtAuditEvents_MaxNumber.Name = "TxtAuditEvents_MaxNumber";
-            this.TxtAuditEvents_MaxNumber.Size = new System.Drawing.Size(849, 20);
-            this.TxtAuditEvents_MaxNumber.TabIndex = 30;
-            this.TxtAuditEvents_MaxNumber.Text = "20";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(75, 27);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(114, 13);
-            this.label2.TabIndex = 31;
-            this.label2.Text = "Max Number of Audits:";
+            this.TmrStreamCheck.Interval = 30000;
+            this.TmrStreamCheck.Tick += new System.EventHandler(this.TmrStreamCheck_Tick);
             // 
             // Streams
             // 
@@ -506,16 +577,16 @@ namespace MetasysServices_TestClient.Forms
             this.TpgCOVValue.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValue)).EndInit();
             this.TpgCOVValues.ResumeLayout(false);
+            this.TlpCOVvalues.ResumeLayout(false);
+            this.TlpCOVvalues.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValues)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValues_Params)).EndInit();
             this.TpgAlarmEvents.ResumeLayout(false);
             this.TpgAlarmEvents.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvAlarmEvents)).EndInit();
             this.TpgAuditEvents.ResumeLayout(false);
             this.TpgAuditEvents.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvAuditEvents)).EndInit();
-            this.TlpCOVvalues.ResumeLayout(false);
-            this.TlpCOVvalues.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValues_Params)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -561,5 +632,11 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox TxtAuditEvents_MaxNumber;
+        private System.Windows.Forms.Label LblCOVValues_Heartbeat;
+        private System.Windows.Forms.TextBox TxtCOVValues_Heartbeat;
+        private System.Windows.Forms.Button BtnCOVValues_KeepAlive;
+        private System.Windows.Forms.Label LblCOVValues_StartTime;
+        private System.Windows.Forms.TextBox TxtCOVValues_StartTime;
+        private System.Windows.Forms.Timer TmrStreamCheck;
     }
 }

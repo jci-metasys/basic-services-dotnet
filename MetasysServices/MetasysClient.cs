@@ -240,6 +240,8 @@ namespace JohnsonControls.Metasys.BasicServices
                     .ReceiveJson<JToken>()
                     .ConfigureAwait(false);
 
+                this.RefreshToken = refresh;
+
                 CreateAccessToken(Hostname, username, response);
                 if (Streams != null)
                 {
@@ -301,7 +303,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 // Set the new value of the Token to the StreamClient
                 if (Streams != null)
                 {
-                    Streams.AccessToken = this.AccessToken; ;
+                    Streams.AccessToken = this.AccessToken;
+                    Streams.KeepAlive(this.AccessToken);
                 }
             }
             catch (FlurlHttpException e)
@@ -1128,7 +1131,8 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 if (Version > ApiVersion.v3)
                 {
-                    JProperty propParams = new JProperty("parameters", "commandIdEnumSet.state1Command");
+                    JArray arrayValues = new JArray(values);
+                    JProperty propParams = new JProperty("parameters", arrayValues);
                     JObject jsonValues = new JObject(propParams);
 
                     var response = await Client.Request(new Url("objects")

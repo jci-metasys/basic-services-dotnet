@@ -817,5 +817,6 @@ namespace JohnsonControls.Metasys.BasicServices
             if (version < MinVersionSupported || version > MaxVersionSupported)
             { throw new MetasysUnsupportedApiVersion(version.ToString()); }
         }
+
     }
 }

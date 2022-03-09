@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using EvtSource;
 using Flurl.Http;
 using JohnsonControls.Metasys.BasicServices;
 
@@ -52,6 +53,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Add a subscription for an Activity according to the ActivityType
         /// </summary>
         void LoadActivitySubscriptions(string activityType);
+
+        /// <summary>
+        /// Call the related API (with a new Token) to keep the Stream Alive 
+        /// </summary>
+        Task KeepAlive(AccessToken accessToken);
 
         /// <summary>
         /// Return the list of request Ids
@@ -139,6 +145,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Event fired when an Audit event occurs
         /// </summary>
         event EventHandler<StreamEventArgs> AuditOccurred;
+
+        /// <summary>
+        /// Event fired when an HeartBeat occurs
+        /// </summary>
+        event EventHandler<EventSourceMessageEventArgs> HeartBeatOccurred;
 
     }
 }

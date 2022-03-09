@@ -45,6 +45,7 @@ namespace MetasysServices_TestClient.Forms
                         _client.Streams.COVValueChanged += COVValue_Changed;
                         _client.Streams.AlarmOccurred += Alarm_Occurred;
                         _client.Streams.AuditOccurred += Audit_Occurred;
+                        _client.Streams.HeartBeatOccurred += HeartBeat_Occurred;
                     }
                 }
             }
@@ -68,6 +69,10 @@ namespace MetasysServices_TestClient.Forms
             var requestId = _client.Streams.GetRequestIds().FirstOrDefault();
             TxtCOVValues_RequestID.Text = requestId.ToString();
             DgvCOVValues.DataSource = _covValues.ToList();
+
+            TmrStreamCheck.Enabled = false;
+            TmrStreamCheck.Enabled = true;
+
         }
 
         private void Alarm_Occurred(object sender, EventArgs e)
@@ -92,6 +97,11 @@ namespace MetasysServices_TestClient.Forms
             DgvAuditEvents.DataSource = null;
             DgvAuditEvents.DataSource = _auditEvents.ToList();
         }
+        private void HeartBeat_Occurred(object sender, EventArgs e)
+        {
+            TxtCOVValues_Heartbeat.Text = DateTime.Now.ToString();
+        }
+
         #endregion
 
         private void BtnCOVValue_StartReadingValue_Click(object sender, EventArgs e)
@@ -148,6 +158,7 @@ namespace MetasysServices_TestClient.Forms
             if (ids.Count > 0 )
             {
                 _client.Streams.StartReadingCOVValuesAsync(ids);
+                TxtCOVValues_StartTime.Text = DateTime.Now.ToString();
             }
         }
 
@@ -209,6 +220,25 @@ namespace MetasysServices_TestClient.Forms
                 Guid id = new Guid(requestId);
                 _client.Streams.StopCollectingAudits(id);
             }
+        }
+
+        private void BtnCOVValues_KeepAlive_Click(object sender, EventArgs e)
+        {
+            AccessToken accessToken = _client.GetAccessToken();
+            try
+            {
+                _client.Streams.KeepAlive(accessToken);
+                MessageBox.Show("OK");
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private void TmrStreamCheck_Tick(object sender, EventArgs e)
+        {
+            MessageBox.Show("End Time: " + DateTime.Now.ToString());
         }
     }
 }
