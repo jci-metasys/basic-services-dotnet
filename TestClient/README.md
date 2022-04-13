@@ -123,11 +123,11 @@ There are four optional parameters when creating a new client:
 - cultureInfo: To set the language for localization specify the target culture with a CultureInfo object. The default culture is en-US.
 - logClientErrors: Set this flag to false to disable logging of client errors. By default the library logs any communication error with the Metasys Server in this path: "C:\ProgramData\Johnson Controls\Metasys Services\Logs".
   
-To create a client that ignores certificate errors for a 10.1 Metasys server with Italian translations of values:
+To create a client that ignores certificate errors for a v12 Metasys server with Italian translations of values:
 
 ```csharp
 CultureInfo culture = new CultureInfo("it-IT");
-var client = new MetasysClient("hostname", true, ApiVersion.v2, culture);
+var client = new MetasysClient("hostname", true, ApiVersion.v4, culture);
 ```
 In some cases you may want to enrich logs with more specific messages to your application. Typically, you disable internal library logging and catch Metasys Exceptions to be handled in your own logging framework or in use for Log4Net initializer provided by the library. The file log4Net.config allows you to customize settings such as the file path, size, append mode, etc.
 To create a client with default settings that does not log errors use:
@@ -461,7 +461,7 @@ client.SendCommand(objectId, release.CommandId, list3);
 
 ### Get Network Devices and other Objects
 
-To get all the available network devices use the GetNetworkDevices method which returns a list of MetasysObjects. This accepts an optional type number as a string to filter the response. To get all of the available types on your server use the GetNetworkDeviceTypes method which returns a list of MetasysObjectType.
+To get all the available network devices use the method *NetworkDevices.Get* (method *GetNetworkDevices* is deprecated) which returns a list of MetasysObjects. This accepts an optional type number as a string to filter the response. To get all of the available types on your server use the method *NetworkDevices.GetTypes* (method *GetNetworkDeviceTypes* is deprecated) which returns a list of MetasysObjectType.
 Note: instead of the optional type number you can also specify the network device type parameter using a dedicated enumeration set (called NetworkDeviceTypeEnum) that helps you to identify the needed type.
 
 ```csharp
@@ -510,6 +510,7 @@ Console.WriteLine(device2);
 */
 
 ```
+To get the child devices of a network device use the method *NetworkDevices.GetChildren*. This takes the id (Guid) of the parent network device and return the a list of Metasys objects.
 
 To get the child devices or objects of an object use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete.
 

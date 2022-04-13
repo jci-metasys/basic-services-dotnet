@@ -16,14 +16,41 @@ For versioning information see the [changelog](CHANGELOG.md).
 - [Usage (.NET)](#usage-net)
   - [Creating a Client](#creating-a-client)
   - [Login and Access Tokens](#login-and-access-tokens)
-  - [Get an Object Id](#get-an-object-id)
-  - [Get a Property](#get-a-property)
-  - [Write a Property](#write-a-property)
-  - [Get and Send Commands](#get-and-send-commands)
-  - [Get Network Devices and other Objects](#get-network-devices-and-other-objects)
+  - [Metasys Objects](#metasys-objects)
+    - [Get Object Id](#Get-object-Id)
+    - [Get a Property](#get-a-property)
+    - [Write a Property](#write-a-property)
+    - [Get and Send Commands](#get-and-send-commands)
+    - [Get Children](#get-children)
+  - [Network-Devices](#network-devices)
+    - [Get Network Device Types](#get-network-device-types)
+    - [Get Network Devices](#get-network-devices)
+    - [Get Single Network Device](#get-single-network-device)
+    - [Get Network Device Children](#get-network-device-children)
+    - [Get Network Devices Hosting an Equipment](#get-network-devices-hosting-an-equipment)
+    - [Get Network Devices Serving a Space](#get-network-devices-serving-a-space)
   - [Localization of Metasys Enumerations](#localization-of-metasys-enumerations)
-  - [Spaces and Equipment](#spaces-and-equipment)
+  - [Equipments](#equipments)
+    - [Get Equipments](#get-equipments)
+    - [Get a Single Equipment](#get-a-single-equipment)
+    - [Get Equipment Served by an Equipment Instance](#get-equipment-served-by-an-equipment-instance)
+    - [Get Equipments Serving a Space](#get-equipments-serving-a-space)
+    - [Get Equipment Points](#get-equipment-points)
+    - [Get Equipments Hosted by a Network Device](#get-equipments-hosted-by-a-network-device)
+    - [Get Equipments Serving an Equipment Instance](#get-equipments-serving-an-equipment-instance)
+  - [Spaces](#spaces)
+    - [Get Space Types](#get-space-types)
+    - [Get Spaces](#get-spaces)
+    - [Get Space Children](#get-space-children)
+    - [Get a Single Space](#get-a-single-space)
+    - [Get Spaces Served by an Equipment](#get-spaces-served-by-an-equipment)
+    - [Get Spaces Served by a Network Device](#get-spaces-served-by-a-network-device)
   - [Alarms](#alarms)
+    - [Get Alarms](#get-alarms)
+    - [Get Single Alarm](#get-single-alarm)
+    - [Get Alarms for an Object](#get-alarms-for-an-object)
+    - [Get Alarms for a Network Device](#get-alarms-for-a-network-device)
+    - [Get Alarm Annotations](#get-alarm-annotations)
   - [Trends](#trends)
   - [Audits](#audits)
 - [Usage (COM)](#usage-com)
@@ -124,11 +151,11 @@ There are four optional parameters when creating a new client:
 - cultureInfo: To set the language for localization specify the target culture with a CultureInfo object. The default culture is en-US.
 - logClientErrors: Set this flag to false to disable logging of client errors. By default the library logs any communication error with the Metasys Server in this path: "C:\ProgramData\Johnson Controls\Metasys Services\Logs".
   
-To create a client that ignores certificate errors for a 10.1 Metasys server with Italian translations of values:
+Example: the following code shows how to create a client that ignores certificate errors for a v12 Metasys server with Italian translations of values:
 
 ```csharp
 CultureInfo culture = new CultureInfo("it-IT");
-var client = new MetasysClient("hostname", true, ApiVersion.v2, culture);
+var client = new MetasysClient("hostname", true, ApiVersion.v4, culture);
 ```
 In some cases you may want to enrich logs with more specific messages to your application. Typically, you disable internal library logging and catch Metasys Exceptions to be handled in your own logging framework or in use for Log4Net initializer provided by the library. The file log4Net.config allows you to customize settings such as the file path, size, append mode, etc.
 To create a client with default settings that does not log errors use:
@@ -164,35 +191,27 @@ client.Hostname = "WIN2016-VM2";
 ```
 ### Login and Access Tokens
 
-After creating the client, to login use the TryLogin method.
+After creating the client, to login use the method **`TryLogin`**.
 The signature has two overloads: the first uses the Credential Manager target to read the credentials, whilst the second takes a username and password.
-Both signatures take an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true. See more information [here](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager) on how to use Credential Manager. If something goes wrong while accessing a Credential Manager target, MetasysClient raises a CredManException. Keep in mind that Credential Manager is available on Windows and is not going to work on other platforms. However, MetasysClient Class could be extended by developers to implement different secure vaults support.
+Both signatures take an optional parameter to automatically refresh the access token during the client's lifetime. 
+The default token refresh policy is true. See more information [here](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager) on how to use Credential Manager. If something goes wrong while accessing a Credential Manager target, MetasysClient raises a CredManException. Keep in mind that Credential Manager is available on Windows and is not going to work on other platforms. However, MetasysClient Class could be extended by developers to implement different secure vaults support.
 
- **Notice: when developing an application that uses a system account always logged without user input, the preferred way to login is to store the username and password in the Credential Manager vault.**
+**Notice: when developing an application that uses a system account always logged without user input, the preferred way to login is to store the username and password in the Credential Manager vault.**
 
 ```csharp
 // Automatically refresh token using plain credentials
 client.TryLogin("username", "password");
+
 // Do not automatically refresh token using plain credentials
 client.TryLogin("username", "password", false);
 
 // Read target from Credential Manager and automatically refresh token
 client.TryLogin("metasys-energy-app");
+
 // Read target from Credential Manager and do not refresh token
 client.TryLogin("metasys-energy-app", false);
-```
 
-At any time you want to manually refresh the access token before it expires use the following:
-
-```csharp
-client.Refresh();
-```
-
-To use the authorization token in an different HttpClient use the AccessToken object returned by these methods or use the GetAccessToken method. A successful token will be in the form "Bearer ...".
-
-```csharp
-AccessToken accessToken = client.TryLogin("metasys-energy-app");
-Console.WriteLine(accessToken);
+// Sample of a valid access token returne by the previous methods:
 /*        
 {
     "Issuer": "metasysserver",
@@ -201,11 +220,36 @@ Console.WriteLine(accessToken);
     "Expires": "2020-05-12T14:18:51Z"
 }
 */
+
 ```
+<br/>
 
-### Get an Object Id
+In case you need to get a new access token then use the method **`Refresh`** before the token expiration time.
 
-In order to use most of the methods in MetasysClient the id of the target object must be known. This id is in the form of a Guid and can be requested using the following given you know the item reference of the object:
+```csharp
+client.Refresh();
+```
+<br/>
+
+To get the current access token (e.g. to use it in an different HttpClient) use the method **`GetAccessToken`**.
+
+```csharp
+client.GetAccesToken()
+```
+<br/>
+
+To get the current date & time of the server you can use the method **`GetServerTime`**.
+```csharp
+client.GetServerTime()
+```
+<br/>
+
+
+### Metasys Objects
+
+#### Get Object Id
+In order to use most of the methods in MetasysClient the id of the target object must be known. 
+This id is in the form of a Guid and can be requested using the method **`GetObjectIdentifier`** given you know the item reference (FQR) of the object:
 
 ```csharp
 Guid objectId = client.GetObjectIdentifier("Win2016-VM2:vNAE2343996/Field Bus MSTP1.VAV-08.ZN-SP");
@@ -214,11 +258,12 @@ Console.WriteLine(objectId);
 d5d96cd3-db4a-52e0-affd-8bc3393c30ec
 */
 ```
+<br/>
 
-### Get a Property
-
-In order to get a property you must know the Guid of the target object. An object called "Variant" is returned when getting a property from an object. Variant contains the property received in many different forms. There is a bit of intuition when handling a Variant since it will not explicitly provide the type of object received by the server. If the server cannot find the target object or attribute on the object this method will throw a MetasysHttpNotFoundException.
-
+#### Get a Property
+In order to get a property you must know the Guid of the target object and then you can use the method **`ReadProperty`**. 
+An object called "Variant" is returned when getting a property from an object. 
+Variant contains the property received in many different forms. There is a bit of intuition when handling a Variant since it will not explicitly provide the type of object received by the server. If the server cannot find the target object or attribute on the object this method will throw a MetasysHttpNotFoundException.
 ```csharp
 Variant property = client.ReadProperty(objectId, "presentValue");
 Console.WriteLine(property);
@@ -240,7 +285,8 @@ Console.WriteLine(property);
 */
 ```
 
-There is a method to get multiple properties from multiple objects. This can be very useful if the objects all are of the same type or have the same target properties.
+To get multiple properties from multiple objects in one action use the method **`ReadPropertyMultiple`**. 
+This can be very useful if the objects all are of the same type or have the same target properties.
 
 ```csharp
 List<Guid> ids = new List<Guid> { id1, id2 };
@@ -285,10 +331,13 @@ Console.WriteLine(multiple1);
 */
 Variant multiple1Description = multiple1.FindAttributeByName("description");
 ```
+<br/>
 
-### Write a Property
+#### Write a Property
 
-In order to write a property you must have the Guid of the object and know the attribute name and type. This method contains an optional priority parameter to specify the write priority of the value. This priority is in the form of an enumeration such as "writePriorityEnumSet.priorityNone". To see more options use the "api/v2/enumSets/1/members" or "api/v2/schemas/enums/writePriorityEnumSet" http requests defined in the [Metasys API](https://metasys-server.github.io/api-landing/api/v2/).
+In order to write a property you must have the Guid of the object and know the attribute name and type
+and then you have to use the method **`WriteProperty`**. This method contains an optional priority parameter to specify the write priority of the value. 
+This priority is in the form of an enumeration such as "writePriorityEnumSet.priorityNone". To see more options use the "api/v2/enumSets/1/members" or "api/v2/schemas/enums/writePriorityEnumSet" http requests defined in the [Metasys API](https://metasys-server.github.io/api-landing/api/v2/).
 
 ```csharp
 Guid id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1");
@@ -296,7 +345,8 @@ client.WriteProperty(id, "description", "This is an AV.");
 client.WriteProperty(id, "description", "This is an AV.", "writePriorityEnumSet.priorityNone");
 ```
 
-To change the same attribute values of many objects use the WritePropertyMultiple method. This method also accepts an optional write priority.
+To change the same attribute values of many objects use the method **`WritePropertyMultiple`**. 
+This method also accepts an optional write priority.
 
 ```csharp
 List<Guid> ids = new List<Guid> { id1, id2 };
@@ -308,10 +358,14 @@ client.WritePropertyMultiple(ids, attributesList);
 Dictionary<string, object> attributesDictionary = new Dictionary<string, object> { { "description", "This is an AV." } };
 client.WritePropertyMultiple(ids, attributesDictionary);
 ```
+<br/>
 
-### Get and Send Commands
+#### Get and Send Commands
 
-To get all available commands on an object use the GetCommands method. This method will return a list of Command objects. The ToString() method is a useful tool to display the available commands and any information associated with it. When sending a command the Command.CommandId attribute is used as the parameter:
+To get all available commands on an object use the method **`GetCommands`**. 
+This method will return a list of Command objects. 
+The ToString() method is a useful tool to display the available commands and any information associated with it. 
+When sending a command the Command.CommandId attribute is used as the parameter:
 
 ```csharp
 List<Command> commands = client.GetCommands(objectId).ToList();
@@ -335,7 +389,11 @@ Console.WriteLine(command);
 */
 ```
 
-When sending a command there may or may not be a single value or list of values that needs to be sent with the command. The Command.Items property will list all of these values as Items which contains the Title and Type of the value to change. If the type of an Item is "oneOf" this indicates the values is an enumeration and the possible values will be contained in the EnumerationValues list. Keep in mind the values to be sent in the command is the TitleEnumerationKey not the Title. The Title is the user friendly translated value that describes the enumeration. For example, an "AV Mapper" object has the following commands:
+When sending a command there may or may not be a single value or list of values that needs to be sent with the command. 
+The property **`Command.Items`** will list all of these values as Items which contains the Title and Type of the value to change. 
+If the type of an Item is "oneOf" this indicates the values is an enumeration and the possible values will be contained in the EnumerationValues list. 
+Keep in mind the values to be sent in the command is the TitleEnumerationKey not the Title. 
+The Title is the user friendly translated value that describes the enumeration. For example, an "AV Mapper" object has the following commands:
 
 - "Adjust" that accepts a number value to adjust the present value.
 - "TemporaryOperatorOverride" that accepts the value to adjust the present value, the hours, and the minutes for the temporary adjustment.
@@ -447,7 +505,7 @@ Console.WriteLine(release);
 */
 ```
 
-To send the command for each of these it would model the following:
+To send the command use the method **`SendCommand`** as showed in the follwing samples:
 
 ```csharp
 var list1 = new List<object> { 70 };
@@ -459,60 +517,11 @@ client.SendCommand(objectId, operatorOverride.CommandId, list2);
 var list3 = new List<object> { "attributeEnumSet.presentValue", "writePriorityEnumSet.priorityNone" };
 client.SendCommand(objectId, release.CommandId, list3);
 ```
+<br/>
 
-### Get Network Devices and other Objects
+#### Get Children
 
-To get all the available network devices use the GetNetworkDevices method which returns a list of MetasysObjects. This accepts an optional type number as a string to filter the response. To get all of the available types on your server use the GetNetworkDeviceTypes method which returns a list of MetasysObjectType.
-Note: instead of the optional type number you can also specify the network device type parameter using a dedicated enumeration set (called NetworkDeviceTypeEnum) that helps you to identify the needed type.
-
-```csharp
-List<MetasysObjectType> types = client.GetNetworkDeviceTypes().ToList();
-Console.WriteLine(types[0]);
-/*                        
-{
-    "Description": "NAE55-NIE59",
-    "DescriptionEnumerationKey": "objectTypeEnumSet.n50Class",
-    "Id": 185
-}
-*/
-int type1 = types[0].Id;
-List<MetasysObject> devices = client.GetNetworkDevices(type1.ToString()).ToList();
-MetasysObject device = devices.LastOrDefault();
-Console.WriteLine(device);
-/*                        
-{
-    "ItemReference": "Win2016-VM2:vNAE2343996",
-    "Id": "142558f8-c4c7-5f89-be97-d806adb72053",
-    "Name": "vNAE2343996",
-    "Description": "",
-    "Type": null,
-    "TypeUrl": "https://win2016-vm2/api/v2/enumSets/508/members/185",
-    "Category": null,
-    "Children": [],
-    "ChildrenCount": 0
-}
-*/
-List<MetasysObject> devices2 = client.GetNetworkDevices(NetworkDeviceTypeEnum.SNC).ToList();
-MetasysObject device2 = devices2.LastOrDefault();
-Console.WriteLine(device2);
-/*                        
-    {
-        "ItemReference": "WIN-21DJ9JV9QH6:EECMI-SNC-KNX",
-        "Id": "69b3c2a5-1090-5418-afd9-5efc7186e42f",
-        "Name": "EECMI-SNC-KNX",
-        "Description": "",
-        "Type": null,
-        "TypeUrl": "https://win-21dj9jv9qh6/api/v3/enumSets/508/members/448",
-        "ObjectType": null,
-        "Category": null,
-        "Children": [],
-        "ChildrenCount": 0
-    }            
-*/
-
-```
-
-To get the child devices or objects of an object use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete.
+To get the child objects of an object use the method **`GetObjects`**. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete.
 
 ```csharp
 Guid parentId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB");
@@ -599,16 +608,95 @@ Console.WriteLine(level1Parent);
 }
 */
 ```
+<br/>
+
+### Network-Devices
+
+#### Get Network Device Types
+To get all of the available types on your server use the method **`NetworkDevices.GetTypes`** (method *GetNetworkDeviceTypes* is deprecated) which returns a list of MetasysObjectType.
+Note: instead of the optional type number you can also specify the network device type parameter using a dedicated enumeration set (called NetworkDeviceTypeEnum) that helps you to identify the needed type.
+
+```csharp
+List<MetasysObjectType> types = client.NetworkDevices.GetTypes().ToList();
+Console.WriteLine(types[0]);
+/*                        
+{
+    "Description": "NAE55-NIE59",
+    "DescriptionEnumerationKey": "objectTypeEnumSet.n50Class",
+    "Id": 185
+}
+*/
+```
+<br/>
+
+#### Get Network Devices
+To get all the available network devices use the method **`NetworkDevices.Get`** (method *GetNetworkDevices* is deprecated) which returns a list of MetasysObjects. This accepts an optional type number as a string to filter the response. 
+```csharp
+int type1 = types[0].Id;
+List<MetasysObject> devices = client.NetworkDevices.Get(type1.ToString()).ToList();
+MetasysObject device = devices.LastOrDefault();
+Console.WriteLine(device);
+/*                        
+{
+    "ItemReference": "Win2016-VM2:vNAE2343996",
+    "Id": "142558f8-c4c7-5f89-be97-d806adb72053",
+    "Name": "vNAE2343996",
+    "Description": "",
+    "Type": null,
+    "TypeUrl": "https://win2016-vm2/api/v2/enumSets/508/members/185",
+    "Category": null,
+    "Children": [],
+    "ChildrenCount": 0
+}
+*/
+List<MetasysObject> devices2 = client.NetworkDevices.Get(NetworkDeviceTypeEnum.SNC).ToList();
+MetasysObject device2 = devices2.LastOrDefault();
+Console.WriteLine(device2);
+/*                        
+    {
+        "ItemReference": "WIN-21DJ9JV9QH6:EECMI-SNC-KNX",
+        "Id": "69b3c2a5-1090-5418-afd9-5efc7186e42f",
+        "Name": "EECMI-SNC-KNX",
+        "Description": "",
+        "Type": null,
+        "TypeUrl": "https://win-21dj9jv9qh6/api/v3/enumSets/508/members/448",
+        "ObjectType": null,
+        "Category": null,
+        "Children": [],
+        "ChildrenCount": 0
+    }            
+*/
+```
+<br/>
+
+#### Get Single Network Device
+To get a single network device use the method **`NetworkDevices.FindById`** which returns a Metasys Object corresponding to the network device Id passed as parameter.
+<br/>
+
+#### Get Network Device Children
+To retrieves the collection of network devices that are children of the specified network device use the method **`NetworkDevices.GetChildren`** which return a list of Metasys Objects according to the network device Id (Guid) passed as parameter.
+<br/>
+
+#### Get Network Devices Hosting an Equipment
+To retrieve the collection of network devices that host the specified equipment instance use the method **`NetworkDevices.GetHostingAnEquipment`** which return a list of Metasys Objects according to the equipment Id (Guid) passed as parameter.
+<br/>
+
+#### Get Network Devices Serving a Space
+To retrieve the collection of network devices that are serving the specified space use the method **`NetworkDevices.GetServingASpace`** which return a list of Metasys Objects according to the space Id (Guid) passed as parameter.
+<br/>
 
 ### Localization of Metasys Enumerations
 
-To get automatically translated enumerations on enumerations returned from a Metasys server you must specify the culture during client creation, or set the "Culture" property before using the "get" methods. The default language for translations will be the machine's current culture ([see more information here](https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo.currentculture)) or en-US (American English) if the language is not supported (see [Supported Localization Languages](#supported-localization-languages)).
+To get automatically translated enumerations from a Metasys server you have to use the method **`Localize`**.  
+Note that you must specify the culture during client creation, or set the "Culture" property before using the "get" methods.  
+The default language for translations will be the machine's current culture ([see more information here](https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo.currentculture)) or en-US (American English) if the language is not supported (see [Supported Localization Languages](#supported-localization-languages)).
 
 ```csharp
 client.Culture = new CultureInfo("it-IT");
 ```
 
-Enumerations returned from a Metasys server will be in a format similar to: "reliabilityEnumSet.reliable". MetasysClient has a method to translate these enumerations manually. This method can be very useful if using an external HttpClient since Metasys servers do not hold translation information.
+Enumerations returned from a Metasys server will be in a format similar to: "reliabilityEnumSet.reliable". 
+MetasysClient has a method to translate these enumerations manually. This method can be very useful if using an external HttpClient since Metasys servers do not hold translation information.
 
 ```csharp
 // Access from the client object
@@ -622,9 +710,87 @@ string translated = ResourceManager.Localize("reliabilityEnumSet.reliable",
 Note: If an automatically translated value (such as Variant.StringValue) contains an enumeration value and not a translated string there could be an error with the MetasysClient globalization setup.
 
 If the enumeration key is desired over the translated value use the EnumerationKey attribute. For example, the translated Variant.Reliability has the enumeration key under the attribute: Variant.ReliabilityEnumerationKey. See the documentation of each Model for more information.
+<br/>
 
-### Spaces and equipment
-To get all the space types use the GetSpaceTypes method. This method will return a list of MetasysObjectType.
+
+### Equipments
+#### Get Equipments
+To retrieves a collection of equipment instances you can use the method **`Equipments.Get`** (method *GetEquipment* is deprecated).  
+This method returns a list of MetasysObjects and doesn't expect any parameter.
+<br/>
+
+#### Get a Single Equipment
+To get a single Equipment object instance you can use the method **`Equipments.FindById`**.  
+This method returns the MetasysObject related to the equipment Id specified as parameter.
+<br/>
+
+#### Get Equipment Served by an Equipment Instance
+To retrieve the equipment served by the specified equipment instance you can use the method **`Equipments.GetServedByEquipment`**.  
+This method returns a list of MetasysObjects and expects the equipment instance Id.
+<br/>
+
+#### Get Equipments Serving a Space
+If you wish to retrieve the list of equipment for a given space you have to use the method **`Equipments.GetServingASpace`** (method *GetSpaceEquipment* is deprecated).  
+The deeper element in the hierarchy is the point. 
+```csharp
+IEnumerable<MetasysObject> spaceEquipment = client.Equipments.GetServingASpace(building.Id);
+MetasysObject sampleSpaceEquipment = spaceEquipment.FirstOrDefault();
+```
+<br/>
+
+#### Get Equipment Points
+To get all the points of an equipment use the method **`Equipments.GetPoints`** (method *GetEquipmentPoint* is deprecated).  
+It takes the Guid of the equipments and it will return the list of MetasysPoint objects.
+```csharp
+IEnumerable<MetasysPoint> equipmentPoints = client.Equipments.GetPoints(sampleEquipment.Id);
+MetasysPoint point = equipmentPoints.FindByShortName("CLG-O");
+string presentValue = point.PresentValue?.StringValue;
+Console.WriteLine(point);
+/*                        
+{
+    "EquipmentName": "AHU-07",
+    "ShortName": "CLG-O",
+    "Label": "Cooling Output",
+    "Category": "",
+    "IsDisplayData": true,
+    "ObjectId": "9dd107cf-e8dc-583a-9557-813395ae1971",
+    "AttributeUrl": "https://win2016-vm2/api/v2/enumSets/509/members/85",
+    "ObjectUrl": "https://win2016-vm2/api/v2/objects/9dd107cf-e8dc-583a-9557-813395ae1971",
+    "PresentValue": {
+    "StringValue": "0",
+    "StringValueEnumerationKey": null,
+    "NumericValue": 0.0,
+    "BooleanValue": false,
+    "ArrayValue": null,
+    "Attribute": "presentValue",
+    "Id": "9dd107cf-e8dc-583a-9557-813395ae1971",
+    "Reliability": "Reliable",
+    "ReliabilityEnumerationKey": "reliabilityEnumSet.reliable",
+    "Priority": "0 (No Priority)",
+    "PriorityEnumerationKey": "writePriorityEnumSet.priorityNone",
+    "IsReliable": true
+    }
+}
+*/
+```
+<br/>
+
+#### Get Equipments Hosted by a Network Device
+To retrieve the collection of equipment instances that are hosted by the specified network device or its children 
+you can use the method **`Equipments.GetHostedByNetworkDevice`**.  
+This method returns a list of 'MetasysObject' and expects a network device Id as parameter.
+Note: a network device is considered to host an equipment if the equipment defines points that map to an attribute of any object contained on the network device.
+<br/>
+
+#### Get Equipments Serving an Equipment Instance
+To retrieve the collection of equipment that serve the specified equipment instance you can use the method **`Equipments.GetServingAnEquipment`**.  
+This method returns alist of 'MetasysObject' and expect an equipment Id as parameter.
+
+### Spaces
+
+#### Get Space Types
+To get all the space types use the method **`Spaces.GetTypes`** (method *GetSpaceTypes* is deprecated). 
+This method will return a list of MetasysObjectType.
 ```csharp
 IEnumerable<MetasysObjectType> spaceTypes = client.GetSpaceTypes();
 foreach (var type in spaceTypes)
@@ -654,8 +820,11 @@ foreach (var type in spaceTypes)
 }
 */
 ```
+<br/>
 
-To get all available spaces on an object use the GetSpaces method. This method will return a list of MetasysObjects. This accepts an optional type as enum to filter the response. To get all of the available types on your server use the GetSpaceTypes method which returns a list of MetasysObjectType. To get all of the equipment on your server use the GetEquipment method which returns a list of MetasysObjects.
+#### Get Spaces
+To get all available spaces use the method **`Spaces.Get`** (method *GetSpaces* is deprecated). 
+This method will return a list of MetasysObjects. This accepts an optional type as enum to filter the response. To get all of the available types on your server use the GetSpaceTypes method which returns a list of MetasysObjectType. To get all of the equipment on your server use the GetEquipment method which returns a list of MetasysObjects.
 ```csharp
 // Retrieves the list of Buildings using SpaceTypeEnum helper
 List<MetasysObject> buildings = client.GetSpaces(SpaceTypeEnum.Building).ToList();
@@ -692,8 +861,11 @@ Console.WriteLine(firstSpace);
 }
 */
 ```
+<br/>
 
-To get the children of a Space use the GetSpaceChildren method. If you wish to retrieve equipment for a given space you can use the GetSpaceEquipment method. The deeper element in the hierarchy is the point, use the getEquipmentPoints method to retrieve the points mapped to an equipment. The Point object contains PresentValue when available. 
+#### Get Space Children
+To get the children of a Space use the method **`Spaces.GetChildren`** (method *GetSpaceChildren* is deprecated). 
+If you wish to retrieve equipment for a given space you can use the GetSpaceEquipment method. The deeper element in the hierarchy is the point, use the getEquipmentPoints method to retrieve the points mapped to an equipment. The Point object contains PresentValue when available. 
 ```csharp
 IEnumerable<MetasysObject> spaceChildren = client.GetSpaceChildren(building.Id);
 IEnumerable<MetasysObject> spaceEquipment = client.GetSpaceEquipment(building.Id);
@@ -719,45 +891,31 @@ Console.WriteLine(sampleEquipment);
 }
 */
 ```
+<br/>
 
-To get all the points of an equipment use the GetEquipmentPoint method. It takes the Guid of the equipments and it will return the list of MetasysPoint objects.
-```csharp
-IEnumerable<MetasysPoint> equipmentPoints = client.GetEquipmentPoints(sampleEquipment.Id);
-MetasysPoint point = equipmentPoints.FindByShortName("CLG-O");
-string presentValue = point.PresentValue?.StringValue;
-Console.WriteLine(point);
-/*                        
-{
-    "EquipmentName": "AHU-07",
-    "ShortName": "CLG-O",
-    "Label": "Cooling Output",
-    "Category": "",
-    "IsDisplayData": true,
-    "ObjectId": "9dd107cf-e8dc-583a-9557-813395ae1971",
-    "AttributeUrl": "https://win2016-vm2/api/v2/enumSets/509/members/85",
-    "ObjectUrl": "https://win2016-vm2/api/v2/objects/9dd107cf-e8dc-583a-9557-813395ae1971",
-    "PresentValue": {
-    "StringValue": "0",
-    "StringValueEnumerationKey": null,
-    "NumericValue": 0.0,
-    "BooleanValue": false,
-    "ArrayValue": null,
-    "Attribute": "presentValue",
-    "Id": "9dd107cf-e8dc-583a-9557-813395ae1971",
-    "Reliability": "Reliable",
-    "ReliabilityEnumerationKey": "reliabilityEnumSet.reliable",
-    "Priority": "0 (No Priority)",
-    "PriorityEnumerationKey": "writePriorityEnumSet.priorityNone",
-    "IsReliable": true
-    }
-}
-*/
-```
+#### Get a Single Space
+To get a single space object use the method **`Spaces.FindById`**. 
+This method returns the MetasysObject related to the space Id specified as parameter.
+<br/>
+
+#### Get Spaces Served by an Equipment
+To Retrieve the collection of spaces served by the specified equipment instance you can use the method **`Spaces.GetServedByEquipment`**.  
+This method returns a list of MetasysObjects and expect the equipment Id as parameter.
+<br/>
+
+#### Get Spaces Served by a Network Device
+To Retrieve the collection of spaces served by the specified network device instance you can use the method **`Spaces.GetServedByNetworkDevice`**.  
+This method returns a list of MetasysObjects and expect the network device Id as parameter.
+<br/>
+
 
 ### Alarms
 
-All services about alarms are provided by Alarms local instance of MetasysClient.
-To get all available alarms use the Get method. This method will return a PagedResult with a list of Alarm objects. This accepts an AlarmFilter object to filter the response. To get a single alarm use the FindById method which returns an Alarm object with all the details given the Guid.
+All services about alarms are provided by **`Alarms`** local instance of MetasysClient.  
+  
+#### Get Alarms
+To get all available alarms use the method **`Alarms.Get`**.  
+This method returns a 'PagedResult' with a list of 'Alarm' objects and expects an 'AlarmFilter' object to filter the response.
 
 ```csharp
 AlarmFilter alarmFilter = new AlarmFilter
@@ -807,20 +965,43 @@ Console.WriteLine(alarm);
 }             
 Console Output: End */
 ```
-To get the alarms of a specific Object or NetworkDevice use the GetForObject and GetForNetworkDevice methods. The Guid of the parent object is required as input.
+<br/>
+
+#### Get Single Alarm
+To get a specific alarm of an Metasys Object (e.g. Point, Network Device etc...) you can use the method **`Alarms.FindById`**.
+GetForObject and GetForNetworkDevice methods. The Guid of the parent object is required as input.
 
 ```csharp
 var alarmId="6c6e18b8-015f-572a-814c-1e5d66142850";
 Alarm singleAlarm = client.Alarms.FindById(alarmId);
+```
+This method returns an 'Alarm' object and expects an alarm Id as paramenter.
+<br/>
 
+#### Get Alarms for an Object
+To retrieve a collection of alarms for the specified object you can use the method **`Alarms.GetForObject`**.  
+This method returns a 'PagedResult' with a list of 'Alarm' objects and expects an object Id and an 'AlarmFilter' object to filter the response.
+
+```csharp
 AlarmFilter alarmFilter = new AlarmFilter{};
 var objectId="f5fe6054-d0b0-55b6-b03f-d4554f80d8e6";
 var objectAlarms = client.Alarms.GetForObject(objectId, alarmFilter);
+```
+<br/>
 
+#### Get Alarms for a Network Device
+To retrieve a collection of alarms for the specified network device you can use the method **`Alarms.GetForNetworkDevice`**.
+This method returns a 'PagedResult' with a list of 'Alarm' objects and expects a network device Id and an 'AlarmFilter' object to filter the response.
+
+```csharp
 var networkDeviceId="2aefbd18-9088-54ee-b6ef-6d9312da3c33";
 var networkDevicesAlarms = client.Alarms.GetForNetworkDevice(networkDeviceId, alarmFilter);
 ```
-To get the annotations of an alarm use the GetAnnotations method, it takes the Guid of the alarm and returns a collection of AlarmAnnotation objects.
+<br/>
+
+#### Get Alarm Annotations
+To retrieves the collection of annotations available for the specified alarm you can use the method **`Alarms.GetAnnotations`**.  
+This method returns a collection of AlarmAnnotation objects and expect an alarm Id as parameter.
 
 ```csharp
  IEnumerable<AlarmAnnotation> annotations = client.Alarms.GetAnnotations(alarm.Id);
@@ -836,6 +1017,9 @@ To get the annotations of an alarm use the GetAnnotations method, it takes the G
   } 
   */
 ```
+<br/>
+
+
 
 ### Trends
 

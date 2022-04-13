@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -326,7 +327,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         #region private methods
 
-        private void KeepStreamAlive(AccessTokenResponse tokenResponse)
+        private void KeepStreamAlive_old(AccessTokenResponse tokenResponse)
         {
             DateTime expireTime = tokenResponse.Expires;
             TimeSpan value = expireTime.Subtract(DateTime.UtcNow);
@@ -349,12 +350,17 @@ namespace JohnsonControls.Metasys.BasicServices
                                         .WithOAuthBearerToken(_token)
                                         .SendAsync(HttpMethod.Get);
 
-                response.EnsureSuccessStatusCode();               
+                response.EnsureSuccessStatusCode();
             };
         }
 
+
+
         private void Stream_Disconnected(object sender, DisconnectEventArgs e)
         {
+            var uriWithCurrentToken = new Uri(_serverUrl.AppendPathSegments("api", Version, "stream").SetQueryParam("access_token", _token));
+            Reflector.SetField(_source, "Uri", uriWithCurrentToken);
+
             //_logger.LogDebug(e.Exception, $"Disconnected from server {_serverUrl}. Retrying in: {e.ReconnectDelay}");
             Task.Delay(e.ReconnectDelay);
             _source.Start();

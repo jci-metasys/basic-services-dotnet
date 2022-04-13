@@ -15,6 +15,8 @@ using JohnsonControls.Metasys.BasicServices.Utils;
 using JohnsonControls.Metasys.BasicServices;
 using System.Diagnostics;
 using System.Dynamic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Timers;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -78,6 +80,10 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         private ApiVersion? version;
+
+        private System.Timers.Timer _timer;
+
+        private DateTime RefreshDateTime;
 
         /// <inheritdoc/>
         public new ApiVersion Version
@@ -226,13 +232,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public AccessToken TryLogin(string username, string password, bool refresh = true)
         {
-            return TryLoginAsync(username, password, refresh).GetAwaiter().GetResult();
+            return TryLoginAsync(username, password, true).GetAwaiter().GetResult();
         }
         /// <inheritdoc/>
         public async Task<AccessToken> TryLoginAsync(string username, string password, bool refresh = true)
         {
-            this.RefreshToken = refresh;
-
             try
             {
                 var response = await Client.Request("login")
@@ -240,7 +244,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     .ReceiveJson<JToken>()
                     .ConfigureAwait(false);
 
-                this.RefreshToken = refresh;
+                this.RefreshToken = true;
 
                 CreateAccessToken(Hostname, username, response);
                 if (Streams != null)
@@ -259,7 +263,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public virtual AccessToken TryLogin(string credManTarget, bool refresh = true)
         {
-            return TryLoginAsync(credManTarget, refresh).GetAwaiter().GetResult();
+            return TryLoginAsync(credManTarget, true).GetAwaiter().GetResult();
         }
         /// <inheritdoc/>
         public virtual async Task<AccessToken> TryLoginAsync(string credManTarget, bool refresh = true)
@@ -267,7 +271,7 @@ namespace JohnsonControls.Metasys.BasicServices
             // Retrieve credentials first
             var credentials = CredentialUtil.GetCredential(credManTarget);
             // Get the control back to TryLogin method
-            return await TryLoginAsync(CredentialUtil.convertToUnSecureString(credentials.Username), CredentialUtil.convertToUnSecureString(credentials.Password), refresh).ConfigureAwait(false);
+            return await TryLoginAsync(CredentialUtil.convertToUnSecureString(credentials.Username), CredentialUtil.convertToUnSecureString(credentials.Password), true).ConfigureAwait(false);
         }
 
         // GetAccessToken -----------------------------------------------------------------------------------------------------------
@@ -277,12 +281,12 @@ namespace JohnsonControls.Metasys.BasicServices
             return this.AccessToken;
         }
 
-        // SetAccessToken -----------------------------------------------------------------------------------------------------------
-        /// <inheritdoc/>
-        public void SetAccessToken(AccessToken accessToken)
-        {
-            this.AccessToken = accessToken;
-        }
+        //// SetAccessToken -----------------------------------------------------------------------------------------------------------
+        ///// <inheritdoc/>
+        //public void SetAccessToken(AccessToken accessToken)
+        //{
+        //    this.AccessToken = accessToken;
+        //}
 
         // Refresh ------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
@@ -296,8 +300,8 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 var response = await Client.Request("refreshToken")
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
+                                                    .GetJsonAsync<JToken>()
+                                                    .ConfigureAwait(false);
                 // Since it's a refresh, get issue info from the current token                
                 CreateAccessToken(AccessToken.Issuer, AccessToken.IssuedTo, response);
                 // Set the new value of the Token to the StreamClient
@@ -313,6 +317,86 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return this.AccessToken;
         }
+
+        // Refresh2 ------------------------------------------------------------------------------------------------------------------
+        
+        private AccessToken Refresh2()
+        {
+            return Refresh2Async().GetAwaiter().GetResult();
+        }
+        
+        private async Task<AccessToken> Refresh2Async()
+        {
+            try
+            {
+                var response = await Client.Request("refreshToken")
+                                                    .GetJsonAsync<JToken>()
+                                                    .ConfigureAwait(false);
+
+                var accessTokenValue = response["accessToken"];
+                var expires = response["expires"];
+                var accessToken = $"Bearer {accessTokenValue.Value<string>()}";
+                var date = expires.Value<DateTime>();
+                this.AccessToken = new AccessToken(AccessToken.Issuer, AccessToken.IssuedTo, accessToken, date);
+                Client.Headers.Remove("Authorization");
+                Client.Headers.Add("Authorization", this.AccessToken.Token);
+
+                DateTime now = DateTime.UtcNow;
+                TimeSpan lifePeriod = (AccessToken.Expires - now);
+                TimeSpan halfLifePeriod = new TimeSpan(lifePeriod.Ticks / 2);
+                DateTime halfLife = now.Add(halfLifePeriod);
+                this.RefreshDateTime = halfLife;
+
+
+                // Set the new value of the Token to the StreamClient
+                if (Streams != null)
+                {
+                    Streams.AccessToken = this.AccessToken;
+                    Streams.KeepAlive(this.AccessToken);
+                }
+
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return this.AccessToken;
+        }
+
+        // CheckRefresh ------------------------------------------------------------------------------------------------------------------
+
+        private void CheckRefresh()
+        {
+            CheckRefreshAsync().GetAwaiter().GetResult();
+        }
+        
+        private async Task CheckRefreshAsync()
+        {
+            try
+            {
+                DateTime now = DateTime.UtcNow;
+                var jwtToken = new JwtSecurityToken(AccessToken.Token);
+                TimeSpan lifePeriod = (jwtToken.ValidTo - jwtToken.ValidFrom);
+                TimeSpan halfLifePeriod = new TimeSpan(lifePeriod.Ticks / 2);
+                DateTime halfLife = jwtToken.ValidFrom.Add(halfLifePeriod);
+                if (now > halfLife)
+                {
+                    try
+                    {
+                        Refresh();
+                    }
+                    catch (Exception ex)
+                    {
+                        //_logger.LogWarning(ex, $"Error refreshing token/keepalive.  Will retry in one minute. Error - " + ex.Message);
+                    }
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+        }
+
         #endregion
 
 
@@ -898,8 +982,15 @@ namespace JohnsonControls.Metasys.BasicServices
                 this.AccessToken = new AccessToken(issuer, issuedTo, accessToken, date);
                 Client.Headers.Remove("Authorization");
                 Client.Headers.Add("Authorization", this.AccessToken.Token);
+
                 if (RefreshToken)
                 {
+                    DateTime now = DateTime.UtcNow;
+                    TimeSpan lifePeriod = (AccessToken.Expires - now);
+                    TimeSpan halfLifePeriod = new TimeSpan(lifePeriod.Ticks / 2);
+                    DateTime halfLife = now.Add(halfLifePeriod);
+                    this.RefreshDateTime = halfLife;
+
                     ScheduleRefresh();
                 }
             }
@@ -915,30 +1006,23 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         private void ScheduleRefresh()
         {
-            DateTime now = DateTime.UtcNow;
-            TimeSpan delay = AccessToken.Expires - now.AddSeconds(-1); // minimum renew gap of 1 sec in advance
-            // Renew one minute before expiration if there is more than one minute time 
-            if (delay > new TimeSpan(0, 1, 0))
+            var delayms = new TimeSpan(0, 1, 0).TotalMilliseconds;
+            _timer = new System.Timers.Timer(delayms)
             {
-                delay.Subtract(new TimeSpan(0, 1, 0));
-            }
-            if (delay <= TimeSpan.Zero)
+                AutoReset = true,
+                Enabled = true
+            };
+
+            _timer.Elapsed += async (object sender, ElapsedEventArgs e) =>
             {
-                // Token already expired
-                return;
-            }
-            int delayms;
-            if (delay.TotalMilliseconds > int.MaxValue)
-            {
-                // Delay is set to int MaxValue to do not go negative with double to int conversion.
-                delayms = int.MaxValue;
-            }
-            else
-            {
-                delayms = (int)delay.TotalMilliseconds;
-            }
-            System.Threading.Tasks.Task.Delay(delayms).ContinueWith(_ => Refresh());
+                DateTime now = DateTime.UtcNow;
+                if (now > this.RefreshDateTime)
+                {
+                  Refresh2();
+                }
+            };
         }
+
 
         /// <summary>
         /// Overload of ReadPropertyAsync for internal use where Exception suppress is needed, e.g. ReadPropertyMultiple 
@@ -947,7 +1031,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeName"></param>
         /// <param name="suppressNotFoundException"></param>
         /// <returns></returns>
-        private async Task<Variant> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException = true)
+            private async Task<Variant> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException = true)
         {
             try
             {
