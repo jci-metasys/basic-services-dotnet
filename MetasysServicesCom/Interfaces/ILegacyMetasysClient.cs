@@ -99,6 +99,24 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms for the specified object.</returns>
         IComPagedResult GetAlarmsForNetworkDevice(string networkDeviceId, IComFilterAlarm alarmFilter);
+
+        /// <summary>
+        /// Acknowledge an Alarm.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="annontationText"></param>
+        /// <returns></returns>
+        void AcknowledgeAlarm(string id, string annontationText);
+
+
+        /// <summary>
+        /// Discard an Alarm.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="annontationText"></param>
+        /// <returns></returns>
+        void DiscardAlarm(string id, string annontationText);
+
         #endregion
 
 

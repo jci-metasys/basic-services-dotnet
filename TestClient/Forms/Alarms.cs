@@ -24,18 +24,6 @@ namespace MetasysServices_TestClient.Forms
         public Alarms()
         {
             InitializeComponent();
-            //Load the combobox using the values from 'SpaceTypesEnum'
-            CmbEditAlarm_Action.DataSource = Enum.GetValues(typeof(ActivityManagementStatusEnum))
-             .Cast<Enum>()
-             .Select(value => new {
-                 (Attribute.GetCustomAttribute(value.GetType().GetField(value.ToString()), typeof(DescriptionAttribute)) as DescriptionAttribute).Description,
-                 value
-             })
-            .OrderBy(item => item.value)
-            .ToList();
-            CmbEditAlarm_Action.DisplayMember = "Description";
-            CmbEditAlarm_Action.ValueMember = "value";
-
         }
         public void InitForm(MetasysClient client, TabPage container)
         {
@@ -207,21 +195,20 @@ namespace MetasysServices_TestClient.Forms
 
         private void BtnEditAlarm_Click(object sender, EventArgs e)
         {
-            TxtEditAlarm_Result.Text = String.Empty;
-            String alarmId = TxtEditAlarm_AlarmId.Text;
-            ActivityManagementStatusEnum action = (ActivityManagementStatusEnum)Enum.Parse(typeof(ActivityManagementStatusEnum), CmbEditAlarm_Action.Text, true); // case insensitive
-            String annotationText = TxtEditAlarm_AnnotationText.Text;
+            TxtAckAlarm_Result.Text = String.Empty;
+            String alarmId = TxtAckAlarm_AlarmId.Text;
+            String annotationText = TxtAckAlarm_AnnotationText.Text;
             if (alarmId.Length > 0)
             {
                 Guid alarmGuid = new Guid(alarmId);
                 try
                 {
-                     _client.Alarms.Edit(alarmGuid, action, annotationText);
-                    TxtEditAlarm_Result.Text = "OK, done";
+                     _client.Alarms.Acknowledge(alarmGuid,  annotationText);
+                    TxtAckAlarm_Result.Text = "OK, done";
                 }
                 catch (MetasysHttpException ex)
                 {
-                    TxtEditAlarm_Result.Text = "Error: " + ex.Message;
+                    TxtAckAlarm_Result.Text = "Error: " + ex.Message;
                 }
             }
         }
@@ -229,6 +216,27 @@ namespace MetasysServices_TestClient.Forms
         private void ChkGet_NoFilters_CheckedChanged(object sender, EventArgs e)
         {
             TlpGet_Filters.Enabled = !ChkGet_NoFilters.Checked;
+        }
+
+        private void BtnDiscardAlarm_Click(object sender, EventArgs e)
+        {
+            TxtDiscardAlarm_Result.Text = String.Empty;
+            String alarmId = TxtDiscardAlarm_AlarmId.Text;
+            String annotationText = TxtDiscardAlarm_AnnotationText.Text;
+            if (alarmId.Length > 0)
+            {
+                Guid alarmGuid = new Guid(alarmId);
+                try
+                {
+                    _client.Alarms.Discard(alarmGuid, annotationText);
+                    TxtDiscardAlarm_Result.Text = "OK, done";
+                }
+                catch (MetasysHttpException ex)
+                {
+                    TxtDiscardAlarm_Result.Text = "Error: " + ex.Message;
+                }
+            }
+
         }
     }
 }

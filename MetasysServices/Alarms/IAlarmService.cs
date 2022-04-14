@@ -11,15 +11,33 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public interface IAlarmsService:IBasicService
     {
+        ///// <summary>
+        ///// Set an Alarm as 'acknowledged' or 'discared'.
+        ///// </summary>
+        ///// <param name="alarmId">The identifier of the alarm.</param>
+        ///// <param name="action">Action: Acknowledged or Discarded.</param>
+        ///// <param name="annotationText">Annotation Text (optional).</param>
+        //void Edit(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null);
+        ///// <inheritdoc cref="IAlarmsService.Edit(Guid, ActivityManagementStatusEnum, String)"/>
+        //Task EditAsync(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null);
+
         /// <summary>
-        /// Set an Alarm as 'acknowledged' or 'discared'.
+        /// Set an Alarm as 'acknowledged'
         /// </summary>
         /// <param name="alarmId">The identifier of the alarm.</param>
-        /// <param name="action">Action: Acknowledged or Discarded.</param>
         /// <param name="annotationText">Annotation Text (optional).</param>
-        void Edit(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null);
-        /// <inheritdoc cref="IAlarmsService.Edit(Guid, ActivityManagementStatusEnum, String)"/>
-        Task EditAsync(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null);
+        void Acknowledge(Guid alarmId, string annotationText = null);
+        /// <inheritdoc cref="IAlarmsService.Acknowledge(Guid, String)"/>
+        Task AcknowledgeAsync(Guid alarmId, string annotationText = null);
+
+        /// <summary>
+        /// Set an Alarm as 'discarded'
+        /// </summary>
+        /// <param name="alarmId">The identifier of the alarm.</param>
+        /// <param name="annotationText">Annotation Text (optional).</param>
+        void Discard(Guid alarmId, string annotationText = null);
+        /// <inheritdoc cref="IAlarmsService.Discard(Guid, String)"/>
+        Task DiscardAsync(Guid alarmId, string annotationText = null);
 
         // --------------------------------------------------------------------------------------------------
         /// <summary>

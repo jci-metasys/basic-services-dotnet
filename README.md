@@ -51,8 +51,16 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Get Alarms for an Object](#get-alarms-for-an-object)
     - [Get Alarms for a Network Device](#get-alarms-for-a-network-device)
     - [Get Alarm Annotations](#get-alarm-annotations)
-  - [Trends](#trends)
+    - [Acknowlege an Alarm](#acknowledge-an-alarm)
+    - [Discard an Alarm](#discard-an-alarm)
   - [Audits](#audits)
+    - [Get Audits](#get-audits)
+    - [Get Single Audit](#get-single-audit)
+    - [Get Audits for an Object](#get-audits-for-an-object)
+    - [Get Audit Annotations](#get-audit-annotations)
+    - [Discard an Audit](#discard-an-audit)
+    - [Discard Multiple Audits](#discard-multiple-audits)
+  - [Trends](#trends)
 - [Usage (COM)](#usage-com)
   - [Creating a Client](#creating-a-client-1)
   - [Login and Access Tokens](#login-and-access-tokens-1)
@@ -1019,54 +1027,30 @@ This method returns a collection of AlarmAnnotation objects and expect an alarm 
 ```
 <br/>
 
+#### Acknowledge an Alarm
+> Only using API v4   
+> 
+To allow for acknowledging an alarm you can use the method **`Alarms.Acknowlege`**.  
+This method expects an alarm Id and optionally you can also add an annotation.
+<br/>
 
+#### Discard_an Alarm
+> Only using API v4   
+> 
+To allow for discarding an alarm you can use the method **`Alarms.Discard`**.  
+This method expects an alarm Id and optionally you can also add an annotation.
+<br/>
 
-### Trends
-
-All services about trends are provided by Trends local instance of MetasysClient. To get all available samples given a time filter use the GetSamples method. This method will return a PagedResult with a list of Sample. This accepts the Guid of the object, the attribute ID and a TimeFilter object to filter the response. To get all of the available trended attributes of an object given the ID use the GetTrendedAttributes method. 
-
-```csharp
-Guid trendedObjectId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB.10FEC11 - V6 Unit.E4 Network Outdoor Temperature");
-
-// Get attributes where trend extension is configured
-List<MetasysAttribute> trendedAttributes = client.Trends.GetTrendedAttributes(trendedObjectId);
-int attributeId = trendedAttributes[0].Id;
-TimeFilter timeFilter = new TimeFilter
-{
-    StartTime = new DateTime(2020, 6, 5),
-    EndTime = new DateTime(2020, 6, 6)
-};
-
-PagedResult<Sample> samplesPager = client.Trends.GetSamples(trendedObjectId, attributeId, timeFilter);
-// Prints the number of records fetched and paging information
-Console.WriteLine("Total:" + samplesPager.Total);
-Console.WriteLine("Current page:" + samplesPager.CurrentPage);
-Console.WriteLine("Page size:" + samplesPager.PageSize);
-Console.WriteLine("Pages:" + samplesPager.PageCount);
-/*                        
-    Total:145
-    Current page:1
-    Page size:100
-    Pages:2
-    */
-Sample firstSample = samplesPager.Items.FirstOrDefault();
-Console.WriteLine(firstSample);
-/*                        
-    {
-        "Value": 82.0,
-        "Unit": "deg F",
-        "Timestamp": "2020-05-12T05:00:00Z",
-        "IsReliable": true
-    }
-*/
-```
-Keep in mind that the object must be properly configured with trended attributes and samples are sent to the ADS/ADX. If you try to retrieve values from an object that has no valid trended attributes a MetasysHttpNotFoundException is raised.
 
 ### Audits
+All services about audits are provided by **`Audits`**  local instance of MetasysClient.
 
-All services about audits are provided by Audits local instance of MetasysClient.
-To get all available audits use the Get method. This method will return a PagedResult with a list of Audit objects. This accepts an AuditFilter object to filter the response. To get a single audit use the FindById method which returns an Audit object with all the details given the Guid.
+#### Get Audits
+To get all available audits you can use the method **`Audits.Get`**.  
+This method will return a 'PagedResult' with a list of 'Audit' objects.  
+This accepts an 'AuditFilter' object to filter the response. 
 In the Audit filter you can specify the values of OriginApplications or ActionTypes using values of dedicated enumeration sets concatenated by a '|' character.
+
 ```csharp
 AuditFilter auditFilter = new AuditFilter
 {
@@ -1118,14 +1102,25 @@ Console.WriteLine(audit);
 }
 */
 ```
+<br/>
 
-To get the audits of a specific Object use the GetForObject method. The Guid of the parent object is required as input.
+#### Get Single Audit
+To get a single audit you can use the method **`Audits.FindById`** which returns an Audit object with all the details given the Guid.
+<br/>
+
+#### Get Audits for an Object
+To get the audits of a specific Object you can use the method **`Audits.GetForObject`**.  
+The Guid of the parent object is required as parameter.
 ```csharp
 AuditFilter auditFilter = new AuditFilter{};
 var objectId="17ac1932-18d8-518c-8012-420c77bea86b";
 var objectAudits = client.Audits.GetForObject(objectId, auditFilter);
 ```
-To get the annotations of an audit use the GetAnnotations method, it takes the Guid of the audit and returns a collection of AuditAnnotation objects.
+<br/>
+
+#### Get Audit Annotations
+To get the annotations of an audit you can use the method **`Audits.GetAnnotations`**.   
+It required the Guid of the audit and returns a collection of 'AuditAnnotation' objects.
 ```csharp
 IEnumerable<AuditAnnotation> annotations = client.Audits.GetAnnotations(audit.Id);
 AuditAnnotation firstAnnotation = annotations.FirstOrDefault();
@@ -1140,14 +1135,24 @@ Console.WriteLine(firstAnnotation);
     "action": "none"
 } 
 */
-``` 
-To discard an Audit (only with API v3) use the Discard method, it takes the Guid of the audit and the text of an annotation to comment the reason of the discard. It doesn't return a value.
+```
+<br/>
+
+#### Discard an Audit
+To allow for discarding an audit you can use the method **`Audits.Discard`**.  
+This method expects an audit Id and optionally you can also add an annotation.
 ```csharp
 Guid auditId = new Guid("9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf");
 string annotationText = "Reason why the audit has been discarded";
 client.Audits.Discard(auditId, annotationText);
 ``` 
-To discard multiple Audits (only with API v3) use the DiscardMultiple method, it takes a list of BatchRequestParam objects (specifing the list of Audits Guid and annotations) and it returns a list of Result objects.
+<br/>
+
+#### Discard Multiple Audits
+> Only with API v3+   
+> 
+To discard multiple Audits you can use the method **`Audits.DiscardMultiple`**.  
+It takes a list of 'BatchRequestParam' objects (specifing the list of Audits Guid and annotations) and it returns a list of 'Result' objects.
 ```csharp
 var requests = new List<BatchRequestParam>();
 BatchRequestParam request1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST DISCARD ANNOTATION" };
@@ -1166,6 +1171,8 @@ Console.WriteLine(resultItem);
 }  
 */
 ``` 
+
+
 To add an Annotation to an Audit (only with API v3) use the AddAnnotation method, it takes the Guid of the Audit and the text of the annotation you want to add. It doesn't return a value.
 ```csharp
 Guid auditId = new Guid("9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf");
@@ -1191,6 +1198,55 @@ Console.WriteLine(resultItem);
 }            /*
 */
 ``` 
+
+
+
+
+
+
+
+### Trends
+
+All services about trends are provided by Trends local instance of MetasysClient. To get all available samples given a time filter use the GetSamples method. This method will return a PagedResult with a list of Sample. This accepts the Guid of the object, the attribute ID and a TimeFilter object to filter the response. To get all of the available trended attributes of an object given the ID use the GetTrendedAttributes method. 
+
+```csharp
+Guid trendedObjectId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB.10FEC11 - V6 Unit.E4 Network Outdoor Temperature");
+
+// Get attributes where trend extension is configured
+List<MetasysAttribute> trendedAttributes = client.Trends.GetTrendedAttributes(trendedObjectId);
+int attributeId = trendedAttributes[0].Id;
+TimeFilter timeFilter = new TimeFilter
+{
+    StartTime = new DateTime(2020, 6, 5),
+    EndTime = new DateTime(2020, 6, 6)
+};
+
+PagedResult<Sample> samplesPager = client.Trends.GetSamples(trendedObjectId, attributeId, timeFilter);
+// Prints the number of records fetched and paging information
+Console.WriteLine("Total:" + samplesPager.Total);
+Console.WriteLine("Current page:" + samplesPager.CurrentPage);
+Console.WriteLine("Page size:" + samplesPager.PageSize);
+Console.WriteLine("Pages:" + samplesPager.PageCount);
+/*                        
+    Total:145
+    Current page:1
+    Page size:100
+    Pages:2
+    */
+Sample firstSample = samplesPager.Items.FirstOrDefault();
+Console.WriteLine(firstSample);
+/*                        
+    {
+        "Value": 82.0,
+        "Unit": "deg F",
+        "Timestamp": "2020-05-12T05:00:00Z",
+        "IsReliable": true
+    }
+*/
+```
+Keep in mind that the object must be properly configured with trended attributes and samples are sent to the ADS/ADX. If you try to retrieve values from an object that has no valid trended attributes a MetasysHttpNotFoundException is raised.
+
+
 
 
 ## Usage (COM)

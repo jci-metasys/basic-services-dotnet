@@ -43,12 +43,14 @@ namespace MetasysServices_TestClient.Forms
             this.ChkGet_NoFilters = new System.Windows.Forms.CheckBox();
             this.BtnGet = new System.Windows.Forms.Button();
             this.DgvGet = new System.Windows.Forms.DataGridView();
+            this.LblGet_Title = new System.Windows.Forms.Label();
             this.TpgFindById = new System.Windows.Forms.TabPage();
             this.TlpFindById = new System.Windows.Forms.TableLayoutPanel();
             this.LblFindById_AlarmId = new System.Windows.Forms.Label();
             this.TxtFindById_AlarmId = new System.Windows.Forms.TextBox();
             this.BtnFindById = new System.Windows.Forms.Button();
             this.PrgFindById = new System.Windows.Forms.PropertyGrid();
+            this.LblFindById_Title = new System.Windows.Forms.Label();
             this.TpgGetForNetworkDevice = new System.Windows.Forms.TabPage();
             this.TlpGetForNetworkDevice = new System.Windows.Forms.TableLayoutPanel();
             this.LblGetForNetworkDevice_DeviceId = new System.Windows.Forms.Label();
@@ -64,6 +66,7 @@ namespace MetasysServices_TestClient.Forms
             this.ChkGetForNetworkDevice_NoFilters = new System.Windows.Forms.CheckBox();
             this.BtnGetForNetworkDevice = new System.Windows.Forms.Button();
             this.DgvGetForNetworkDevice = new System.Windows.Forms.DataGridView();
+            this.LblGetForNetworkDevice_Title = new System.Windows.Forms.Label();
             this.TpgGetForObject = new System.Windows.Forms.TabPage();
             this.TlpGetForObject = new System.Windows.Forms.TableLayoutPanel();
             this.LblGetForObject_ObjectId = new System.Windows.Forms.Label();
@@ -79,29 +82,34 @@ namespace MetasysServices_TestClient.Forms
             this.ChkGetForObject_NoFilters = new System.Windows.Forms.CheckBox();
             this.BtnGetForObject = new System.Windows.Forms.Button();
             this.DgvGetForObject = new System.Windows.Forms.DataGridView();
+            this.LblGetForObject_Title = new System.Windows.Forms.Label();
             this.TpgGetAnnotations = new System.Windows.Forms.TabPage();
             this.TlpGetAnnotations = new System.Windows.Forms.TableLayoutPanel();
             this.LblGetAnnotations_AlarmId = new System.Windows.Forms.Label();
             this.TxtGetAnnotations_AlarmId = new System.Windows.Forms.TextBox();
             this.BtnGetAnnotations = new System.Windows.Forms.Button();
             this.TxtGetAnnotations_Result = new System.Windows.Forms.TextBox();
-            this.TpgEdit = new System.Windows.Forms.TabPage();
-            this.TlpEditAlarm = new System.Windows.Forms.TableLayoutPanel();
-            this.LblEditAlarm_AlarmId = new System.Windows.Forms.Label();
-            this.TxtEditAlarm_AlarmId = new System.Windows.Forms.TextBox();
-            this.LblEditAlarm_Action = new System.Windows.Forms.Label();
-            this.CmbEditAlarm_Action = new System.Windows.Forms.ComboBox();
-            this.LblEditAlarm_AnnotationText = new System.Windows.Forms.Label();
-            this.TxtEditAlarm_AnnotationText = new System.Windows.Forms.TextBox();
-            this.BtnEditAlarm = new System.Windows.Forms.Button();
-            this.TxtEditAlarm_Result = new System.Windows.Forms.TextBox();
-            this.LblEditAlarm_Result = new System.Windows.Forms.Label();
-            this.LblFindById_Title = new System.Windows.Forms.Label();
-            this.LblEdit_Title = new System.Windows.Forms.Label();
-            this.LblGet_Title = new System.Windows.Forms.Label();
-            this.LblGetForNetworkDevice_Title = new System.Windows.Forms.Label();
-            this.LblGetForObject_Title = new System.Windows.Forms.Label();
             this.GetAnnotations_Title = new System.Windows.Forms.Label();
+            this.TpgAcknowledge = new System.Windows.Forms.TabPage();
+            this.TlpAckAlarm = new System.Windows.Forms.TableLayoutPanel();
+            this.LblAckAlarm_AlarmId = new System.Windows.Forms.Label();
+            this.TxtAckAlarm_AlarmId = new System.Windows.Forms.TextBox();
+            this.LblAckAlarm_AnnotationText = new System.Windows.Forms.Label();
+            this.TxtAckAlarm_AnnotationText = new System.Windows.Forms.TextBox();
+            this.BtnAcknowledgeAlarm = new System.Windows.Forms.Button();
+            this.TxtAckAlarm_Result = new System.Windows.Forms.TextBox();
+            this.LblAckAlarm_Result = new System.Windows.Forms.Label();
+            this.LblAck_Title = new System.Windows.Forms.Label();
+            this.TpgDiscardAlarm = new System.Windows.Forms.TabPage();
+            this.TlpDiscardAlarm = new System.Windows.Forms.TableLayoutPanel();
+            this.LblDiscardAlarm_AlarmId = new System.Windows.Forms.Label();
+            this.TxtDiscardAlarm_AlarmId = new System.Windows.Forms.TextBox();
+            this.LblDiscardAlarm_AnnotationText = new System.Windows.Forms.Label();
+            this.TxtDiscardAlarm_AnnotationText = new System.Windows.Forms.TextBox();
+            this.BtnDiscardAlarm = new System.Windows.Forms.Button();
+            this.TxtDiscardAlarm_Result = new System.Windows.Forms.TextBox();
+            this.LblDiscardAlarm_Result = new System.Windows.Forms.Label();
+            this.LblDiscard_Title = new System.Windows.Forms.Label();
             this.TabMain.SuspendLayout();
             this.TpgGet.SuspendLayout();
             this.TlpGet.SuspendLayout();
@@ -119,8 +127,10 @@ namespace MetasysServices_TestClient.Forms
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetForObject)).BeginInit();
             this.TpgGetAnnotations.SuspendLayout();
             this.TlpGetAnnotations.SuspendLayout();
-            this.TpgEdit.SuspendLayout();
-            this.TlpEditAlarm.SuspendLayout();
+            this.TpgAcknowledge.SuspendLayout();
+            this.TlpAckAlarm.SuspendLayout();
+            this.TpgDiscardAlarm.SuspendLayout();
+            this.TlpDiscardAlarm.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabMain
@@ -131,7 +141,8 @@ namespace MetasysServices_TestClient.Forms
             this.TabMain.Controls.Add(this.TpgGetForNetworkDevice);
             this.TabMain.Controls.Add(this.TpgGetForObject);
             this.TabMain.Controls.Add(this.TpgGetAnnotations);
-            this.TabMain.Controls.Add(this.TpgEdit);
+            this.TabMain.Controls.Add(this.TpgAcknowledge);
+            this.TabMain.Controls.Add(this.TpgDiscardAlarm);
             this.TabMain.ItemSize = new System.Drawing.Size(58, 25);
             this.TabMain.Location = new System.Drawing.Point(12, 12);
             this.TabMain.Name = "TabMain";
@@ -309,6 +320,21 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGet.Size = new System.Drawing.Size(686, 479);
             this.DgvGet.TabIndex = 4;
             // 
+            // LblGet_Title
+            // 
+            this.LblGet_Title.AutoSize = true;
+            this.TlpGet.SetColumnSpan(this.LblGet_Title, 4);
+            this.LblGet_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGet_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGet_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblGet_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblGet_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGet_Title.Name = "LblGet_Title";
+            this.LblGet_Title.Size = new System.Drawing.Size(852, 16);
+            this.LblGet_Title.TabIndex = 5;
+            this.LblGet_Title.Text = "Retrieves a collection of alarms.";
+            this.LblGet_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // TpgFindById
             // 
             this.TpgFindById.Controls.Add(this.TlpFindById);
@@ -384,6 +410,21 @@ namespace MetasysServices_TestClient.Forms
             this.PrgFindById.Name = "PrgFindById";
             this.PrgFindById.Size = new System.Drawing.Size(686, 511);
             this.PrgFindById.TabIndex = 3;
+            // 
+            // LblFindById_Title
+            // 
+            this.LblFindById_Title.AutoSize = true;
+            this.TlpFindById.SetColumnSpan(this.LblFindById_Title, 4);
+            this.LblFindById_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblFindById_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblFindById_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblFindById_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblFindById_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblFindById_Title.Name = "LblFindById_Title";
+            this.LblFindById_Title.Size = new System.Drawing.Size(872, 16);
+            this.LblFindById_Title.TabIndex = 4;
+            this.LblFindById_Title.Text = "Retrieves the specified alarm.";
+            this.LblFindById_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // TpgGetForNetworkDevice
             // 
@@ -578,6 +619,20 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetForNetworkDevice.Size = new System.Drawing.Size(686, 456);
             this.DgvGetForNetworkDevice.TabIndex = 6;
             // 
+            // LblGetForNetworkDevice_Title
+            // 
+            this.LblGetForNetworkDevice_Title.AutoSize = true;
+            this.TlpGetForNetworkDevice.SetColumnSpan(this.LblGetForNetworkDevice_Title, 4);
+            this.LblGetForNetworkDevice_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGetForNetworkDevice_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGetForNetworkDevice_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblGetForNetworkDevice_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblGetForNetworkDevice_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetForNetworkDevice_Title.Name = "LblGetForNetworkDevice_Title";
+            this.LblGetForNetworkDevice_Title.Size = new System.Drawing.Size(852, 16);
+            this.LblGetForNetworkDevice_Title.TabIndex = 7;
+            this.LblGetForNetworkDevice_Title.Text = "Retrieves a collection of alarms for the specified network device.";
+            // 
             // TpgGetForObject
             // 
             this.TpgGetForObject.Controls.Add(this.TlpGetForObject);
@@ -771,6 +826,21 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetForObject.Size = new System.Drawing.Size(686, 456);
             this.DgvGetForObject.TabIndex = 6;
             // 
+            // LblGetForObject_Title
+            // 
+            this.LblGetForObject_Title.AutoSize = true;
+            this.TlpGetForObject.SetColumnSpan(this.LblGetForObject_Title, 4);
+            this.LblGetForObject_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGetForObject_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblGetForObject_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblGetForObject_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblGetForObject_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetForObject_Title.Name = "LblGetForObject_Title";
+            this.LblGetForObject_Title.Size = new System.Drawing.Size(852, 16);
+            this.LblGetForObject_Title.TabIndex = 7;
+            this.LblGetForObject_Title.Text = "Retrieves a collection of alarms for the specified object.";
+            this.LblGetForObject_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // TpgGetAnnotations
             // 
             this.TpgGetAnnotations.Controls.Add(this.TlpGetAnnotations);
@@ -847,218 +917,6 @@ namespace MetasysServices_TestClient.Forms
             this.TxtGetAnnotations_Result.Size = new System.Drawing.Size(686, 511);
             this.TxtGetAnnotations_Result.TabIndex = 3;
             // 
-            // TpgEdit
-            // 
-            this.TpgEdit.Controls.Add(this.TlpEditAlarm);
-            this.TpgEdit.Location = new System.Drawing.Point(4, 29);
-            this.TpgEdit.Name = "TpgEdit";
-            this.TpgEdit.Padding = new System.Windows.Forms.Padding(3);
-            this.TpgEdit.Size = new System.Drawing.Size(884, 600);
-            this.TpgEdit.TabIndex = 0;
-            this.TpgEdit.Text = "Edit";
-            this.TpgEdit.UseVisualStyleBackColor = true;
-            // 
-            // TlpEditAlarm
-            // 
-            this.TlpEditAlarm.ColumnCount = 4;
-            this.TlpEditAlarm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpEditAlarm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.TlpEditAlarm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpEditAlarm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpEditAlarm.Controls.Add(this.LblEditAlarm_AlarmId, 1, 1);
-            this.TlpEditAlarm.Controls.Add(this.TxtEditAlarm_AlarmId, 2, 1);
-            this.TlpEditAlarm.Controls.Add(this.LblEditAlarm_Action, 1, 2);
-            this.TlpEditAlarm.Controls.Add(this.CmbEditAlarm_Action, 2, 2);
-            this.TlpEditAlarm.Controls.Add(this.LblEditAlarm_AnnotationText, 1, 3);
-            this.TlpEditAlarm.Controls.Add(this.TxtEditAlarm_AnnotationText, 2, 3);
-            this.TlpEditAlarm.Controls.Add(this.BtnEditAlarm, 2, 4);
-            this.TlpEditAlarm.Controls.Add(this.TxtEditAlarm_Result, 2, 5);
-            this.TlpEditAlarm.Controls.Add(this.LblEditAlarm_Result, 1, 5);
-            this.TlpEditAlarm.Controls.Add(this.LblEdit_Title, 0, 0);
-            this.TlpEditAlarm.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TlpEditAlarm.Location = new System.Drawing.Point(3, 3);
-            this.TlpEditAlarm.Name = "TlpEditAlarm";
-            this.TlpEditAlarm.RowCount = 7;
-            this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TlpEditAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpEditAlarm.Size = new System.Drawing.Size(878, 594);
-            this.TlpEditAlarm.TabIndex = 0;
-            // 
-            // LblEditAlarm_AlarmId
-            // 
-            this.LblEditAlarm_AlarmId.AutoSize = true;
-            this.LblEditAlarm_AlarmId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEditAlarm_AlarmId.Location = new System.Drawing.Point(23, 25);
-            this.LblEditAlarm_AlarmId.Margin = new System.Windows.Forms.Padding(3);
-            this.LblEditAlarm_AlarmId.MinimumSize = new System.Drawing.Size(140, 0);
-            this.LblEditAlarm_AlarmId.Name = "LblEditAlarm_AlarmId";
-            this.LblEditAlarm_AlarmId.Size = new System.Drawing.Size(140, 20);
-            this.LblEditAlarm_AlarmId.TabIndex = 0;
-            this.LblEditAlarm_AlarmId.Text = "Alarm ID (GUID):";
-            this.LblEditAlarm_AlarmId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TxtEditAlarm_AlarmId
-            // 
-            this.TxtEditAlarm_AlarmId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtEditAlarm_AlarmId.Location = new System.Drawing.Point(169, 25);
-            this.TxtEditAlarm_AlarmId.Name = "TxtEditAlarm_AlarmId";
-            this.TxtEditAlarm_AlarmId.Size = new System.Drawing.Size(686, 20);
-            this.TxtEditAlarm_AlarmId.TabIndex = 1;
-            // 
-            // LblEditAlarm_Action
-            // 
-            this.LblEditAlarm_Action.AutoSize = true;
-            this.LblEditAlarm_Action.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEditAlarm_Action.Location = new System.Drawing.Point(23, 51);
-            this.LblEditAlarm_Action.Margin = new System.Windows.Forms.Padding(3);
-            this.LblEditAlarm_Action.Name = "LblEditAlarm_Action";
-            this.LblEditAlarm_Action.Size = new System.Drawing.Size(140, 21);
-            this.LblEditAlarm_Action.TabIndex = 2;
-            this.LblEditAlarm_Action.Text = "Action:";
-            this.LblEditAlarm_Action.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // CmbEditAlarm_Action
-            // 
-            this.CmbEditAlarm_Action.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CmbEditAlarm_Action.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CmbEditAlarm_Action.FormattingEnabled = true;
-            this.CmbEditAlarm_Action.Location = new System.Drawing.Point(169, 51);
-            this.CmbEditAlarm_Action.Name = "CmbEditAlarm_Action";
-            this.CmbEditAlarm_Action.Size = new System.Drawing.Size(686, 21);
-            this.CmbEditAlarm_Action.TabIndex = 3;
-            // 
-            // LblEditAlarm_AnnotationText
-            // 
-            this.LblEditAlarm_AnnotationText.AutoSize = true;
-            this.LblEditAlarm_AnnotationText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEditAlarm_AnnotationText.Location = new System.Drawing.Point(23, 78);
-            this.LblEditAlarm_AnnotationText.Margin = new System.Windows.Forms.Padding(3);
-            this.LblEditAlarm_AnnotationText.Name = "LblEditAlarm_AnnotationText";
-            this.LblEditAlarm_AnnotationText.Size = new System.Drawing.Size(140, 20);
-            this.LblEditAlarm_AnnotationText.TabIndex = 4;
-            this.LblEditAlarm_AnnotationText.Text = "Annotation Text:";
-            this.LblEditAlarm_AnnotationText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TxtEditAlarm_AnnotationText
-            // 
-            this.TxtEditAlarm_AnnotationText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtEditAlarm_AnnotationText.Location = new System.Drawing.Point(169, 78);
-            this.TxtEditAlarm_AnnotationText.Name = "TxtEditAlarm_AnnotationText";
-            this.TxtEditAlarm_AnnotationText.Size = new System.Drawing.Size(686, 20);
-            this.TxtEditAlarm_AnnotationText.TabIndex = 5;
-            // 
-            // BtnEditAlarm
-            // 
-            this.BtnEditAlarm.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnEditAlarm.Location = new System.Drawing.Point(169, 104);
-            this.BtnEditAlarm.MinimumSize = new System.Drawing.Size(260, 0);
-            this.BtnEditAlarm.Name = "BtnEditAlarm";
-            this.BtnEditAlarm.Size = new System.Drawing.Size(686, 23);
-            this.BtnEditAlarm.TabIndex = 6;
-            this.BtnEditAlarm.Text = "Alarms.Edit";
-            this.BtnEditAlarm.UseVisualStyleBackColor = true;
-            this.BtnEditAlarm.Click += new System.EventHandler(this.BtnEditAlarm_Click);
-            // 
-            // TxtEditAlarm_Result
-            // 
-            this.TxtEditAlarm_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtEditAlarm_Result.Location = new System.Drawing.Point(169, 133);
-            this.TxtEditAlarm_Result.Name = "TxtEditAlarm_Result";
-            this.TxtEditAlarm_Result.ReadOnly = true;
-            this.TxtEditAlarm_Result.Size = new System.Drawing.Size(686, 20);
-            this.TxtEditAlarm_Result.TabIndex = 7;
-            // 
-            // LblEditAlarm_Result
-            // 
-            this.LblEditAlarm_Result.AutoSize = true;
-            this.LblEditAlarm_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEditAlarm_Result.Location = new System.Drawing.Point(23, 133);
-            this.LblEditAlarm_Result.Margin = new System.Windows.Forms.Padding(3);
-            this.LblEditAlarm_Result.Name = "LblEditAlarm_Result";
-            this.LblEditAlarm_Result.Size = new System.Drawing.Size(140, 20);
-            this.LblEditAlarm_Result.TabIndex = 8;
-            this.LblEditAlarm_Result.Text = "Result:";
-            this.LblEditAlarm_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LblFindById_Title
-            // 
-            this.LblFindById_Title.AutoSize = true;
-            this.TlpFindById.SetColumnSpan(this.LblFindById_Title, 4);
-            this.LblFindById_Title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblFindById_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblFindById_Title.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.LblFindById_Title.Location = new System.Drawing.Point(3, 3);
-            this.LblFindById_Title.Margin = new System.Windows.Forms.Padding(3);
-            this.LblFindById_Title.Name = "LblFindById_Title";
-            this.LblFindById_Title.Size = new System.Drawing.Size(872, 16);
-            this.LblFindById_Title.TabIndex = 4;
-            this.LblFindById_Title.Text = "Retrieves the specified alarm.";
-            this.LblFindById_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // LblEdit_Title
-            // 
-            this.LblEdit_Title.AutoSize = true;
-            this.TlpEditAlarm.SetColumnSpan(this.LblEdit_Title, 4);
-            this.LblEdit_Title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblEdit_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblEdit_Title.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.LblEdit_Title.Location = new System.Drawing.Point(3, 3);
-            this.LblEdit_Title.Margin = new System.Windows.Forms.Padding(3);
-            this.LblEdit_Title.Name = "LblEdit_Title";
-            this.LblEdit_Title.Size = new System.Drawing.Size(872, 16);
-            this.LblEdit_Title.TabIndex = 9;
-            this.LblEdit_Title.Text = "Allows for acknowledging or discarding an alarm.";
-            this.LblEdit_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // LblGet_Title
-            // 
-            this.LblGet_Title.AutoSize = true;
-            this.TlpGet.SetColumnSpan(this.LblGet_Title, 4);
-            this.LblGet_Title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGet_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblGet_Title.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.LblGet_Title.Location = new System.Drawing.Point(3, 3);
-            this.LblGet_Title.Margin = new System.Windows.Forms.Padding(3);
-            this.LblGet_Title.Name = "LblGet_Title";
-            this.LblGet_Title.Size = new System.Drawing.Size(852, 16);
-            this.LblGet_Title.TabIndex = 5;
-            this.LblGet_Title.Text = "Retrieves a collection of alarms.";
-            this.LblGet_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // LblGetForNetworkDevice_Title
-            // 
-            this.LblGetForNetworkDevice_Title.AutoSize = true;
-            this.TlpGetForNetworkDevice.SetColumnSpan(this.LblGetForNetworkDevice_Title, 4);
-            this.LblGetForNetworkDevice_Title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetForNetworkDevice_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblGetForNetworkDevice_Title.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.LblGetForNetworkDevice_Title.Location = new System.Drawing.Point(3, 3);
-            this.LblGetForNetworkDevice_Title.Margin = new System.Windows.Forms.Padding(3);
-            this.LblGetForNetworkDevice_Title.Name = "LblGetForNetworkDevice_Title";
-            this.LblGetForNetworkDevice_Title.Size = new System.Drawing.Size(852, 16);
-            this.LblGetForNetworkDevice_Title.TabIndex = 7;
-            this.LblGetForNetworkDevice_Title.Text = "Retrieves a collection of alarms for the specified network device.";
-            // 
-            // LblGetForObject_Title
-            // 
-            this.LblGetForObject_Title.AutoSize = true;
-            this.TlpGetForObject.SetColumnSpan(this.LblGetForObject_Title, 4);
-            this.LblGetForObject_Title.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetForObject_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblGetForObject_Title.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.LblGetForObject_Title.Location = new System.Drawing.Point(3, 3);
-            this.LblGetForObject_Title.Margin = new System.Windows.Forms.Padding(3);
-            this.LblGetForObject_Title.Name = "LblGetForObject_Title";
-            this.LblGetForObject_Title.Size = new System.Drawing.Size(852, 16);
-            this.LblGetForObject_Title.TabIndex = 7;
-            this.LblGetForObject_Title.Text = "Retrieves a collection of alarms for the specified object.";
-            this.LblGetForObject_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // GetAnnotations_Title
             // 
             this.GetAnnotations_Title.AutoSize = true;
@@ -1073,6 +931,264 @@ namespace MetasysServices_TestClient.Forms
             this.GetAnnotations_Title.TabIndex = 4;
             this.GetAnnotations_Title.Text = "Retrieves the collection of annotations available for the specified alarm.";
             this.GetAnnotations_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // TpgAcknowledge
+            // 
+            this.TpgAcknowledge.Controls.Add(this.TlpAckAlarm);
+            this.TpgAcknowledge.Location = new System.Drawing.Point(4, 29);
+            this.TpgAcknowledge.Name = "TpgAcknowledge";
+            this.TpgAcknowledge.Padding = new System.Windows.Forms.Padding(3);
+            this.TpgAcknowledge.Size = new System.Drawing.Size(884, 600);
+            this.TpgAcknowledge.TabIndex = 0;
+            this.TpgAcknowledge.Text = "Acknowledge";
+            this.TpgAcknowledge.UseVisualStyleBackColor = true;
+            // 
+            // TlpAckAlarm
+            // 
+            this.TlpAckAlarm.ColumnCount = 4;
+            this.TlpAckAlarm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpAckAlarm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.TlpAckAlarm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpAckAlarm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpAckAlarm.Controls.Add(this.LblAckAlarm_AlarmId, 1, 1);
+            this.TlpAckAlarm.Controls.Add(this.TxtAckAlarm_AlarmId, 2, 1);
+            this.TlpAckAlarm.Controls.Add(this.LblAckAlarm_AnnotationText, 1, 2);
+            this.TlpAckAlarm.Controls.Add(this.TxtAckAlarm_AnnotationText, 2, 2);
+            this.TlpAckAlarm.Controls.Add(this.BtnAcknowledgeAlarm, 2, 3);
+            this.TlpAckAlarm.Controls.Add(this.TxtAckAlarm_Result, 2, 4);
+            this.TlpAckAlarm.Controls.Add(this.LblAckAlarm_Result, 1, 4);
+            this.TlpAckAlarm.Controls.Add(this.LblAck_Title, 0, 0);
+            this.TlpAckAlarm.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TlpAckAlarm.Location = new System.Drawing.Point(3, 3);
+            this.TlpAckAlarm.Name = "TlpAckAlarm";
+            this.TlpAckAlarm.RowCount = 6;
+            this.TlpAckAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpAckAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpAckAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpAckAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpAckAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpAckAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpAckAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpAckAlarm.Size = new System.Drawing.Size(878, 594);
+            this.TlpAckAlarm.TabIndex = 0;
+            // 
+            // LblAckAlarm_AlarmId
+            // 
+            this.LblAckAlarm_AlarmId.AutoSize = true;
+            this.LblAckAlarm_AlarmId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblAckAlarm_AlarmId.Location = new System.Drawing.Point(23, 25);
+            this.LblAckAlarm_AlarmId.Margin = new System.Windows.Forms.Padding(3);
+            this.LblAckAlarm_AlarmId.MinimumSize = new System.Drawing.Size(140, 0);
+            this.LblAckAlarm_AlarmId.Name = "LblAckAlarm_AlarmId";
+            this.LblAckAlarm_AlarmId.Size = new System.Drawing.Size(140, 20);
+            this.LblAckAlarm_AlarmId.TabIndex = 0;
+            this.LblAckAlarm_AlarmId.Text = "Alarm ID (GUID):";
+            this.LblAckAlarm_AlarmId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtAckAlarm_AlarmId
+            // 
+            this.TxtAckAlarm_AlarmId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtAckAlarm_AlarmId.Location = new System.Drawing.Point(169, 25);
+            this.TxtAckAlarm_AlarmId.Name = "TxtAckAlarm_AlarmId";
+            this.TxtAckAlarm_AlarmId.Size = new System.Drawing.Size(686, 20);
+            this.TxtAckAlarm_AlarmId.TabIndex = 1;
+            // 
+            // LblAckAlarm_AnnotationText
+            // 
+            this.LblAckAlarm_AnnotationText.AutoSize = true;
+            this.LblAckAlarm_AnnotationText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblAckAlarm_AnnotationText.Location = new System.Drawing.Point(23, 51);
+            this.LblAckAlarm_AnnotationText.Margin = new System.Windows.Forms.Padding(3);
+            this.LblAckAlarm_AnnotationText.Name = "LblAckAlarm_AnnotationText";
+            this.LblAckAlarm_AnnotationText.Size = new System.Drawing.Size(140, 20);
+            this.LblAckAlarm_AnnotationText.TabIndex = 4;
+            this.LblAckAlarm_AnnotationText.Text = "Annotation Text:";
+            this.LblAckAlarm_AnnotationText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtAckAlarm_AnnotationText
+            // 
+            this.TxtAckAlarm_AnnotationText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtAckAlarm_AnnotationText.Location = new System.Drawing.Point(169, 51);
+            this.TxtAckAlarm_AnnotationText.Name = "TxtAckAlarm_AnnotationText";
+            this.TxtAckAlarm_AnnotationText.Size = new System.Drawing.Size(686, 20);
+            this.TxtAckAlarm_AnnotationText.TabIndex = 5;
+            // 
+            // BtnAcknowledgeAlarm
+            // 
+            this.BtnAcknowledgeAlarm.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnAcknowledgeAlarm.Location = new System.Drawing.Point(169, 77);
+            this.BtnAcknowledgeAlarm.MinimumSize = new System.Drawing.Size(260, 0);
+            this.BtnAcknowledgeAlarm.Name = "BtnAcknowledgeAlarm";
+            this.BtnAcknowledgeAlarm.Size = new System.Drawing.Size(686, 23);
+            this.BtnAcknowledgeAlarm.TabIndex = 6;
+            this.BtnAcknowledgeAlarm.Text = "Alarms.Acknowledge";
+            this.BtnAcknowledgeAlarm.UseVisualStyleBackColor = true;
+            this.BtnAcknowledgeAlarm.Click += new System.EventHandler(this.BtnEditAlarm_Click);
+            // 
+            // TxtAckAlarm_Result
+            // 
+            this.TxtAckAlarm_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtAckAlarm_Result.Location = new System.Drawing.Point(169, 106);
+            this.TxtAckAlarm_Result.Name = "TxtAckAlarm_Result";
+            this.TxtAckAlarm_Result.ReadOnly = true;
+            this.TxtAckAlarm_Result.Size = new System.Drawing.Size(686, 20);
+            this.TxtAckAlarm_Result.TabIndex = 7;
+            // 
+            // LblAckAlarm_Result
+            // 
+            this.LblAckAlarm_Result.AutoSize = true;
+            this.LblAckAlarm_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblAckAlarm_Result.Location = new System.Drawing.Point(23, 106);
+            this.LblAckAlarm_Result.Margin = new System.Windows.Forms.Padding(3);
+            this.LblAckAlarm_Result.Name = "LblAckAlarm_Result";
+            this.LblAckAlarm_Result.Size = new System.Drawing.Size(140, 20);
+            this.LblAckAlarm_Result.TabIndex = 8;
+            this.LblAckAlarm_Result.Text = "Result:";
+            this.LblAckAlarm_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LblAck_Title
+            // 
+            this.LblAck_Title.AutoSize = true;
+            this.TlpAckAlarm.SetColumnSpan(this.LblAck_Title, 4);
+            this.LblAck_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblAck_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblAck_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblAck_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblAck_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblAck_Title.Name = "LblAck_Title";
+            this.LblAck_Title.Size = new System.Drawing.Size(872, 16);
+            this.LblAck_Title.TabIndex = 9;
+            this.LblAck_Title.Text = "Allows for acknowledging an alarm.";
+            this.LblAck_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // TpgDiscardAlarm
+            // 
+            this.TpgDiscardAlarm.Controls.Add(this.TlpDiscardAlarm);
+            this.TpgDiscardAlarm.Location = new System.Drawing.Point(4, 29);
+            this.TpgDiscardAlarm.Name = "TpgDiscardAlarm";
+            this.TpgDiscardAlarm.Padding = new System.Windows.Forms.Padding(3);
+            this.TpgDiscardAlarm.Size = new System.Drawing.Size(884, 600);
+            this.TpgDiscardAlarm.TabIndex = 6;
+            this.TpgDiscardAlarm.Text = "Discard";
+            this.TpgDiscardAlarm.UseVisualStyleBackColor = true;
+            // 
+            // TlpDiscardAlarm
+            // 
+            this.TlpDiscardAlarm.ColumnCount = 4;
+            this.TlpDiscardAlarm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpDiscardAlarm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.TlpDiscardAlarm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpDiscardAlarm.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpDiscardAlarm.Controls.Add(this.LblDiscardAlarm_AlarmId, 1, 1);
+            this.TlpDiscardAlarm.Controls.Add(this.TxtDiscardAlarm_AlarmId, 2, 1);
+            this.TlpDiscardAlarm.Controls.Add(this.LblDiscardAlarm_AnnotationText, 1, 2);
+            this.TlpDiscardAlarm.Controls.Add(this.TxtDiscardAlarm_AnnotationText, 2, 2);
+            this.TlpDiscardAlarm.Controls.Add(this.BtnDiscardAlarm, 2, 3);
+            this.TlpDiscardAlarm.Controls.Add(this.TxtDiscardAlarm_Result, 2, 4);
+            this.TlpDiscardAlarm.Controls.Add(this.LblDiscardAlarm_Result, 1, 4);
+            this.TlpDiscardAlarm.Controls.Add(this.LblDiscard_Title, 0, 0);
+            this.TlpDiscardAlarm.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TlpDiscardAlarm.Location = new System.Drawing.Point(3, 3);
+            this.TlpDiscardAlarm.Name = "TlpDiscardAlarm";
+            this.TlpDiscardAlarm.RowCount = 6;
+            this.TlpDiscardAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpDiscardAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpDiscardAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpDiscardAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpDiscardAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpDiscardAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpDiscardAlarm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpDiscardAlarm.Size = new System.Drawing.Size(878, 594);
+            this.TlpDiscardAlarm.TabIndex = 1;
+            // 
+            // LblDiscardAlarm_AlarmId
+            // 
+            this.LblDiscardAlarm_AlarmId.AutoSize = true;
+            this.LblDiscardAlarm_AlarmId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblDiscardAlarm_AlarmId.Location = new System.Drawing.Point(23, 25);
+            this.LblDiscardAlarm_AlarmId.Margin = new System.Windows.Forms.Padding(3);
+            this.LblDiscardAlarm_AlarmId.MinimumSize = new System.Drawing.Size(140, 0);
+            this.LblDiscardAlarm_AlarmId.Name = "LblDiscardAlarm_AlarmId";
+            this.LblDiscardAlarm_AlarmId.Size = new System.Drawing.Size(140, 20);
+            this.LblDiscardAlarm_AlarmId.TabIndex = 0;
+            this.LblDiscardAlarm_AlarmId.Text = "Alarm ID (GUID):";
+            this.LblDiscardAlarm_AlarmId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtDiscardAlarm_AlarmId
+            // 
+            this.TxtDiscardAlarm_AlarmId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtDiscardAlarm_AlarmId.Location = new System.Drawing.Point(169, 25);
+            this.TxtDiscardAlarm_AlarmId.Name = "TxtDiscardAlarm_AlarmId";
+            this.TxtDiscardAlarm_AlarmId.Size = new System.Drawing.Size(686, 20);
+            this.TxtDiscardAlarm_AlarmId.TabIndex = 1;
+            // 
+            // LblDiscardAlarm_AnnotationText
+            // 
+            this.LblDiscardAlarm_AnnotationText.AutoSize = true;
+            this.LblDiscardAlarm_AnnotationText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblDiscardAlarm_AnnotationText.Location = new System.Drawing.Point(23, 51);
+            this.LblDiscardAlarm_AnnotationText.Margin = new System.Windows.Forms.Padding(3);
+            this.LblDiscardAlarm_AnnotationText.Name = "LblDiscardAlarm_AnnotationText";
+            this.LblDiscardAlarm_AnnotationText.Size = new System.Drawing.Size(140, 20);
+            this.LblDiscardAlarm_AnnotationText.TabIndex = 4;
+            this.LblDiscardAlarm_AnnotationText.Text = "Annotation Text:";
+            this.LblDiscardAlarm_AnnotationText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtDiscardAlarm_AnnotationText
+            // 
+            this.TxtDiscardAlarm_AnnotationText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtDiscardAlarm_AnnotationText.Location = new System.Drawing.Point(169, 51);
+            this.TxtDiscardAlarm_AnnotationText.Name = "TxtDiscardAlarm_AnnotationText";
+            this.TxtDiscardAlarm_AnnotationText.Size = new System.Drawing.Size(686, 20);
+            this.TxtDiscardAlarm_AnnotationText.TabIndex = 5;
+            // 
+            // BtnDiscardAlarm
+            // 
+            this.BtnDiscardAlarm.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnDiscardAlarm.Location = new System.Drawing.Point(169, 77);
+            this.BtnDiscardAlarm.MinimumSize = new System.Drawing.Size(260, 0);
+            this.BtnDiscardAlarm.Name = "BtnDiscardAlarm";
+            this.BtnDiscardAlarm.Size = new System.Drawing.Size(686, 23);
+            this.BtnDiscardAlarm.TabIndex = 6;
+            this.BtnDiscardAlarm.Text = "Alarms.Discard";
+            this.BtnDiscardAlarm.UseVisualStyleBackColor = true;
+            this.BtnDiscardAlarm.Click += new System.EventHandler(this.BtnDiscardAlarm_Click);
+            // 
+            // TxtDiscardAlarm_Result
+            // 
+            this.TxtDiscardAlarm_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtDiscardAlarm_Result.Location = new System.Drawing.Point(169, 106);
+            this.TxtDiscardAlarm_Result.Name = "TxtDiscardAlarm_Result";
+            this.TxtDiscardAlarm_Result.ReadOnly = true;
+            this.TxtDiscardAlarm_Result.Size = new System.Drawing.Size(686, 20);
+            this.TxtDiscardAlarm_Result.TabIndex = 7;
+            // 
+            // LblDiscardAlarm_Result
+            // 
+            this.LblDiscardAlarm_Result.AutoSize = true;
+            this.LblDiscardAlarm_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblDiscardAlarm_Result.Location = new System.Drawing.Point(23, 106);
+            this.LblDiscardAlarm_Result.Margin = new System.Windows.Forms.Padding(3);
+            this.LblDiscardAlarm_Result.Name = "LblDiscardAlarm_Result";
+            this.LblDiscardAlarm_Result.Size = new System.Drawing.Size(140, 20);
+            this.LblDiscardAlarm_Result.TabIndex = 8;
+            this.LblDiscardAlarm_Result.Text = "Result:";
+            this.LblDiscardAlarm_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LblDiscard_Title
+            // 
+            this.LblDiscard_Title.AutoSize = true;
+            this.TlpDiscardAlarm.SetColumnSpan(this.LblDiscard_Title, 4);
+            this.LblDiscard_Title.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblDiscard_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblDiscard_Title.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LblDiscard_Title.Location = new System.Drawing.Point(3, 3);
+            this.LblDiscard_Title.Margin = new System.Windows.Forms.Padding(3);
+            this.LblDiscard_Title.Name = "LblDiscard_Title";
+            this.LblDiscard_Title.Size = new System.Drawing.Size(872, 16);
+            this.LblDiscard_Title.TabIndex = 9;
+            this.LblDiscard_Title.Text = "Allows for discarding an alarm.";
+            this.LblDiscard_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Alarms
             // 
@@ -1107,9 +1223,12 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetAnnotations.ResumeLayout(false);
             this.TlpGetAnnotations.ResumeLayout(false);
             this.TlpGetAnnotations.PerformLayout();
-            this.TpgEdit.ResumeLayout(false);
-            this.TlpEditAlarm.ResumeLayout(false);
-            this.TlpEditAlarm.PerformLayout();
+            this.TpgAcknowledge.ResumeLayout(false);
+            this.TlpAckAlarm.ResumeLayout(false);
+            this.TlpAckAlarm.PerformLayout();
+            this.TpgDiscardAlarm.ResumeLayout(false);
+            this.TlpDiscardAlarm.ResumeLayout(false);
+            this.TlpDiscardAlarm.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1117,9 +1236,9 @@ namespace MetasysServices_TestClient.Forms
         #endregion
 
         private System.Windows.Forms.TabControl TabMain;
-        private System.Windows.Forms.TabPage TpgEdit;
+        private System.Windows.Forms.TabPage TpgAcknowledge;
         private System.Windows.Forms.TabPage TpgFindById;
-        private System.Windows.Forms.TableLayoutPanel TlpEditAlarm;
+        private System.Windows.Forms.TableLayoutPanel TlpAckAlarm;
         private System.Windows.Forms.TabPage TpgGetForNetworkDevice;
         private System.Windows.Forms.TabPage TpgGetForObject;
         private System.Windows.Forms.TabPage TpgGetAnnotations;
@@ -1174,20 +1293,28 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.TextBox TxtGetAnnotations_AlarmId;
         private System.Windows.Forms.Button BtnGetAnnotations;
         private System.Windows.Forms.TextBox TxtGetAnnotations_Result;
-        private System.Windows.Forms.Label LblEditAlarm_AlarmId;
-        private System.Windows.Forms.TextBox TxtEditAlarm_AlarmId;
-        private System.Windows.Forms.Label LblEditAlarm_Action;
-        private System.Windows.Forms.ComboBox CmbEditAlarm_Action;
-        private System.Windows.Forms.Label LblEditAlarm_AnnotationText;
-        private System.Windows.Forms.TextBox TxtEditAlarm_AnnotationText;
-        private System.Windows.Forms.Button BtnEditAlarm;
-        private System.Windows.Forms.TextBox TxtEditAlarm_Result;
-        private System.Windows.Forms.Label LblEditAlarm_Result;
+        private System.Windows.Forms.Label LblAckAlarm_AlarmId;
+        private System.Windows.Forms.TextBox TxtAckAlarm_AlarmId;
+        private System.Windows.Forms.Label LblAckAlarm_AnnotationText;
+        private System.Windows.Forms.TextBox TxtAckAlarm_AnnotationText;
+        private System.Windows.Forms.Button BtnAcknowledgeAlarm;
+        private System.Windows.Forms.TextBox TxtAckAlarm_Result;
+        private System.Windows.Forms.Label LblAckAlarm_Result;
         private System.Windows.Forms.Label LblFindById_Title;
-        private System.Windows.Forms.Label LblEdit_Title;
+        private System.Windows.Forms.Label LblAck_Title;
         private System.Windows.Forms.Label LblGet_Title;
         private System.Windows.Forms.Label LblGetForNetworkDevice_Title;
         private System.Windows.Forms.Label LblGetForObject_Title;
         private System.Windows.Forms.Label GetAnnotations_Title;
+        private System.Windows.Forms.TabPage TpgDiscardAlarm;
+        private System.Windows.Forms.TableLayoutPanel TlpDiscardAlarm;
+        private System.Windows.Forms.Label LblDiscardAlarm_AlarmId;
+        private System.Windows.Forms.TextBox TxtDiscardAlarm_AlarmId;
+        private System.Windows.Forms.Label LblDiscardAlarm_AnnotationText;
+        private System.Windows.Forms.TextBox TxtDiscardAlarm_AnnotationText;
+        private System.Windows.Forms.Button BtnDiscardAlarm;
+        private System.Windows.Forms.TextBox TxtDiscardAlarm_Result;
+        private System.Windows.Forms.Label LblDiscardAlarm_Result;
+        private System.Windows.Forms.Label LblDiscard_Title;
     }
 }

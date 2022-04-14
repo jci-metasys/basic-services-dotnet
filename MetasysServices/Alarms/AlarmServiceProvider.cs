@@ -137,13 +137,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public void Edit(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
+        private void Edit(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
         {
             EditAsync(alarmId, action, annotationText).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task EditAsync(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
+        private async Task EditAsync(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
         {
             if (Version > ApiVersion.v3)
             {
@@ -163,6 +163,30 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 throw new MetasysUnsupportedApiVersion(Version.ToString());
             }
+        }
+
+        /// <inheritdoc/>
+        public void Discard(Guid alarmId, string annotationText = null)
+        {
+            EditAsync(alarmId, ActivityManagementStatusEnum.discarded, annotationText).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public async Task DiscardAsync(Guid alarmId, string annotationText = null)
+        {
+            EditAsync(alarmId, ActivityManagementStatusEnum.discarded, annotationText);
+        }
+
+        /// <inheritdoc/>
+        public void Acknowledge(Guid alarmId, string annotationText = null)
+        {
+            EditAsync(alarmId, ActivityManagementStatusEnum.acknowledged, annotationText).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public async Task AcknowledgeAsync(Guid alarmId, string annotationText = null)
+        {
+            EditAsync(alarmId, ActivityManagementStatusEnum.discarded, annotationText);
         }
 
         /// <inheritdoc/>

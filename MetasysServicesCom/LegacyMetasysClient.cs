@@ -173,13 +173,19 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComAlarmAnnotation[]>(response);
         }
 
-        //EditAlarm -----------------------------------------------------------------------------------------------------------------
+        //AcknowledgeAlarm -----------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public void EditAlarm(string alarmId, string action, string annotationText = null)
+        public void AcknowledgeAlarm(string alarmId, string annotationText = null)
         {
             Guid guid = Guid.Parse(alarmId);
-            ActivityManagementStatusEnum enumAction = (ActivityManagementStatusEnum)Enum.Parse(typeof(ActivityManagementStatusEnum), action);
-            Client.Alarms.Edit(guid, enumAction, annotationText);
+            Client.Alarms.Acknowledge(guid,  annotationText);
+        }
+        //DiscardAlarm -----------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void DiscardAlarm(string alarmId, string annotationText = null)
+        {
+            Guid guid = Guid.Parse(alarmId);
+            Client.Alarms.Discard(guid, annotationText);
         }
         #endregion
 
