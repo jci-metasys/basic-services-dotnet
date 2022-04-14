@@ -1018,10 +1018,40 @@ namespace JohnsonControls.Metasys.BasicServices
                 DateTime now = DateTime.UtcNow;
                 if (now > this.RefreshDateTime)
                 {
-                  Refresh2();
+                    Refresh2();
                 }
             };
         }
+
+        ///// <summary>
+        ///// Will call Refresh() a minute before the token expires.
+        ///// </summary>
+        //private void ScheduleRefresh()
+        //{
+        //    DateTime now = DateTime.UtcNow;
+        //    TimeSpan delay = AccessToken.Expires - now.AddSeconds(-1); // minimum renew gap of 1 sec in advance
+        //    // Renew one minute before expiration if there is more than one minute time 
+        //    if (delay > new TimeSpan(0, 1, 0))
+        //    {
+        //        delay.Subtract(new TimeSpan(0, 1, 0));
+        //    }
+        //    if (delay <= TimeSpan.Zero)
+        //    {
+        //        // Token already expired
+        //        return;
+        //    }
+        //    int delayms;
+        //    if (delay.TotalMilliseconds > int.MaxValue)
+        //    {
+        //        // Delay is set to int MaxValue to do not go negative with double to int conversion.
+        //        delayms = int.MaxValue;
+        //    }
+        //    else
+        //    {
+        //        delayms = (int)delay.TotalMilliseconds;
+        //    }
+        //    System.Threading.Tasks.Task.Delay(delayms).ContinueWith(_ => Refresh2());
+        //}
 
 
         /// <summary>
@@ -1031,7 +1061,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="attributeName"></param>
         /// <param name="suppressNotFoundException"></param>
         /// <returns></returns>
-            private async Task<Variant> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException = true)
+        private async Task<Variant> ReadPropertyAsync(Guid id, string attributeName, bool suppressNotFoundException = true)
         {
             try
             {

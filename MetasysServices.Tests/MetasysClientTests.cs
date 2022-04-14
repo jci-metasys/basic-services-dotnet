@@ -207,31 +207,31 @@ namespace MetasysServices.Tests
             PrintMessage($"TestRefreshUnauthorizedThrowsException: {e.Message}", true);
         }
 
-        [Test]
-        public void TestRefreshTimerThreeSeconds()
-        {
-            CleanLogin();
-            DateTime now = DateTime.UtcNow;
-            DateTime future = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond));
-            future.AddSeconds(3);
-            string time = future.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
-            httpTest.RespondWithJson(new { accessToken = "faketokenTimer1", expires = time })
-                .RespondWithJson(new { accessToken = "faketokenTimer2", expires = date2 });
-            var expected1 = new AccessToken("hostname", "username", "Bearer faketokenTimer1", future);
-            var expected2 = new AccessToken("hostname", "username", "Bearer faketokenTimer2", dateTime2);
+        //[Test]
+        //public void TestRefreshTimerThreeSeconds()
+        //{
+        //    CleanLogin();
+        //    DateTime now = DateTime.UtcNow;
+        //    DateTime future = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond));
+        //    future.AddSeconds(3);
+        //    string time = future.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
+        //    httpTest.RespondWithJson(new { accessToken = "faketokenTimer1", expires = time })
+        //        .RespondWithJson(new { accessToken = "faketokenTimer2", expires = date2 });
+        //    var expected1 = new AccessToken("hostname", "username", "Bearer faketokenTimer1", future);
+        //    var expected2 = new AccessToken("hostname", "username", "Bearer faketokenTimer2", dateTime2);
 
-            client.TryLogin("username", "password");
+        //    client.TryLogin("username", "password");
 
-            var token1 = client.GetAccessToken();
-            Assert.AreEqual(expected1, token1);
+        //    var token1 = client.GetAccessToken();
+        //    Assert.AreEqual(expected1, token1);
 
-            System.Threading.Thread.Sleep(3000);
-            httpTest.ShouldHaveCalled($"https://hostname/api/v2/refreshToken")
-                .WithVerb(HttpMethod.Get)
-                .Times(1);
-            var token2 = client.GetAccessToken();
-            Assert.AreEqual(expected2, token2);
-        }
+        //    System.Threading.Thread.Sleep(3000);
+        //    httpTest.ShouldHaveCalled($"https://hostname/api/v2/refreshToken")
+        //        .WithVerb(HttpMethod.Get)
+        //        .Times(1);
+        //    var token2 = client.GetAccessToken();
+        //    Assert.AreEqual(expected2, token2);
+        //}
 
         #endregion
 

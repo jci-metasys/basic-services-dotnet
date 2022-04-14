@@ -138,11 +138,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <returns>Current session's Access Token.</returns>
         AccessToken GetAccessToken();
-        /// <summary>
-        /// Set the current session access token.
-        /// </summary>
-        /// <returns>Current session's Access Token.</returns>
-        void SetAccessToken(AccessToken accessToken);
+
+        ///// <summary>
+        ///// Set the current session access token.
+        ///// </summary>
+        ///// <returns>Current session's Access Token.</returns>
+        //void SetAccessToken(AccessToken accessToken);
 
 
         /// <summary>
