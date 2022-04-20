@@ -60,7 +60,25 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Get Audit Annotations](#get-audit-annotations)
     - [Discard an Audit](#discard-an-audit)
     - [Discard Multiple Audits](#discard-multiple-audits)
+    - [Add Audit Annotation](#add-audit-annotation)
+    - [Add Multiple Audit Annotations](#add-multiple-audit-annotations)
   - [Trends](#trends)
+    - [Get Object Trended Attributes](#get-object-trended-attributes)
+    - [Get Samples](#get-samples)
+    - [Get Network Device Trended Attributes](#get-network-device-trended-attributes)
+    - [Get Network Device Samples](#get-network-device-samples)
+  - [Enumerations](#enumerations)
+    - [Get Enumerations](#get-enumerations)
+    - [Get Enumeration Values](#get-enumeration-values)
+    - [Create a Custom Enumeration](#create-a-custom-enumeration)
+    - [Edit a Custom Enumeration](#edit-a-custom-enumeration)
+    - [Replace a Custom Enumeration](#replace-a-custom-enumeration)
+    - [Delete a Custom Enumeration](#delete-a-custom-enumeration)
+  - [Streams](#Streams)
+    - [Reading Object PresentValue COV](#reading-object-presentvalue-cov)
+    - [Collecting Alarm Events](#collecting-alarm-events)
+    - [Collecting Audit Events](#collecting-audit-events)
+    - [Keep the Stream Alive](#keep-the-stream-alive)
 - [Usage (COM)](#usage-com)
   - [Creating a Client](#creating-a-client-1)
   - [Login and Access Tokens](#login-and-access-tokens-1)
@@ -722,6 +740,9 @@ If the enumeration key is desired over the translated value use the EnumerationK
 
 
 ### Equipments
+All services about equipments are provided by **`Equipments`** local instance of MetasysClient.  
+<br/>
+
 #### Get Equipments
 To retrieves a collection of equipment instances you can use the method **`Equipments.Get`** (method *GetEquipment* is deprecated).  
 This method returns a list of MetasysObjects and doesn't expect any parameter.
@@ -793,8 +814,13 @@ Note: a network device is considered to host an equipment if the equipment defin
 #### Get Equipments Serving an Equipment Instance
 To retrieve the collection of equipment that serve the specified equipment instance you can use the method **`Equipments.GetServingAnEquipment`**.  
 This method returns alist of 'MetasysObject' and expect an equipment Id as parameter.
+<br/>
+
+
 
 ### Spaces
+All services about spaces are provided by **`Spaces`** local instance of MetasysClient.  
+<br/>
 
 #### Get Space Types
 To get all the space types use the method **`Spaces.GetTypes`** (method *GetSpaceTypes* is deprecated). 
@@ -917,10 +943,11 @@ This method returns a list of MetasysObjects and expect the network device Id as
 <br/>
 
 
-### Alarms
 
+### Alarms
 All services about alarms are provided by **`Alarms`** local instance of MetasysClient.  
-  
+<br/>
+
 #### Get Alarms
 To get all available alarms use the method **`Alarms.Get`**.  
 This method returns a 'PagedResult' with a list of 'Alarm' objects and expects an 'AlarmFilter' object to filter the response.
@@ -1010,7 +1037,6 @@ var networkDevicesAlarms = client.Alarms.GetForNetworkDevice(networkDeviceId, al
 #### Get Alarm Annotations
 To retrieves the collection of annotations available for the specified alarm you can use the method **`Alarms.GetAnnotations`**.  
 This method returns a collection of AlarmAnnotation objects and expect an alarm Id as parameter.
-
 ```csharp
  IEnumerable<AlarmAnnotation> annotations = client.Alarms.GetAnnotations(alarm.Id);
  AlarmAnnotation firstAnnotation = annotations.FirstOrDefault();
@@ -1028,22 +1054,24 @@ This method returns a collection of AlarmAnnotation objects and expect an alarm 
 <br/>
 
 #### Acknowledge an Alarm
-> Only using API v4   
+> Available since API v4
 > 
 To allow for acknowledging an alarm you can use the method **`Alarms.Acknowlege`**.  
 This method expects an alarm Id and optionally you can also add an annotation.
 <br/>
 
-#### Discard_an Alarm
-> Only using API v4   
+#### Discard an Alarm
+> Available since API v4
 > 
 To allow for discarding an alarm you can use the method **`Alarms.Discard`**.  
 This method expects an alarm Id and optionally you can also add an annotation.
 <br/>
 
 
+
 ### Audits
-All services about audits are provided by **`Audits`**  local instance of MetasysClient.
+All services about audits are provided by **`Audits`** local instance of MetasysClient.
+<br/>
 
 #### Get Audits
 To get all available audits you can use the method **`Audits.Get`**.  
@@ -1139,6 +1167,8 @@ Console.WriteLine(firstAnnotation);
 <br/>
 
 #### Discard an Audit
+> Available since API v3
+> 
 To allow for discarding an audit you can use the method **`Audits.Discard`**.  
 This method expects an audit Id and optionally you can also add an annotation.
 ```csharp
@@ -1149,7 +1179,7 @@ client.Audits.Discard(auditId, annotationText);
 <br/>
 
 #### Discard Multiple Audits
-> Only with API v3+   
+> Available since API v3
 > 
 To discard multiple Audits you can use the method **`Audits.DiscardMultiple`**.  
 It takes a list of 'BatchRequestParam' objects (specifing the list of Audits Guid and annotations) and it returns a list of 'Result' objects.
@@ -1171,15 +1201,25 @@ Console.WriteLine(resultItem);
 }  
 */
 ``` 
+<br/>
 
-
-To add an Annotation to an Audit (only with API v3) use the AddAnnotation method, it takes the Guid of the Audit and the text of the annotation you want to add. It doesn't return a value.
+#### Add Audit Annotation
+> Available since API v3
+> 
+To add an Annotation to an Audit you can use the method **`Audits.AddAnnotation`**.   
+It takes the Guid of the Audit and the text of the annotation you want to add. It doesn't return a value.
 ```csharp
 Guid auditId = new Guid("9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf");
 string annotationText = "This is the text of the annotation";
 client.Audits.AddAnnotation(auditId, annotationText);
 ``` 
-To add multiple Annotations to an Audit (only with API v3) use the AddAnnotationMultiple, it takes a list of BatchRequestParam objects (specifing the list of Audits Guid and annotations) and it returns a list of Result objects.
+<br/>
+
+#### Add Multiple Audit Annotations
+> Available since API v3
+> 
+To add multiple Annotations to an Audit you can use the method **`Audits.AddAnnotationMultiple`**.  
+It takes a list of 'BatchRequestParam' objects (specifing the list of Audits Guid and annotations) and it returns a list of 'Result' objects.
 ```csharp
 var requests = new List<BatchRequestParam>();
 BatchRequestParam request1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST AUDIT ANNOTATION" };
@@ -1198,22 +1238,30 @@ Console.WriteLine(resultItem);
 }            /*
 */
 ``` 
-
-
-
-
+<br/>
 
 
 
 ### Trends
+All services about trends are provided by **`Trends`** local instance of MetasysClient.
+<br/>
 
-All services about trends are provided by Trends local instance of MetasysClient. To get all available samples given a time filter use the GetSamples method. This method will return a PagedResult with a list of Sample. This accepts the Guid of the object, the attribute ID and a TimeFilter object to filter the response. To get all of the available trended attributes of an object given the ID use the GetTrendedAttributes method. 
-
+#### Get Object Trended Attributes
+To get the trended attributes of a specified Metasys object you can use the method **`Trends.GetTrendedAttributes`**.  
+This method requires the object Id (Guid) as parameter and it returns a list of 'MetasysAttribute' objects.
 ```csharp
 Guid trendedObjectId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB.10FEC11 - V6 Unit.E4 Network Outdoor Temperature");
 
 // Get attributes where trend extension is configured
 List<MetasysAttribute> trendedAttributes = client.Trends.GetTrendedAttributes(trendedObjectId);
+```
+<br/>
+
+#### Get Samples
+To get the samples related the a trended attribute of an object you can use the method **`Trends.GetSamples`**.  
+This method requires the object Id (Guid), the attribute Id (numeric or enumerated value) and a 'TimeFilter' object. 
+It returns a 'PagedResult' list of 'Sample' objects.
+```csharp
 int attributeId = trendedAttributes[0].Id;
 TimeFilter timeFilter = new TimeFilter
 {
@@ -1244,7 +1292,124 @@ Console.WriteLine(firstSample);
     }
 */
 ```
-Keep in mind that the object must be properly configured with trended attributes and samples are sent to the ADS/ADX. If you try to retrieve values from an object that has no valid trended attributes a MetasysHttpNotFoundException is raised.
+Note that the object must be properly configured with trended attributes and samples are sent to the ADS/ADX. 
+If you try to retrieve values from an object that has no valid trended attributes a MetasysHttpNotFoundException is raised.
+<br/>
+
+#### Get Network Device Trended Attributes
+> Available since API v3
+> 
+To the trended attributes of a specified network device you can use the method **`Trends.GetNetDevTrendedAttributes`**.
+This method requires the network device Id (Guid) as parameter and it returns a list of 'MetasysAttribute' objects.
+<br/>
+
+#### Get Network Device Samples
+> Available since API v3
+> 
+To get the samples related the a trended attribute of a network device you can use the method **`Trends.GetNetDevSamples`**.  
+This method requires the object Id (Guid), the attribute Id (numeric or enumerated value) and a 'TimeFilter' object. 
+It returns a 'PagedResult' list of 'Sample' objects.
+<br/>
+
+
+
+### Enumerations
+All services about enumerations are provided by **`Enumerations`** local instance of MetasysClient. 
+<br/>
+
+#### Get Enumerations
+> Available since API v4
+>
+To get all the available enumeration sets you can use the method **`Enumerations.Get`**.  
+This method returns a list of 'MetasysEnumeration' objects.
+<br/>
+
+#### Get Enumeration Values
+> Available since API v4
+>
+To get all the values of an enumeration set you can use the method **`Enumerations.GetValues`**.  
+This method requires the name (identifier) of the enumeration and it returns a list of 'MetasysEnumValue' objects.
+<br/>
+
+#### Create a Custom Enumeration
+> Available since API v4
+>
+To create a new custom enumeration set you can use the method **`Enumerations.Create`**.  
+This method requires the name of the new custom enumeration and the list of values will be associated to the new set.
+It does not return values.
+<br/>
+
+#### Edit a Custom Enumeration
+> Available since API v4
+>
+To modify the name and/or the values of an existing custom enumeration set you can use the method **`Enumerations.Edit`**.  
+This method requires the identifier of the existing custom enumeration and the new list of values to be associated. It does not return values.  
+Note this method cannot be used to add/remove values (it can only modify them)
+<br/>
+
+#### Replace a Custom Enumeration
+> Available since API v4
+>
+To replace the whole definition of an existing custom enumeration set you can use the method **`Enumerations.Replace`**.  
+This method requires the identifier of the existing custom enumeration and the new list of values to be associated. It does not return values.  
+Note you can not replace a two-state enumeration with a multiple-state enumeration. 
+Nor can you replace a multiple-state enumeration with a two-state enumeration.
+<br/>
+
+#### Delete a Custom Enumeration
+> Available since API v4
+>
+To delete an existing custom enumeration set you can use the method **`Enumerations.Delete`**.  
+This method requires the identifier of the existing custom enumeration and it does not return values.  
+Note this method can only delete custom enumerations.
+<br/>
+
+
+
+### Streams
+All services about streams are provided by **`Streams`** local instance of MetasysClient. 
+<br/>
+
+#### Reading Object PresentValue COV
+> Available since API v4
+>
+To define a stream in order to read the presentValue (COV) of a single or multiple objects use the method **`Streams.StartReadingCOV`**.  
+This method requires the object Id (in case of single value) or a list of  Ids (in case of multiple objects).  
+To retrieve the value(s) updated by the stream use the method **`Streams.GetCOV`** or **`Streams.GetCOVList`** (in case of multiple objects).  
+To stop reading (and updating) the values use the method **`Streams.StopReadingCOV`**.
+The **`Streams`** local instance also provides the event **`Streams.COVValueChanged`** 
+that is fired when a new value has changed and red by the stream.
+<br/>
+
+#### Collecting Alarm Events
+> Available since API v4
+>
+To define a stream in order to collect a list of alarm events use the method **`Streams.StartCollectingAlarms`**.  
+To retrieve the list of the alarms collected from the stream use the method **`Streams.GetAlarmEvents`**. 
+This method requires, as parameter, the max length of the list of alarms (by default the value is 100).  
+To stop collecting alarm events use the method **`Streams.StopCollectingAlarms`**.
+The **`Streams`** local instance also provides the event **`Streams.AlarmOccurred`** 
+that is fired when a new alarm has occurred and reported by the stream.
+<br/>
+
+#### Collecting Audit Events
+> Available since API v4
+>
+To define a stream in order to collect a list of audit events use the method **`Streams.StartCollectingAudits`**.  
+To retrieve the list of the audits collected from the stream use the method **`Streams.GetAuditEvents`**. 
+This method requires, as parameter, the max length of the list of audits (by default the value is 100).  
+To stop collecting audit events use the method **`Streams.StopCollectingAudits`**.
+The **`Streams`** local instance also provides the event **`Streams.AuditOccurred`** 
+that is fired when a new audit has occurred and reported by the stream.
+<br/>
+
+#### Keep the Stream Alive
+> Available since API v4
+>
+Normally all the methods that define a new stream also keep the stream alive despite the duration of the access token.  
+In case you want to force it then use the method **`Streams.KeepAlive`**.  
+<br/>
+
 
 
 
@@ -1269,7 +1434,7 @@ There are three optional parameters when creating a new client:
   
   **WARNING: You should not ignore certificate errors on a production site. Doing so puts your server at risk of a man-in-the-middle attack.**
   
-- apiVersion: If your server is not a current 10.1 Metasys server or later this SDK will not function correctly. The version parameter takes in an ApiVersion string value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is V2.
+- apiVersion: your server must run at least Metasys v10.1 or later otherwise this SDK cannot be used. The version parameter takes in an ApiVersion string value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is V2.
 - cultureInfo: To set the language for localization specify the target culture with the ISO Language Code string. The default culture is en-US.
 - logClientErrors: Set this flag to false to disable logging of client errors. By default the library logs any communication error with the Metasys Server in this path: "C:\ProgramData\Johnson Controls\Metasys Services\Logs".
   

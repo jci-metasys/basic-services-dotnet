@@ -27,8 +27,6 @@ namespace MetasysServices_TestClient.Forms
         public Streams()
         {
             InitializeComponent();
-
-
         }
 
         public MetasysClient Client
@@ -63,16 +61,12 @@ namespace MetasysServices_TestClient.Forms
         #region "Event Handler" 
         private void COVValue_Changed(object sender, EventArgs e)
         {
-            _covValues = _client.Streams.GetCOVValues();
+            _covValues = _client.Streams.GetCOVList();
             _covValue = _covValues?.FirstOrDefault();
 
             var requestId = _client.Streams.GetRequestIds().FirstOrDefault();
             TxtCOVValues_RequestID.Text = requestId.ToString();
             DgvCOVValues.DataSource = _covValues.ToList();
-
-            TmrStreamCheck.Enabled = false;
-            TmrStreamCheck.Enabled = true;
-
         }
 
         private void Alarm_Occurred(object sender, EventArgs e)
@@ -107,19 +101,19 @@ namespace MetasysServices_TestClient.Forms
         private void BtnCOVValue_StartReadingValue_Click(object sender, EventArgs e)
         {
             var id = new Guid(TxtCOVValue_ObjectID.Text);
-            _client.Streams.StartReadingCOVValueAsync(id);
+            _client.Streams.StartReadingCOVAsync(id);
             TmrRefreshCOVValue.Enabled = true;
         }
 
         private void BtnCOVValue_StopReadingCOVValue_Click(object sender, EventArgs e)
         {
             var requestid = new Guid(TxtCOVValue_RequestID.Text);
-            _client.Streams.StopReadingCOVValues(requestid);
+            _client.Streams.StopReadingCOV(requestid);
         }
 
         private void BtnCOVValue_GetCOVValues_Click(object sender, EventArgs e)
         {
-            _covValues = _client.Streams.GetCOVValues();
+            _covValues = _client.Streams.GetCOVList();
             _covValue = _covValues?.FirstOrDefault();
 
             var str = (_covValue is null) ? String.Empty : _covValue.Data;
@@ -157,7 +151,7 @@ namespace MetasysServices_TestClient.Forms
             }
             if (ids.Count > 0 )
             {
-                _client.Streams.StartReadingCOVValuesAsync(ids);
+                _client.Streams.StartReadingCOVAsync(ids);
                 TxtCOVValues_StartTime.Text = DateTime.Now.ToString();
             }
         }
@@ -177,7 +171,7 @@ namespace MetasysServices_TestClient.Forms
             if (requestId.Length > 0)
             {
                 Guid id = new Guid(requestId);
-                _client.Streams.StopReadingCOVValues(id);
+                _client.Streams.StopReadingCOV(id);
             }
         }
 
@@ -236,9 +230,5 @@ namespace MetasysServices_TestClient.Forms
             }
         }
 
-        private void TmrStreamCheck_Tick(object sender, EventArgs e)
-        {
-            MessageBox.Show("End Time: " + DateTime.Now.ToString());
-        }
     }
 }

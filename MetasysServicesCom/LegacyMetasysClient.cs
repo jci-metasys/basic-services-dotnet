@@ -726,7 +726,7 @@ namespace JohnsonControls.Metasys.ComServices
         public string StartReadingStreamCOVValue(string id)
         {
             Guid guid = new Guid(id);
-            Client.Streams.StartReadingCOVValueAsync(guid);
+            Client.Streams.StartReadingCOVAsync(guid);
             return guid.ToString();
         }
 
@@ -739,7 +739,7 @@ namespace JohnsonControls.Metasys.ComServices
             {
                 guids.Add(new Guid(id));
             }
-            Client.Streams.StartReadingCOVValuesAsync(guids);
+            Client.Streams.StartReadingCOVAsync(guids);
         }
 
         //StopReadingStreamCOVValues ------------------------------------------------------------------------------------------------
@@ -747,14 +747,14 @@ namespace JohnsonControls.Metasys.ComServices
         public void StopReadingStreamCOVValues(string requestId)
         {
             Guid guid = new Guid(requestId);
-            Client.Streams.StopReadingCOVValues(guid);
+            Client.Streams.StopReadingCOV(guid);
         }
 
         //GetCOVStreamValues --------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public object GetCOVStreamValues()
         {
-            var res = Client.Streams.GetCOVValues();
+            var res = Client.Streams.GetCOVList();
             return Mapper.Map<IComStreamMessage[]>(res);
         }
 
@@ -762,7 +762,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <inheritdoc/>
         public IComStreamMessage GetCOVStreamValue()
         {
-            var res = Client.Streams.GetCOVValue();
+            var res = Client.Streams.GetCOV();
             return Mapper.Map<IComStreamMessage>(res);
         }
 

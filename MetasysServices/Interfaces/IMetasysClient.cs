@@ -404,36 +404,5 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="IMetasysClient.GetServerTime()"/>
         Task<DateTime> GetServerTimeAsync();
 
-
-        /// <summary>
-        /// GetCOVStream.
-        /// </summary>
-        void GetCOVStream(Guid id);
-
-        /// <summary>
-        /// GetCOVStreamAsync.
-        /// </summary>
-        Task GetCOVStreamAsync(Guid id);
-
-        /// <summary>
-        /// GetCOVStreamMultiple.
-        /// </summary>
-        void GetCOVStreamMultiple(IEnumerable<Guid> ids);
-
-        /// <summary>
-        /// GetCOVStreamMultipleAsync.
-        /// </summary>
-        Task GetCOVStreamMultipleAsync(IEnumerable<Guid> ids);
-
-        /// <summary>
-        /// GetSingleStreamingChannel.
-        /// </summary>
-        StreamMessage GetSingleStreamingChannel();
-
-        /// <summary>
-        /// GetSingleStreamingChannelAsync.
-        /// </summary>
-        Task<StreamMessage> GetSingleStreamingChannelAsync();
-
     }
 }

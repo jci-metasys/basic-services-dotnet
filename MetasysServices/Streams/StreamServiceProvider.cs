@@ -323,8 +323,6 @@ namespace JohnsonControls.Metasys.BasicServices
             response.EnsureSuccessStatusCode();
         }
 
-
-
         #region private methods
 
         private void KeepStreamAlive_old(AccessTokenResponse tokenResponse)
@@ -353,8 +351,6 @@ namespace JohnsonControls.Metasys.BasicServices
                 response.EnsureSuccessStatusCode();
             };
         }
-
-
 
         private void Stream_Disconnected(object sender, DisconnectEventArgs e)
         {
@@ -670,54 +666,67 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         private bool KeepCOVReading = true;
 
-        //StartReadingCOVValueAsync -------------------------------------------------------------------------------------------------
-        /// <inheritdoc />
-        public async Task StartReadingCOVValueAsync(Guid id)
+        //StartReadingCOVAsync -------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void StartReadingCOV(Guid id)
         {
-            COVValues.Clear();
-            KeepCOVReading = true;
-            LoadCOVSubscriptions(id);
-            await ConnectAsync();
-            UpdateCOVValues();
+            StartReadingCOVAsync(id).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc />
+        public async Task StartReadingCOVAsync(Guid id)
+        {
+            if (!KeepCOVReading)
+            {
+                COVValues.Clear();
+                KeepCOVReading = true;
+                LoadCOVSubscriptions(id);
+                await ConnectAsync();
+                UpdateCOVValues();
+            }
         }
 
-        //StartReadingCOVValuesAsync ------------------------------------------------------------------------------------------------
+        //StartReadingCOVAsync (multiple) ---------------------------------------------------------------------------------------
         /// <inheritdoc />
-        public async Task StartReadingCOVValuesAsync(IEnumerable<Guid> ids)
+        public async Task StartReadingCOVAsync(IEnumerable<Guid> ids)
         {
-            COVValues.Clear();
-            KeepCOVReading = true;
-            LoadCOVSubscriptions(ids);
-            if (_source == null)
+            if (!KeepCOVReading)
             {
-                await ConnectAsync();
+                COVValues.Clear();
+                KeepCOVReading = true;
+                LoadCOVSubscriptions(ids);
+                if (_source == null)
+                {
+                    await ConnectAsync();
+                }
+                else
+                {
+                    SubscribeAllRequest();
+                }
+                UpdateCOVValues();
             }
-            else
-            {
-                SubscribeAllRequest();
-            }
-
-            UpdateCOVValues();
         }
 
         //StopReadingCOVValues ------------------------------------------------------------------------------------------------------
         /// <inheritdoc />
-        public void StopReadingCOVValues(Guid requestId)
+        public void StopReadingCOV(Guid requestId)
         {
-            KeepCOVReading = false;
-            _ = UnsubscribeAsync(requestId);
+            if (KeepCOVReading)
+            {
+                KeepCOVReading = false;
+                _ = UnsubscribeAsync(requestId);
+            }
         }
 
-        //GetCOVValues --------------------------------------------------------------------------------------------------------------
+        //GetCOVList --------------------------------------------------------------------------------------------------------------
         /// <inheritdoc />
-        public List<StreamMessage> GetCOVValues()
+        public List<StreamMessage> GetCOVList()
         {
             return COVValues;
         }
 
         //GetCOVValue ---------------------------------------------------------------------------------------------------------------
         /// <inheritdoc />
-        public StreamMessage GetCOVValue()
+        public StreamMessage GetCOV()
         {
             return COVValues.FirstOrDefault();
         }
@@ -758,25 +767,28 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc />
         public async Task StartCollectingAlarmsAsync(int maxNumber = 100)
         {
-            AlarmEvents.Clear();
-            KeepAlarmCollecting = true;
-            LoadActivitySubscriptions("Alarm");
-            if (_source == null)
+            if (!KeepAlarmCollecting)
             {
-                await ConnectAsync();
-            }
-            else
-            {
-                SubscribeAllRequest();
-            }
-            while (KeepAlarmCollecting)
-            {
-                StreamMessage streamMsg = await ResultChannel.ReadAsync(); ;
-                AlarmEvents = UpdateAlarmStreamValuesList(AlarmEvents, streamMsg, maxNumber);
-                //Raise the event
-                StreamEventArgs arg = new StreamEventArgs();
-                arg.Value = streamMsg;
-                OnAlarmOccurred(arg);
+                AlarmEvents.Clear();
+                KeepAlarmCollecting = true;
+                LoadActivitySubscriptions("Alarm");
+                if (_source == null)
+                {
+                    await ConnectAsync();
+                }
+                else
+                {
+                    SubscribeAllRequest();
+                }
+                while (KeepAlarmCollecting)
+                {
+                    StreamMessage streamMsg = await ResultChannel.ReadAsync(); ;
+                    AlarmEvents = UpdateAlarmStreamValuesList(AlarmEvents, streamMsg, maxNumber);
+                    //Raise the event
+                    StreamEventArgs arg = new StreamEventArgs();
+                    arg.Value = streamMsg;
+                    OnAlarmOccurred(arg);
+                }
             }
         }
 
@@ -784,8 +796,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc />
         public void StopCollectingAlarms(Guid requestId)
         {
-            KeepAlarmCollecting = false;
-            _ = UnsubscribeAsync(requestId);
+            if (KeepAlarmCollecting)
+            {
+                KeepAlarmCollecting = false;
+                _ = UnsubscribeAsync(requestId);
+            }
         }
 
         //GetAlarmEvents ------------------------------------------------------------------------------------------------------------
@@ -818,33 +833,39 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc />
         public async Task StartCollectingAuditsAsync(int maxNumber = 100)
         {
-            AuditEvents.Clear();
-            KeepAuditCollecting = true;
-            LoadActivitySubscriptions("Audit");
-            if (_source == null)
+            if (!KeepAuditCollecting)
             {
-                await ConnectAsync();
-            }
-            else
-            {
-                SubscribeAllRequest();
-            }
-            while (KeepAuditCollecting)
-            {
-                StreamMessage streamMsg = await ResultChannel.ReadAsync(); ;
-                AuditEvents = UpdateAuditStreamValuesList(AuditEvents, streamMsg, maxNumber);
-                //Raise the event
-                StreamEventArgs arg = new StreamEventArgs();
-                arg.Value = streamMsg;
-                OnAuditOccurred(arg);
+                AuditEvents.Clear();
+                KeepAuditCollecting = true;
+                LoadActivitySubscriptions("Audit");
+                if (_source == null)
+                {
+                    await ConnectAsync();
+                }
+                else
+                {
+                    SubscribeAllRequest();
+                }
+                while (KeepAuditCollecting)
+                {
+                    StreamMessage streamMsg = await ResultChannel.ReadAsync(); ;
+                    AuditEvents = UpdateAuditStreamValuesList(AuditEvents, streamMsg, maxNumber);
+                    //Raise the event
+                    StreamEventArgs arg = new StreamEventArgs();
+                    arg.Value = streamMsg;
+                    OnAuditOccurred(arg);
+                }
             }
         }
 
         /// <inheritdoc />
         public void StopCollectingAudits(Guid requestId)
         {
-            KeepAuditCollecting = false;
-            _ = UnsubscribeAsync(requestId);
+            if (KeepAuditCollecting)
+            {
+                KeepAuditCollecting = false;
+                _ = UnsubscribeAsync(requestId);
+            }
         }
 
         /// <inheritdoc />
@@ -869,7 +890,6 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             HeartBeatOccurred?.Invoke(this, e);
         }
-
         #endregion
 
     }

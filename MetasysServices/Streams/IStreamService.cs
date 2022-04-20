@@ -69,37 +69,36 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         void Dispose();
 
-        //List<StreamMessage> UpdateCOVStreamValuesList(List<StreamMessage> values, StreamMessage msg);
-
-        //List<StreamMessage> UpdateAlarmStreamValuesList(List<StreamMessage> values, StreamMessage msg, int maxNumber);
-
-        //List<StreamMessage> UpdateAuditStreamValuesList(List<StreamMessage> values, StreamMessage msg, int maxNumber);
-
 
         /// <summary>
         /// Start reading a COV value from the stream
         /// </summary>
-        Task StartReadingCOVValueAsync(Guid id);
+        void StartReadingCOV(Guid id);
 
         /// <summary>
-        /// Start reading the COV values from the stream
+        /// Start reading a COV value from the stream
         /// </summary>
-        Task StartReadingCOVValuesAsync(IEnumerable<Guid> ids);
+        Task StartReadingCOVAsync(Guid id);
+
+        /// <summary>
+        /// Start reading multiple COV values from the stream
+        /// </summary>
+        Task StartReadingCOVAsync(IEnumerable<Guid> ids);
 
         /// <summary>
         /// Stop reading COV Stream Value.
         /// </summary>
-        void StopReadingCOVValues(Guid requestId);
+        void StopReadingCOV(Guid requestId);
 
         /// <summary>
         /// Return the list of COV values
         /// </summary>
-        List<StreamMessage> GetCOVValues();
+        List<StreamMessage> GetCOVList();
 
         /// <summary>
         /// Return the first value of COV values
         /// </summary>
-        StreamMessage GetCOVValue();
+        StreamMessage GetCOV();
 
         /// <summary>
         /// Event fired when a COV value changes
