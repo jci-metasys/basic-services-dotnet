@@ -79,6 +79,10 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<MetasysEnumeration, IComMetasysEnumeration>();
                 cfg.CreateMap<MetasysEnumValue, IComMetasysEnumValue>();
             }).CreateMapper();
+
+            Client.Streams.COVValueChanged += OnStreamCOVValueChanged;
+            Client.Streams.AlarmOccurred += OnStreamAlarmOccurred;
+            Client.Streams.AuditOccurred += OnStreamAuditOccurred;
         }
 
         // TryLogin -----------------------------------------------------------------------------------------------------------------
@@ -723,16 +727,15 @@ namespace JohnsonControls.Metasys.ComServices
         #region "Streams" // ========================================================================================================
         //StartReadingStreamCOVValue ------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public string StartReadingStreamCOVValue(string id)
+        public void StartReadingStreamCOV(string id)
         {
             Guid guid = new Guid(id);
             Client.Streams.StartReadingCOVAsync(guid);
-            return guid.ToString();
         }
 
         //StartReadingStreamCOVValues -----------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public void StartReadingStreamCOVValues([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids)
+        public void StartReadingStreamCOV([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids)
         {
             var guids = new List<Guid>();
             foreach (var id in ids)
@@ -744,7 +747,7 @@ namespace JohnsonControls.Metasys.ComServices
 
         //StopReadingStreamCOVValues ------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public void StopReadingStreamCOVValues(string requestId)
+        public void StopReadingStreamCOV(string requestId)
         {
             Guid guid = new Guid(requestId);
             Client.Streams.StopReadingCOV(guid);
@@ -752,7 +755,7 @@ namespace JohnsonControls.Metasys.ComServices
 
         //GetCOVStreamValues --------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public object GetCOVStreamValues()
+        public object GetStreamCOVList()
         {
             var res = Client.Streams.GetCOVList();
             return Mapper.Map<IComStreamMessage[]>(res);
@@ -760,12 +763,11 @@ namespace JohnsonControls.Metasys.ComServices
 
         //GetCOVStreamValue ---------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public IComStreamMessage GetCOVStreamValue()
+        public IComStreamMessage GetStreamCOV()
         {
             var res = Client.Streams.GetCOV();
             return Mapper.Map<IComStreamMessage>(res);
         }
-
 
         /// <inheritdoc/>
         public string[] GetStreamRequestIds()
@@ -780,6 +782,15 @@ namespace JohnsonControls.Metasys.ComServices
             }
             return result;
         }
+
+        /// <inheritdoc />
+        public event EventHandler<StreamEventArgs> StreamCOVValueChanged;
+        /// <inheritdoc />
+        private void OnStreamCOVValueChanged(object sender, StreamEventArgs e)
+        {
+            StreamCOVValueChanged?.Invoke(this, e);
+        }
+
 
         //StartCollectingStreamAlarms -----------------------------------------------------------------------------------------------
         /// <inheritdoc/>
@@ -804,6 +815,16 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComStreamMessage[]>(res);
         }
 
+        /// <inheritdoc />
+        public event EventHandler<StreamEventArgs> StreamAlarmOccurred;
+
+        /// <inheritdoc />
+        void OnStreamAlarmOccurred(object sender, StreamEventArgs e)
+        {
+            StreamAlarmOccurred?.Invoke(this, e);
+        }
+
+
         //StartCollectingStreamAuditc -----------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public void StartCollectingStreamAudits()
@@ -819,6 +840,17 @@ namespace JohnsonControls.Metasys.ComServices
             Client.Streams.StopCollectingAudits(guid);
         }
 
+        /// <inheritdoc />
+        public event EventHandler<StreamEventArgs> StreamAuditOccurred;
+
+        /// <inheritdoc />
+        void OnStreamAuditOccurred(object sender, StreamEventArgs e)
+        {
+            StreamAuditOccurred?.Invoke(this, e);
+        }
+
+
+
         //GetAuditStreamEvents --------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public object GetAuditStreamEvents()
@@ -826,6 +858,14 @@ namespace JohnsonControls.Metasys.ComServices
             var res = Client.Streams.GetAuditEvents();
             return Mapper.Map<IComStreamMessage[]>(res);
         }
+
+        //KeepStreamAlive -----------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void KeepStreamAlive()
+        {
+            Client.Streams.KeepAlive(null);
+        }
+
         #endregion
 
     }

@@ -16,6 +16,7 @@ For versioning information see the [changelog](CHANGELOG.md).
 - [Usage (.NET)](#usage-net)
   - [Creating a Client](#creating-a-client)
   - [Login and Access Tokens](#login-and-access-tokens)
+  - [Localization of Metasys Enumerations](#localization-of-metasys-enumerations)
   - [Metasys Objects](#metasys-objects)
     - [Get Object Id](#Get-object-Id)
     - [Get a Property](#get-a-property)
@@ -29,7 +30,6 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Get Network Device Children](#get-network-device-children)
     - [Get Network Devices Hosting an Equipment](#get-network-devices-hosting-an-equipment)
     - [Get Network Devices Serving a Space](#get-network-devices-serving-a-space)
-  - [Localization of Metasys Enumerations](#localization-of-metasys-enumerations)
   - [Equipments](#equipments)
     - [Get Equipments](#get-equipments)
     - [Get a Single Equipment](#get-a-single-equipment)
@@ -82,15 +82,68 @@ For versioning information see the [changelog](CHANGELOG.md).
 - [Usage (COM)](#usage-com)
   - [Creating a Client](#creating-a-client-1)
   - [Login and Access Tokens](#login-and-access-tokens-1)
-  - [Get an Object Id](#get-an-object-id-1)
-  - [Get a Property](#get-a-property-1)
-  - [Write a Property](#write-a-property-1)
-  - [Send Commands](#send-commands)
-  - [Get Network Devices and other Objects](#get-network-devices-and-other-objects-1)
-  - [Spaces and Equipment](#spaces-and-equipment-1)
+  - [Metasys Objects](#metasys-objects)
+    - [Get Object Id](#get-object-id-1)
+    - [Get a Property](#get-a-property-1)
+    - [Write a Property](#write-a-property-1)
+    - [Get and Send Commands](#get-and-send-commands-1)
+    - [Get Children](#get-children-1)
+  - [Network-Devices](#network-devices-1)
+    - [Get Network Device Types](#get-network-device-types-1)
+    - [Get Network Devices](#get-network-devices-1)
+    - [Get Single Network Device](#get-single-network-device-1)
+    - [Get Network Device Children](#get-network-device-children-1)
+    - [Get Network Devices Hosting an Equipment](#get-network-devices-hosting-an-equipment-1)
+    - [Get Network Devices Serving a Space](#get-network-devices-serving-a-space-1)
+  - [Equipments](#equipments-1)
+    - [Get Equipments](#get-equipments-1)
+    - [Get a Single Equipment](#get-a-single-equipment-1)
+    - [Get Equipment Served by an Equipment Instance](#get-equipment-served-by-an-equipment-instance-1)
+    - [Get Equipments Serving a Space](#get-equipments-serving-a-space-1)
+    - [Get Equipment Points](#get-equipment-points-1)
+    - [Get Equipments Hosted by a Network Device](#get-equipments-hosted-by-a-network-device-1)
+    - [Get Equipments Serving an Equipment Instance](#get-equipments-serving-an-equipment-instance-1)
+  - [Spaces](#spaces-1)
+    - [Get Space Types](#get-space-types-1)
+    - [Get Spaces](#get-spaces-1)
+    - [Get Space Children](#get-space-children-1)
+    - [Get a Single Space](#get-a-single-space-1)
+    - [Get Spaces Served by an Equipment](#get-spaces-served-by-an-equipment-1)
+    - [Get Spaces Served by a Network Device](#get-spaces-served-by-a-network-device-1)
   - [Alarms](#alarms-1)
-  - [Trends](#trends-1)
+    - [Get Alarms](#get-alarms-1)
+    - [Get Single Alarm](#get-single-alarm-1)
+    - [Get Alarms for an Object](#get-alarms-for-an-object-1)
+    - [Get Alarms for a Network Device](#get-alarms-for-a-network-device-1)
+    - [Get Alarm Annotations](#get-alarm-annotations-1)
+    - [Acknowlege an Alarm](#acknowledge-an-alarm-1)
+    - [Discard an Alarm](#discard-an-alarm-1)
   - [Audits](#audits-1)
+    - [Get Audits](#get-audits-1)
+    - [Get Single Audit](#get-single-audit-1)
+    - [Get Audits for an Object](#get-audits-for-an-object-1)
+    - [Get Audit Annotations](#get-audit-annotations-1)
+    - [Discard an Audit](#discard-an-audit-1)
+    - [Discard Multiple Audits](#discard-multiple-audits-1)
+    - [Add Audit Annotation](#add-audit-annotation-1)
+    - [Add Multiple Audit Annotations](#add-multiple-audit-annotations-1)
+  - [Trends](#trends-1)
+    - [Get Object Trended Attributes](#get-object-trended-attributes-1)
+    - [Get Samples](#get-samples-1)
+    - [Get Network Device Trended Attributes](#get-network-device-trended-attributes-1)
+    - [Get Network Device Samples](#get-network-device-samples-1)
+  - [Enumerations](#enumerations-1)
+    - [Get Enumerations](#get-enumerations-1)
+    - [Get Enumeration Values](#get-enumeration-values-1)
+    - [Create a Custom Enumeration](#create-a-custom-enumeration-1)
+    - [Edit a Custom Enumeration](#edit-a-custom-enumeration-1)
+    - [Replace a Custom Enumeration](#replace-a-custom-enumeration-1)
+    - [Delete a Custom Enumeration](#delete-a-custom-enumeration-1)
+  - [Streams](#Streams-1)
+    - [Reading Object PresentValue COV](#reading-object-presentvalue-cov-1)
+    - [Collecting Alarm Events](#collecting-alarm-events-1)
+    - [Collecting Audit Events](#collecting-audit-events-1)
+    - [Keep the Stream Alive](#keep-the-stream-alive-1)
 - [License](#license)
 - [Contributing](#contributing)
 - [Additional Information](#additional-information)
@@ -271,11 +324,39 @@ client.GetServerTime()
 <br/>
 
 
+### Localization of Metasys Enumerations
+To get automatically translated enumerations from a Metasys server you have to use the method **`Localize`**.  
+Note that you must specify the culture during client creation, or set the "Culture" property before using the "get" methods.  
+The default language for translations will be the machine's current culture ([see more information here](https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo.currentculture)) or en-US (American English) if the language is not supported (see [Supported Localization Languages](#supported-localization-languages)).
+
+```csharp
+client.Culture = new CultureInfo("it-IT");
+```
+
+Enumerations returned from a Metasys server will be in a format similar to: "reliabilityEnumSet.reliable". 
+MetasysClient has a method to translate these enumerations manually. This method can be very useful if using an external HttpClient since Metasys servers do not hold translation information.
+
+```csharp
+// Access from the client object
+string translated = client.Localize("reliabilityEnumSet.reliable"); // Reliable
+
+// Access without instantiating a client
+string translated = ResourceManager.Localize("reliabilityEnumSet.reliable",
+    new CultureInfo("it-IT"));  // Affidabile
+```
+
+Note: If an automatically translated value (such as Variant.StringValue) contains an enumeration value and not a translated string there could be an error with the MetasysClient globalization setup.
+
+If the enumeration key is desired over the translated value use the EnumerationKey attribute. For example, the translated Variant.Reliability has the enumeration key under the attribute: Variant.ReliabilityEnumerationKey. See the documentation of each Model for more information.
+<br/>
+
+
 ### Metasys Objects
+<br/>
 
 #### Get Object Id
-In order to use most of the methods in MetasysClient the id of the target object must be known. 
-This id is in the form of a Guid and can be requested using the method **`GetObjectIdentifier`** given you know the item reference (FQR) of the object:
+In order to use most of the methods in MetasysClient the identifier (Id) of the target object must be known.  
+This Id is in the form of a Guid and can be requested using the method **`GetObjectIdentifier`** given you know the 'Fully Qualified Reference' (FQR) of the object:
 
 ```csharp
 Guid objectId = client.GetObjectIdentifier("Win2016-VM2:vNAE2343996/Field Bus MSTP1.VAV-08.ZN-SP");
@@ -360,20 +441,15 @@ Variant multiple1Description = multiple1.FindAttributeByName("description");
 <br/>
 
 #### Write a Property
-
 In order to write a property you must have the Guid of the object and know the attribute name and type
-and then you have to use the method **`WriteProperty`**. This method contains an optional priority parameter to specify the write priority of the value. 
-This priority is in the form of an enumeration such as "writePriorityEnumSet.priorityNone". To see more options use the "api/v2/enumSets/1/members" or "api/v2/schemas/enums/writePriorityEnumSet" http requests defined in the [Metasys API](https://metasys-server.github.io/api-landing/api/v2/).
-
+and then you have to use the method **`WriteProperty`**.  
 ```csharp
 Guid id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1");
 client.WriteProperty(id, "description", "This is an AV.");
-client.WriteProperty(id, "description", "This is an AV.", "writePriorityEnumSet.priorityNone");
 ```
+<br/>
 
 To change the same attribute values of many objects use the method **`WritePropertyMultiple`**. 
-This method also accepts an optional write priority.
-
 ```csharp
 List<Guid> ids = new List<Guid> { id1, id2 };
 // Write to many attributes values using a list of tuples
@@ -387,12 +463,10 @@ client.WritePropertyMultiple(ids, attributesDictionary);
 <br/>
 
 #### Get and Send Commands
-
 To get all available commands on an object use the method **`GetCommands`**. 
 This method will return a list of Command objects. 
-The ToString() method is a useful tool to display the available commands and any information associated with it. 
+The ToString() method is a useful tool to display the available commands and any information associated with it.  
 When sending a command the Command.CommandId attribute is used as the parameter:
-
 ```csharp
 List<Command> commands = client.GetCommands(objectId).ToList();
 Command command = commands.FindById("Adjust");
@@ -530,9 +604,9 @@ Console.WriteLine(release);
 }
 */
 ```
+<br/>
 
 To send the command use the method **`SendCommand`** as showed in the follwing samples:
-
 ```csharp
 var list1 = new List<object> { 70 };
 client.SendCommand(objectId, adjust.CommandId, list1);
@@ -546,9 +620,10 @@ client.SendCommand(objectId, release.CommandId, list3);
 <br/>
 
 #### Get Children
-
-To get the child objects of an object use the method **`GetObjects`**. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete.
-
+To get the child objects of an object use the method **`GetObjects`**.  
+This method requires the identifier (Guid) of the parent object and an optional number of levels to retrieve. 
+The default is 1 level or just the immediate children of the object. 
+Depending on the number of objects on your server this method can take a very long time to complete.
 ```csharp
 Guid parentId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB");
 // Get direct children (1 level)
@@ -636,7 +711,11 @@ Console.WriteLine(level1Parent);
 ```
 <br/>
 
+
+
 ### Network-Devices
+All services about network devices are provided by **`NetworkDevices`** local instance of MetasysClient.  
+<br/>
 
 #### Get Network Device Types
 To get all of the available types on your server use the method **`NetworkDevices.GetTypes`** (method *GetNetworkDeviceTypes* is deprecated) which returns a list of MetasysObjectType.
@@ -656,7 +735,8 @@ Console.WriteLine(types[0]);
 <br/>
 
 #### Get Network Devices
-To get all the available network devices use the method **`NetworkDevices.Get`** (method *GetNetworkDevices* is deprecated) which returns a list of MetasysObjects. This accepts an optional type number as a string to filter the response. 
+To get all the available network devices use the method **`NetworkDevices.Get`** (method *GetNetworkDevices* is deprecated) which returns a list of MetasysObjects.  
+This accepts an optional type number as a string to filter the response. 
 ```csharp
 int type1 = types[0].Id;
 List<MetasysObject> devices = client.NetworkDevices.Get(type1.ToString()).ToList();
@@ -711,32 +791,6 @@ To retrieve the collection of network devices that host the specified equipment 
 To retrieve the collection of network devices that are serving the specified space use the method **`NetworkDevices.GetServingASpace`** which return a list of Metasys Objects according to the space Id (Guid) passed as parameter.
 <br/>
 
-### Localization of Metasys Enumerations
-
-To get automatically translated enumerations from a Metasys server you have to use the method **`Localize`**.  
-Note that you must specify the culture during client creation, or set the "Culture" property before using the "get" methods.  
-The default language for translations will be the machine's current culture ([see more information here](https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo.currentculture)) or en-US (American English) if the language is not supported (see [Supported Localization Languages](#supported-localization-languages)).
-
-```csharp
-client.Culture = new CultureInfo("it-IT");
-```
-
-Enumerations returned from a Metasys server will be in a format similar to: "reliabilityEnumSet.reliable". 
-MetasysClient has a method to translate these enumerations manually. This method can be very useful if using an external HttpClient since Metasys servers do not hold translation information.
-
-```csharp
-// Access from the client object
-string translated = client.Localize("reliabilityEnumSet.reliable"); // Reliable
-
-// Access without instantiating a client
-string translated = ResourceManager.Localize("reliabilityEnumSet.reliable",
-    new CultureInfo("it-IT"));  // Affidabile
-```
-
-Note: If an automatically translated value (such as Variant.StringValue) contains an enumeration value and not a translated string there could be an error with the MetasysClient globalization setup.
-
-If the enumeration key is desired over the translated value use the EnumerationKey attribute. For example, the translated Variant.Reliability has the enumeration key under the attribute: Variant.ReliabilityEnumerationKey. See the documentation of each Model for more information.
-<br/>
 
 
 ### Equipments
@@ -745,17 +799,17 @@ All services about equipments are provided by **`Equipments`** local instance of
 
 #### Get Equipments
 To retrieves a collection of equipment instances you can use the method **`Equipments.Get`** (method *GetEquipment* is deprecated).  
-This method returns a list of MetasysObjects and doesn't expect any parameter.
+This method returns a list of 'MetasysObject' objects and doesn't expect any parameter.
 <br/>
 
 #### Get a Single Equipment
 To get a single Equipment object instance you can use the method **`Equipments.FindById`**.  
-This method returns the MetasysObject related to the equipment Id specified as parameter.
+This method returns the 'MetasysObject' object related to the equipment Id specified as parameter.
 <br/>
 
 #### Get Equipment Served by an Equipment Instance
 To retrieve the equipment served by the specified equipment instance you can use the method **`Equipments.GetServedByEquipment`**.  
-This method returns a list of MetasysObjects and expects the equipment instance Id.
+This method returns a list of 'MetasysObject' objects and expects the equipment instance Id.
 <br/>
 
 #### Get Equipments Serving a Space
@@ -769,7 +823,7 @@ MetasysObject sampleSpaceEquipment = spaceEquipment.FirstOrDefault();
 
 #### Get Equipment Points
 To get all the points of an equipment use the method **`Equipments.GetPoints`** (method *GetEquipmentPoint* is deprecated).  
-It takes the Guid of the equipments and it will return the list of MetasysPoint objects.
+It requires the identifier of the equipment instance and returns the list of 'MetasysPoint' objects.
 ```csharp
 IEnumerable<MetasysPoint> equipmentPoints = client.Equipments.GetPoints(sampleEquipment.Id);
 MetasysPoint point = equipmentPoints.FindByShortName("CLG-O");
@@ -805,14 +859,13 @@ Console.WriteLine(point);
 <br/>
 
 #### Get Equipments Hosted by a Network Device
-To retrieve the collection of equipment instances that are hosted by the specified network device or its children 
-you can use the method **`Equipments.GetHostedByNetworkDevice`**.  
-This method returns a list of 'MetasysObject' and expects a network device Id as parameter.
+To retrieve the equipments hosted by the specified network device or its children use the method **`Equipments.GetHostedByNetworkDevice`**.  
+This method returns a list of 'MetasysObject' objects and expects a network device Id as parameter.
 Note: a network device is considered to host an equipment if the equipment defines points that map to an attribute of any object contained on the network device.
 <br/>
 
 #### Get Equipments Serving an Equipment Instance
-To retrieve the collection of equipment that serve the specified equipment instance you can use the method **`Equipments.GetServingAnEquipment`**.  
+To retrieve the equipments that serve the specified equipment instance use the method **`Equipments.GetServingAnEquipment`**.  
 This method returns alist of 'MetasysObject' and expect an equipment Id as parameter.
 <br/>
 
@@ -824,7 +877,7 @@ All services about spaces are provided by **`Spaces`** local instance of Metasys
 
 #### Get Space Types
 To get all the space types use the method **`Spaces.GetTypes`** (method *GetSpaceTypes* is deprecated). 
-This method will return a list of MetasysObjectType.
+This method returns a list of 'MetasysObjectType' objects.
 ```csharp
 IEnumerable<MetasysObjectType> spaceTypes = client.GetSpaceTypes();
 foreach (var type in spaceTypes)
@@ -858,7 +911,7 @@ foreach (var type in spaceTypes)
 
 #### Get Spaces
 To get all available spaces use the method **`Spaces.Get`** (method *GetSpaces* is deprecated). 
-This method will return a list of MetasysObjects. This accepts an optional type as enum to filter the response. To get all of the available types on your server use the GetSpaceTypes method which returns a list of MetasysObjectType. To get all of the equipment on your server use the GetEquipment method which returns a list of MetasysObjects.
+This method returns a list of 'MetasysObject' objects. This accepts an optional type as enum to filter the response.  
 ```csharp
 // Retrieves the list of Buildings using SpaceTypeEnum helper
 List<MetasysObject> buildings = client.GetSpaces(SpaceTypeEnum.Building).ToList();
@@ -898,48 +951,26 @@ Console.WriteLine(firstSpace);
 <br/>
 
 #### Get Space Children
-To get the children of a Space use the method **`Spaces.GetChildren`** (method *GetSpaceChildren* is deprecated). 
-If you wish to retrieve equipment for a given space you can use the GetSpaceEquipment method. The deeper element in the hierarchy is the point, use the getEquipmentPoints method to retrieve the points mapped to an equipment. The Point object contains PresentValue when available. 
+To retrieve the children of a space instance use the method **`Spaces.GetChildren`** (method *GetSpaceChildren* is deprecated). 
+This meethod requires the identifier of the 'parent' space instance and returns a list of 'MetasysObject' objects.
 ```csharp
-IEnumerable<MetasysObject> spaceChildren = client.GetSpaceChildren(building.Id);
-IEnumerable<MetasysObject> spaceEquipment = client.GetSpaceEquipment(building.Id);
-MetasysObject sampleSpaceEquipment = spaceEquipment.FirstOrDefault();
-```
-
-To get all the equipment use the GetEquipment method. This method will return a list of MetasysObject objects.
-```csharp
-List<MetasysObject> equipment = client.GetEquipment().ToList();
-MetasysObject sampleEquipment = equipment.FirstOrDefault();
-Console.WriteLine(sampleEquipment);
-/*                        
-{
-    "ItemReference": "Win2016-VM2:Win2016-VM2/equipment.vNAE2343947.Field Bus MSTP1.AHU-07",
-    "Id": "6c6e18b8-015f-572a-814c-1e5d66142850",
-    "Name": "AHU-07",
-    "Description": null,
-    "Type": 3,
-    "TypeUrl": null,
-    "Category": null,
-    "Children": [],
-    "ChildrenCount": 0
-}
-*/
+IEnumerable<MetasysObject> spaceChildren = client.Spaces.GetChildren(building.Id);
 ```
 <br/>
 
 #### Get a Single Space
-To get a single space object use the method **`Spaces.FindById`**. 
-This method returns the MetasysObject related to the space Id specified as parameter.
+To retrieve a single space object use the method **`Spaces.FindById`**. 
+This method returns the 'MetasysObject' object related to the space Id specified as parameter.
 <br/>
 
 #### Get Spaces Served by an Equipment
-To Retrieve the collection of spaces served by the specified equipment instance you can use the method **`Spaces.GetServedByEquipment`**.  
-This method returns a list of MetasysObjects and expect the equipment Id as parameter.
+To retrieve the spaces served by the specified equipment instance use the method **`Spaces.GetServedByEquipment`**.  
+This method returns a list of 'MetasysObject' objects and expect the equipment Id as parameter.
 <br/>
 
 #### Get Spaces Served by a Network Device
-To Retrieve the collection of spaces served by the specified network device instance you can use the method **`Spaces.GetServedByNetworkDevice`**.  
-This method returns a list of MetasysObjects and expect the network device Id as parameter.
+To retrieve the spaces served by the specified network device instance use the method **`Spaces.GetServedByNetworkDevice`**.  
+This method returns a list of 'MetasysObject' objects and expect the network device Id as parameter.
 <br/>
 
 
@@ -1004,19 +1035,16 @@ Console Output: End */
 
 #### Get Single Alarm
 To get a specific alarm of an Metasys Object (e.g. Point, Network Device etc...) you can use the method **`Alarms.FindById`**.
-GetForObject and GetForNetworkDevice methods. The Guid of the parent object is required as input.
-
+This method requires the identified of the alarm and returns the associated 'Alarm' object.
 ```csharp
 var alarmId="6c6e18b8-015f-572a-814c-1e5d66142850";
 Alarm singleAlarm = client.Alarms.FindById(alarmId);
 ```
-This method returns an 'Alarm' object and expects an alarm Id as paramenter.
 <br/>
 
 #### Get Alarms for an Object
-To retrieve a collection of alarms for the specified object you can use the method **`Alarms.GetForObject`**.  
+To retrieve the alarms of a specified object instance use the method **`Alarms.GetForObject`**.  
 This method returns a 'PagedResult' with a list of 'Alarm' objects and expects an object Id and an 'AlarmFilter' object to filter the response.
-
 ```csharp
 AlarmFilter alarmFilter = new AlarmFilter{};
 var objectId="f5fe6054-d0b0-55b6-b03f-d4554f80d8e6";
@@ -1420,7 +1448,6 @@ This section demonstrates how to use the LegacyMetasysClient to interact with yo
 Download the Command Line sample project [here](https://github.com/metasys-server/basic-services-dotnet/tree/master/MetasysServicesComExampleApp) and finally the Excel App is available at this [link](https://github.com/metasys-server/basic-services-dotnet/blob/master/MetasysServicesComExampleApp/MetasysApiTest.xlsm).
 
 ### Creating a Client
-
 To create a new client and connect to a Metasys server with the default settings use the ComMetasysClientFactory:
 
 ```vb
@@ -1430,71 +1457,78 @@ Set client = clientFactory.GetLegacyClient("host")
 ```
 There are three optional parameters when creating a new client:
 
-- ignoreCertificateErrors: If your server does not have a valid certificate the MetasysClient will not behave as expected and will likely block the connection. Setting the ignoreCertificateErrors = true will ignore this error and make an insecure connection with the server. To avoid this problem ensure the Metasys server has a valid certificate.  
+- ignoreCertificateErrors: If your server does not have a valid certificate the LegacyMetasysClient will not behave as expected and will likely block the connection. Setting the ignoreCertificateErrors = true will ignore this error and make an insecure connection with the server. To avoid this problem ensure the Metasys server has a valid certificate.  
   
   **WARNING: You should not ignore certificate errors on a production site. Doing so puts your server at risk of a man-in-the-middle attack.**
   
 - apiVersion: your server must run at least Metasys v10.1 or later otherwise this SDK cannot be used. The version parameter takes in an ApiVersion string value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is V2.
 - cultureInfo: To set the language for localization specify the target culture with the ISO Language Code string. The default culture is en-US.
 - logClientErrors: Set this flag to false to disable logging of client errors. By default the library logs any communication error with the Metasys Server in this path: "C:\ProgramData\Johnson Controls\Metasys Services\Logs".
-  
-To create a client that ignores certificate errors for a 10.1 Metasys server with Italian translations of values:
+<cr/>
 
+Example: the following code shows how to create a client that ignores certificate errors for a v12 Metasys server with Italian translations of values:  
 ```vb
-Set client = clientFactory.GetLegacyClient("host", true, "V2", "it-IT")
+Set client = clientFactory.GetLegacyClient("host", true, "v4", "it-IT")
 ```
 In some cases you may want to enrich logs with more specific messages to your application. Typically, you disable internal library logging and catch Metasys Exceptions to be handled in your own logging framework or Log4Net configuration provided by the library. The file log4Net.config allows you to customize settings such as the file path, size, append mode, etc.
 To create a client that does not log errors use:
 
 ```vb
-Set client = clientFactory.GetLegacyClient("host", true, "V2", "it-IT", false)
+Set client = clientFactory.GetLegacyClient("host", true, "v4", "it-IT", false)
 ```
 
 ### Login and Access Tokens
-
-After creating the client, to login use the TryLogin method.
-The signature has two variants: the first (TryLoginWithCredMan) uses the Credential Manager target to read the credentials, whilst the second (TryLogin) takes a username and password.
-Both signatures take an optional parameter to automatically refresh the access token during the client's lifetime. The default token refresh policy is true. See more information [here](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager) on how to use Credential Manager. If something goes wrong while accessing a Credential Manager target, MetasysClient raises a CredManException. Keep in mind that Credential Manager is available on Windows and is not going to work on other platforms. However, MetasysClient Class could be extended by developers to implement different secure vaults support.
+After creating the client, to login use the method **`TryLogin`**.  
+this method requires a username and password parameters.  
+<cr/>
+To login using the Windows Credential Manager use the method **`TryLoginWithCredMan`** 
+that requires, as 'target' parameter, the name of the credential defined in Windows.
 
  **Notice: when developing an application that uses a system account always logged without user input, the preferred way to login is to store the username and password in the Credential Manager vault.**
 
 ```vb
 Dim token As IComAccessToken
-'Read username/password from Credential Manager vault and automatically refresh token
-Set token = client.TryLogin("vault-target")
-'Read username/password from Credential Manager vault and do not automatically refresh token
-Set token = client.TryLogin("vault-target", false)
-'Automatically refresh token using plain credentials
+'Login passing username and password
 Set token = client.TryLogin("user", "password")
-'Do not automatically refresh token using plain credentials
-Set token = client.TryLogin("user", "password", false)
+
+'Login using username/password from Credential Manager vault
+Set token = client.TryLogin("vault-target")
 ```
+<br/>
 
-### Get an Object Id
+### Metasys Objects
 
-In order to use most of the methods in LegacyMetasysClient the id of the target object must be known. This id is in the form of a Guid and can be requested using the following given you know the item reference of the object:
+#### Get Object Id
+In order to use most of the methods in LegacyMetasysClient the id of the target object must be known. 
+To retrieve the identifier of an object use the method **`GetObjectIdentifier`**.  
+This method requires the Fully Qualified Reference (FQR) of the object and returns the id as a string (in the form of a Guid).
 
 ```vb
 Dim id As String
 id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1")
 ```
+<br/>
 
-### Get a Property
-
-In order to get a property you must know the Guid of the target object. An object called "ComVariant" is returned when getting a property from an object. ComVariant contains the property received in many different forms. There is a bit of intuition when handling a ComVariant since it will not explicitly provide the type of object received by the server. If the server cannot find the target object or attribute on the object this method will return a null value.
-
+#### Get a Property
+In order to get a property you must know the Guid of the target object and then you can use the method **`ReadProperty`**. 
+An object called "ComVariant" is returned when getting a property from an object. 
 ```vb
 Dim result As ComVariant
 Set result = client.ReadProperty(id, "presentValue")
+
 Dim stringValue as String
 stringValue = result.StringValue
+
 Dim numericValue as Double
 numericValue = result.NumericValue
+
 Dim booleanValue as Boolean
 booleanValue = result.BooleanValue
 ```
+<br/>
 
-There is a method to get multiple properties from multiple objects. This can be very useful if the objects all are of the same type or have the same target properties.
+To get multiple properties from multiple objects in one action use the method **`ReadPropertyMultiple`**. 
+This can be very useful if the objects all are of the same type or have the same target properties.
 
 ```vb
 Dim ids() As String
@@ -1508,19 +1542,21 @@ Set id1 = results(0)
 Dim variants() As Object
 variants=id1.Variants
 ```
+<br/>
 
-### Write a Property
+#### Write a Property
 
-In order to write a property you must have the Guid of the object and know the attribute name and type. This method contains an optional priority parameter to specify the write priority of the value. This priority is in the form of an enumeration such as "writePriorityEnumSet.priorityNone". To see more options use the "api/v2/enumSets/1/members" or "api/v2/schemas/enums/writePriorityEnumSet" http requests defined in the [Metasys API](https://metasys-server.github.io/api-landing/api/v2/).
+In order to write a property you must have the Guid of the object and know the attribute name and type
+and then you have to use the method **`WriteProperty`**. 
 
 ```vb
 Dim id As String
 id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1")
 client.WriteProperty id, "description", "This is an AV."
-client.WriteProperty id, "description", "This is an AV.", "writePriorityEnumSet.priorityNone"
 ```
+<br/>
 
-To change the same attribute values of many objects use the WritePropertyMultiple method. This method also accepts an optional write priority.
+To change the same attribute values of many objects use the method **`WritePropertyMultiple`**. 
 
 ```vb
 Dim ids() As String
@@ -1530,35 +1566,32 @@ attributes = Split("name,description", ",")
 Dim attributeValues() As String
 attributeValues = Split("AV,This is an AV", ",")
 client.WritePropertyMultiple ids, attributes, attributeValues
-client.WritePropertyMultiple ids, attributes, attributeValues, "writePriorityEnumSet.priorityNone"
 ```
+<br/>
 
-### Send Commands
+#### Get and Send Commands
+To get all available commands on an object use the method **`GetCommands`**. 
+This method requires the identifier of the object an returns a list of 'ComCommand' objects. 
+When sending a command the 'ComCommand.CommandId' attribute is used as parameter.
+<br/>
 
-When sending a command there may or may not be a single value or list of values that needs to be sent with the command. The Command.Items property will list all of these values as Items which contains the Title and Type of the value to change. If the type of an Item is "oneOf" this indicates the values is an enumeration and the possible values will be contained in the EnumerationValues list. Keep in mind the values to be sent in the command is the TitleEnumerationKey not the Title. The Title is the user friendly translated value that describes the enumeration. 
+When sending a command there may or may not be a single value or list of values that needs to be sent with the command. 
+The Command.Items property will list all of these values as Items which contains the Title and Type of the value to change. If the type of an Item is "oneOf" this indicates the values is an enumeration and the possible values will be contained in the EnumerationValues list. Keep in mind the values to be sent in the command is the TitleEnumerationKey not the Title. 
+The Title is the user friendly translated value that describes the enumeration.  
+To send the command use the method **`SendCommand`** as showed in the following sample:
+
 ```vb
-
 Dim parameters() As String
 parameters = Split("offonEnumSet.0,", ",")
 client.SendCommand id, "OperatorOverride", parameters
-
 ```
+<br/>
 
-### Get Network Devices and other Objects
-
-To get all the available network devices use the GetNetworkDevices method which returns a list of MetasysObjects. This accepts an optional type number as a string to filter the response. To get all of the available types on your server use the GetNetworkDeviceTypes method which returns a list of MetasysObjectType.
-
-```vb
-Dim devices() As Object
-devices = client.GetNetworkDevices()
-Dim device As IComMetasysObject
-Set device = devices(0)
-Dim itemReference as String
-itemReference=device.itemReference
-```
-
-To get the child devices or objects of an object use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete.
-
+#### Get Children
+To get the child objects of an object use the method **`GetObjects`**.  
+This takes the identifier of the parent object and an optional number of levels to retrieve.  
+The default is 1 level or just the immediate children of the object.  
+Depending on the number of objects on your server this method can take quite a long time to complete.
 ```vb
 Dim devices() As Object
 devices = client.GetObjects(id)
@@ -1567,10 +1600,116 @@ Set device = devices(0)
 Dim children() As Object
 children=device.children
 ```
+<br/>
 
-### Spaces and equipment
 
-To get all available spaces on an object use the GetSpaces method. This method will return a list of MetasysObjects. This accepts an optional type number as a string to filter the response. To get all of the available types on your server use the GetSpaceTypes method which returns a list of MetasysObjectType. To get all of the equipment on your server use the GetEquipment method which returns a list of MetasysObjects.
+
+### Network-Devices
+<br/>
+
+#### Get Network Device Types
+To get all of the available types on your server use the method **`GetNetworkDeviceTypes`** which returns a list of 'ComMetasysObjectType' objects.  
+
+```vb
+Dim devTypes() As Object
+devTypes = client.GetNetworkDeviceTypes()
+```
+<br/>
+
+#### Get Network Devices
+To get all the available network devices use the method **`GetNetworkDevices`** which returns a list of 'ComMetasysObject' objects.  
+This accepts an optional type number as a string to filter the response.  
+```vb
+Dim devices() As Object
+devices = client.GetNetworkDevices()
+Dim device As IComMetasysObject
+Set device = devices(0)
+Dim itemReference as String
+itemReference=device.itemReference
+```
+<br/>
+
+#### Get Single Network Device
+To get a single network device use the method **`GetSingleNetworkDevice`** which returns a 'ComMetasysObject' object corresponding to the network device Id passed as parameter.
+<br/>
+
+#### Get Network Device Children
+To retrieves the collection of network devices that are children of the specified network device use the method **`GetNetworkDevicesChildren`** which return a list of 'ComMetasysObject' objects corresponding to the network device Id passed as parameter.
+<br/>
+
+#### Get Network Devices Hosting an Equipment
+To retrieve the collection of network devices that host the specified equipment instance use the method **`GetNetworkDevicesHostingAnEquipment`** which return a list of 'ComMetasysObject' objects corresponding to the equipment Id passed as parameter.
+<br/>
+
+#### Get Network Devices Serving a Space
+To retrieve the collection of network devices that are serving the specified space use the method **`GetNetworkDevicesServingASpace`** which return a list of 'ComMetasysObject' objects corresponding to the space Id passed as parameter.
+<br/>
+
+
+### Equipments
+<br/>
+
+#### Get Equipments
+To retrieves all the equipments use the method **`GetEquipment`**.  
+This method returns a list of 'ComMetasysObject' objects and doesn't require any parameter.  
+```vb
+Dim equipment() As Object
+equipment = client.GetEquipment()
+Dim e As IComMetasysObject
+Set e = equipment(0)
+```
+<br/>
+
+#### Get a Single Equipment
+To get a single equipment instance use the method **`GetSingleEquipment`**.  
+This method returns the 'ComMetasysObject' object related to the equipment Id specified as parameter.
+<br/>
+
+#### Get Equipment Served by an Equipment Instance
+To retrieve the equipments served by the specified equipment instance you can use the method **`GetEquipmentsServedByEquipment`**.  
+This method returns a list of 'ComMetasysObject' objects and expects the equipment instance Id.
+<br/>
+
+#### Get Equipments Serving a Space
+To retrieve the equipments serving a given space use the method **`GetEquipmentsServingASpace`** (method *GetSpaceEquipment* is deprecated).  
+This method expects the space identifier as parameter and returns a list of 'ComMetasysObject' objects.
+<br/>
+
+#### Get Equipment Points
+To get all the points of an equipment use the method **`GetEquipmentPoints`**.  
+This method requires the equipment identifier as parameter and returns a list of 'ComMetasysPoint' objects.
+<br/>
+
+#### Get Equipments Hosted by a Network Device
+To retrieve the equipments hosted by the specified network device instance or its children use the method **`GetEquipmentsHostedByNetworkDevice`**.  
+This method requires the netowrk device identifier as parmater and returns a list of 'ComMetasysObject' objects.
+Note: a network device is considered to host an equipment if the equipment defines points that map to an attribute of any object contained on the network device.
+<br/>
+
+#### Get Equipments Serving an Equipment Instance
+To retrieve the equipments that serve a specified equipment instance use the method **`GetEquipmentsServingAnEquipment`**.  
+This method requires the equipment instance identifier and returns a list of 'ComMetasysObject' objects.
+<br/>
+
+
+
+### Spaces
+<br/>
+
+#### Get Space Types
+To get all the space types use the method **`GetSpaceTypes`**. 
+This method will return a list of 'ComMetasysObjectType' objects.  
+```vb
+Dim spaceTypes() As Object
+spaceTypes = client.GetSpaceTypes()
+Dim spaceType As IComMetasysObjectType
+Set spaceType = spaceTypes(0)
+```
+<br/>
+
+#### Get Spaces
+To get all available spaces use the method **`GetSpaces`**. 
+This method will return a list of 'ComMetasysObject' objects. This accepts an optional type as enum to filter the response. 
 ```vb
 Dim spaceTypes() As Object
 spaceTypes = client.GetSpaceTypes()
@@ -1580,17 +1719,37 @@ Dim spaces() As Object
 spaces = client.GetSpaces(spaceType.Id)
 Dim space As IComMetasysObject
 Set space = spaces(0)
-Dim equipment() As Object
-equipment = client.GetEquipment()
-Dim e As IComMetasysObject
-Set e = equipment(0)
 ```
-To get the children objects of Spaces and Equipment use the GetObjects method. This takes the Guid of the parent object and an optional number of levels to retrieve. The default is 1 level or just the immediate children of the object. Depending on the number of objects on your server this method can take a very long time to complete. 
+<br/>
+
+#### Get Space Children
+To get the spaces children of a specific space instance use the method **`GetSpaceChildren`**.  
+This methods requires the space instance identifier as parameter and returns a list of 'ComMetasysObject' objects.
+<br/>
+
+#### Get a Single Space
+To get a single space object use the method **`GetSingleSpace`**. 
+This method returns the 'ComMetasysObject' related to the space Id specified as parameter.
+<br/>
+
+#### Get Spaces Served by an Equipment
+To Retrieve the collection of spaces served by the specified equipment instance you can use the method **`GetSpacesServedByEquipment`**.  
+This method returns a list of 'ComMetasysObject' objects and expect the equipment Id as parameter.
+<br/>
+
+#### Get Spaces Served by a Network Device
+To Retrieve the collection of spaces served by the specified network device instance you can use the method **`Spaces.GetServedByNetworkDevice`**.  
+This method returns a list of MetasysObjects and expect the network device Id as parameter.
+<br/>
+
+
 
 ### Alarms
+<cr/>
 
-To get all available alarms use the GetAlarms method. This method will return a PagedResult with a list of AlarmItemProvider. This accepts an AlarmFilter object to filter the response. To get a single alarm use the GetSingleAlarm method which returns an AlarmItemProvider object with all the details given the Guid.
-
+#### Get Alarms
+To get all available alarms use the method **`GetAlarms`**.  
+This method returns a 'PagedResult' with a list of 'ComAlarm' objects and expects an 'AlarmFilter' object to filter the response.
 ```vb
 'Prepare Alarm filter
 Dim filter As New ComAlarmFilter
@@ -1610,36 +1769,204 @@ message = alarm.message
 Dim pages as integer
 pages=alarmsPager.PageCount
 ```
-To get the alarms of a specific Object or NetworkDevice use the GetAlarmsForAnObject and GetAlarmsForNetworkDevice methods. The Guid of the parent object is required as input.
+<br/>
 
+#### Get Single Alarm
+To get a specific alarm of an Metasys Object (e.g. Point, Network Device etc...) use the method **`GetSingleAlarm`**.
+This method requires the identified of the alarm and returns the associated 'ComAlarm' object.
+<br/>
+
+#### Get Alarms for an Object
+To retrieve the alarms of a specified object instance use the method **`GetAlarmsForObject`**.  
+This method returns a 'PagedResult' with a list of 'ComAlarm' objects and expects an object Id and an 'AlarmFilter' object to filter the response.
 ```vb
 Set objectAlarmsPager = client.GetAlarmsForAnObject(objId, filter)
 Dim objectAlarms() As Object
 ReDim objectAlarms(objectAlarmsPager.Items)
 objectAlarms = objectAlarmsPager.Items
+```
+<br/>
+
+#### Get Alarms for a Network Device
+To retrieve a collection of alarms for the specified network device you can use the method **`GetAlarmsForNetworkDevice`**.
+This method returns a 'PagedResult' with a list of 'ComAlarm' objects and expects a network device Id and an 'AlarmFilter' object to filter the response.
+```vb
 Set deviceAlarmsPager = client.GetAlarmsForNetworkDevice(networkDeviceId, filter)
 Dim deviceAlarms() As Object
 ReDim deviceAlarms(deviceAlarmsPager.Items)
 deviceAlarms = deviceAlarmsPager.Items
 ```
-To get the annotations of an alarm use the GetAlarmAnnotations method, it takes the Guid of the alarm and returns a list of AlarmAnnotation objects.
+<br/>
 
+#### Get Alarm Annotations
+To retrieves the collection of annotations available for the specified alarm you can use the method **`GetAlarmAnnotations`**.  
+This method returns a collection of AlarmAnnotation objects and expect an alarm Id as parameter.
 ```vb
 Dim alarmId As String
 alarmId = "6c999f43-6007-5137-b6d3-c30b93fb70ec"
 Dim result() As Object
 result = client.GetAlarmAnnotations(alarmId)
 ```
+<br/>
+
+#### Acknowledge an Alarm
+> Available since API v4
+> 
+To allow for acknowledging an alarm you can use the method **`AcknowledgeAlarm`**.  
+This method expects an alarm Id and optionally you can also add an annotation.
+<br/>
+
+#### Discard an Alarm
+> Available since API v4
+> 
+To allow for discarding an alarm you can use the method **`DiscardAlarm`**.  
+This method expects an alarm Id and optionally you can also add an annotation.
+<br/>
+
+
+
+### Audits
+<br/>
+
+#### Get Audits
+To get all available audits you can use the method **`GetAudits`**.  
+This method will return a 'ComPagedResult' with a list of 'ComAudit' objects.  
+This accepts an 'ComAuditFilter' object to filter the response. 
+In the Audit filter you can specify the values of OriginApplications or ActionTypes using values of dedicated enumeration sets concatenated by a '|' character.
+```vb
+'Prepare Alarm filter
+Dim filter As New ComAuditFilter
+filter.StartTime = "2020-01-10T08:10:20.243Z"
+filter.EndTime = "2020-01-10T09:10:20.243Z"
+filter.OriginApplications="1,2"
+filter.ActionTypes="0,1"
+Dim auditsPager As ComPagedResult
+Set auditsPager = client.GetAudits(filter)
+'Iterate paged results
+Dim audit As ComProvideAuditItem
+Dim audits() As Object
+audits = auditsPager.Items
+Set audit = audits(0)
+Dim user as String
+user = audit.user
+'Read paging properties
+Dim pages as integer
+pages=auditsPager.PageCount
+```
+<br/>
+
+#### Get Single Audit
+To get a single audit you can use the method **`GetSingleAudit`** which returns an 'ComAudit' object with all the details given the Guid.
+<br/>
+
+#### Get Audits for an Object
+To get the audits of a specific Object you can use the method **`GetAuditsForAnObject`**.  
+The Guid of the parent object is required as parameter.
+```vb
+Set objectAuditsPager = client.GetAuditsForAnObject(objId, filter)
+Dim objectAudits() As Object
+ReDim objectAudits(objectAuditsPager.Items)
+objectAudits = objectAuditsPager.Items
+```
+<br/>
+
+#### Get Audit Annotations
+To get the annotations of an audit you can use the method **`GetAuditAnnotations`**.   
+It required the Guid of the audit and returns a collection of 'AuditAnnotation' objects.
+```vb
+Dim auditId As String
+auditId = "6c999f43-6007-5137-b6d3-c30b93fb70ec"
+Dim result() As Object
+result = client.GetAuditAnnotations(auditId)
+```
+<cr/>
+
+#### Discard an Audit
+> Available since API v3
+> 
+To allow for discarding an audit you can use the method **`DiscardAudit`**.  
+This method expects an audit Id and optionally you can also add an annotation.
+<br/>
+
+#### Discard Multiple Audits
+> Available since API v3
+> 
+To discard multiple Audits you can use the method **`DiscardAuditMultiple`**.  
+it takes an array of strings as parameter and returns an array of strings as well.  
+Each string of the array used as parameter must contains the audit ID 
+and the text of the discard annotation separated by the character | (vertical bar).
+```vb
+Dim auditId1 As String
+auditId1 = "1b3b3127-a703-42b7-bb9a-7527331e329d"
+Dim auditId2 As String
+auditId2 = "e3b6cbcf-cf05-43ed-b845-7321c8b86c38"
+
+Dim annotation1 as String
+annotation1 = "DISCARD ANNOTATION AUDIT #1"
+Dim annotation2 as String
+annotation2 = "DISCARD ANNOTATION AUDIT #2"
+
+Dim requestParams(1) As String
+requestParams(0) = auditId1 & "|" & annotation1
+requestParams(1) = auditId2 & "|" & annotation2
+
+Dim result() As String
+result = client.DiscardAuditMultiple(auditId)
+```
+<br/>
+
+#### Add Audit Annotation
+> Available since API v3
+> 
+To add an Annotation to an Audit you can use the method **`AddAuditAnnotation`**.   
+It takes the Guid of the Audit and the text of the annotation you want to add. It doesn't return a value.
+<br/>
+
+#### Add Multiple Audit Annotations
+> Available since API v3
+> 
+To add multiple Annotations to an Audit you can use the method **`Audits.AddAnnotationMultiple`**.  
+it takes an array of strings as parameter and returns an array of strings as well.  
+Each string of the array used as parameter must contains the audit ID 
+and the text of the annotation separated by the character | (vertical bar).
+```vb
+Dim auditId As String
+auditId = "6c999f43-6007-5137-b6d3-c30b93fb70ec"
+
+Dim annotation1 as String
+annotation1 = "TEXT OF ANNOTATION #1"
+Dim annotation2 as String
+annotation2 = "TEXT OF ANNOTATION #2"
+
+Dim requestParams(1) As String
+requestParams(0) = auditId & "|" & annotation1
+requestParams(1) = auditId & "|" & annotation2
+
+Dim result() As String
+result = client.AddAuditAnnotationMultiple(auditId)
+```
+<br/>
+
 
 
 ### Trends
+<cr/>
 
- To get all available samples given a time filter use the GetSamples method. This method will return a PagedResult with a list of Sample. This accepts the Guid of the object, the attribute ID and a TimeFilter object to filter the response. To get all of the available trended attributes of an object given the ID use the GetTrendedAttributes method. 
-
+#### Get Object Trended Attributes
+To get the trended attributes of a specified Metasys object use the method **`GetTrendedAttributes`**.  
+This method requires the object Id as parameter and it returns a list of 'ComAttribute' objects.
 ```vb
 'Get Trended attributes
 Dim attrs() As ComAttribute
 attrs = client.GetTrendedAttributes(objId)
+```
+<br/>
+
+#### Get Samples
+To get the samples related the a trended attribute of an object you can use the method **`GetSamples`**.  
+This method requires the object Id (Guid), the attribute Id (numeric or enumerated value) and a 'ComTimeFilter' object. 
+It returns a 'ComPagedResult' list of 'ComSample' objects.
+```vb
 Dim attr As ComAttribute
 Set attr = attrs(0)
 Dim attrId As Integer
@@ -1663,91 +1990,126 @@ pages=samplesPager.PageCount
 Dim SamplesCount as integer
 samplesCount=samplesPager.Total
 ```
-### Audits
+Note that the object must be properly configured with trended attributes and samples are sent to the ADS/ADX. 
+If you try to retrieve values from an object that has no valid trended attributes a MetasysHttpNotFoundException is raised.
+<br/>
 
-To get all available audits use the GetAudits method. This method will return a PagedResult with a list of AuditItemProvider. This accepts an AuditFilter object to filter the response. To get a single audit use the GetSingleAudit method which returns an AuditItemProvider object with all the details given the Guid.
+#### Get Network Device Trended Attributes
+> Available since API v3
+> 
+To the trended attributes of a specified network device you can use the method **`GetNetDevTrendedAttributes`**.
+This method requires the network device Id as parameter and it returns a list of 'ComAttribute' objects.
+<br/>
 
-```vb
-'Prepare Alarm filter
-Dim filter As New ComAuditFilter
-filter.StartTime = "2020-01-10T08:10:20.243Z"
-filter.EndTime = "2020-01-10T09:10:20.243Z"
-filter.OriginApplications="1,2"
-filter.ActionTypes="0,1"
-Dim auditsPager As ComPagedResult
-Set auditsPager = client.GetAudits(filter)
-'Iterate paged results
-Dim audit As ComProvideAuditItem
-Dim audits() As Object
-audits = auditsPager.Items
-Set audit = audits(0)
-Dim user as String
-user = audit.user
-'Read paging properties
-Dim pages as integer
-pages=auditsPager.PageCount
-```
-To get the audits of a specific Object use the GetAuditsForAnObject methods. The Guid of the parent object is required as input.
+#### Get Network Device Samples
+> Available since API v3
+> 
+To get the samples related the a trended attribute of a network device you can use the method **`GetNetDevSamples`**.  
+This method requires the object Id (Guid), the attribute Id (numeric or enumerated value) and a 'ComTimeFilter' object. 
+It returns a 'ComPagedResult' list of 'ComSample' objects.
+<br/>
 
-```vb
-Set objectAuditsPager = client.GetAuditsForAnObject(objId, filter)
-Dim objectAudits() As Object
-ReDim objectAudits(objectAuditsPager.Items)
-objectAudits = objectAuditsPager.Items
-```
-To get the annotations of an audit use the GetAuditAnnotations method, it takes the Guid of the audit and returns a list of AlarmAnnotation objects.
 
-```vb
-Dim auditId As String
-auditId = "6c999f43-6007-5137-b6d3-c30b93fb70ec"
-Dim result() As Object
-result = client.GetAuditAnnotations(auditId)
-```
-To add many annotations to one or many audits use the AddAuditAnnotationMultiple method, it takes an array of strings 
-as parameter and returns an array of strings as well.
-Each string of the array used as parameter must contains the audit ID 
-and the text of the annotation separated by the character | (vertical bar).
 
-```vb
-Dim auditId As String
-auditId = "6c999f43-6007-5137-b6d3-c30b93fb70ec"
+### Enumerations 
+<br/>
 
-Dim annotation1 as String
-annotation1 = "TEXT OF ANNOTATION #1"
-Dim annotation2 as String
-annotation2 = "TEXT OF ANNOTATION #2"
+#### Get Enumerations
+> Available since API v4
+>
+To get all the available enumeration sets you can use the method **`GetEnumerations`**.  
+This method returns a list of 'ComMetasysEnumeration' objects.
+<br/>
 
-Dim requestParams(1) As String
-requestParams(0) = auditId & "|" & annotation1
-requestParams(1) = auditId & "|" & annotation2
+#### Get Enumeration Values
+> Available since API v4
+>
+To get all the values of an enumeration set you can use the method **`GetEnumerationValues`**.  
+This method requires the name (identifier) of the enumeration and it returns a list of 'ComMetasysEnumValue' objects.
+<br/>
 
-Dim result() As String
-result = client.AddAuditAnnotationMultiple(auditId)
-```
+#### Create a Custom Enumeration
+> Available since API v4
+>
+To create a new custom enumeration set you can use the method **`CreateCustomEnumeration`**.  
+This method requires the name of the new custom enumeration and the list of values will be associated to the new set.
+It does not return values.
+<br/>
 
-To discard many audits using one call please use the DiscardAuditMultiple method, it takes an array of strings 
-as parameter and returns an array of strings as well.
-Each string of the array used as parameter must contains the audit ID 
-and the text of the discard annotation separated by the character | (vertical bar).
+#### Edit a Custom Enumeration
+> Available since API v4
+>
+To modify the name and/or the values of an existing custom enumeration set you can use the method **`EditCustomEnumeration`**.  
+This method requires the identifier of the existing custom enumeration and the new list of values to be associated. It does not return values.  
+Note this method cannot be used to add/remove values (it can only modify them)
+<br/>
 
-```vb
-Dim auditId1 As String
-auditId1 = "1b3b3127-a703-42b7-bb9a-7527331e329d"
-Dim auditId2 As String
-auditId2 = "e3b6cbcf-cf05-43ed-b845-7321c8b86c38"
+#### Replace a Custom Enumeration
+> Available since API v4
+>
+To replace the whole definition of an existing custom enumeration set you can use the method **`ReplaceCustomEnumeration`**.  
+This method requires the identifier of the existing custom enumeration and the new list of values to be associated. It does not return values.  
+Note you can not replace a two-state enumeration with a multiple-state enumeration. 
+Nor can you replace a multiple-state enumeration with a two-state enumeration.
+<br/>
 
-Dim annotation1 as String
-annotation1 = "DISCARD ANNOTATION AUDIT #1"
-Dim annotation2 as String
-annotation2 = "DISCARD ANNOTATION AUDIT #2"
+#### Delete a Custom Enumeration
+> Available since API v4
+>
+To delete an existing custom enumeration set you can use the method **`DeleteCustomEnumeration`**.  
+This method requires the identifier of the existing custom enumeration and it does not return values.  
+Note this method can only delete custom enumerations.
+<br/>
 
-Dim requestParams(1) As String
-requestParams(0) = auditId1 & "|" & annotation1
-requestParams(1) = auditId2 & "|" & annotation2
 
-Dim result() As String
-result = client.DiscardAuditMultiple(auditId)
-```
+
+### Streams
+<br/>
+
+#### Reading Object PresentValue COV
+> Available since API v4
+>
+To define a stream in order to read the presentValue (COV) of a single or multiple objects use the method **`StartReadingStreamCOV`**.  
+This method requires the object Id (in case of single value) or an arrary of  Ids (in case of multiple objects).  
+To retrieve the value(s) updated by the stream use the method **`GetStreamCOV`** or **`GetStreamCOVList`** (in case of multiple objects).  
+To retrieve the array of 'Request Ids' use the method **`GetStreamRequestIds`**  
+To stop reading (and updating) the values use the method **`StopReadingStreamCOV`**.  
+The event **`StreamCOVValueChanged`** is fired when a new value has changed and red by the stream.
+<br/>
+
+#### Collecting Alarm Events
+> Available since API v4
+>
+To define a stream in order to collect a list of alarm events use the method **`StartCollectingStreamAlarms`**.    
+To retrieve the list of the alarms collected from the stream use the method **`GetAlarmStreamEvents`**.  
+This method requires, as parameter, the max length of the list of alarms (by default the value is 100).  
+To stop collecting alarm events use the method **`StopCollectingStreamAlarms`**.  
+The event **`OnStreamAlarmOccurred`** is fired when a new alarm has occurred and reported by the stream.
+<br/>
+
+#### Collecting Audit Events
+> Available since API v4
+>
+To define a stream in order to collect a list of audit events use the method **`StartCollectingStreamAudits`**.  
+To retrieve the list of the audits collected from the stream use the method **`GetAuditStreamEvents`**.  
+This method requires, as parameter, the max length of the list of audits (by default the value is 100).  
+To stop collecting audit events use the method **`StopCollectingStreamAudits`**.  
+The event **`OnStreamAuditOccurred`** is fired when a new audit has occurred and reported by the stream.
+<br/>
+
+#### Keep the Stream Alive
+> Available since API v4
+>
+Normally all the methods that define a new stream also keep the stream alive despite the duration of the access token.  
+In case you want to force it then use the method **`KeepStreamAlive`**.  
+<br/>
+
+
+
+
+
+
+
 
 ## License
 

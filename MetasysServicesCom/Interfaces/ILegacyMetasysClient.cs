@@ -564,27 +564,34 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Start the method that reads the COV values using the stream mechanism.
         /// </summary>
-        string StartReadingStreamCOVValue(string id);
+        void StartReadingStreamCOV(string id);
 
         /// <summary>
         /// Start the method that reads multiple COV values using the stream mechanism.
         /// </summary>
-        void StartReadingStreamCOVValues([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids);
+        void StartReadingStreamCOV([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids);
 
         /// <summary>
         /// Stop reading COV stream Values.
         /// </summary>
-        void StopReadingStreamCOVValues(string requestId);
+        void StopReadingStreamCOV(string requestId);
 
         /// <summary>
         /// Return a single COV values (first of the list)
         /// </summary>
-        IComStreamMessage GetCOVStreamValue();
+        IComStreamMessage GetStreamCOV();
 
         /// <summary>
         /// Return the list of COV values
         /// </summary>
-        object GetCOVStreamValues();
+        object GetStreamCOVList();
+
+        /// <summary>
+        /// Event fired when a COV value changes
+        /// </summary>
+        event EventHandler<StreamEventArgs> StreamCOVValueChanged;
+        
+
 
         /// <summary>
         /// Start the method that collects the Alarms using the stream mechanism.
@@ -602,6 +609,13 @@ namespace JohnsonControls.Metasys.ComServices
         object GetAlarmStreamEvents();
 
         /// <summary>
+        /// Event fired when an Alarm event occurs
+        /// </summary>
+        event EventHandler<StreamEventArgs> StreamAlarmOccurred;
+
+
+
+        /// <summary>
         /// Start the method that collects the Audits using the stream mechanism.
         /// </summary>
         void StartCollectingStreamAudits();
@@ -615,6 +629,19 @@ namespace JohnsonControls.Metasys.ComServices
         /// Return the list of Audit events
         /// </summary>
         object GetAuditStreamEvents();
+
+        /// <summary>
+        /// Event fired when an Alarm event occurs
+        /// </summary>
+        event EventHandler<StreamEventArgs> StreamAuditOccurred;
+
+
+
+        /// <summary>
+        /// Call the related API to keep the Stream Alive 
+        /// </summary>
+        void KeepStreamAlive();
+        
         #endregion
 
 
