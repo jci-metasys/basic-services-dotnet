@@ -1529,6 +1529,33 @@ namespace MetasysServices.Tests
             PrintMessage($"TestGetNetworkDevicesUnauthorizedThrowsException: {e.Message}", true);
         }
 
+        [Test]
+        public void TestGetNetworkDevicesWithClassification()
+        {
+            string device = string.Concat("{",
+                "\"id\": \"", mockid, "\",",
+                "\"itemReference\": \"fully:qualified/reference\",",
+                "\"name\": \"name\",",
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
+                "\"description\": \"none\",",
+                "\"firmwareVersion\": \"4.0.0.1105\",",
+                "\"ipAddress\": \"\"}");
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 1,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [", device, "],",
+                "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=200&sort=name\"}"));
+
+            var devices = client.GetNetworkDevicesByClassification("controller");
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            MetasysObject expected = new MetasysObject(JToken.Parse(device), ApiVersion.v2, null, testCulture);
+            Assert.AreEqual(expected, devices.ElementAt(0));
+        }
+
         #endregion
 
         #region GetNetworkDeviceTypes Tests

@@ -33,6 +33,17 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="INetworkDeviceService.Get(string)"/>
         Task<IEnumerable<MetasysObject>> GetAsync(string type = null);
 
+        /// <summary>
+        /// Retrieves a collection of network devices.
+        /// </summary>
+        /// <param name="classification">Optional classification as a string</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        IEnumerable<MetasysObject> GetByClassification(string classification = null);
+        
+        /// <inheritdoc cref="INetworkDeviceService.GetByClassification(string)"/>
+        Task<IEnumerable<MetasysObject>> GetByClassificationAsync(string classification = null);
+
         // Get -------------------------------------------------------------------------------------------------------------------
         /// <summary>
         /// Retrieves a collection of network devices.

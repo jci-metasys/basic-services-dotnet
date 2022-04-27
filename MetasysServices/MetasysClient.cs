@@ -474,6 +474,17 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetNetworkDevicesByClassification(string classification = null)
+        {
+            return NetworkDevices.GetByClassification(classification);
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetNetworkDevicesByClassificationAsync(string classification = null)
+        {
+            return await NetworkDevices.GetByClassificationAsync(classification);
+        }
+
+        /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetNetworkDevices(NetworkDeviceTypeEnum networkDevicetype)
         {
             return NetworkDevices.Get(networkDevicetype);
