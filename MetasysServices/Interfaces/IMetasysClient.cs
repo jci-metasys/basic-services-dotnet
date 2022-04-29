@@ -271,9 +271,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="classification">Optional classification as a string</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        IEnumerable<MetasysObject> GetNetworkDevicesByClassification(string classification = null);
-        
-        /// <inheritdoc cref="IMetasysClient.GetNetworkDevicesByClassification(string)"/>
         Task<IEnumerable<MetasysObject>> GetNetworkDevicesByClassificationAsync(string classification = null);
 
         /// <summary>

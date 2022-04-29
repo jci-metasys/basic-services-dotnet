@@ -1536,7 +1536,6 @@ namespace MetasysServices.Tests
                 "\"id\": \"", mockid, "\",",
                 "\"itemReference\": \"fully:qualified/reference\",",
                 "\"name\": \"name\",",
-                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\",",
                 "\"description\": \"none\",",
                 "\"firmwareVersion\": \"4.0.0.1105\",",
                 "\"ipAddress\": \"\"}");
@@ -1547,7 +1546,7 @@ namespace MetasysServices.Tests
                 "\"items\": [", device, "],",
                 "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=200&sort=name\"}"));
 
-            var devices = client.GetNetworkDevicesByClassification("controller");
+            var devices = client.GetNetworkDevicesByClassificationAsync("controller").GetAwaiter().GetResult(); ;
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)

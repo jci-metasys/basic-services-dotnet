@@ -59,11 +59,6 @@ namespace JohnsonControls.Metasys.BasicServices
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Object);
         }
         /// <inheritdoc/>
-        public IEnumerable<MetasysObject> GetByClassification(string classification = null)
-        {
-            return GetByClassificationAsync(classification).GetAwaiter().GetResult();
-        }
-        /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetByClassificationAsync(string classification = null)
         {
             var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "classification", classification } }).ConfigureAwait(false);
