@@ -541,6 +541,29 @@ namespace JohnsonControls.Metasys.BasicServices
             return ToMetasysObject(objects, Version);
         }
 
+         /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, string objectType)
+        {
+            Dictionary<string, string> parameters = null;
+
+            if (Version > ApiVersion.v3)
+            {
+                parameters = new Dictionary<string, string>();
+                parameters.Add("flatten", "true".ToString());
+                parameters.Add("includeExtensions", "true".ToString());
+                parameters.Add("depth", "-1".ToString());
+                parameters.Add("objectType", objectType);
+            }
+
+            var objects = await GetObjectChildrenAsync(id, parameters).ConfigureAwait(false);
+            if (Version > ApiVersion.v3 && objects.Count > 0)
+            {
+                //Due to in this case the API returns also the parent object then remove it
+                objects.Remove(objects.First());
+            }
+            return ToMetasysObject(objects, Version);
+        }
+
         // GetObjectIdentifier ------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public Guid GetObjectIdentifier(string itemReference)

@@ -1732,6 +1732,32 @@ namespace MetasysServices.Tests
         }
 
         [Test]
+        public void TestGetGraphicsObjects()
+        {
+            string obj = string.Concat("{",
+                "\"id\": \"", mockid, "\",",
+                "\"itemReference\": \"fully:qualified/reference\",",
+                "\"name\": \"name\",",
+                "\"description\": \"description\",",
+                "\"typeUrl\": \"https://hostname/api/v2/enumSets/508/members/197\"}");
+            httpTest.RespondWith(string.Concat("{",
+                "\"total\": 1,",
+                "\"next\": null,",
+                "\"previous\": null,",
+                "\"items\": [", obj, "],",
+                $"\"self\": \"https://hostname/api/v2/objects/{mockid}/objects?page=1&pageSize=200&sort=name\"}}"));
+
+            var objects = client.GetObjectsAsync(mockid, "objectTypeEnumSet.graphicClass").GetAwaiter().GetResult();
+
+            httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/objects")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+            MetasysObject expected = new MetasysObject(JToken.Parse(obj), ApiVersion.v2, null, testCulture);
+            Assert.AreEqual(expected, objects.ElementAt(0));
+        }
+
+
+        [Test]
         public void TestGetObjectsManyPages()
         {
             string obj1 = string.Concat("{",
