@@ -542,7 +542,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
          /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, string objectType)
+        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid objectId, string objectType)
         {
             Dictionary<string, string> parameters = null;
 
@@ -555,12 +555,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 parameters.Add("objectType", objectType);
             }
 
-            var objects = await GetObjectChildrenAsync(id, parameters).ConfigureAwait(false);
-            if (Version > ApiVersion.v3 && objects.Count > 0)
-            {
-                //Due to in this case the API returns also the parent object then remove it
-                objects.Remove(objects.First());
-            }
+            var objects = await GetObjectChildrenAsync(objectId, parameters).ConfigureAwait(false);
+            
             return ToMetasysObject(objects, Version);
         }
 

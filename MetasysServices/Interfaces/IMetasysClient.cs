@@ -313,11 +313,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Gets all child objects given a parent Guid and object type.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="objectId"></param>
         /// <param name="objectType">The object type enum set.</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>        
-        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, string objectType);
+        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid objectId, string objectType);
 
         #region "SPACES" //==============================================================================================================
         // GetSpaces ---------------------------------------------------------------------------------------------------------------------
