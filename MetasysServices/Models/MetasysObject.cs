@@ -68,7 +68,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// The number of direct children objects.
         /// </summary>
         /// <value>The number of children or -1 if there is no children data.</value>
-        public int ChildrenCount { set; get; }      
+        public int ChildrenCount { set; get; }
+
+        // <summary>
+        /// Name of the Equipment Definition mapped with the Equipment Instance
+        /// </summary>
+        public string EquipmentDefinitionName { get; set; }
 
         /// <summary>
         /// Default constructor for Metasys Object.
@@ -167,6 +172,15 @@ namespace JohnsonControls.Metasys.BasicServices
             catch
             {
                 ObjectCategory = null;
+            }
+
+            try
+            {
+                EquipmentDefinitionName = token["type"].Value<string>();
+            }
+            catch
+            {
+                EquipmentDefinitionName = null;
             }
         }
 
