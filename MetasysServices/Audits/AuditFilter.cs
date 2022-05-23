@@ -24,6 +24,11 @@ namespace JohnsonControls.Metasys.BasicServices
       public ClassLevelsEnum ClassesLevels { get; set; }
 
         /// <summary>
+        /// Added to call into API v4.
+        /// </summary>
+      public string ClassLevels { get; set; }
+
+        /// <summary>
         /// Filter by comma-separated list of the action types.
         /// See /enumSets/578/members for possible values.
         /// Example: 1,2.
