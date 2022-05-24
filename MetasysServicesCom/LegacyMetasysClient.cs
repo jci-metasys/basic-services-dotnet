@@ -80,9 +80,9 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<MetasysEnumValue, IComMetasysEnumValue>();
             }).CreateMapper();
 
-            Client.Streams.COVValueChanged += OnStreamCOVValueChanged;
-            Client.Streams.AlarmOccurred += OnStreamAlarmOccurred;
-            Client.Streams.AuditOccurred += OnStreamAuditOccurred;
+            //Client.Streams.COVValueChanged += OnStreamCOVValueChanged;
+            //Client.Streams.AlarmOccurred += OnStreamAlarmOccurred;
+            //Client.Streams.AuditOccurred += OnStreamAuditOccurred;
         }
 
         // TryLogin -----------------------------------------------------------------------------------------------------------------
