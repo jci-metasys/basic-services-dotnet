@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.ComponentModel;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -12,18 +13,22 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Space of Type Generic.
         /// </summary>
-        Generic=0,
+        [Description("0 (= Generic)")]
+        Generic = 0,
         /// <summary>
         /// Space of Type Building.
         /// </summary>
-        Building=1,
+        [Description("1 (= Building)")]
+        Building = 1,
         /// <summary>
         /// Space of Type Floor.
         /// </summary>        
-        Floor=2,
+        [Description("2 (= Floor)")]
+        Floor = 2,
         /// <summary>
         /// Space of Type Room.
         /// </summary>
-        Room=3
+        [Description("3 (= Room)")]
+        Room = 3
     }
 }

@@ -193,14 +193,27 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
-        internal Command(JToken token, CultureInfo cultureInfo)
+        internal Command(JToken token, CultureInfo cultureInfo, ApiVersion version)
+        {
+            if (version > ApiVersion.v3)
+            {
+                CreateCommand_4(token, cultureInfo);
+            } else 
+            {
+                 CreateCommand_2_3(token, cultureInfo);
+            }
+        }
+
+        private void CreateCommand_2_3(JToken token, CultureInfo cultureInfo)
         {
             try
             {
+                JArray items;
                 _CultureInfo = cultureInfo;
+                CommandId = token["commandId"].Value<string>();
                 Title = token["title"].Value<string>();
-                // Translate the title from en-US to specified culture.
                 TitleEnumerationKey = ResourceManager.GetCommandEnumeration(Title);
+                // Translate the title from en-US to specified culture.
                 string translatedTitle = ResourceManager.Localize(TitleEnumerationKey, _CultureInfo);
                 if (translatedTitle != TitleEnumerationKey)
                 {
@@ -208,30 +221,28 @@ namespace JohnsonControls.Metasys.BasicServices
                     Title = translatedTitle;
                 }
 
-                CommandId = token["commandId"].Value<string>();
                 Items = null;
-                List<Item> itemsList = new List<Item>();
-                var items = token["items"] as JArray;
+                items = token["items"] as JArray;
 
+                List<Item> itemsList = new List<Item>();
                 if (items != null && items.Count > 0)
                 {
                     foreach (var item in items)
                     {
                         // Check if a value or an enum
                         var enumSet = item["oneOf"] as JArray;
-
                         if (enumSet == null)
                         {
                             string iTitle = item["title"].Value<string>();
                             string type = item["type"].Value<string>();
-                            double? maximum = item["maximum"].Value<double?>();
-                            double? minimum = item["minimum"].Value<double?>();
+                            double? maximum = (item["maximum"] != null) ? item["maximum"].Value<double?>() : null;
+                            double? minimum = (item["minimum"] != null) ? item["minimum"].Value<double?>() : null;
+                            //add the item
                             itemsList.Add(new Item(iTitle, type, minimum, maximum));
                         }
                         else
                         {
                             List<EnumerationItem> enumList = new List<EnumerationItem>();
-
                             foreach (var e in enumSet)
                             {
                                 string eTitle = e["title"].Value<string>();
@@ -250,7 +261,83 @@ namespace JohnsonControls.Metasys.BasicServices
                     }
                     Items = itemsList;
                 }
-            } 
+            }
+            catch (Exception e)
+            {
+                throw new MetasysCommandException(token.ToString(), e);
+            }
+        }
+
+        private void CreateCommand_4(JToken token, CultureInfo cultureInfo)
+        {
+            try
+            {
+                JArray items = null;
+                List<EnumerationItem> enumList = null;
+
+                _CultureInfo = cultureInfo;
+                Title = token["title"].Value<string>();
+                //Populate the properties according to the API version
+                TitleEnumerationKey = token["id"].Value<string>();
+                CommandId = TitleEnumerationKey.Replace("commandIdEnumSet.", "");
+                if (token["commandSet"] == null)
+                {
+                    //This case is valid for analog
+                    if ((token["commandBodySchema"]["properties"]["parameters"] != null) 
+                        && (token["commandBodySchema"]["properties"]["parameters"]["items"] != null))
+                    {
+                        items = token["commandBodySchema"]["properties"]["parameters"]["items"] as JArray;
+                    }
+                }
+                else
+                {
+                    //This case IServiceProvider valid for binary
+                    if (token["commandSet"] != null)
+                    {
+                        items = token["commandSet"] as JArray;
+                    }
+                    enumList = new List<EnumerationItem>();
+                }
+
+                // Translate the title from en-US to specified culture.
+                string translatedTitle = ResourceManager.Localize(TitleEnumerationKey, _CultureInfo);
+                if (translatedTitle != TitleEnumerationKey)
+                {
+                    // A translation was found
+                    Title = translatedTitle;
+                }
+
+                Items = null;
+
+                List<Item> itemsList = new List<Item>();
+                if (items != null && items.Count > 0)
+                {
+                    foreach (var item in items)
+                    {
+                        if (enumList == null)
+                        {
+                            string iTitle = item["title"].Value<string>();
+                            string type = item["type"].Value<string>();
+                            double? maximum = (item["maximum"] != null) ? item["maximum"].Value<double?>() : null;
+                            double? minimum = (item["minimum"] != null) ? item["minimum"].Value<double?>() : null;
+                            //... there are other properties that could be retrieved
+                            itemsList.Add(new Item(iTitle, type, minimum, maximum));
+                        }
+                        else
+                        {
+                            string eTitle = item["title"].Value<string>();
+                            string eKey = item["id"].Value<string>();
+                            enumList.Add(new EnumerationItem(eTitle, eKey));
+                        }
+                    }
+                    if (enumList != null)
+                    {
+                        itemsList.Add(new Item("oneOf", "enum", 1, 1, enumList));
+                    }
+
+                    Items = itemsList;
+                }
+            }
             catch (Exception e)
             {
                 throw new MetasysCommandException(token.ToString(), e);

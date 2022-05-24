@@ -24,7 +24,7 @@ namespace MetasysServicesComExampleApp
                 Console.Write("Enter the Password:");
                 var password = Console.ReadLine();
 
-                var legacyClient = comMetasysClientFactory.GetLegacyClient(hostName, logClientErrors: false); // Disable internal logging since its managed here
+                var legacyClient = comMetasysClientFactory.GetLegacyClient(hostName,ignoreCertificateErrors: true, logClientErrors: false); // Disable internal logging since its managed here
 
                 #region Login            
                 legacyClient.TryLogin(userName, password);

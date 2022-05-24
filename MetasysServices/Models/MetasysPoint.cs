@@ -10,7 +10,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Point is a structure that holds information about an object attribute mapped to a point.
     /// </summary>
-    public class MetasysPoint
+    public class MetasysPoint: Utils.ObjectUtil
     {
         /// <summary>
         /// The name of the Equipment that contains the Point
@@ -37,6 +37,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public string AttributeUrl {get;   set; }
         /// <summary>
+        /// Attribute where the point is mapped
+        /// </summary>
+        public string Attribute { get; set; }
+        /// <summary>
         /// Full URL of the object where the point is mapped
         /// </summary>
         public string ObjectUrl { get;  set; }
@@ -61,7 +65,24 @@ namespace JohnsonControls.Metasys.BasicServices
                 Label = token["label"].Value<string>();
                 Category = token["category"].Value<string>();
                 IsDisplayData = token["isDisplayData"].Value<bool>();
-                AttributeUrl = token["attributeUrl"].Value<string>();
+                //AttributeUrl = GetJTokenValue(token, "attributeUrl");
+                try
+                {
+                    AttributeUrl = token["attributeUrl"].Value<string>();
+                }
+                catch
+                {
+                    AttributeUrl = null;
+                }
+                //Attribute = GetJTokenValue(token, "attribute");
+                try
+                {
+                    Attribute = token["attribute"].Value<string>();
+                }
+                catch
+                {
+                    Attribute = null;
+                }
                 ObjectUrl = token["objectUrl"].Value<string>();            
                 PresentValue = null;
             }

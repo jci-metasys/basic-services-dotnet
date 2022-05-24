@@ -75,21 +75,52 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<MetasysPoint, IComMetasysPoint>();
                 cfg.CreateMap<AlarmAnnotation, IComAlarmAnnotation>();
                 cfg.CreateMap<AuditAnnotation, IComAuditAnnotation>();
+                cfg.CreateMap<StreamMessage, IComStreamMessage>();
+                cfg.CreateMap<MetasysEnumeration, IComMetasysEnumeration>();
+                cfg.CreateMap<MetasysEnumValue, IComMetasysEnumValue>();
             }).CreateMapper();
+
+            //Client.Streams.COVValueChanged += OnStreamCOVValueChanged;
+            //Client.Streams.AlarmOccurred += OnStreamAlarmOccurred;
+            //Client.Streams.AuditOccurred += OnStreamAuditOccurred;
         }
 
+        // TryLogin -----------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public IComAccessToken TryLogin(string username, string password, bool refresh = true)
         {
             return Mapper.Map<IComAccessToken>(Client.TryLogin(username, password, refresh));
         }
 
+        // TryLoginWithCredMan ------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IComAccessToken TryLoginWithCredMan(string target, bool refresh = true)
+        {
+            return Mapper.Map<IComAccessToken>(Client.TryLogin(target, refresh));
+        }
+
+        // GetAccessToken -----------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IComAccessToken GetAccessToken()
+        {
+            return Mapper.Map<IComAccessToken>(Client.GetAccessToken());
+        }
+
+        // Refresh ------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public IComAccessToken Refresh()
         {
             return Mapper.Map<IComAccessToken>(Client.Refresh());
         }
 
+        // GetServerTime ------------------------------------------------------------------------------------------------------------
+        ///<inheritdoc/>
+        public DateTime GetServerTime()
+        {
+            return Client.GetServerTime();
+        }
+
+        // Localize -----------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public string Localize(string resource, string cultureInfo = "en-US")
         {
@@ -97,13 +128,388 @@ namespace JohnsonControls.Metasys.ComServices
             return Client.Localize(resource, culture);
         }
 
-        /// <inheritdoc/>
-        public string GetCommandEnumeration(string resource)
+
+        #region "Alarms" // =========================================================================================================
+        //GetAlarms -----------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public IComPagedResult GetAlarms(IComFilterAlarm alarmFilter)
         {
-            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
-            return Client.GetCommandEnumeration(resource);
+            var mapAlarmFilter = Mapper.Map<AlarmFilter>(alarmFilter);
+            PagedResult<Alarm> alarmItems = Client.Alarms.Get(mapAlarmFilter);
+            return Mapper.Map<IComPagedResult>(alarmItems);
         }
 
+        //GetSingleAlarm ------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public object GetSingleAlarm(string alarmId)
+        {
+            Guid guidAlarmId = Guid.Parse(alarmId);
+            var alarmItem = Client.Alarms.FindById(guidAlarmId);
+            return Mapper.Map<IComAlarm>(alarmItem);
+        }
+
+        //GetAlarmsForNetworkDevice -------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public IComPagedResult GetAlarmsForNetworkDevice(string networkDeviceId, IComFilterAlarm alarmFilter)
+        {
+            Guid guidNetworkDeviceId = Guid.Parse(networkDeviceId);
+            var mapAlarmFilterForObject = Mapper.Map<AlarmFilter>(alarmFilter);
+            var alarmItems = Client.Alarms.GetForNetworkDevice(guidNetworkDeviceId, mapAlarmFilterForObject);
+            return Mapper.Map<IComPagedResult>(alarmItems);
+        }
+
+        //GetAlarmsForObject --------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public IComPagedResult GetAlarmsForObject(string objectId, IComFilterAlarm alarmFilter)
+        {
+            Guid guidObjectId = Guid.Parse(objectId);
+            var mapAlarmFilterForAnObject = Mapper.Map<AlarmFilter>(alarmFilter);
+            var alarmItems = Client.Alarms.GetForObject(guidObjectId, mapAlarmFilterForAnObject);
+            return Mapper.Map<IComPagedResult>(alarmItems);
+        }
+
+        //GetAlarmAnnotations -------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public object GetAlarmAnnotations(string alarmId)
+        {
+            Guid guidAlarmId = Guid.Parse(alarmId);
+            var response = Client.Alarms.GetAnnotations(guidAlarmId);
+            return Mapper.Map<IComAlarmAnnotation[]>(response);
+        }
+
+        //AcknowledgeAlarm -----------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void AcknowledgeAlarm(string alarmId, string annotationText = null)
+        {
+            Guid guid = Guid.Parse(alarmId);
+            Client.Alarms.Acknowledge(guid,  annotationText);
+        }
+        //DiscardAlarm -----------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void DiscardAlarm(string alarmId, string annotationText = null)
+        {
+            Guid guid = Guid.Parse(alarmId);
+            Client.Alarms.Discard(guid, annotationText);
+        }
+        #endregion
+
+
+        #region "Audits" // =========================================================================================================
+        //GetAudits -----------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public IComPagedResult GetAudits(IComAuditFilter auditFilter)
+        {
+            AuditFilter auditF = new AuditFilter
+            {
+                StartTime = DateTime.Parse(auditFilter.StartTime),
+                EndTime = DateTime.Parse(auditFilter.EndTime)
+            };
+            if (!(auditFilter.Page is null)) auditF.Page = int.Parse(auditFilter.Page);
+            if (!(auditFilter.PageSize is null)) auditF.PageSize = int.Parse(auditFilter.PageSize);
+            auditF.Sort = auditFilter.Sort;
+            auditF.ExcludeDiscarded = auditFilter.ExcludeDiscarded;
+
+            PagedResult<Audit> auditItems = Client.Audits.Get(auditF);
+            return Mapper.Map<IComPagedResult>(auditItems);
+        }
+
+        //GetSingleAudit ------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public object GetSingleAudit(string auditId)
+        {
+            Guid guidAuditId = Guid.Parse(auditId);
+            var auditItem = Client.Audits.FindById(guidAuditId);
+            return Mapper.Map<IComAudit>(auditItem);
+        }
+
+        //GetAuditsForObject --------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IComPagedResult GetAuditsForObject(string objectId, IComAuditFilter auditFilter)
+        {
+            Guid guidObjectId = Guid.Parse(objectId);
+            var mapAuditFilterForAnObject = Mapper.Map<AuditFilter>(auditFilter);
+            var auditItems = Client.Audits.GetForObject(guidObjectId, mapAuditFilterForAnObject);
+            return Mapper.Map<IComPagedResult>(auditItems);
+        }
+
+        //GetAuditAnnotations -------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public object GetAuditAnnotations(string auditId)
+        {
+            Guid guidAuditId = Guid.Parse(auditId);
+            var response = Client.Audits.GetAnnotations(guidAuditId);
+            return Mapper.Map<IComAuditAnnotation[]>(response);
+        }
+
+        //DiscardAudit --------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public void DiscardAudit(string id, string annotationText)
+        {
+            Guid guid = new Guid(id);
+            Client.Audits.Discard(guid, annotationText);
+        }
+
+        //DiscardAuditMultiple ------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public string[] DiscardAuditMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requestParams)
+        {
+            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
+            var requests = new List<BatchRequestParam>();
+            foreach (var request in requestParams)
+            {
+                string[] param = request.Split('|');
+                requests.Add(new BatchRequestParam { ObjectId = new Guid(param[0]), Resource = param[1] });
+            }
+            var response = Client.Audits.DiscardMultiple(requests);
+
+            string[] result = new string[response.Count()];
+            int i = 0;
+            foreach (var res in response)
+            {
+                result[i] = res.Id.ToString() + "|" + res.Status.ToString() + "|" + res.Annotation;
+                i++;
+            }
+            return result;
+        }
+
+        //AddAuditAnnotations --------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public void AddAuditAnnotation(string id, string text)
+        {
+            Guid guid = new Guid(id);
+            Client.Audits.AddAnnotation(guid, text);
+        }
+
+        //AddAuditAnnotationMultiple ------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public string[] AddAuditAnnotationMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requestParams)
+        {
+            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
+            var requests = new List<BatchRequestParam>();
+            foreach (var request in requestParams)
+            {
+                string[] param = request.Split('|');
+                requests.Add(new BatchRequestParam { ObjectId = new Guid(param[0]), Resource = param[1] });
+            }
+            var response = Client.Audits.AddAnnotationMultiple(requests);
+
+            string[] result = new string[response.Count()];
+            int i = 0;
+            foreach (var res in response)
+            {
+                result[i] = res.Id.ToString() + "|" + res.Status.ToString() + "|" + res.Annotation;
+                i++;
+            }
+            return result;
+        }
+        #endregion
+
+
+        #region "Enumerations" // ===================================================================================================
+        //GetEnumerations -----------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public object GetEnumerations()
+        {
+            var response = Client.Enumerations.Get();
+            return Mapper.Map<IComMetasysEnumeration[]>(response);
+        }
+
+        //CreateCustomEnumeration ---------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public void CreateCustomEnumeration(string name, string[] values)
+        {
+            IEnumerable<String> ievalues = values;
+            Client.Enumerations.Create(name, ievalues);
+        }
+
+        //GetEnumerationValues ------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public object GetEnumerationValues(String id)
+        {
+            var response = Client.Enumerations.GetValues(id);
+            return Mapper.Map<IComMetasysEnumValue[]>(response);
+        }
+
+        //EditCustomEnumeration -----------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public void EditCustomEnumeration(string id, string name, string[] values)
+        {
+            IEnumerable<String> ievalues = values;
+            Client.Enumerations.Edit(id, name, ievalues);
+        }
+
+        //ReplaceCustomEnumeration --------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public void ReplaceCustomEnumeration(string id, string name, string[] values)
+        {
+            IEnumerable<String> ievalues = values;
+            Client.Enumerations.Replace(id, name, ievalues);
+        }
+
+        //DeleteCustomEnumeration ---------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public void DeleteCustomEnumeration(string id)
+        {
+            Client.Enumerations.Delete(id);
+        }
+        #endregion
+
+
+        #region "Equipments" // =====================================================================================================
+        //GetEquipment --------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetEquipment()
+        {
+            // Note: need a generic object as return type in order to map correctly to VBA type array
+            var res = Client.Equipments.Get();
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+
+        //GetSingleEquipment --------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public object GetSingleEquipment(string equipmentId)
+        {
+            Guid guid = Guid.Parse(equipmentId);
+            var res = Client.Equipments.FindById(guid);
+            return Mapper.Map<IComMetasysObject>(res);
+        }
+
+        //GetEquipmentsServedByEquipment --------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetEquipmentsServedByEquipment(string equipmentId)
+        {
+            Guid guid = new Guid(equipmentId);
+            var res = Client.Equipments.GetServedByEquipment(guid);
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+
+        //GetEquipmentPoints --------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public object GetEquipmentPoints(string equipmentId, bool ReadAttributeValue = true)
+        {
+            Guid guid = new Guid(equipmentId);
+            var res = Client.Equipments.GetPoints(guid, ReadAttributeValue);
+            return Mapper.Map<IComMetasysPoint[]>(res);
+        }
+
+        //GetEquipmentServingASpace -------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetEquipmentsServingASpace(string spaceId)
+        {
+            Guid guid = new Guid(spaceId);
+            var res = Client.Equipments.GetServingASpace(guid);
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+        /// <inheritdoc/>
+        public object GetSpaceEquipment(string spaceId) //This method is deprecated and you should use 'GetEquipmentServingASpace()'
+        {       
+            return GetEquipmentsServingASpace(spaceId);
+        }
+
+        //GetEquipmentHostedByNetworkDevice -----------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetEquipmentsHostedByNetworkDevice(string networkDeviceId)
+        {
+            Guid guid = new Guid(networkDeviceId);
+            var res = Client.Equipments.GetHostedByNetworkDevice(guid);
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+
+        //GetEquipmentsServingAnEquipment -------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetEquipmentsServingAnEquipment(string equipmentId)
+        {
+            Guid guid = new Guid(equipmentId);
+            var res = Client.Equipments.GetServingAnEquipment(guid);
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+        #endregion
+
+
+        #region "NetworkDevices" // =================================================================================================
+        //GetNetworkDevices ---------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetNetworkDevices(string type = null)
+        {
+            // Note: need a generic object as return type in order to map correctly to VBA type array
+            var res = Client.NetworkDevices.Get(type).ToList();
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+
+        //GetNetworkDeviceTypes -----------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetNetworkDeviceTypes(string type = null)
+        {
+            var res = Client.NetworkDevices.GetTypes();
+            return Mapper.Map<IComMetasysObjectType[]>(res);
+        }
+
+        //GetSingleNetworkDevice ----------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public object GetSingleNetworkDevice(string networkDeviceId)
+        {
+            Guid guid = Guid.Parse(networkDeviceId);
+            var res = Client.NetworkDevices.FindById(guid);
+            return Mapper.Map<IComMetasysObject>(res);
+        }
+
+        //GetNetworkDevicesHostingAnEquipment ---------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetNetworkDevicesHostingAnEquipment(string equipmentId)
+        {
+            Guid guid = new Guid(equipmentId);
+            var res = Client.NetworkDevices.GetHostingAnEquipment(guid);
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+
+        //GetNetworkDevicesChildren -------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetNetworkDevicesChildren(string networkDeviceId)
+        {
+            Guid guid = new Guid(networkDeviceId);
+            var res = Client.NetworkDevices.GetChildren(guid);
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+
+        //GetNetworkDevicesServingASpace --------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetNetworkDevicesServingASpace(string spaceId)
+        {
+            Guid guid = new Guid(spaceId);
+            var res = Client.NetworkDevices.GetServingASpace(guid);
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+        #endregion
+
+
+        #region "Objects" // ========================================================================================================
+        //GetObjects ----------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetObjects(string id, int levels = 1)
+        {
+            Guid guid = new Guid(id);
+            var res = Client.GetObjects(guid, levels).ToList();
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+
+        //GetObjectidentifier -------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public string GetObjectIdentifier(string itemReference)
+        {
+            Guid? res = Client.GetObjectIdentifier(itemReference);
+            return res?.ToString();
+        }
+
+        //GetCommands ---------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetCommands(string id)
+        {
+            Guid guid = new Guid(id);
+            var res = Client.GetCommands(guid);
+            return Mapper.Map<IComCommand[]>(res);
+        }
+
+        //GetObjectTypeEnumeration --------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public string GetObjectTypeEnumeration(string resource)
         {
@@ -111,33 +517,27 @@ namespace JohnsonControls.Metasys.ComServices
             return Client.GetObjectTypeEnumeration(resource);
         }
 
-        /// <summary>
-        /// Given the Item Reference of an object, returns the object identifier.
-        /// </summary>
-        /// <remarks>
-        /// The itemReference will be automatically URL encoded.
-        /// </remarks>
-        /// <returns>A Guid representing the id, or an empty Guid if errors occurred.</returns>
-        /// <param name="itemReference"></param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysGuidException"></exception>
-        public string GetObjectIdentifier(string itemReference)
+        //GetCommandEnumeration -----------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public string GetCommandEnumeration(string resource)
         {
-            Guid? response = Client.GetObjectIdentifier(itemReference);
-            return response?.ToString();
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+            return Client.GetCommandEnumeration(resource);
         }
 
+        //ReadProperty --------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public IComVariant ReadProperty(string id, string attributeName)
         {
             // Parse Id and generate GUID
             Guid guid = new Guid(id);
-            var response = Client.ReadProperty(guid, attributeName);
-            return Mapper.Map<IComVariant>(response);
+            var res = Client.ReadProperty(guid, attributeName);
+            return Mapper.Map<IComVariant>(res);
         }
 
+        //ReadPropertyMultiple ------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public object ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributeNames)
+        public object ReadPropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeNames)
         {
             // Note: MarshalAs decorator is needed for arrays, otherwise will cause a VBA app crash
             // Note: need a generic object as return type in order to map correctly to VBA type array
@@ -146,18 +546,20 @@ namespace JohnsonControls.Metasys.ComServices
             {
                 guidList.Add(new Guid(id));
             }
-            var response = Client.ReadPropertyMultiple(guidList, attributeNames);
-            return Mapper.Map<IComVariantMultiple[]>(response);
+            var res = Client.ReadPropertyMultiple(guidList, attributeNames);
+            return Mapper.Map<IComVariantMultiple[]>(res);
         }
 
+        //WriteProperty -------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public void WriteProperty(string id, string attributeName, string newValue)
         {
             Client.WriteProperty(new Guid(id), attributeName, newValue);
         }
 
+        //WritePropertyMultiple -----------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] attributeValues)
+        public void WritePropertyMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributes, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] attributeValues)
         {
             // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
             var guidList = new List<Guid>();
@@ -174,20 +576,12 @@ namespace JohnsonControls.Metasys.ComServices
             Client.WritePropertyMultiple(guidList, valueList);
         }
 
+        //SendCommand ---------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public object GetCommands(string id)
-        {
-            Guid guid = new Guid(id);
-            var res = Client.GetCommands(guid);
-            return Mapper.Map<IComCommand[]>(res);
-        }
-
-        /// <inheritdoc/>
-        public void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)]string[] values = null)
+        public void SendCommand(string id, string command, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] values = null)
         {
             // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
             Guid guid = new Guid(id);
-
             List<Object> objValues = null;
             if (values != null)
             {
@@ -206,30 +600,11 @@ namespace JohnsonControls.Metasys.ComServices
             }
             Client.SendCommand(guid, command, objValues);
         }
+        #endregion
 
-        /// <inheritdoc/>
-        public object GetObjects(string id, int levels = 1)
-        {
-            Guid guid = new Guid(id);
-            var res = Client.GetObjects(guid, levels).ToList();
-            return Mapper.Map<IComMetasysObject[]>(res);
-        }
 
-        /// <inheritdoc/>
-        public object GetNetworkDevices(string type = null)
-        {
-            // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.GetNetworkDevices(type).ToList();
-            return Mapper.Map<IComMetasysObject[]>(res);
-        }
-
-        /// <inheritdoc/>
-        public object GetNetworkDeviceTypes(string type = null)
-        {
-            var res = Client.GetNetworkDeviceTypes();
-            return Mapper.Map<IComMetasysObjectType[]>(res);
-        }
-
+        #region "Spaces" // =========================================================================================================
+        //GetSpaces -----------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public object GetSpaces(string type = null)
         {
@@ -240,93 +615,60 @@ namespace JohnsonControls.Metasys.ComServices
                 spaceType = (SpaceTypeEnum)Enum.Parse(typeof(SpaceTypeEnum), type);
             }
             // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.GetSpaces(spaceType);
+            var res = Client.Spaces.Get(spaceType);
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
+        //GetSpaceChildren ----------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public object GetSpaceChildren(string id)
         {
             Guid guid = new Guid(id);
-            // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.GetSpaceChildren(guid);
+            var res = Client.Spaces.GetChildren(guid);
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
+        //GetSpaceTypes -------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public object GetSpaceTypes()
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.GetSpaceTypes();
+            var res = Client.Spaces.GetTypes();
             return Mapper.Map<IComMetasysObjectType[]>(res);
         }
 
-        /// <inheritdoc/>
-        public object GetSpaceEquipment(string spaceId)
-        {
-            Guid guid = new Guid(spaceId);
-            var res = Client.GetSpaceEquipment(guid);
-            return Mapper.Map<IComMetasysObject[]>(res);
-        }
-
-        /// <inheritdoc/>
-        public object GetEquipment()
-        {
-            // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.GetEquipment();
-            return Mapper.Map<IComMetasysObject[]>(res);
-        }
-
+        //GetSingleSpace ------------------------------------------------------------------------------------------------------------
         /// <inheritdoc />
-        public object GetEquipmentPoints(string equipmentId, bool ReadAttributeValue=true)
+        public object GetSingleSpace(string spaceId)
+        {
+            Guid guid = Guid.Parse(spaceId);
+            var res = Client.Spaces.FindById(guid);
+            return Mapper.Map<IComMetasysObject>(res);
+        }
+
+        //GetSpacesServedByEquipment ------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetSpacesServedByEquipment(string equipmentId)
         {
             Guid guid = new Guid(equipmentId);
-            var res = Client.GetEquipmentPoints(guid, ReadAttributeValue);
-            return Mapper.Map<IComMetasysPoint[]>(res);
+            var res = Client.Spaces.GetServedByEquipment(guid);
+            return Mapper.Map<IComMetasysObject[]>(res);
         }
 
-        /// <inheritdoc />
-        public object GetSingleAlarm(string alarmId)
+        //GetSpacesServedByNetworkDevice --------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetSpacesServedByNetworkDevice(string networkDeviceId)
         {
-            Guid guidAlarmId = Guid.Parse(alarmId);
-            var alarmItem = Client.Alarms.FindById(guidAlarmId);
-            return Mapper.Map<IComAlarm>(alarmItem);
+            Guid guid = new Guid(networkDeviceId);
+            // Note: need a generic object as return type in order to map correctly to VBA type array
+            var res = Client.Spaces.GetServedByNetworkDevice(guid);
+            return Mapper.Map<IComMetasysObject[]>(res);
         }
+        #endregion
 
-        /// <inheritdoc />
-        public IComPagedResult GetAlarms(IComFilterAlarm alarmFilter)
-        {
-            var mapAlarmFilter = Mapper.Map<AlarmFilter>(alarmFilter);
-            PagedResult<Alarm> alarmItems = Client.Alarms.Get(mapAlarmFilter);
-            return Mapper.Map<IComPagedResult>(alarmItems);
-        }
 
-        /// <inheritdoc />
-        public object GetAlarmAnnotations(string alarmId)
-        {
-            Guid guidAlarmId = Guid.Parse(alarmId);
-            var response = Client.Alarms.GetAnnotations(guidAlarmId);
-            return Mapper.Map<IComAlarmAnnotation[]>(response);
-        }
-
-        /// <inheritdoc />
-        public IComPagedResult GetAlarmsForObject(string objectId, IComFilterAlarm alarmFilter)
-        {
-            Guid guidObjectId = Guid.Parse(objectId);
-            var mapAlarmFilterForAnObject = Mapper.Map<AlarmFilter>(alarmFilter);
-            var alarmItems = Client.Alarms.GetForObject(guidObjectId, mapAlarmFilterForAnObject);
-            return Mapper.Map<IComPagedResult>(alarmItems);
-        }
-
-        /// <inheritdoc />
-        public IComPagedResult GetAlarmsForNetworkDevice(string networkDeviceId, IComFilterAlarm alarmFilter)
-        {
-            Guid guidNetworkDeviceId = Guid.Parse(networkDeviceId);
-            var mapAlarmFilterForObject = Mapper.Map<AlarmFilter>(alarmFilter);
-            var alarmItems = Client.Alarms.GetForNetworkDevice(guidNetworkDeviceId, mapAlarmFilterForObject);
-            return Mapper.Map<IComPagedResult>(alarmItems);
-        }
-
+        #region "Trends" // =========================================================================================================
+        //GetTrendedAttributes ------------------------------------------------------------------------------------------------------
         /// <inheritdoc />
         public object GetTrendedAttributes(string id)
         {
@@ -334,118 +676,197 @@ namespace JohnsonControls.Metasys.ComServices
             return Mapper.Map<IComMetasysAttribute[]>(res);
         }
 
+        //GetSamples ----------------------------------------------------------------------------------------------------------------
         /// <inheritdoc />
         public IComPagedResult GetSamples(string objectId, int attributeId, IComTimeFilter filter)
         {
             var mapTrendedAttributes = Mapper.Map<TimeFilter>(filter);
             PagedResult<Sample> samples = Client.Trends.GetSamples(new Guid(objectId), attributeId, mapTrendedAttributes);
-            var map = Mapper.Map<IComPagedResult>(samples);
-            return map;
+            return Mapper.Map<IComPagedResult>(samples);
         }
 
+        //GetSamples (2) ------------------------------------------------------------------------------------------------------------
         /// <inheritdoc />
-        public object GetSingleAudit(string auditId)
+        public IComPagedResult GetSamples(string objectId, String attributeName, IComTimeFilter filter)
         {
-            Guid guidAuditId = Guid.Parse(auditId);
-            var auditItem = Client.Audits.FindById(guidAuditId);
-            return Mapper.Map<IComAudit>(auditItem);
+            var mapTrendedAttributes = Mapper.Map<TimeFilter>(filter);
+            AttributeEnumSet attribute = (AttributeEnumSet)Enum.Parse(typeof(AttributeEnumSet), attributeName);
+            PagedResult<Sample> samples = Client.Trends.GetSamples(new Guid(objectId), attribute, mapTrendedAttributes);
+            return Mapper.Map<IComPagedResult>(samples);
         }
 
+        //GetNetDevTrendedAttributes ------------------------------------------------------------------------------------------------
         /// <inheritdoc />
-        public IComPagedResult GetAudits(IComAuditFilter auditFilter)
+        public object GetNetDevTrendedAttributes(string id)
         {
-            AuditFilter auditF = new AuditFilter
-            {
-                StartTime = DateTime.Parse(auditFilter.StartTime),
-                EndTime = DateTime.Parse(auditFilter.EndTime)
-            };
-            if (!(auditFilter.Page is null)) auditF.Page = int.Parse(auditFilter.Page);
-            if (!(auditFilter.PageSize is null)) auditF.PageSize = int.Parse(auditFilter.PageSize);
-            auditF.Sort = auditFilter.Sort;
-            auditF.ExcludeDiscarded = auditFilter.ExcludeDiscarded;
-
-            PagedResult<Audit> auditItems = Client.Audits.Get(auditF);
-            return Mapper.Map<IComPagedResult>(auditItems);
+            var res = Client.Trends.GetNetDevTrendedAttributes(new Guid(id));
+            return Mapper.Map<IComMetasysAttribute[]>(res);
         }
 
+        //GetNetDevSamples ----------------------------------------------------------------------------------------------------------
         /// <inheritdoc />
-        public object GetAuditAnnotations(string auditId)
+        public IComPagedResult GetNetDevSamples(string networkDeviceId, int attributeId, IComTimeFilter filter)
         {
-            Guid guidAuditId = Guid.Parse(auditId);
-            var response = Client.Audits.GetAnnotations(guidAuditId);
-            return Mapper.Map<IComAuditAnnotation[]>(response);
+            var mapTrendedAttributes = Mapper.Map<TimeFilter>(filter);
+            PagedResult<Sample> samples = Client.Trends.GetNetDevSamples(new Guid(networkDeviceId), attributeId, mapTrendedAttributes);
+            return Mapper.Map<IComPagedResult>(samples);
         }
 
+        //GetNetDevSamples (2) ------------------------------------------------------------------------------------------------------
         /// <inheritdoc />
-        public void DiscardAudit(string id, string annotationText)
+        public IComPagedResult GetNetDevSamples(string networkDeviceId, String attributeName, IComTimeFilter filter)
+        {
+            var mapTrendedAttributes = Mapper.Map<TimeFilter>(filter);
+            AttributeEnumSet attribute = (AttributeEnumSet)Enum.Parse(typeof(AttributeEnumSet), attributeName);
+            PagedResult<Sample> samples = Client.Trends.GetNetDevSamples(new Guid(networkDeviceId), attribute, mapTrendedAttributes);
+            return Mapper.Map<IComPagedResult>(samples);
+        }
+        #endregion
+
+
+        #region "Streams" // ========================================================================================================
+        //StartReadingStreamCOVValue ------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void StartReadingStreamCOV(string id)
         {
             Guid guid = new Guid(id);
-            Client.Audits.Discard(guid, annotationText);
+            Client.Streams.StartReadingCOVAsync(guid);
         }
 
-        /// <inheritdoc />
-        public string[] DiscardAuditMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requestParams)
+        //StartReadingStreamCOVValues -----------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void StartReadingStreamCOV([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids)
         {
-            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
-            var requests = new List<BatchRequestParam>();
-            foreach (var request in requestParams) {
-                string[] param = request.Split('|');
-                requests.Add(new BatchRequestParam { ObjectId = new Guid(param[0]), Resource = param[1] });
+            var guids = new List<Guid>();
+            foreach (var id in ids)
+            {
+                guids.Add(new Guid(id));
             }
-            var response = Client.Audits.DiscardMultiple(requests);
+            Client.Streams.StartReadingCOVAsync(guids);
+        }
 
+        //StopReadingStreamCOVValues ------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void StopReadingStreamCOV(string requestId)
+        {
+            Guid guid = new Guid(requestId);
+            Client.Streams.StopReadingCOV(guid);
+        }
+
+        //GetCOVStreamValues --------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetStreamCOVList()
+        {
+            var res = Client.Streams.GetCOVList();
+            return Mapper.Map<IComStreamMessage[]>(res);
+        }
+
+        //GetCOVStreamValue ---------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public IComStreamMessage GetStreamCOV()
+        {
+            var res = Client.Streams.GetCOV();
+            return Mapper.Map<IComStreamMessage>(res);
+        }
+
+        /// <inheritdoc/>
+        public string[] GetStreamRequestIds()
+        {
+            var response = Client.Streams.GetRequestIds();
             string[] result = new string[response.Count()];
             int i = 0;
             foreach (var res in response)
             {
-                result[i] = res.Id.ToString() + "|" + res.Status.ToString() + "|" + res.Annotation;
+                result[i] = res.ToString();
                 i++;
             }
             return result;
         }
 
         /// <inheritdoc />
-        public void AddAuditAnnotation(string id, string text)
+        public event EventHandler<StreamEventArgs> StreamCOVValueChanged;
+        /// <inheritdoc />
+        private void OnStreamCOVValueChanged(object sender, StreamEventArgs e)
         {
-            Guid guid = new Guid(id);
-            Client.Audits.AddAnnotation(guid, text);
+            StreamCOVValueChanged?.Invoke(this, e);
+        }
+
+
+        //StartCollectingStreamAlarms -----------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void StartCollectingStreamAlarms()
+        {
+            Client.Streams.StartCollectingAlarmsAsync();
+        }
+
+        //StopCollectingStreamAlarms -----------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void StopCollectingStreamAlarms(string requestId)
+        {
+            Guid guid = new Guid(requestId);
+            Client.Streams.StopCollectingAlarms(guid);
+        }
+
+        //GetAlarmStreamEvents --------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetAlarmStreamEvents()
+        {
+            var res = Client.Streams.GetAlarmEvents();
+            return Mapper.Map<IComStreamMessage[]>(res);
         }
 
         /// <inheritdoc />
-        public string[] AddAuditAnnotationMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requestParams)
-        {
-            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
-            var requests = new List<BatchRequestParam>();
-            foreach (var request in requestParams) {
-                string[] param = request.Split('|');
-                requests.Add(new BatchRequestParam { ObjectId = new Guid(param[0]), Resource = param[1] });
-            }
-            var response = Client.Audits.AddAnnotationMultiple(requests);
+        public event EventHandler<StreamEventArgs> StreamAlarmOccurred;
 
-            string[] result = new string[response.Count()];
-            int i = 0;
-            foreach (var res in response)
-            {
-                result[i] = res.Id.ToString() + "|" + res.Status.ToString() + "|" + res.Annotation;
-                i++;
-            }
-            return result;
+        /// <inheritdoc />
+        void OnStreamAlarmOccurred(object sender, StreamEventArgs e)
+        {
+            StreamAlarmOccurred?.Invoke(this, e);
         }
 
+
+        //StartCollectingStreamAuditc -----------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public IComPagedResult GetAuditsForObject(string objectId, IComAuditFilter auditFilter)
+        public void StartCollectingStreamAudits()
         {
-            Guid guidObjectId = Guid.Parse(objectId);
-            var mapAuditFilterForAnObject = Mapper.Map<AuditFilter>(auditFilter);
-            var auditItems = Client.Audits.GetForObject(guidObjectId, mapAuditFilterForAnObject);
-            return Mapper.Map<IComPagedResult>(auditItems);
+            Client.Streams.StartCollectingAuditsAsync();
         }
 
+        //StopCollectingStreamAudits -----------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public IComAccessToken TryLoginWithCredMan(string target, bool refresh = true)
+        public void StopCollectingStreamAudits(string requestId)
         {
-            return Mapper.Map<IComAccessToken>(Client.TryLogin(target, refresh));
+            Guid guid = new Guid(requestId);
+            Client.Streams.StopCollectingAudits(guid);
         }
-       
+
+        /// <inheritdoc />
+        public event EventHandler<StreamEventArgs> StreamAuditOccurred;
+
+        /// <inheritdoc />
+        void OnStreamAuditOccurred(object sender, StreamEventArgs e)
+        {
+            StreamAuditOccurred?.Invoke(this, e);
+        }
+
+
+
+        //GetAuditStreamEvents --------------------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public object GetAuditStreamEvents()
+        {
+            var res = Client.Streams.GetAuditEvents();
+            return Mapper.Map<IComStreamMessage[]>(res);
+        }
+
+        //KeepStreamAlive -----------------------------------------------------------------------------------------------
+        /// <inheritdoc/>
+        public void KeepStreamAlive()
+        {
+            Client.Streams.KeepAlive(null);
+        }
+
+        #endregion
+
     }
 }

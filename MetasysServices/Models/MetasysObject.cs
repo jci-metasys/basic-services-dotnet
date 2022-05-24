@@ -10,7 +10,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// MetasysObject is a structure that holds information about a Metasys object.
     /// </summary>
-    public class MetasysObject
+    public class MetasysObject: Utils.ObjectUtil
     {
         private CultureInfo _CultureInfo;
 
@@ -40,7 +40,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
         public string TypeUrl { get; set; }
 
-
         /// <summary>
         /// The resource type detail reference. 
         /// </summary>
@@ -51,6 +50,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// The specific category of the Metasys Object Type.
         /// </summary>
         public string Category { get; set; }
+
+        /// <summary>
+        /// Reference of the Metasys Object uthorization Category.
+        /// </summary>
+        public string CategoryUrl { get; set; }
+
+        /// <summary>
+        /// Metasys Object Authorization Category.
+        /// </summary>
+        public string ObjectCategory { get; set; }
 
         /// <summary>The direct children objects of the Metasys object.</summary>
         public IEnumerable<MetasysObject> Children { set;  get; }
@@ -104,8 +113,9 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 // This applies for v2 and v1.
-                TypeUrl = token["typeUrl"].Value<string>();
-                if (Type == MetasysObjectTypeEnum.Space)
+                TypeUrl =  (version < ApiVersion.v4)?  token["typeUrl"].Value<string>() : TypeUrl = String.Empty;
+                if (Type == MetasysObjectTypeEnum.Space && TypeUrl.Length > 0)
+                //if (Type == MetasysObjectTypeEnum.Space)
                 {
                     // Set the specific category for Space
                     var typeId = TypeUrl.Split('/').Last();
@@ -130,6 +140,22 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     ObjectType = null;
                 }
+            }
+            try
+            {
+                CategoryUrl = token["categoryUrl"].Value<string>();
+            }
+            catch
+            {
+                CategoryUrl = null;
+            }
+            try
+            {
+                ObjectCategory = token["objectCategory"].Value<string>();
+            }
+            catch
+            {
+                ObjectCategory = null;
             }
         }
 

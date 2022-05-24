@@ -23,7 +23,13 @@ namespace JohnsonControls.Metasys.ComServices
         public string ItemReference { get; set; }
 
         /// <inheritdoc/>
+        public string Description { get; set; }
+
+        /// <inheritdoc/>
         public string Name { get; set; }
+
+        /// <inheritdoc/>
+        public string DiscardedTime { get; set; }
 
         /// <inheritdoc/>
         public string Message { get; set; }
@@ -35,6 +41,9 @@ namespace JohnsonControls.Metasys.ComServices
         public string TypeUrl { get; set; }
 
         /// <inheritdoc/>
+        public string Type { get; set; }
+
+        /// <inheritdoc/>
         public int Priority { get; set; }
 
         /// <inheritdoc/>
@@ -44,6 +53,9 @@ namespace JohnsonControls.Metasys.ComServices
         public string CreationTime { get; set; }
 
         /// <inheritdoc/>
+        public string ActivityManagementStatus { get; set; }
+
+        /// <inheritdoc/>
         public bool IsAcknowledged { get; set; }
 
         /// <inheritdoc/>
@@ -51,6 +63,9 @@ namespace JohnsonControls.Metasys.ComServices
 
         /// <inheritdoc/>
         public string CategoryUrl { get; set; }
+
+        /// <inheritdoc/>
+        public string Category { get; set; }
 
         /// <inheritdoc/>
         public string ObjectUrl { get; set; }

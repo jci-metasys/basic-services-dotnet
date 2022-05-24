@@ -1,8 +1,8 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -29,10 +29,22 @@ namespace JohnsonControls.Metasys.BasicServices
         public string ItemReference { get; set; }
 
         /// <summary>
+        /// Alarm description
+        /// </summary>
+        /// <remarks> This is available since Metasys API v4. </remarks>
+        public string Description { get; set; }
+
+        /// <summary>
         /// Item name
         /// </summary>
         [JsonProperty(Required = Required.Always)]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Discarded Time
+        /// </summary>
+        /// <remarks> This is available since Metasys API v4. </remarks>
+        public string DiscardedTime { get; set; }
 
         /// <summary>
         /// Alarm message
@@ -47,7 +59,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm type route
         /// </summary>
-        /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
+        /// <remarks> This is available only with Metasys API v2 and v1. </remarks>
         public string TypeUrl { get; set; }
 
         /// <summary>
@@ -64,7 +76,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Alarm trigger value details
         /// </summary>
-        public Measurement TriggerValue { get; set; }
+        public TriggerValue TriggerValue { get; set; }
 
         /// <summary>
         /// Alarm creation time
@@ -72,19 +84,27 @@ namespace JohnsonControls.Metasys.BasicServices
         public string CreationTime { get; set; }
 
         /// <summary>
+        /// Activity Management Status
+        /// </summary>
+        /// <remarks> This is available since Metasys API v4. </remarks>
+        public string ActivityManagementStatus { get; set; }
+
+        /// <summary>
         /// Is alarm already acknowledged
         /// </summary>
+        /// <remarks> This is not anymore available since Metasys API v4. </remarks>
         public bool IsAcknowledged { get; set; }
 
         /// <summary>
-        /// Is alarm discarded
+        /// Is alarm already discarded
         /// </summary>
+        /// <remarks> This is not anymore available since Metasys API v4. </remarks>
         public bool IsDiscarded { get; set; }
 
         /// <summary>
         /// Alarm Category route
         /// </summary>
-        /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
+        /// <remarks> This is available only with Metasys API v2 and v1. </remarks>
         public string CategoryUrl { get; set; }
 
         /// <summary>
@@ -103,6 +123,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public string AnnotationsUrl { get; set; }
 
+
         /// <summary>
         /// Returns a value indicating whether this instance has values equal to a specified object.
         /// </summary>
@@ -110,9 +131,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is Alarm)
+            if (obj != null && obj is Alarm alarm)
             {
-                var o = (Alarm)obj;
+                var o = alarm;
                 // Compare each properties one by one for better performance
                 return this.Id == o.Id && this.IsAcknowledged == o.IsAcknowledged && this.IsAckRequired == o.IsAckRequired
                     && this.IsDiscarded == o.IsDiscarded && this.ItemReference == o.ItemReference && this.Message == o.Message
@@ -166,5 +187,6 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
+
     }
 }

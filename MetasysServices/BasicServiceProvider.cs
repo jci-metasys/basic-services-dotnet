@@ -1,29 +1,43 @@
-﻿using Flurl;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Resources;
+using System.Net;
+using System.Collections;
+using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
 using System.Net.Http;
-using System.Globalization;
-using System.IO;
+using JohnsonControls.Metasys.BasicServices.Utils;
+using JohnsonControls.Metasys.BasicServices;
+using System.Diagnostics;
+using System.Dynamic;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// Base abstract class to be extended on specific provider implementation.
     /// </summary>
-    public abstract class BasicServiceProvider
+    public abstract class BasicServiceProvider: ObjectUtil
     {
         /// <summary>The http client.</summary>
         protected IFlurlClient Client;
 
         /// <inheritdoc/>
         public ApiVersion Version { get; set; }
+
+        /// <summary>
+        /// Min API version supported by this SDK.
+        /// </summary>
+        public ApiVersion MinVersionSupported { get; } = ApiVersion.v2;
+
+        /// <summary>
+        /// Max API version supported by this SDK.
+        /// </summary>
+        public ApiVersion MaxVersionSupported { get; } = ApiVersion.v4;
 
         /// <summary>
         /// The current Culture Used for localization.
@@ -84,8 +98,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Return Metasys Object representation from a generic JSON object tree.
         /// </summary>
         /// <returns></returns>
-        protected List<MetasysObject> ToMetasysObject(IEnumerable<TreeObject> objects, MetasysObjectTypeEnum? objectType=null)
+        protected List<MetasysObject> ToMetasysObject(IEnumerable<TreeObject> objects, ApiVersion version, MetasysObjectTypeEnum? objectType=null)
         {
+            Version = version;
             if (objects == null)
             {
                 // Exit condition for recursion
@@ -94,7 +109,7 @@ namespace JohnsonControls.Metasys.BasicServices
             List<MetasysObject> metasysObjects = new List<MetasysObject>();
             foreach (var o in objects)
             {
-                metasysObjects.Add(new MetasysObject(o.Item, Version, ToMetasysObject(o.Children), type:objectType));
+                metasysObjects.Add(new MetasysObject(o.Item, Version, ToMetasysObject(o.Children, Version), type:objectType));
             }
             return metasysObjects;
         }
@@ -103,22 +118,47 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Return Metasys Object representation from a generic JSON object.
         /// </summary>
         /// <returns></returns>
-        protected MetasysObject ToMetasysObject(JToken item, MetasysObjectTypeEnum? objectType = null)
+        protected MetasysObject ToMetasysObject(JToken item, ApiVersion version, MetasysObjectTypeEnum? objectType = null)
         {
+            Version = version;
             return new MetasysObject(item, Version, null, type:objectType);
         }
-
-
         /// <summary>
         /// Return Metasys Object representation from a generic JSON object List.
         /// </summary>
         /// <returns></returns>
-        protected List<MetasysObject> ToMetasysObject(List<JToken> items, MetasysObjectTypeEnum? type = null)
+        protected List<MetasysObject> ToMetasysObject(List<JToken> items, ApiVersion version, MetasysObjectTypeEnum? type = null)
         {
+            Version = version;
             List<MetasysObject> objects = new List<MetasysObject>();
             foreach (var i in items)
             {
-                objects.Add(ToMetasysObject(i, objectType:type));
+                objects.Add(ToMetasysObject(i, Version, objectType:type));
+            }
+            return objects;
+        }
+
+        /// <summary>
+        /// Return Network Device representation from a generic JSON object.
+        /// </summary>
+        /// <returns></returns>
+        protected NetworkDevice ToNetworkDevice(JToken item, ApiVersion version)
+        {
+            Version = version;
+            return new NetworkDevice(item, Version);
+        }
+
+        /// <summary>
+        /// Return Network Device representation from a generic JSON object List.
+        /// </summary>
+        /// <returns></returns>
+        protected List<NetworkDevice> ToNetworkDevice(List<JToken> items, ApiVersion version)
+        {
+            Version = version;
+            List<NetworkDevice> objects = new List<NetworkDevice>();
+            foreach (var i in items)
+            {
+                objects.Add(ToNetworkDevice(i, Version));
             }
             return objects;
         }
@@ -154,6 +194,11 @@ namespace JohnsonControls.Metasys.BasicServices
                 hasNext = false;
                 parameters["page"] = page.ToString();
                 var response = await GetPagedResultsAsync<JToken>("objects", parameters, id, "objects").ConfigureAwait(false);
+                //List<JToken> listOfItems = response.Items;
+                //if (Version > ApiVersion.v3)
+                //{
+                //    listOfItems = response.Items[0].Children("Items");
+                //}
                 foreach (var item in response.Items)
                 {
                     List<TreeObject> children = null;
@@ -175,6 +220,226 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
             }
             return objects;
+        }
+
+        /// <summary>
+        /// Gets all resource types asynchronously.
+        /// </summary>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>
+        public async Task<IEnumerable<MetasysObjectType>> GetResourceTypesAsync(string resource, string pathSegment)
+        {
+            List<MetasysObjectType> types = new List<MetasysObjectType>() { };
+
+            try
+            {
+                var response = await Client.Request(new Url(resource)
+                    .AppendPathSegment(pathSegment))
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+                try
+                {
+                    if (Version < ApiVersion.v4)
+                    {
+                        // The response is a list of typeUrls, not the type data
+                        var list = response["items"] as JArray;
+                        foreach (var item in list)
+                        {
+                            try
+                            {
+                                JToken typeToken = item;
+                                // Retrieve type token from url (when available) and construct Metasys Object Type
+                                if (item["typeUrl"] != null)
+                                {
+                                    var url = item["typeUrl"].Value<string>();
+                                    typeToken = await GetWithFullUrl(url).ConfigureAwait(false);
+                                }
+                                var type = GetType(typeToken);
+                                types.Add(type);
+                            }
+                            catch (System.ArgumentNullException e)
+                            {
+                                throw new MetasysHttpParsingException(response.ToString(), e);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var item = response["item"];
+                        var members = item["members"];
+                        dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(members.ToString());
+                        foreach (KeyValuePair<string, object> kvp in kvpList)
+                        {
+                            if (kvp.Key.Length > 0)
+                            {
+                                var itm = kvp.Value as IDictionary<string, object>;
+                                String description = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
+                                int id = int.Parse((itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
+
+                                var type = GetType(id, description, kvp.Key);
+                                types.Add(type);
+                            }
+                        }
+                    }
+                }
+                catch (System.NullReferenceException e)
+                {
+                    throw new MetasysHttpParsingException(response.ToString(), e);
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return types;
+        }
+
+        /// <summary>
+        /// Gets the type from a token retrieved from a typeUrl 
+        /// </summary>
+        /// <param name="typeToken"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysObjectTypeException"></exception>
+        protected MetasysObjectType GetType(JToken typeToken)
+        {
+            try
+            {
+                if (typeToken != null || typeToken == null)
+                {
+                    //string description = (typeToken.Contains("description") && typeToken["description"] != null) ? typeToken["description"].Value<string>(): "";
+                    //int id = (typeToken.Contains("id") && typeToken["id"] != null) ?  typeToken["id"].Value<int>() : -1;
+                    //string key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
+                    string description = typeToken["description"].Value<string>();
+                    int id = typeToken["id"].Value<int>();
+                    //string key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
+                    string key = GetObjectTypeEnumeration(description);
+
+                    if (key.Length > 0)
+                    {
+                        string translation = Localize(key);
+                        if (translation != key)
+                        {
+                            // A translation was found
+                            description = translation;
+                        }
+                    }
+                    return new MetasysObjectType(id, key, description);
+                }
+                else
+                {
+                    return new MetasysObjectType(-1, "", "");
+                }
+            }
+            catch (Exception e) when (e is System.ArgumentNullException
+                || e is System.NullReferenceException || e is System.FormatException)
+            {
+                throw new MetasysObjectTypeException(typeToken.ToString(), e);
+            }
+        }
+
+        /// <inheritdoc/>
+        public string GetObjectTypeEnumeration(string resource)
+        {
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+            return Utils.ResourceManager.GetObjectTypeEnumeration(resource);
+        }
+
+        /// <inheritdoc/>
+        public string Localize(string resource, CultureInfo cultureInfo = null)
+        {
+            // Priority is the cultureInfo parameter if available, otherwise MetasysClient culture.
+            return Utils.ResourceManager.Localize(resource, cultureInfo ?? Culture);
+        }
+
+
+        /// <inheritdoc/>
+        protected IEnumerable<MetasysEnumValue> GetEnumValues(String enumerationKey)
+        {
+            return GetEnumValuesAsync(enumerationKey).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        protected async Task<IEnumerable<MetasysEnumValue>> GetEnumValuesAsync(String enumerationKey)
+        {
+            List<MetasysEnumValue> enums = new List<MetasysEnumValue>() { };
+
+            if (Version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+
+            try
+            {
+                var response = await Client.Request(new Url("enumerations")
+                    .AppendPathSegment(enumerationKey))
+                    .GetJsonAsync<JToken>()
+                    .ConfigureAwait(false);
+                try
+                {
+                    var item = response["item"];
+                    var members = item["members"];
+                    dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(members.ToString());
+                    foreach (KeyValuePair<string, object> kvp in kvpList)
+                    {
+                        if (kvp.Key.Length > 0)
+                        {
+                            var itm = kvp.Value as IDictionary<string, object>;
+                            String key = kvp.Key;
+                            String name = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
+                            int value = int.Parse((itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
+
+                            var enumValue = new MetasysEnumValue(key, name, value, Culture);
+                            enums.Add(enumValue);
+                        }
+                    }
+                }
+                catch (System.NullReferenceException e)
+                {
+                    throw new MetasysHttpParsingException(response.ToString(), e);
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return enums;
+        }
+
+        /// <summary>
+        /// Gets the type from the values of the paramenters
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="description"></param>
+        /// <param name="key"></param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysObjectTypeException"></exception>
+        protected MetasysObjectType GetType(int id, String description, String key)
+        {
+            try
+            {
+                if (id >= 0 && description.Length > 0)
+                {
+                    if (String.IsNullOrEmpty(key))
+                    {
+                        key = description.Length > 0 ? GetObjectTypeEnumeration(description) : "";
+                    }
+                    if (key.Length > 0)
+                    {
+                        string translation = Localize(key);
+                        if (translation != key)
+                        {
+                            // A translation was found
+                            description = translation;
+                        }
+                    }
+                    return new MetasysObjectType(id, key, description);
+                }
+                else
+                {
+                    return new MetasysObjectType(-1, "", "");
+                }
+            }
+            catch (Exception e) when (e is System.ArgumentNullException
+                || e is System.NullReferenceException || e is System.FormatException)
+            {
+                throw new MetasysObjectTypeException(id.ToString() + " " + description, e);
+            }
         }
 
         /// <summary>
@@ -293,6 +558,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             bool hasNext = true;
             List<JToken> aggregatedResponse = new List<JToken>();
+            
             int page = 1;
             // Init our dictionary for paging
             if (parameters == null)
@@ -477,6 +743,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         protected async Task<JToken> PutBatchRequestAsync(string endpoint, IEnumerable<BatchRequestParam> requests, params string[] paths)
         {
+            Boolean isDiscard = false;
             // Create URL with base resource
             Url url = new Url(endpoint);
             // Concatenate batch segment to use batch request and prepare the list of requests
@@ -494,6 +761,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     case "discard":
                         string annotationText = r.Resource;
                         body = new { annotationText };
+                        isDiscard = true;
                         break;
                     default:
                         body = null;
@@ -514,18 +782,40 @@ namespace JohnsonControls.Metasys.BasicServices
             JToken responseToken = null;
             try
             {
-                // Post the list of requests and return responses as JToken
-                var response = await Client.Request(url)
-                                            .PostJsonAsync(new BatchRequest { Method = "PUT", Requests = objectsRequests })
-                                            .ConfigureAwait(false);
+                if (isDiscard && Version == ApiVersion.v4)
+                {
+                    // Post the list of requests and return responses as JToken
+                    var response = await Client.Request(url)
+                                                .PostJsonAsync(new BatchRequest { Method = "PATCH", Requests = objectsRequests })
+                                                .ConfigureAwait(false);
 
-                responseToken = JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+                    responseToken = JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+
+                }
+                else
+                {
+                    // Post the list of requests and return responses as JToken
+                    var response = await Client.Request(url)
+                                                .PostJsonAsync(new BatchRequest { Method = "PUT", Requests = objectsRequests })
+                                                .ConfigureAwait(false);
+
+                    responseToken = JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+                }
             }
             catch (FlurlHttpException e)
             {
                 ThrowHttpException(e);
             }
             return responseToken;
+        }
+
+        /// <summary>
+        /// Check if the selected API version is supported by the SDK
+        /// </summary>
+        protected void CheckVersion(ApiVersion version)
+        {
+            if (version < MinVersionSupported || version > MaxVersionSupported)
+            { throw new MetasysUnsupportedApiVersion(version.ToString()); }
         }
 
     }

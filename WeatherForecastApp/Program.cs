@@ -17,11 +17,13 @@ namespace WeatherForecastApp
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("AppSettings.json", optional: false, reloadOnChange:true)
             .Build();
+            // Define the Metasys API version
+            ApiVersion apiVersion = ApiVersion.v4;
             // Read hostname from credential manager first
             var hostnameTarget = config.GetSection("CredentialManager:Targets:MetasysServer").Value;
             // Hostname is stored in the Credential Manager using password field
             var secureHostname = CredentialUtil.GetCredential(hostnameTarget);
-            MetasysClient metasysClient = new MetasysClient(CredentialUtil.convertToUnSecureString(secureHostname.Password));
+            MetasysClient metasysClient = new MetasysClient(CredentialUtil.convertToUnSecureString(secureHostname.Password),true, apiVersion);
             // Retrieve Metasys Credentials to login
             var credTarget = config.GetSection("CredentialManager:Targets:MetasysCredentials").Value;
             // Use TryLogin overload that accepts Credential Manager Target
@@ -29,6 +31,7 @@ namespace WeatherForecastApp
             // Forecast container target is securely stored in Credential manager
             var containerTarget = config.GetSection("CredentialManager:Targets:ForecastContainer").Value;
             var secureContainer = CredentialUtil.GetCredential(containerTarget);
+
             // Get parent object of Weather Forecast to retrieve related children (securely stored in Credential Manager)
             Guid parentObjectId = metasysClient.GetObjectIdentifier(CredentialUtil.convertToUnSecureString(secureContainer.Password));
             IEnumerable<MetasysObject> weatherForecast = metasysClient.GetObjects(parentObjectId, 1);
@@ -37,6 +40,9 @@ namespace WeatherForecastApp
             MetasysObject longitudePoint = weatherForecast.FindByName("Longitude");
             double latitude = metasysClient.ReadProperty(latitudePoint.Id, "presentValue").NumericValue;
             double longitude = metasysClient.ReadProperty(longitudePoint.Id, "presentValue").NumericValue;
+
+            //double latitude = 45.46134; // Instead of reading the coordinates from a couple of points I hardcoded them
+            //double longitude = 9.13696;
             // Forecast API key is securely stored in Credential manager
             var apiKeyTarget = config.GetSection("CredentialManager:Targets:OpenWeather").Value;
             var secureApiKey = CredentialUtil.GetCredential(apiKeyTarget);
@@ -57,6 +63,10 @@ namespace WeatherForecastApp
             MetasysObject Snow = weatherForecast.FindByName("Snow");
             // Use commands to write the results
             string adjustCommand = "Adjust"; 
+            if (apiVersion > ApiVersion.v3)
+            {
+                adjustCommand = "adjustCommand";
+            }
             var date = OpenWeatherMapClient.UnixTimeStampToDateTime(forecast.dt);
             metasysClient.SendCommand(Day.Id, adjustCommand, new List<object> {date.Day});
             metasysClient.SendCommand(Month.Id, adjustCommand, new List<object> {date.Month});

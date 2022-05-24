@@ -978,7 +978,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     ExcludeAcknowledged = true
                 };
 
-                Alarm alarm = new Alarm { Id = new Guid("f1a17676-f421-4649-80a5-b13935ae7404") };
+                Alarm alarm = new Alarm { Id = new Guid("d66cf3da-529d-4a81-9479-04834c7a2209") };
 
                 AuditFilter auditFilter = new AuditFilter
                 {
