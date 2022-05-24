@@ -41,7 +41,7 @@ namespace MetasysServices_TestClient.Forms
             string type = TxtGetTypes_TypeID.Text;
             if (_client != null)
             {
-                var result = _client.GetNetworkDevices((type.Length > 0) ? type : null) ;
+                var result = _client.NetworkDevices.Get((type.Length > 0) ? type : null) ;
                 DgvGet.DataSource = result;
             }
         }
@@ -51,7 +51,7 @@ namespace MetasysServices_TestClient.Forms
             DgvGetTypes.DataSource = null;
             if (_client != null)
             {
-                var result = _client.GetNetworkDeviceTypes();
+                var result = _client.NetworkDevices.GetTypes();
                 DgvGetTypes.DataSource = result;
             }
 

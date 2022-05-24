@@ -65,6 +65,24 @@ namespace JohnsonControls.Metasys.BasicServices
             return ToMetasysObject(spaces, Version, type: MetasysObjectTypeEnum.Space);
         }
 
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> Get(string type)
+        {
+            return GetAsync(type).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetAsync(string type)
+        {
+            Dictionary<string, string> parameters = null;
+            if (type != null)
+            {
+                // Init Dictionary with Space Type parameter
+                parameters = new Dictionary<string, string>() { { "type", type } };
+            }
+            var spaces = await GetAllAvailablePagesAsync("spaces", parameters).ConfigureAwait(false);
+            return ToMetasysObject(spaces, Version, type: MetasysObjectTypeEnum.Space);
+        }
+
         // GetChildren ------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetChildren(Guid spaceId)

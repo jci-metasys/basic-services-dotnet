@@ -55,7 +55,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetAsync(string type = null)
         {
-            var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "type", type } }).ConfigureAwait(false);
+            // Note: the name of the parameter 'Type' changes according to the API version
+            string typeParamName = Version > ApiVersion.v3 ? "objectType" : "type";
+            var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { typeParamName, type } }).ConfigureAwait(false);
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Object);
         }
 

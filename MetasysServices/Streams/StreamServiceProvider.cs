@@ -664,7 +664,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Variable to keep the loop that updated the list of COV Stream values
         /// </summary>
-        private bool KeepCOVReading = true;
+        private bool KeepCOVReading = false;
 
         //StartReadingCOVAsync -------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
@@ -761,7 +761,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Variable to keep the loop that updated the list of COV Stream values
         /// </summary>
-        private bool KeepAlarmCollecting = true;
+        private bool KeepAlarmCollecting = false;
 
         //StartCollectingAlarmsAsync ------------------------------------------------------------------------------------------------
         /// <inheritdoc />
@@ -828,7 +828,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Variable to keep the loop that updated the list of COV Stream values
         /// </summary>
-        private bool KeepAuditCollecting = true;
+        private bool KeepAuditCollecting = false;
 
         /// <inheritdoc />
         public async Task StartCollectingAuditsAsync(int maxNumber = 100)

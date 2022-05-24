@@ -78,6 +78,9 @@ namespace MetasysServices_TestClient
                 _frmTrends.Client = _client;
                 _frmMiscellanea.Client = _client;
 
+                _frmSpaces.LoadComboBox();
+                //_frmNetworkDevices.LoadComboBox();
+
                 //Do the login using the credentials got from the UI
                 var token = _client.TryLogin(txtUsername.Text, txtPassword.Text);
                 if (token != null)

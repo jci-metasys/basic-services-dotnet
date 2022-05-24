@@ -23,17 +23,6 @@ namespace MetasysServices_TestClient.Forms
         public Spaces()
         {
             InitializeComponent();
-            //Load the combobox using the values from 'SpaceTypesEnum'
-            CmbGetSpaces.DataSource =  Enum.GetValues(typeof(SpaceTypeEnum))
-             .Cast<Enum>()
-             .Select(value => new {
-                 (Attribute.GetCustomAttribute(value.GetType().GetField(value.ToString()), typeof(DescriptionAttribute)) as DescriptionAttribute).Description,
-                 value
-                 })
-            .OrderBy(item => item.value)
-            .ToList();
-            CmbGetSpaces.DisplayMember = "Description";
-            CmbGetSpaces.ValueMember = "value";
         }
 
         public void InitForm(MetasysClient client, TabPage container)
@@ -46,17 +35,56 @@ namespace MetasysServices_TestClient.Forms
             TabMain.Visible = true;
         }
 
+        public void LoadComboBox()
+        {
+            if (_client.Version > ApiVersion.v3)
+            {
+                // In case of API v4 load the combobox using the API that returns the values of an enumerated set
+                IEnumerable<MetasysObjectType> result;
+                result = _client.Spaces.GetTypes();
+                if (result != null)
+                {
+                    CmbGetSpaces.DataSource = result;
+                    CmbGetSpaces.DisplayMember = "DescriptionEnumerationKey";
+                    CmbGetSpaces.ValueMember = "DescriptionEnumerationKey";
+                }
+            }
+            else
+            {
+                // In case of API v2, v3 load the combobox using the values from 'SpaceTypesEnum'
+                CmbGetSpaces.DataSource = Enum.GetValues(typeof(SpaceTypeEnum))
+                 .Cast<Enum>()
+                 .Select(value => new
+                 {
+                     (Attribute.GetCustomAttribute(value.GetType().GetField(value.ToString()), typeof(DescriptionAttribute)) as DescriptionAttribute).Description,
+                     value
+                 })
+                .OrderBy(item => item.value)
+                .ToList();
+                CmbGetSpaces.DisplayMember = "Description";
+                CmbGetSpaces.ValueMember = "value";
+            }
+        }
+
         private void BtnGetSpaces_Click(object sender, EventArgs e)
         {
             IEnumerable<MetasysObject> result;
             if (ChkGetSpaces.Checked)
             {
-                result = _client.GetSpaces();
+                result = _client.Spaces.Get();
             }
             else
             {
-                SpaceTypeEnum spaceType = (SpaceTypeEnum)CmbGetSpaces.SelectedValue;
-                result = _client.GetSpaces(spaceType);
+                if (_client.Version > ApiVersion.v3) 
+                {
+                    string spaceType = (string)CmbGetSpaces.SelectedValue;
+                    result = _client.Spaces.Get(spaceType);
+                }
+                else
+                {
+                    SpaceTypeEnum spaceType = (SpaceTypeEnum)CmbGetSpaces.SelectedValue;
+                    result = _client.Spaces.Get(spaceType);
+                }
             }
             DgvGetSpaces.DataSource = result;
         }
