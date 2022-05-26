@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.BasicServices.Enums;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -36,10 +37,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Retrieves a collection of network devices.
         /// </summary>
-        /// <param name="classification">Optional classification as a string</param>
+        /// <param name="NetworkDeviceClassificationEnum"></param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        Task<IEnumerable<MetasysObject>> GetByClassificationAsync(string classification = null);
+        Task<IEnumerable<MetasysObject>> GetAsync(NetworkDeviceClassificationEnum classificationEnum);
 
         // Get -------------------------------------------------------------------------------------------------------------------
         /// <summary>

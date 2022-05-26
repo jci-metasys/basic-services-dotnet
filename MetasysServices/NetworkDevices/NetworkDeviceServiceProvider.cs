@@ -12,6 +12,7 @@ using log4net.Config;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using JohnsonControls.Metasys.BasicServices.Utils;
+using JohnsonControls.Metasys.BasicServices.Enums;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -51,6 +52,11 @@ namespace JohnsonControls.Metasys.BasicServices
         public IEnumerable<MetasysObject> Get(string type = null)
         {
             return GetAsync(type).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetAsync(NetworkDeviceClassificationEnum classificationEnum)
+        {
+            return await GetByClassificationAsync(classificationEnum.ToString());
         }
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetAsync(string type = null)

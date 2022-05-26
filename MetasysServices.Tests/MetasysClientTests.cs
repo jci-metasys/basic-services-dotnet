@@ -9,6 +9,7 @@ using JohnsonControls.Metasys.BasicServices;
 using Nito.AsyncEx;
 using System.Threading.Tasks;
 using System.Globalization;
+using JohnsonControls.Metasys.BasicServices.Enums;
 
 namespace MetasysServices.Tests
 {
@@ -1546,7 +1547,7 @@ namespace MetasysServices.Tests
                 "\"items\": [", device, "],",
                 "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=200&sort=name\"}"));
 
-            var devices = client.GetNetworkDevicesByClassificationAsync("controller").GetAwaiter().GetResult(); ;
+            var devices = client.NetworkDevices.GetAsync(NetworkDeviceClassificationEnum.Controller).GetAwaiter().GetResult(); 
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)

@@ -266,14 +266,6 @@ namespace JohnsonControls.Metasys.BasicServices
         Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null);
 
         /// <summary>
-        /// Gets all network devices by classification.
-        /// </summary>
-        /// <param name="classification">Optional classification as a string</param>
-        /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>
-        Task<IEnumerable<MetasysObject>> GetNetworkDevicesByClassificationAsync(string classification = null);
-
-        /// <summary>
         /// Gets all network devices.
         /// </summary>
         /// <param name="networkDevicetype">Network Device Type enum</param>
