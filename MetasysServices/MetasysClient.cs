@@ -472,7 +472,6 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             return await NetworkDevices.GetAsync(type);
         }
-
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetNetworkDevices(NetworkDeviceTypeEnum networkDevicetype)
         {
@@ -533,6 +532,25 @@ namespace JohnsonControls.Metasys.BasicServices
                 //Due to in this case the API returns also the parent object then remove it
                 objects.Remove(objects.First());
             }
+            return ToMetasysObject(objects, Version);
+        }
+
+         /// <inheritdoc/>
+        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid objectId, string objectType)
+        {
+            Dictionary<string, string> parameters = null;
+
+            if (Version > ApiVersion.v3)
+            {
+                parameters = new Dictionary<string, string>();
+                parameters.Add("flatten", "true".ToString());
+                parameters.Add("includeExtensions", "true".ToString());
+                parameters.Add("depth", "-1".ToString());
+                parameters.Add("objectType", objectType);
+            }
+
+            var objects = await GetObjectChildrenAsync(objectId, parameters).ConfigureAwait(false);
+            
             return ToMetasysObject(objects, Version);
         }
 

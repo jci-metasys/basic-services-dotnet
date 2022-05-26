@@ -265,7 +265,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="IMetasysClient.GetNetworkDevices(string)"/>
         Task<IEnumerable<MetasysObject>> GetNetworkDevicesAsync(string type = null);
 
-
         /// <summary>
         /// Gets all network devices.
         /// </summary>
@@ -286,7 +285,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="IMetasysClient.GetNetworkDeviceTypes()"/>
         Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync();
 
-
         /// <summary>
         /// Gets all child objects given a parent Guid.
         /// Level indicates how deep to retrieve objects.
@@ -303,6 +301,15 @@ namespace JohnsonControls.Metasys.BasicServices
         IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false);
         /// <inheritdoc cref="IMetasysClient.GetObjects(Guid, int, bool)"/>
         Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, bool includeInternalObjects = false);
+
+        /// <summary>
+        /// Gets all child objects given a parent Guid and object type.
+        /// </summary>
+        /// <param name="objectId"></param>
+        /// <param name="objectType">The object type enum set.</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>        
+        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid objectId, string objectType);
 
         #region "SPACES" //==============================================================================================================
         // GetSpaces ---------------------------------------------------------------------------------------------------------------------
