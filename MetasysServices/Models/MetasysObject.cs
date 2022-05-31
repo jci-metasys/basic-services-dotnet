@@ -68,7 +68,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// The number of direct children objects.
         /// </summary>
         /// <value>The number of children or -1 if there is no children data.</value>
-        public int ChildrenCount { set; get; }      
+        public int ChildrenCount { set; get; }
+
+        // <summary>
+        /// Name of the Equipment Definition mapped with the Equipment Instance
+        /// </summary>
+        public string EquipmentDefinitionName { get; set; }
 
         /// <summary>
         /// Default constructor for Metasys Object.
@@ -112,15 +117,26 @@ namespace JohnsonControls.Metasys.BasicServices
 
             try
             {
-                // This applies for v2 and v1.
-                TypeUrl =  (version < ApiVersion.v4)?  token["typeUrl"].Value<string>() : TypeUrl = String.Empty;
-                if (Type == MetasysObjectTypeEnum.Space && TypeUrl.Length > 0)
-                //if (Type == MetasysObjectTypeEnum.Space)
+                if (version >= ApiVersion.v4)
                 {
-                    // Set the specific category for Space
-                    var typeId = TypeUrl.Split('/').Last();
-                    // Convert space type to enum
-                    Category = ((SpaceTypeEnum)int.Parse(typeId)).ToString();
+                    if (Type == MetasysObjectTypeEnum.Space)
+                    {
+                        // Set the specific category for Space
+                        Enum.TryParse(token["type"].Value<string>().Split('.').Last(), true, out SpaceTypeEnum spaceType);
+                        Category = spaceType.ToString();
+                    }
+                }
+                else
+                {
+                    // This applies for v2 and v1.
+                    TypeUrl = token["typeUrl"].Value<string>();
+                    if (Type == MetasysObjectTypeEnum.Space && TypeUrl.Length > 0)
+                    {
+                        // Set the specific category for Space
+                        var typeId = TypeUrl.Split('/').Last();
+                        // Convert space type to enum
+                        Category = ((SpaceTypeEnum)int.Parse(typeId)).ToString();
+                    }
                 }
             }
             catch
@@ -156,6 +172,15 @@ namespace JohnsonControls.Metasys.BasicServices
             catch
             {
                 ObjectCategory = null;
+            }
+
+            try
+            {
+                EquipmentDefinitionName = token["type"].Value<string>();
+            }
+            catch
+            {
+                EquipmentDefinitionName = null;
             }
         }
 

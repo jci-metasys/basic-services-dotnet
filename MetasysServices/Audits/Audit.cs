@@ -100,6 +100,11 @@ namespace JohnsonControls.Metasys.BasicServices
         public dynamic Legacy { get; set; }
 
         /// <summary>
+        /// To get description value for v4
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// URI that points back to this resource
         /// </summary>
         public string Self { get; set; }
