@@ -66,12 +66,14 @@ namespace JohnsonControls.Metasys.BasicServices
             var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { typeParamName, type } }).ConfigureAwait(false);
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Object);
         }
+
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetByClassificationAsync(string classification = null)
         {
             var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "classification", classification } }).ConfigureAwait(false);
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Object);
         }
+
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> Get(NetworkDeviceTypeEnum networkDevicetype)
         {

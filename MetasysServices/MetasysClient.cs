@@ -472,6 +472,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             return await NetworkDevices.GetAsync(type);
         }
+
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetNetworkDevices(NetworkDeviceTypeEnum networkDevicetype)
         {
