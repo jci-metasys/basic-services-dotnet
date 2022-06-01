@@ -5,9 +5,19 @@ using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.BasicServices.Token
 {
+    /// <summary>
+    /// Access Token Response
+    /// </summary>
     public class AccessTokenResponse
     {
+        /// <summary>
+        /// Access Token
+        /// </summary>
         public string AccessToken { get; set; }
+
+        /// <summary>
+        /// Expiration Date Time
+        /// </summary>
         public DateTime Expires { get; set; }
     }
 

@@ -31,6 +31,13 @@ namespace JohnsonControls.Metasys.BasicServices
         IEnumerable<MetasysObject> Get(SpaceTypeEnum? type = null);
         /// <inheritdoc cref="ISpaceService.Get(SpaceTypeEnum?)"/>
         Task<IEnumerable<MetasysObject>> GetAsync(SpaceTypeEnum? type = null);
+
+
+        // Get ---------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Retrieves a collection of spaces.
+        /// </summary>
+        /// <param name="type">Optional, type ID (numeric for v2, v3 - enumset key string for v4).</param>
         IEnumerable<MetasysObject> Get(string type);
         /// <inheritdoc cref="ISpaceService.Get(string)"/>
         Task<IEnumerable<MetasysObject>> GetAsync(string type);

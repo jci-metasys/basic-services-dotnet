@@ -78,6 +78,9 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+        /// <summary>
+        /// Stream Service Provider
+        /// </summary>
         public StreamServiceProvider(IFlurlClient client, string serverUrl, ApiVersion version, bool logClientErrors = true) : base(client, version, logClientErrors)
         {
             _client = client;
@@ -507,7 +510,10 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (values.Count == 0)
             {
-                if (msg.Event != "hello") values.Add(msg);            
+                if (msg.Event == "object.values.update")
+                {
+                    values.Add(msg);
+                };
             }
             else
             {
@@ -530,7 +536,11 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (values.Count < maxNumber)
             {
-                if (msg.Event != "hello") values.Add(msg);
+                if (msg.Event == "activity.alarm.new" || msg.Event == "activity.alarm.ack") 
+                {
+                    values.Add(msg);
+                };
+                //if (msg.Event == "activity.alarm.new") values.Add(msg);
             }
             else
             {
@@ -543,7 +553,10 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (values.Count < maxNumber)
             {
-                if (msg.Event != "hello") values.Add(msg);
+                if (msg.Event == "activity.audit.new")
+                { 
+                    values.Add(msg);
+                } ;
             }
             else
             {

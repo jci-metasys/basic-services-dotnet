@@ -308,7 +308,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 if (Streams != null)
                 {
                     Streams.AccessToken = this.AccessToken;
-                    Streams.KeepAlive(this.AccessToken);
+                    _ = Streams.KeepAlive(this.AccessToken);
                 }
             }
             catch (FlurlHttpException e)
@@ -352,7 +352,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 if (Streams != null)
                 {
                     Streams.AccessToken = this.AccessToken;
-                    Streams.KeepAlive(this.AccessToken);
+                    _ = Streams.KeepAlive(this.AccessToken);
                 }
 
             }
@@ -369,7 +369,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             CheckRefreshAsync().GetAwaiter().GetResult();
         }
-        
+
         private async Task CheckRefreshAsync()
         {
             try
@@ -383,9 +383,9 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     try
                     {
-                        Refresh();
+                        await RefreshAsync();
                     }
-                    catch (Exception ex)
+                    catch 
                     {
                         //_logger.LogWarning(ex, $"Error refreshing token/keepalive.  Will retry in one minute. Error - " + ex.Message);
                     }
@@ -952,7 +952,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 Enabled = true
             };
 
-            _timer.Elapsed += async (object sender, ElapsedEventArgs e) =>
+            _timer.Elapsed +=  (object sender, ElapsedEventArgs e) =>
             {
                 DateTime now = DateTime.UtcNow;
                 if (now > this.RefreshDateTime)

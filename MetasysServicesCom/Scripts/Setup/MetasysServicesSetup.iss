@@ -1,10 +1,10 @@
 ; Inno Setup script
-; Johnson Controls © 2020
+; Johnson Controls © 2022
 ; Metasys Services COM Setup
 
 #define MyAppName "Metasys Services COM"
 #define MyAppShortName "MetasysServicesCOM"
-#define MyAppVersion "4.2.0"
+#define MyAppVersion "5.0.0"
 #define MyAppPublisher "Johnson Controls"
 
 
@@ -36,7 +36,7 @@ SetupAppTitle =Setup {#MyAppShortName}
 SetupWindowTitle ={#MyAppPublisher} - {#MyAppName} {#MyAppVersion}
 
 [Files]
-Source: ..\..\bin\release\net472\any\publish\*; DestDir: {app}; Flags: ignoreversion recursesubdirs
+Source: ..\..\bin\release\net472\any\*; DestDir: {app}; Flags: ignoreversion recursesubdirs
 
 [Icons]
 Name: {group}\COM Libraries; Filename: {app}; IconFilename: {app}\Icons\ComLib.ico

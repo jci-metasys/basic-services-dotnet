@@ -74,7 +74,6 @@ namespace MetasysServices_TestClient.Forms
             this.TxtAuditEvents_RequestID = new System.Windows.Forms.TextBox();
             this.LblAuditEvents_RequestID = new System.Windows.Forms.Label();
             this.TmrRefreshCOVValue = new System.Windows.Forms.Timer(this.components);
-            this.TgpMiscellanea = new System.Windows.Forms.TabPage();
             this.TabMain.SuspendLayout();
             this.TpgCOVValue.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValue)).BeginInit();
@@ -95,7 +94,6 @@ namespace MetasysServices_TestClient.Forms
             this.TabMain.Controls.Add(this.TpgCOVValues);
             this.TabMain.Controls.Add(this.TpgAlarmEvents);
             this.TabMain.Controls.Add(this.TpgAuditEvents);
-            this.TabMain.Controls.Add(this.TgpMiscellanea);
             this.TabMain.ItemSize = new System.Drawing.Size(84, 25);
             this.TabMain.Location = new System.Drawing.Point(12, 12);
             this.TabMain.Name = "TabMain";
@@ -444,6 +442,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             // DgvAlarmEvents
             // 
+            this.DgvAlarmEvents.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.DgvAlarmEvents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvAlarmEvents.Location = new System.Drawing.Point(195, 101);
             this.DgvAlarmEvents.Name = "DgvAlarmEvents";
@@ -532,6 +533,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             // DgvAuditEvents
             // 
+            this.DgvAuditEvents.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.DgvAuditEvents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvAuditEvents.Location = new System.Drawing.Point(197, 105);
             this.DgvAuditEvents.Name = "DgvAuditEvents";
@@ -559,15 +563,6 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.TmrRefreshCOVValue.Interval = 1000;
             this.TmrRefreshCOVValue.Tick += new System.EventHandler(this.TmrRefreshCOVValue_Tick);
-            // 
-            // TgpMiscellanea
-            // 
-            this.TgpMiscellanea.Location = new System.Drawing.Point(4, 29);
-            this.TgpMiscellanea.Name = "TgpMiscellanea";
-            this.TgpMiscellanea.Size = new System.Drawing.Size(1060, 508);
-            this.TgpMiscellanea.TabIndex = 4;
-            this.TgpMiscellanea.Text = "Miscellanea";
-            this.TgpMiscellanea.UseVisualStyleBackColor = true;
             // 
             // Streams
             // 
@@ -642,6 +637,5 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.Button BtnCOVValues_KeepAlive;
         private System.Windows.Forms.Label LblCOVValues_StartTime;
         private System.Windows.Forms.TextBox TxtCOVValues_StartTime;
-        private System.Windows.Forms.TabPage TgpMiscellanea;
     }
 }

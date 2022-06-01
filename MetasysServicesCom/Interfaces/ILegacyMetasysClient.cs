@@ -569,7 +569,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Start the method that reads multiple COV values using the stream mechanism.
         /// </summary>
-        void StartReadingStreamCOV([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids);
+        void StartReadingStreamCOVs([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids);
 
         /// <summary>
         /// Stop reading COV stream Values.
@@ -586,10 +586,10 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         object GetStreamCOVList();
 
-        /// <summary>
-        /// Event fired when a COV value changes
-        /// </summary>
-        event EventHandler<StreamEventArgs> StreamCOVValueChanged;
+        ///// <summary>
+        ///// Event fired when a COV value changes
+        ///// </summary>
+        //event EventHandler<StreamEventArgs> StreamCOVValueChanged;
         
 
 
@@ -608,10 +608,10 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         object GetAlarmStreamEvents();
 
-        /// <summary>
-        /// Event fired when an Alarm event occurs
-        /// </summary>
-        event EventHandler<StreamEventArgs> StreamAlarmOccurred;
+        ///// <summary>
+        ///// Event fired when an Alarm event occurs
+        ///// </summary>
+        //event EventHandler<StreamEventArgs> StreamAlarmOccurred;
 
 
 
@@ -630,10 +630,10 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         object GetAuditStreamEvents();
 
-        /// <summary>
-        /// Event fired when an Alarm event occurs
-        /// </summary>
-        event EventHandler<StreamEventArgs> StreamAuditOccurred;
+        ///// <summary>
+        ///// Event fired when an Alarm event occurs
+        ///// </summary>
+        //event EventHandler<StreamEventArgs> StreamAuditOccurred;
 
 
 

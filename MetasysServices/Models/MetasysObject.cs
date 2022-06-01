@@ -70,7 +70,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <value>The number of children or -1 if there is no children data.</value>
         public int ChildrenCount { set; get; }
 
-        // <summary>
+        /// <summary>
         /// Name of the Equipment Definition mapped with the Equipment Instance
         /// </summary>
         public string EquipmentDefinitionName { get; set; }

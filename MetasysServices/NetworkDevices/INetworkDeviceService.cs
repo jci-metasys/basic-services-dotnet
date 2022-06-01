@@ -37,7 +37,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Retrieves a collection of network devices.
         /// </summary>
-        /// <param name="NetworkDeviceClassificationEnum"></param>
+        /// <param name="classificationEnum"></param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         Task<IEnumerable<MetasysObject>> GetAsync(NetworkDeviceClassificationEnum classificationEnum);

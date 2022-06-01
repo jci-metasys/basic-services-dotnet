@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
@@ -168,25 +164,59 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public void Discard(Guid alarmId, string annotationText = null)
         {
-            EditAsync(alarmId, ActivityManagementStatusEnum.discarded, annotationText).GetAwaiter().GetResult();
+            DiscardAsync(alarmId, annotationText).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
         public async Task DiscardAsync(Guid alarmId, string annotationText = null)
         {
-            EditAsync(alarmId, ActivityManagementStatusEnum.discarded, annotationText);
+            if (Version > ApiVersion.v3)
+            {
+                JObject body = new JObject();
+                body.Add(propertyName: "activityManagementStatus", value: ActivityManagementStatusEnum.discarded.ToString());
+                if (annotationText != null)
+                {
+                    body.Add(propertyName: "annotationText", value: annotationText);
+                }
+
+                var response = await Client.Request(new Url("alarms")
+                .AppendPathSegments(alarmId))
+                .PatchJsonAsync(body)
+                .ConfigureAwait(false);
+            }
+            else
+            {
+                throw new MetasysUnsupportedApiVersion(Version.ToString());
+            }
         }
 
         /// <inheritdoc/>
         public void Acknowledge(Guid alarmId, string annotationText = null)
         {
-            EditAsync(alarmId, ActivityManagementStatusEnum.acknowledged, annotationText).GetAwaiter().GetResult();
+            AcknowledgeAsync(alarmId, annotationText).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
         public async Task AcknowledgeAsync(Guid alarmId, string annotationText = null)
         {
-            EditAsync(alarmId, ActivityManagementStatusEnum.discarded, annotationText);
+            if (Version > ApiVersion.v3)
+            {
+                JObject body = new JObject();
+                body.Add(propertyName: "activityManagementStatus", value: ActivityManagementStatusEnum.acknowledged.ToString());
+                if (annotationText != null)
+                {
+                    body.Add(propertyName: "annotationText", value: annotationText);
+                }
+
+                var response = await Client.Request(new Url("alarms")
+                .AppendPathSegments(alarmId))
+                .PatchJsonAsync(body)
+                .ConfigureAwait(false);
+            }
+            else
+            {
+                throw new MetasysUnsupportedApiVersion(Version.ToString());
+            }
         }
 
         /// <inheritdoc/>

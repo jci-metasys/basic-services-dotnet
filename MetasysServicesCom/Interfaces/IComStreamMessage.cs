@@ -29,12 +29,12 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Subscription Identifier (String)
         /// </summary>
-        string SubscriptionId { get; set; }
+        String SubscriptionId { get; set; }
 
         /// <summary>
         /// Stream Identifier (String)
         /// </summary>
-        string StreamId { get; set; }
+        String StreamId { get; set; }
 
         /// <summary>
         /// Object Identifier (GUID)
@@ -71,7 +71,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <summary>
         /// Event that generated the stream message
         /// </summary>
-        string Event { get; }
+        String Event { get; }
 
         /// <summary>
         /// Description

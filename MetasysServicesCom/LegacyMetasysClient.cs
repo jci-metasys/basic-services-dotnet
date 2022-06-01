@@ -735,7 +735,7 @@ namespace JohnsonControls.Metasys.ComServices
 
         //StartReadingStreamCOVValues -----------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public void StartReadingStreamCOV([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids)
+        public void StartReadingStreamCOVs([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] ids)
         {
             var guids = new List<Guid>();
             foreach (var id in ids)

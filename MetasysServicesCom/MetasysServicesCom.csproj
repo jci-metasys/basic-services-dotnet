@@ -4,7 +4,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="Packaging.Targets" Version="0.1.171" />
+    <PackageReference Include="Packaging.Targets" Version="0.1.220">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
