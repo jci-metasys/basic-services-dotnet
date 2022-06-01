@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.0] - 2022-06-01
+
+### Added
+
+- Support to Metasys API v4 (provided by Metasys 12).
+- Added new Alarm service methods: Alarms.Acknowledge, Alarms.Discard.
+- Added new Enumeration service and related methods: Enumerations.Get, Enumerations.Create, Enumerations.GetValues, Enumerations.Edit, Enumerations.Replace, Enumerations.Delete.
+- Added new Equipment service and related methods: Equipments.Get, Equipments.FindById, Equipments.GetServedByEquipment, Equipments.GetPoint, Equipments.GetServingASpace, Equipments.GetHostedByNetworkDevice, Equipments.GetServingAnEquipment.
+- Added new NetworkDevice service and related methods: NetworkDevices.Get, NetworkDevices.GetTypes, NetworkDevices.FindById, NetworkDevices.GetHostingAnEquipment, NetworkDevices.GetChildren, NetworkDevices.GetServingASpace.
+- Added new Space service and related methods: Spaces.Get, Spaces.GetChildren, Spaces.GetTypes, Spaces.FindById, Spaces.GetServedByEquipment, Spaces.GetServedByNetworkDevice.
+- Added new Stream service and related methods: StartReadingCOV, StopReadingCOV, Streams.GetCOV, Streams.StartCollectingAlarms, Streams.StopCollectingAlarms, Streams.GetAlarmEvents, Streams.StartCollectingAudits, Streams.StopCollectingAudits, Streams.GetAuditEvents, Streams.KeepAlive.
+- Added a new specific exception to report when a method is not supported by the specified API version.
+- Added a new TestClient application to show how to use all the provided methods.
+
+### Changed
+
+- Updated the file 'MetasysApiTest.xlsm' to shown examples of the new methods.
+- Modified the following existing methods to support API v4: Alarms.Get, Alarms.FindById, Alarms.GetForNetworkDevice, Alarms.GetForObject, Alarms.GetAnnotations, Audits.Get, Audits.FindById, Audits.GetForObject, Audits.GetAnnotations, Audits.Discard, Audits.DiscardMultiple.
+
+### Deprecated
+
+- Deprecated the following existing methods: GetEquipmentPoints, GetNetworkDevices, GetEquipment, GetSpaceEquipment, GetNetworkDevices, GetNetworkDeviceTypes, GetSpaces, GetSpaceChildren, GetSpaceTypes. These methods have been replaced by the equivalent ones provided by the different services.
+
 ## [4.2.0] - 2020-10-20
 
 ### Added
