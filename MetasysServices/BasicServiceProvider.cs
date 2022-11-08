@@ -558,8 +558,10 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             bool hasNext = true;
             List<JToken> aggregatedResponse = new List<JToken>();
-            
+
             int page = 1;
+            int pageSize = 1000;
+
             // Init our dictionary for paging
             if (parameters == null)
             {
@@ -569,11 +571,16 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 parameters.Add("page", page.ToString());
             }
+            if (!parameters.ContainsKey("pageSize"))
+            {
+                parameters.Add("pageSize", pageSize.ToString());
+            }
             while (hasNext)
             {
                 hasNext = false;
                 // Just overwrite page parameter
                 parameters["page"] = page.ToString();
+                parameters["pageSize"] = pageSize.ToString();
                 var response = await GetPagedResultsAsync<JToken>(resource, parameters, pathSegments).ConfigureAwait(false);
                 var total = response.Total;
                 if (total > 0)
