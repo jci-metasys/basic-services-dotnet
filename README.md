@@ -800,6 +800,9 @@ All services about equipments are provided by **`Equipments`** local instance of
 #### Get Equipments
 To retrieves a collection of equipment instances you can use the method **`Equipments.Get`** (method *GetEquipment* is deprecated).  
 This method returns a list of 'MetasysObject' objects and doesn't expect any parameter.
+It is possible to set a few optional parameters as: **`page`** (that specifies the number of the page of the items that will be returned) 
+and **`pageSize`** (that specifies the number of items per page).
+NOTE: when the parameter `page` is specified then the method will return ony the items associated to the specified page. Vive-versa, the method will return all the items.
 <br/>
 
 #### Get a Single Equipment
