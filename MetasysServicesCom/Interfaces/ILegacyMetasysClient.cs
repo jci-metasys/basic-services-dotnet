@@ -247,7 +247,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        object GetEquipment();
+        object GetEquipment(int? page = null, int? pageSize = null);
 
         /// <summary>
         /// Retrieves the collection of equipment instances that are hosted by the specified network device or its children.

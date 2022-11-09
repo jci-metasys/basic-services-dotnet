@@ -220,7 +220,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGet_Filters.RowCount = 2;
             this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TlpGet_Filters.Size = new System.Drawing.Size(615, 52);
+            this.TlpGet_Filters.Size = new System.Drawing.Size(610, 52);
             this.TlpGet_Filters.TabIndex = 1;
             // 
             // LblGet_StartTime
@@ -240,14 +240,14 @@ namespace MetasysServices_TestClient.Forms
             this.DtpGet_StartTime.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DtpGet_StartTime.Location = new System.Drawing.Point(64, 3);
             this.DtpGet_StartTime.Name = "DtpGet_StartTime";
-            this.DtpGet_StartTime.Size = new System.Drawing.Size(242, 20);
+            this.DtpGet_StartTime.Size = new System.Drawing.Size(239, 20);
             this.DtpGet_StartTime.TabIndex = 1;
             // 
             // LblGet_EndTime
             // 
             this.LblGet_EndTime.AutoSize = true;
             this.LblGet_EndTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGet_EndTime.Location = new System.Drawing.Point(312, 3);
+            this.LblGet_EndTime.Location = new System.Drawing.Point(309, 3);
             this.LblGet_EndTime.Margin = new System.Windows.Forms.Padding(3);
             this.LblGet_EndTime.Name = "LblGet_EndTime";
             this.LblGet_EndTime.Size = new System.Drawing.Size(52, 20);
@@ -258,9 +258,9 @@ namespace MetasysServices_TestClient.Forms
             // DtpGet_EndTime
             // 
             this.DtpGet_EndTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DtpGet_EndTime.Location = new System.Drawing.Point(370, 3);
+            this.DtpGet_EndTime.Location = new System.Drawing.Point(367, 3);
             this.DtpGet_EndTime.Name = "DtpGet_EndTime";
-            this.DtpGet_EndTime.Size = new System.Drawing.Size(242, 20);
+            this.DtpGet_EndTime.Size = new System.Drawing.Size(240, 20);
             this.DtpGet_EndTime.TabIndex = 3;
             // 
             // ChkGet_ExcludeAcknowledged
@@ -269,7 +269,7 @@ namespace MetasysServices_TestClient.Forms
             this.ChkGet_ExcludeAcknowledged.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ChkGet_ExcludeAcknowledged.Location = new System.Drawing.Point(64, 29);
             this.ChkGet_ExcludeAcknowledged.Name = "ChkGet_ExcludeAcknowledged";
-            this.ChkGet_ExcludeAcknowledged.Size = new System.Drawing.Size(242, 20);
+            this.ChkGet_ExcludeAcknowledged.Size = new System.Drawing.Size(239, 20);
             this.ChkGet_ExcludeAcknowledged.TabIndex = 4;
             this.ChkGet_ExcludeAcknowledged.Text = "Exclude Acknowledged";
             this.ChkGet_ExcludeAcknowledged.UseVisualStyleBackColor = true;
@@ -278,9 +278,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.ChkGet_ExcludeDiscarded.AutoSize = true;
             this.ChkGet_ExcludeDiscarded.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChkGet_ExcludeDiscarded.Location = new System.Drawing.Point(370, 29);
+            this.ChkGet_ExcludeDiscarded.Location = new System.Drawing.Point(367, 29);
             this.ChkGet_ExcludeDiscarded.Name = "ChkGet_ExcludeDiscarded";
-            this.ChkGet_ExcludeDiscarded.Size = new System.Drawing.Size(242, 20);
+            this.ChkGet_ExcludeDiscarded.Size = new System.Drawing.Size(240, 20);
             this.ChkGet_ExcludeDiscarded.TabIndex = 5;
             this.ChkGet_ExcludeDiscarded.Text = "Exclude Discarded";
             this.ChkGet_ExcludeDiscarded.UseVisualStyleBackColor = true;
@@ -289,11 +289,11 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.ChkGet_NoFilters.AutoSize = true;
             this.ChkGet_NoFilters.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ChkGet_NoFilters.Location = new System.Drawing.Point(790, 25);
+            this.ChkGet_NoFilters.Location = new System.Drawing.Point(785, 25);
             this.ChkGet_NoFilters.Name = "ChkGet_NoFilters";
-            this.ChkGet_NoFilters.Size = new System.Drawing.Size(65, 52);
+            this.ChkGet_NoFilters.Size = new System.Drawing.Size(70, 52);
             this.ChkGet_NoFilters.TabIndex = 2;
-            this.ChkGet_NoFilters.Text = "No Filter";
+            this.ChkGet_NoFilters.Text = "No Filters";
             this.ChkGet_NoFilters.UseVisualStyleBackColor = true;
             this.ChkGet_NoFilters.CheckedChanged += new System.EventHandler(this.ChkGet_NoFilters_CheckedChanged);
             // 

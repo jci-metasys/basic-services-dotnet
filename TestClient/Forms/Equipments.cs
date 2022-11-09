@@ -38,7 +38,17 @@ namespace MetasysServices_TestClient.Forms
         private void BtnGetEquipment_Click(object sender, EventArgs e)
         {
             DgvGetEquipment.DataSource = null;
-            var result = _client.GetEquipment();
+            bool noFilters = ChkGet_NoFilters.Checked;
+            int? page = null;
+            int? pageSize = null;
+
+            if (!noFilters)
+            {
+                page = (int?)NudGet_Page.Value; ;
+                pageSize = (int?)NudGet_PageSize.Value;
+            }
+
+            var result = _client.Equipments.Get(page, pageSize);
             DgvGetEquipment.DataSource = result;
         }
 
@@ -50,7 +60,7 @@ namespace MetasysServices_TestClient.Forms
             if (equipmentId.Length > 0)
             {
                 Guid equipmentGuid = new Guid(equipmentId);
-                var result = _client.GetEquipmentPoints(equipmentGuid, readAttributeValue);
+                var result = _client.Equipments.GetPoints(equipmentGuid, readAttributeValue);
                 DgvGetEquipmentPoints.DataSource = result;
             }
         }
@@ -113,6 +123,11 @@ namespace MetasysServices_TestClient.Forms
                 var result = _client.Equipments.GetServedByEquipment(equipmentGuid);
                 DgvGetServingAnEquipment.DataSource = result;
             }
+        }
+
+        private void ChkGet_NoFilters_CheckedChanged(object sender, EventArgs e)
+        {
+            TlpGet_Filters.Enabled = !ChkGet_NoFilters.Checked;
         }
     }
 }

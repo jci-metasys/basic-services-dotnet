@@ -557,6 +557,7 @@ namespace JohnsonControls.Metasys.BasicServices
         protected async Task<List<JToken>> GetAllAvailablePagesAsync(string resource, Dictionary<string, string> parameters = null, params string[] pathSegments)
         {
             bool hasNext = true;
+            bool buildAggregateResponse = true;
             List<JToken> aggregatedResponse = new List<JToken>();
 
             int page = 1;
@@ -567,29 +568,37 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 parameters = new Dictionary<string, string>();
             }
-            if (!parameters.ContainsKey("page"))
+            if (!parameters.ContainsKey("Page"))
             {
-                parameters.Add("page", page.ToString());
+                parameters.Add("Page", page.ToString());
             }
-            if (!parameters.ContainsKey("pageSize"))
+            else
             {
-                parameters.Add("pageSize", pageSize.ToString());
+                Int32.TryParse(parameters["Page"], out page);
+                if (page > 0) buildAggregateResponse = false; // This handles the case when it has been passed a specific Page number so the response will not be aggregate
+            }
+            if (!parameters.ContainsKey("PageSize"))
+            {
+                parameters.Add("PageSize", pageSize.ToString());
             }
             while (hasNext)
             {
                 hasNext = false;
                 // Just overwrite page parameter
-                parameters["page"] = page.ToString();
-                parameters["pageSize"] = pageSize.ToString();
+                parameters["Page"] = page.ToString();
                 var response = await GetPagedResultsAsync<JToken>(resource, parameters, pathSegments).ConfigureAwait(false);
                 var total = response.Total;
                 if (total > 0)
                 {
                     aggregatedResponse.AddRange(response.Items);
-                    if (response.CurrentPage < response.PageCount)
+                    if ((response.CurrentPage < response.PageCount) & (buildAggregateResponse))
                     {
                         hasNext = true;
                         page++;
+                    }
+                    else
+                    {
+                        if (page > response.CurrentPage) aggregatedResponse.Clear(); //This case happens when the specified Page is higher than the tot number of pages
                     }
                 }
             }

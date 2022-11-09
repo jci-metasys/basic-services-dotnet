@@ -48,15 +48,21 @@ namespace JohnsonControls.Metasys.BasicServices
 
         // Get ---------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public IEnumerable<MetasysObject> Get()
+        public IEnumerable<MetasysObject> Get(int? page = null, int? pageSize = null)
         {
-            return GetAsync().GetAwaiter().GetResult();
+            return GetAsync(page,pageSize).GetAwaiter().GetResult();
         }
         /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetAsync()
+        public async Task<IEnumerable<MetasysObject>> GetAsync(int? page = null, int? pageSize = null)
         {
             CheckVersion(Version);
-            var equipment = await GetAllAvailablePagesAsync("equipment").ConfigureAwait(false);
+            Dictionary<string, string> parameters = null;
+            if ((page != null && page > 0) | (pageSize != null && pageSize > 0)) parameters = new Dictionary<string, string>();
+
+            if (page != null && page > 0 && parameters != null) parameters.Add("Page", page.ToString());
+            if (pageSize != null && pageSize > 0 && parameters != null) parameters.Add("PageSize", pageSize.ToString());
+
+            var equipment = await GetAllAvailablePagesAsync("equipment", parameters).ConfigureAwait(false);
             return ToMetasysObject(equipment, Version, MetasysObjectTypeEnum.Equipment);
         }
 

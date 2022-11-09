@@ -24,9 +24,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Retrieves a collection of equipment instances.
         /// </summary>
-        IEnumerable<MetasysObject> Get();
-        /// <inheritdoc cref="IEquipmentService.Get()"/>
-        Task<IEnumerable<MetasysObject>> GetAsync();
+        /// <param name="page">Specifies the number of the page to be retrieved (optional).</param>
+        /// <param name="pageSize">Specifies the number of items per page. Default is 1000. (optional).</param>
+        /// <remarks> If the param 'page' is specified then it will return only the items associated to the specified page number. Otherwise all the items will be returned. </remarks>
+        IEnumerable<MetasysObject> Get(int? page = null, int? pageSize = null);
+        /// <inheritdoc cref="IEquipmentService.Get(int?, int?)"/>
+        Task<IEnumerable<MetasysObject>> GetAsync(int? page = null, int? pageSize = null);
 
         // GetPoints -----------------------------------------------------------------------------------------------------------
         /// <summary>

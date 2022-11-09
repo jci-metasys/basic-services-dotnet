@@ -358,10 +358,10 @@ namespace JohnsonControls.Metasys.ComServices
         #region "Equipments" // =====================================================================================================
         //GetEquipment --------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public object GetEquipment()
+        public object GetEquipment(int? page = null, int? pageSize = null)
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.Equipments.Get();
+            var res = Client.Equipments.Get(page, pageSize);
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
