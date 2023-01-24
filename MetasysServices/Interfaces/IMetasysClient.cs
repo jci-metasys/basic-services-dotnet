@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using JohnsonControls.Metasys.BasicServices;
 
@@ -404,5 +406,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="IMetasysClient.GetServerTime()"/>
         Task<DateTime> GetServerTimeAsync();
 
+        /// <summary>
+        /// Send an HTTP request as an asynchronous operation.
+        /// </summary>
+        /// <param name="request">The HTTP request message to send.</param>
+        /// <param name="completionOption"> When the operation should complete (as soon as a response is available or after reading the whole response content).</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>The task object representing the asynchronous operation.</returns>
+        Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead, CancellationToken cancellationToken = default);
     }
 }

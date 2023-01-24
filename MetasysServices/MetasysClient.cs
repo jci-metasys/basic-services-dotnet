@@ -17,6 +17,8 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Timers;
+using System.Net.Http.Headers;
+using System.Threading;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -1207,7 +1209,45 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+        #region "ad-hoc calls" // =========================================================================================================
+        // Support Ad-Hoc calls -----------------------------------------------------------------------------------------------------------
+        ///<inheritdoc/>
+        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage, HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead, CancellationToken cancellationToken = default)
+        {
+            var response = new HttpResponseMessage();
+            try
+            {
+                var flurlRequest = Client.Request();
+                flurlRequest.Url = GetUrlFromHttpRequest(requestMessage);
+                flurlRequest.WithHeaders(requestMessage.Headers);
 
+                response = await flurlRequest.SendAsync(requestMessage.Method, requestMessage.Content, cancellationToken, completionOption).ConfigureAwait(false);
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return response;
+        }
+
+        private Url GetUrlFromHttpRequest(HttpRequestMessage requestMessage)
+        {
+            var baseUri = new Uri(Client.BaseUrl);
+            var requestUri = requestMessage.RequestUri.ToString();
+            if (Uri.IsWellFormedUriString(requestUri, UriKind.Absolute))
+            {
+                if (Uri.Compare(baseUri, requestMessage.RequestUri, UriComponents.SchemeAndServer, UriFormat.SafeUnescaped, StringComparison.OrdinalIgnoreCase) != 0)
+                {
+                    throw new MetasysHttpException("HTTP request can not be made.", "You are trying to connect to a different host.");
+                }
+                return new Url(requestUri);
+            } 
+            else
+            {
+                return new Url($"{baseUri.AbsoluteUri.Replace(baseUri.AbsolutePath, string.Empty)}/{requestUri}");
+            }
+        }
+        #endregion
     }
 
 }

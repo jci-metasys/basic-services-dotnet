@@ -2357,5 +2357,71 @@ namespace MetasysServices.Tests
         }
 
         #endregion
+
+        #region Ad-Hoc Calls
+        [Test]
+        public async Task TestSendAsyncWithAbsoluteUrl()
+        {
+            var requestUrl = "https://hostname/api/v5-preview/someController/someAction";
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+            await client.SendAsync(httpRequest);
+
+            httpTest.ShouldHaveCalled(requestUrl)
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+        }
+
+        [Test]
+        public async Task TestSendAsyncWithRelativeUrl()
+        {
+            var requestUrl = "api/v5-preview/someController/someAction";
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+            await client.SendAsync(httpRequest);
+
+            httpTest.ShouldHaveCalled($"https://hostname/{requestUrl}")
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+        }
+
+        [Test]
+        public async Task TestSendAsyncCheckQueryStringAndFragmentsAreUsed()
+        {
+            var requestUrl = $"api/v5-preview/someController/someAction?fqr=itemReference#fragment1";
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+            await client.SendAsync(httpRequest);
+
+            httpTest.ShouldHaveCalled($"https://hostname/{requestUrl}")
+                .WithVerb(HttpMethod.Get)
+                .WithQueryParamValue("fqr", "itemReference")
+                .With(call => call.Request.RequestUri.Fragment.StartsWith("#fragment1"))
+                .Times(1);
+        }
+
+        [Test]
+        public async Task TestSendAsyncCheckRequestHeadersAreUsed()
+        {
+            var requestUrl = "api/v5-preview/someController/someAction";
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+            httpRequest.Headers.Add("Accept", "application/json");
+            await client.SendAsync(httpRequest);
+
+            httpTest.ShouldHaveCalled($"https://hostname/{requestUrl}")
+                .WithVerb(HttpMethod.Get)
+                .WithHeader("Accept")
+                .Times(1);
+        }
+
+        [Test]
+        public void TestSendAsyncWithInvalidAbsoluteUrlThrowsException()
+        {
+            var requestUrl = "https://different-hostname/api/v5-preview/someController/someAction";
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+            var e = Assert.Throws<MetasysHttpException>(() =>
+                client.SendAsync(httpRequest).GetAwaiter().GetResult());
+
+            PrintMessage($"TestSendAsyncWithInvalidAbsoluteUrlThrowsException: {e.Message}", true);
+        }
+
+        #endregion
     }
 }
