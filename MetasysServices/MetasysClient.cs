@@ -1244,7 +1244,7 @@ namespace JohnsonControls.Metasys.BasicServices
             } 
             else
             {
-                return new Url($"{baseUri.AbsoluteUri.Replace(baseUri.AbsolutePath, string.Empty)}/{requestUri}");
+                return new Url(Url.Combine(baseUri.GetLeftPart(UriPartial.Authority), "/api/", requestUri));
             }
         }
         #endregion

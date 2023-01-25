@@ -19,7 +19,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             try
             {
-                Console.WriteLine("\nEnter the endpoint you want to make the request to (Example: \"https://hostname/api/v5-preview/someController/someAction\"): .");
+                Console.WriteLine("\nEnter the endpoint you want to make the request to (Example: \"https://hostname/api/v5/networkDevices?sort=itemReference\"): .");
                 string endpoint = Console.ReadLine();
                 Console.WriteLine($"\nMaking the call to {endpoint}...");
                 HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Get, endpoint);
