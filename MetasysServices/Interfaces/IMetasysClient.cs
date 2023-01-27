@@ -408,6 +408,10 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <summary>
         /// Send an HTTP request as an asynchronous operation.
+        /// 
+        /// <para>
+        /// This method currently only supports 1 value per header rather than multiple. In a future revision, this is planned to be addressed.
+        /// </para>
         /// </summary>
         /// <param name="request">The HTTP request message to send.</param>
         /// <param name="completionOption"> When the operation should complete (as soon as a response is available or after reading the whole response content).</param>

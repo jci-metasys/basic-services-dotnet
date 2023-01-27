@@ -1219,7 +1219,11 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 var flurlRequest = Client.Request();
                 flurlRequest.Url = GetUrlFromHttpRequest(requestMessage);
-                flurlRequest.WithHeaders(requestMessage.Headers);
+
+                // Flurl.Http 2.4.2 can only work with 1 value per header
+                // Once upgraded to Flurl 3.0.1, then multiple values can be supported
+                var headers = requestMessage.Headers.ToDictionary((kvp) => kvp.Key, (kvp) => kvp.Value.First());
+                flurlRequest.WithHeaders(headers);
 
                 response = await flurlRequest.SendAsync(requestMessage.Method, requestMessage.Content, cancellationToken, completionOption).ConfigureAwait(false);
             }

@@ -2403,7 +2403,7 @@ namespace MetasysServices.Tests
 
             httpTest.ShouldHaveCalled("https://hostname/api/v5/networkDevices?sort=itemReference")
                 .WithVerb(HttpMethod.Get)
-                .WithHeader("request-header")
+                .WithHeader("request-header", "header_value")
                 .Times(1);
         }
 
