@@ -1242,7 +1242,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 if (Uri.Compare(baseUri, requestMessage.RequestUri, UriComponents.SchemeAndServer, UriFormat.SafeUnescaped, StringComparison.OrdinalIgnoreCase) != 0)
                 {
-                    throw new MetasysHttpException("HTTP request can not be made.", "You are trying to connect to a different host.");
+                    throw new UriFormatException("HTTP request can not be made. Scheme or Host is invalid.");
                 }
                 return new Url(requestUri);
             } 
