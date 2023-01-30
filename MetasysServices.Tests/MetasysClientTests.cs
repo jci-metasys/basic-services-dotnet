@@ -2432,8 +2432,6 @@ namespace MetasysServices.Tests
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
             await client.SendAsync(httpRequest);
 
-            Assert.AreEqual(expectedUrl, httpTest.CallLog.Last().Request.RequestUri.ToString());
-
             httpTest.ShouldHaveCalled(expectedUrl)
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -2517,77 +2515,42 @@ namespace MetasysServices.Tests
             Assert.AreEqual(Encoding.UTF8.GetBytes("Metasys Client"), data);
         }
 
-        [Test]
-        public async Task TestSendAsyncCanMakePutRequest()
+        [TestCase("PUT", "https://hostname/api/v5/put")]
+        [TestCase("POST", "https://hostname/api/v5/post")]
+        [TestCase("PATCH", "https://hostname/api/v5/patch")]
+        public async Task TestSendAsyncCanMakeRequestWithContent(string httpVerb, string requestUrl)
         {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Put, "https://hostname/api/v5/put")
+            var content = JsonContent.Create(new { id = 1, name = "Metasys" });
+            var httpMethod = new HttpMethod(httpVerb);
+            var httpRequest = new HttpRequestMessage(httpMethod, requestUrl)
             {
-                Content = JsonContent.Create(new { id = 1, name = "Metasys" })
-            };
-            
-            var response = await client.SendAsync(httpRequest);
-
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Test]
-        public async Task TestSendAsyncCanMakePostRequest()
-        {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, "https://hostname/api/v5/post")
-            {
-                Content = JsonContent.Create(new { id = 1, name = "Metasys" })
+                Content = content
             };
 
             var response = await client.SendAsync(httpRequest);
 
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Test]
-        public async Task TestSendAsyncCanMakePatchRequest()
-        {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Patch, "https://hostname/api/v5/patch")
-            {
-                Content = JsonContent.Create(new { name = "Metasys Client" })
-            };
-
-            var response = await client.SendAsync(httpRequest);
+            httpTest.ShouldHaveCalled(requestUrl)
+                .WithVerb(httpMethod)
+                .WithContentType("application/json")
+                .With(call => call.Request.Content.Equals(content))
+                .Times(1);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [Test]
-        public async Task TestSendAsyncCanMakeDeleteRequest()
+        [TestCase("DELETE", "https://hostname/api/v5/delete")]
+        [TestCase("HEAD", "https://hostname/api/v5/head")]
+        [TestCase("TRACE", "https://hostname/api/v5/trace")]
+        [TestCase("OPTIONS", "https://hostname/api/v5/options")]
+        public async Task TestSendAsyncCanSupportsDeleteHeadTraceOptionsRequest(string httpVerb, string requestUrl)
         {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Delete, "https://hostname/api/v5/delete");
+            var httpMethod = new HttpMethod(httpVerb);
+            var httpRequest = new HttpRequestMessage(httpMethod, requestUrl);
             var response = await client.SendAsync(httpRequest);
 
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Test]
-        public async Task TestSendAsyncCanMakeHeadRequest()
-        {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Head, "https://hostname/api/v5/head");
-            var response = await client.SendAsync(httpRequest);
-
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Test]
-        public async Task TestSendAsyncCanMakeTraceRequest()
-        {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Trace, "https://hostname/api/v5/trace");
-            var response = await client.SendAsync(httpRequest);
-
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Test]
-        public async Task TestSendAsyncCanMakeOptionsRequest()
-        {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Options, "https://hostname/api/v5/options");
-            var response = await client.SendAsync(httpRequest);
+            httpTest.ShouldHaveCalled(requestUrl)
+                .WithVerb(httpMethod)
+                .Times(1);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
