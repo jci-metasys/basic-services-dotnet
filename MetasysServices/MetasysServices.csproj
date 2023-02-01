@@ -5,18 +5,18 @@
     <RootNamespace>JohnsonControls.Metasys.BasicServices</RootNamespace>
     <LangVersion>7.3</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Copyright>Johnson Controls Inc. 2022</Copyright>
-    <Company>Johnson Controls Inc.</Company>
+    <Copyright>Johnson Controls Int. 2023</Copyright>
+    <Company>Johnson Controls Int.</Company>
     <Product>Metasys Services</Product>
     <Authors>Johnson Controls</Authors>
     <Description>A library for accessing the most common services of the Metasys Server API.</Description>
     <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
-    <PackageReleaseNotes>- Modified the default value of the parameter 'PageSize' from 100 to 1000
-- Added the extra parameters: 'page' and 'pageSize' to the method: Equipments.Get()</PackageReleaseNotes>
+    <PackageReleaseNotes>- Added support for 'Ad Hoc' calls,
+- Updated the reference to Newtonsoft.Json v13.0.2</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>5.0.1</Version>    
+    <Version>5.0.2</Version>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

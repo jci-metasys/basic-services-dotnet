@@ -79,6 +79,8 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Collecting Alarm Events](#collecting-alarm-events)
     - [Collecting Audit Events](#collecting-audit-events)
     - [Keep the Stream Alive](#keep-the-stream-alive)
+  - ['Ad-Hoc' call](#ad-hoc-call)
+    - [SendAsync](#sendasync)
 - [Usage (COM)](#usage-com)
   - [Creating a Client](#creating-a-client-1)
   - [Login and Access Tokens](#login-and-access-tokens-1)
@@ -1442,6 +1444,17 @@ In case you want to force it then use the method **`Streams.KeepAlive`**.
 <br/>
 
 
+### 'Ad-Hoc' call
+<br/>
+
+#### SendAsync
+Send an HTTP request as an asynchronous operation.
+This method currently only supports 1 value per header rather than multiple.
+This method requires as mandatory value the parameter **`request`** that specifies The HTTP request message to send.
+Also, as optional parameters, it is possible to enter a value for **`completionOption`** that specifies 
+when the operation should complete (as soon as a response is available or after reading the whole response content) as well as
+a value for **`cancellationToken`** that specifies the cancellation token to cancel operation. 
+<br/>
 
 
 
