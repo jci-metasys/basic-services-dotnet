@@ -2,14 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Linq;
-using Flurl.Http.Testing;
 using NUnit.Framework;
 using Newtonsoft.Json.Linq;
 using JohnsonControls.Metasys.BasicServices;
 using Nito.AsyncEx;
 using System.Threading.Tasks;
-using System.Globalization;
 using JohnsonControls.Metasys.BasicServices.Enums;
+using Flurl.Http;
+using System.IO;
+using System.Text;
+using System.Net;
+using System.Net.Http.Json;
 
 namespace MetasysServices.Tests
 {
@@ -1547,7 +1550,7 @@ namespace MetasysServices.Tests
                 "\"items\": [", device, "],",
                 "\"self\": \"https://hostname/api/v2/networkDevices?page=1&pageSize=200&sort=name\"}"));
 
-            var devices = client.NetworkDevices.GetAsync(NetworkDeviceClassificationEnum.Controller).GetAwaiter().GetResult(); 
+            var devices = client.NetworkDevices.GetAsync(NetworkDeviceClassificationEnum.Controller).GetAwaiter().GetResult();
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices")
                 .WithVerb(HttpMethod.Get)
@@ -2356,6 +2359,207 @@ namespace MetasysServices.Tests
             Assert.AreEqual(JTokenType.Null, o["test"].Type);
         }
 
+        #endregion
+
+        #region Ad-Hoc Calls
+        [TestCase("v5/networkDevices", "https://hostname/api/v5/networkDevices")]
+        [TestCase("v5/networkDevices?sort=itemReference", "https://hostname/api/v5/networkDevices?sort=itemReference")]
+        [TestCase("v5/networkDevices?sort=itemReference#fragment1", "https://hostname/api/v5/networkDevices?sort=itemReference#fragment1")]
+        [TestCase("/v5/networkDevices", "https://hostname/api/v5/networkDevices")]
+        [TestCase("/v5/networkDevices?sort=itemReference", "https://hostname/api/v5/networkDevices?sort=itemReference")]
+        [TestCase("/v5/networkDevices?sort=itemReference#fragment1", "https://hostname/api/v5/networkDevices?sort=itemReference#fragment1")]
+        [TestCase("https://hostname/api/v5/networkDevices", "https://hostname/api/v5/networkDevices")]
+        [TestCase("https://hostname/api/v5/networkDevices?sort=itemReference", "https://hostname/api/v5/networkDevices?sort=itemReference")]
+        [TestCase("https://hostname/api/v5/networkDevices?sort=itemReference#fragment1", "https://hostname/api/v5/networkDevices?sort=itemReference#fragment1")]
+        public async Task TestSendAsync(string requestUrl, string expectedUrl)
+        {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+            await client.SendAsync(httpRequest);
+
+            httpTest.ShouldHaveCalled(expectedUrl)
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+        }
+
+        [Test]
+        public async Task TestSendAsyncCheckQueryStringAndFragmentsAreUsed()
+        {
+            var requestUrl = "/v5/networkDevices?sort=itemReference#fragment1";
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+            await client.SendAsync(httpRequest);
+
+            httpTest.ShouldHaveCalled("https://hostname/api/v5/networkDevices?sort=itemReference#fragment1")
+                .WithVerb(HttpMethod.Get)
+                .WithQueryParamValue("sort", "itemReference")
+                .With(call => call.Request.RequestUri.Fragment.Equals("#fragment1"))
+                .Times(1);
+        }
+
+        [Test]
+        public async Task TestSendAsyncCheckRequestHeadersAreUsed()
+        {
+            var requestUrl = "/v5/networkDevices?sort=itemReference";
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+            httpRequest.Headers.Add("request-header", "header_value");
+            await client.SendAsync(httpRequest);
+
+            httpTest.ShouldHaveCalled("https://hostname/api/v5/networkDevices?sort=itemReference")
+                .WithVerb(HttpMethod.Get)
+                .WithHeader("request-header", "header_value")
+                .Times(1);
+        }
+
+        [Test]
+        public void TestSendAsyncWithInvalidAbsoluteUrlThrowsException()
+        {
+            var requestUrl = "https://different-hostname/api/v5/networkDevices";
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+            var e = Assert.Throws<UriFormatException>(() =>
+                client.SendAsync(httpRequest).GetAwaiter().GetResult());
+
+            PrintMessage($"TestSendAsyncWithInvalidAbsoluteUrlThrowsException: {e.Message}", true);
+        }
+
+        [TestCase("v5/networkDevices", "v5/networkDevices")]
+        [TestCase("/v5/networkDevices", "v5/networkDevices")]
+        public async Task TestSendAsyncWithCustomPort(string requestUrl, string expectedRelativeUrl)
+        {
+            var originalHostname = client.Hostname;
+            var expectedUrl = $"https://{originalHostname}:8080/api/{expectedRelativeUrl}";
+
+            client.Hostname = $"{originalHostname}:8080";
+
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+            await client.SendAsync(httpRequest);
+
+            httpTest.ShouldHaveCalled(expectedUrl)
+                .WithVerb(HttpMethod.Get)
+                .Times(1);
+
+            client.Hostname = originalHostname;
+        }
+
+        [Test]
+        public async Task TestSendAsyncCanGetJson()
+        {
+            httpTest.RespondWithJson(new TestData { id = 1, name = "Metasys" });
+
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, "https://hostname/api/v5/getJson");
+            var data = await client.SendAsync(httpRequest).ReceiveJson<TestData>();
+
+            Assert.AreEqual(1, data.id);
+            Assert.AreEqual("Metasys", data.name);
+        }
+
+        [Test]
+        public async Task TestSendAsyncCanGetJsonDynamic()
+        {
+            httpTest.RespondWithJson(new { id = 1, name = "Metasys" });
+
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, "https://hostname/api/v5/getJsonDynamic");
+            var data = await client.SendAsync(httpRequest).ReceiveJson();
+
+            Assert.AreEqual(1, data.id);
+            Assert.AreEqual("Metasys", data.name);
+        }
+
+        [Test]
+        public async Task TestSendAsyncCanGetJsonDynamicList()
+        {
+            httpTest.RespondWithJson(
+                new[] {
+                    new { id = 1, name = "Metasys" },
+                    new { id = 2, name = "Client" }
+                }
+            );
+
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, "https://hostname/api/v5/getJsonDynamicList");
+            var data = await client.SendAsync(httpRequest).ReceiveJsonList();
+
+            Assert.AreEqual(1, data[0].id);
+            Assert.AreEqual("Metasys", data[0].name);
+            Assert.AreEqual(2, data[1].id);
+            Assert.AreEqual("Client", data[1].name);
+        }
+
+        [Test]
+        public async Task TestSendAsyncCanGetString()
+        {
+            httpTest.RespondWith("Metasys Client");
+
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, "https://hostname/api/v5/getString");
+            var data = await client.SendAsync(httpRequest).ReceiveString();
+
+            Assert.AreEqual("Metasys Client", data);
+        }
+
+        [Test]
+        public async Task TestSendAsyncCanGetStream()
+        {
+            httpTest.RespondWith("Metasys Client");
+
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, "https://hostname/api/v5/getStream");
+            var data = await client.SendAsync(httpRequest).ReceiveStream();
+
+            Assert.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("Metasys Client")), data);
+        }
+
+        [Test]
+        public async Task TestSendAsyncCanGetBytes()
+        {
+            httpTest.RespondWith("Metasys Client");
+
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, "https://hostname/api/v5/getBytes");
+            var data = await client.SendAsync(httpRequest).ReceiveBytes();
+
+            Assert.AreEqual(Encoding.UTF8.GetBytes("Metasys Client"), data);
+        }
+
+        [TestCase("PUT", "https://hostname/api/v5/put")]
+        [TestCase("POST", "https://hostname/api/v5/post")]
+        [TestCase("PATCH", "https://hostname/api/v5/patch")]
+        public async Task TestSendAsyncCanMakeRequestWithContent(string httpVerb, string requestUrl)
+        {
+            var content = JsonContent.Create(new { id = 1, name = "Metasys" });
+            var httpMethod = new HttpMethod(httpVerb);
+            var httpRequest = new HttpRequestMessage(httpMethod, requestUrl)
+            {
+                Content = content
+            };
+
+            var response = await client.SendAsync(httpRequest);
+
+            httpTest.ShouldHaveCalled(requestUrl)
+                .WithVerb(httpMethod)
+                .WithContentType("application/json")
+                .With(call => call.Request.Content.Equals(content))
+                .Times(1);
+
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestCase("DELETE", "https://hostname/api/v5/delete")]
+        [TestCase("HEAD", "https://hostname/api/v5/head")]
+        [TestCase("TRACE", "https://hostname/api/v5/trace")]
+        [TestCase("OPTIONS", "https://hostname/api/v5/options")]
+        public async Task TestSendAsyncCanSupportsDeleteHeadTraceOptionsRequest(string httpVerb, string requestUrl)
+        {
+            var httpMethod = new HttpMethod(httpVerb);
+            var httpRequest = new HttpRequestMessage(httpMethod, requestUrl);
+            var response = await client.SendAsync(httpRequest);
+
+            httpTest.ShouldHaveCalled(requestUrl)
+                .WithVerb(httpMethod)
+                .Times(1);
+
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        private class TestData
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+        }
         #endregion
     }
 }

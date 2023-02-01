@@ -20,7 +20,7 @@ namespace MetasysServicesExampleApp
                     connectionDetails = Console.ReadLine();
                     args = connectionDetails.Split(' ');
                 }
-                string username=null, password= null, hostname= null, credManTarget=null; string version = null;
+                string username = null, password = null, hostname = null, credManTarget = null; string version = null;
 
                 if (args.Length > 3)
                 {
@@ -42,7 +42,7 @@ namespace MetasysServicesExampleApp
 
                 Console.WriteLine("\nLogging in...");
                 var apiVersion = (ApiVersion)Enum.Parse(typeof(ApiVersion), version);
-                var client = new MetasysClient(hostname,true,apiVersion,logClientErrors:false); // Disable default logging since it is handled in this app.
+                var client = new MetasysClient(hostname, true, apiVersion, logClientErrors: false); // Disable default logging since it is handled in this app.
                 // var client = new MetasysClient(hostname, true); // Ignore Certificate Errors
                 // var client = new MetasysClient(hostname, false, ApiVersion.v2, culture);
 
@@ -65,12 +65,12 @@ namespace MetasysServicesExampleApp
                     showMenu = MainMenu(client);
                 }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 log.Logger.Error(string.Format("An error occured while login - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to exit");
                 Console.ReadLine();
-            }          
+            }
         }
 
         private static bool MainMenu(MetasysClient client)
@@ -86,16 +86,17 @@ namespace MetasysServicesExampleApp
             Console.WriteLine("7) Trends");
             Console.WriteLine("8) Audits");
             Console.WriteLine("9) JSON Output");
-            Console.WriteLine("10) Exit");
+            Console.WriteLine("10) Ad-hoc Calls");
+            Console.WriteLine("11) Exit");
             Console.Write("\r\nSelect an option: ");
-            var option = "9";// Console.ReadLine();
+            var option = "10";// Console.ReadLine();
             Console.WriteLine();
             switch (option)
             {
-                case "1":                 
+                case "1":
                     new GetObjectIdentifierDemo(client).Run();
                     return true;
-                case "2":                
+                case "2":
                     new GeneralDemo(client).Run();
                     return true;
                 case "3":
@@ -120,6 +121,7 @@ namespace MetasysServicesExampleApp
                     new JsonOutputDemo(client).Run();
                     return false;
                 case "10":
+                    new AdHocCallsDemo(client).Run();
                     return false;
                 default:
                     return true;

@@ -17,6 +17,8 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Timers;
+using System.Net.Http.Headers;
+using System.Threading;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -1207,7 +1209,49 @@ namespace JohnsonControls.Metasys.BasicServices
             }
         }
 
+        #region "ad-hoc calls" // =========================================================================================================
+        // Support Ad-Hoc calls -----------------------------------------------------------------------------------------------------------
+        ///<inheritdoc/>
+        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage, HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead, CancellationToken cancellationToken = default)
+        {
+            var response = new HttpResponseMessage();
+            try
+            {
+                var flurlRequest = Client.Request();
+                flurlRequest.Url = GetUrlFromHttpRequest(requestMessage);
 
+                // Flurl.Http 2.4.2 can only work with 1 value per header
+                // Once upgraded to Flurl 3.0.1, then multiple values can be supported
+                var headers = requestMessage.Headers.ToDictionary((kvp) => kvp.Key, (kvp) => kvp.Value.First());
+                flurlRequest.WithHeaders(headers);
+
+                response = await flurlRequest.SendAsync(requestMessage.Method, requestMessage.Content, cancellationToken, completionOption).ConfigureAwait(false);
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return response;
+        }
+
+        private Url GetUrlFromHttpRequest(HttpRequestMessage requestMessage)
+        {
+            var baseUri = new Uri(Client.BaseUrl);
+            var requestUri = requestMessage.RequestUri.ToString();
+            if (Uri.IsWellFormedUriString(requestUri, UriKind.Absolute))
+            {
+                if (Uri.Compare(baseUri, requestMessage.RequestUri, UriComponents.SchemeAndServer, UriFormat.SafeUnescaped, StringComparison.OrdinalIgnoreCase) != 0)
+                {
+                    throw new UriFormatException("HTTP request can not be made. Scheme or Host is invalid.");
+                }
+                return new Url(requestUri);
+            } 
+            else
+            {
+                return new Url(Url.Combine(baseUri.GetLeftPart(UriPartial.Authority), "/api/", requestUri));
+            }
+        }
+        #endregion
     }
 
 }
