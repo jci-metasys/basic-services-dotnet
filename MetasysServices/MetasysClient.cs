@@ -3,22 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Resources;
 using System.Net;
-using System.Collections;
 using Flurl;
 using Flurl.Http;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using JohnsonControls.Metasys.BasicServices.Utils;
-using JohnsonControls.Metasys.BasicServices;
-using System.Diagnostics;
-using System.Dynamic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Timers;
-using System.Net.Http.Headers;
 using System.Threading;
+
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -162,8 +156,10 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (IgnoreCertificateErrors)
             {
-                HttpClientHandler httpClientHandler = new HttpClientHandler();
-                httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                HttpClientHandler httpClientHandler = new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                };
                 HttpClient httpClient = new HttpClient(httpClientHandler)
                 {
                     BaseAddress = new Uri($"https://{hostname}"
@@ -365,39 +361,6 @@ namespace JohnsonControls.Metasys.BasicServices
             return this.AccessToken;
         }
 
-        // CheckRefresh ------------------------------------------------------------------------------------------------------------------
-
-        private void CheckRefresh()
-        {
-            CheckRefreshAsync().GetAwaiter().GetResult();
-        }
-
-        private async Task CheckRefreshAsync()
-        {
-            try
-            {
-                DateTime now = DateTime.UtcNow;
-                var jwtToken = new JwtSecurityToken(AccessToken.Token);
-                TimeSpan lifePeriod = (jwtToken.ValidTo - jwtToken.ValidFrom);
-                TimeSpan halfLifePeriod = new TimeSpan(lifePeriod.Ticks / 2);
-                DateTime halfLife = jwtToken.ValidFrom.Add(halfLifePeriod);
-                if (now > halfLife)
-                {
-                    try
-                    {
-                        await RefreshAsync();
-                    }
-                    catch 
-                    {
-                        //_logger.LogWarning(ex, $"Error refreshing token/keepalive.  Will retry in one minute. Error - " + ex.Message);
-                    }
-                }
-            }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
-        }
 
         #endregion
 
@@ -521,12 +484,13 @@ namespace JohnsonControls.Metasys.BasicServices
             if (Version > ApiVersion.v3)
             {
                 // Since API v3 we could use the includeInternalObjects parameter
-                parameters = new Dictionary<string, string>();
-                parameters.Add("includeInternal", includeInternalObjects.ToString()); //This param has different name when version > v3
-                //This parameter is needed to get the data in a 'flat' way and keep consistency in the logic to retrieve the objects
-                parameters.Add("flatten", "true".ToString());
-                parameters.Add("includeExtensions", "true".ToString());
-                parameters.Add("depth", "2".ToString());
+                parameters = new Dictionary<string, string>
+                {
+                    { "includeInternal", includeInternalObjects.ToString() }, //This param has different name when version > v3
+                    { "flatten", "true".ToString() }, //This parameter is needed to get the data in a 'flat' way and keep consistency in the logic to retrieve the objects
+                    { "includeExtensions", "true".ToString() },
+                    { "depth", "2".ToString() }
+                };
             }
 
             var objects = await GetObjectChildrenAsync(id, parameters, levels).ConfigureAwait(false);
@@ -545,11 +509,13 @@ namespace JohnsonControls.Metasys.BasicServices
 
             if (Version > ApiVersion.v3)
             {
-                parameters = new Dictionary<string, string>();
-                parameters.Add("flatten", "true".ToString());
-                parameters.Add("includeExtensions", "true".ToString());
-                parameters.Add("depth", "-1".ToString());
-                parameters.Add("objectType", objectType);
+                parameters = new Dictionary<string, string>
+                {
+                    { "flatten", "true".ToString() },
+                    { "includeExtensions", "true".ToString() },
+                    { "depth", "-1".ToString() },
+                    { "objectType", objectType }
+                };
             }
 
             var objects = await GetObjectChildrenAsync(objectId, parameters).ConfigureAwait(false);
@@ -621,7 +587,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
                 if (array != null)
                 {
-                    foreach (JObject command in array)
+                    foreach (JObject command in array.Cast<JObject>())
                     {
                         try
                         {
@@ -751,8 +717,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task WritePropertyAsync(Guid id, string attributeName, object newValue)
         {
-            List<(string Attribute, object Value)> list = new List<(string Attribute, object Value)>();
-            list.Add((Attribute: attributeName, Value: newValue));
+            List<(string Attribute, object Value)> list = new List<(string Attribute, object Value)>
+            {
+                (Attribute: attributeName, Value: newValue)
+            };
             var item = GetWritePropertyBody(list);
             await WritePropertyRequestAsync(id, item).ConfigureAwait(false);
         }

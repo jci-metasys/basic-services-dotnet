@@ -25,6 +25,17 @@ namespace JohnsonControls.Metasys.ComServices
         IComAccessToken TryLogin(string username, string password, bool refresh = true);
 
         /// <summary>
+        /// Attempts to login to the given host.
+        /// </summary>
+        /// <returns>Token as string.</returns>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysTokenException"></exception>
+        string TryLogin2(string username, string password, bool refresh = true);
+
+        /// <summary>
         /// Attempts to login to the given host, using Credential Manager target.
         /// </summary>
         /// <param name="target"></param>

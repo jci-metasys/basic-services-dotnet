@@ -91,6 +91,22 @@ namespace JohnsonControls.Metasys.ComServices
         {
             return Mapper.Map<IComAccessToken>(Client.TryLogin(username, password, refresh));
         }
+        /// <inheritdoc/>
+        public string TryLogin2(string username, string password, bool refresh = true)
+        {
+            string res = "";
+            try
+            {
+                AccessToken accToken = Client.TryLogin(username, password, refresh);
+                res = accToken.Token.ToString();
+            }
+            catch (Exception ex)
+            {
+                res = ex.StackTrace.ToString();
+            }
+            return res;
+        }
+
 
         // TryLoginWithCredMan ------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>

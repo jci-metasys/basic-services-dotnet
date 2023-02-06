@@ -4,7 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>7.3</LangVersion>
-    <Version>4.2.0</Version>
+    <Version>5.0.2</Version>
+    <Copyright>© 2020-2023 Johnson Controls</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

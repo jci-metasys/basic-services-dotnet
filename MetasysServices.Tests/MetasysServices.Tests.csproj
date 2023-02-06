@@ -5,16 +5,18 @@
 
     <IsPackable>false</IsPackable>
 
-    <Version>4.2.0</Version>
+    <Version>5.0.2</Version>
+
+    <Copyright>© 2020-2023 Johnson Controls</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="nunit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1">
+    <PackageReference Include="NUnit3TestAdapter" Version="4.3.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
   </ItemGroup>
 

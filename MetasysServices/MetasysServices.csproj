@@ -5,7 +5,7 @@
     <RootNamespace>JohnsonControls.Metasys.BasicServices</RootNamespace>
     <LangVersion>7.3</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Copyright>Johnson Controls Int. 2023</Copyright>
+    <Copyright>© 2020-2023 Johnson Controls</Copyright>
     <Company>Johnson Controls Int.</Company>
     <Product>Metasys Services</Product>
     <Authors>Johnson Controls</Authors>
@@ -14,7 +14,8 @@
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
     <PackageReleaseNotes>- Added support for 'Ad Hoc' calls,
-- Updated the reference to Newtonsoft.Json v13.0.2</PackageReleaseNotes>
+- Updated the reference to Newtonsoft.Json v13.0.2
+- Removed a few unused references</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Version>5.0.2</Version>    
   </PropertyGroup>
@@ -53,12 +54,9 @@
     <PackageReference Include="CredentialManagement.Standard" Version="1.0.4" />
     <PackageReference Include="Flurl" Version="2.8.2" />
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
-    <PackageReference Include="log4net" Version="2.0.14" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.18.0" />
-    <PackageReference Include="System.Threading" Version="4.3.0" />
-    <PackageReference Include="System.Threading.Channels" Version="6.0.0" />
+    <PackageReference Include="log4net" Version="2.0.15" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.26.0" />
+    <PackageReference Include="System.Threading.Channels" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

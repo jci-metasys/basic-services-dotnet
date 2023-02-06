@@ -34,7 +34,8 @@ namespace JohnsonControls.Metasys.ComServices
                 culture = new CultureInfo(cultureInfo);
             }
             // Create instance with the given parameters
-            return new LegacyMetasysClient(new MetasysClient(hostname, ignoreCertificateErrors, apiVersion, culture, logClientErrors));
+            ILegacyMetasysClient res = new LegacyMetasysClient(new MetasysClient(hostname, ignoreCertificateErrors, apiVersion, culture, logClientErrors));
+            return res;
         }
 
         /// <inheritdoc/>

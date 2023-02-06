@@ -1,10 +1,10 @@
 ; Inno Setup script
-; Johnson Controls © 2022
+; Johnson Controls © 2023
 ; Metasys Services COM Setup
 
 #define MyAppName "Metasys Services COM"
 #define MyAppShortName "MetasysServicesCOM"
-#define MyAppVersion "5.0.0"
+#define MyAppVersion "5.0.2"
 #define MyAppPublisher "Johnson Controls"
 
 
