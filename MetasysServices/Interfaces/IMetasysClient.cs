@@ -306,6 +306,15 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="IMetasysClient.GetObjects(Guid, int, bool)"/>
         Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, bool includeInternalObjects = false);
 
+        /// <summary>
+        /// Gets all child objects given a parent Guid and object type.
+        /// </summary>
+        /// <param name="objectId"></param>
+        /// <param name="objectType">The object type enum set.</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>        
+        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid objectId, string objectType);
+
         #region "SPACES" //==============================================================================================================
         // GetSpaces ---------------------------------------------------------------------------------------------------------------------
         /// <summary>
