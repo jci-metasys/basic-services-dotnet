@@ -13,9 +13,11 @@
     <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
-    <PackageReleaseNotes>- Added support for 'Ad Hoc' calls,
-- Updated the reference to Newtonsoft.Json v13.0.2
-- Removed a few unused references</PackageReleaseNotes>
+    <PackageReleaseNotes>- Added methods: 
+    GetObjects(Guid objectId, string objectType)
+    GetObjectsAsync(Guid objectId, string objectType)
+- Added the related method to the COM component:
+    GetObjects(string id, string type)</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Version>5.0.3</Version>    
   </PropertyGroup>

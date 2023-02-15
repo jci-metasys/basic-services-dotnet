@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using JohnsonControls.Metasys.BasicServices;
 
 namespace JohnsonControls.Metasys.ComServices
@@ -366,6 +367,15 @@ namespace JohnsonControls.Metasys.ComServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>        
         object GetObjects(string id, int levels = 1);
+
+        /// <summary>
+        /// Gets all child objects given a parent Guid and object type.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type">The object type enum set.</param>
+        /// <exception cref="MetasysHttpException"></exception>
+        /// <exception cref="MetasysHttpParsingException"></exception>        
+        object GetObjects(string id, string type);
 
         /// <summary>
         /// Given the Item Reference of an object, returns the object identifier.

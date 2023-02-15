@@ -313,6 +313,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="objectType">The object type enum set.</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>        
+        IEnumerable<MetasysObject> GetObjects(Guid objectId, string objectType);
+
+        /// <inheritdoc cref="IMetasysClient.GetObjects(Guid, string)"/>
         Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid objectId, string objectType);
 
         #region "SPACES" //==============================================================================================================

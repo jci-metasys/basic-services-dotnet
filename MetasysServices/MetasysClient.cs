@@ -502,7 +502,12 @@ namespace JohnsonControls.Metasys.BasicServices
             return ToMetasysObject(objects, Version);
         }
 
-         /// <inheritdoc/>
+        /// <inheritdoc/>
+        public IEnumerable<MetasysObject> GetObjects(Guid id, string objectType)
+        {
+            return GetObjectsAsync(id, objectType).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid objectId, string objectType)
         {
             Dictionary<string, string> parameters = null;

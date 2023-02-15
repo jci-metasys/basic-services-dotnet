@@ -94,7 +94,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <inheritdoc/>
         public string TryLogin2(string username, string password, bool refresh = true)
         {
-            string res = "";
+            string res ;
             try
             {
                 AccessToken accToken = Client.TryLogin(username, password, refresh);
@@ -505,6 +505,14 @@ namespace JohnsonControls.Metasys.ComServices
         {
             Guid guid = new Guid(id);
             var res = Client.GetObjects(guid, levels).ToList();
+            return Mapper.Map<IComMetasysObject[]>(res);
+        }
+
+        /// <inheritdoc/>
+        public object GetObjects(string id, string type)
+        {
+            Guid guid = new Guid(id);
+            var res = Client.GetObjects(guid, type).ToList();
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
