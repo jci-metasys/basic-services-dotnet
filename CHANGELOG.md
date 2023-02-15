@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.2] - 2023-02-07
+
+### Added
+
+- Added the support for 'Ad-Hoc' calls.
+
+### Changed
+
+- Updated reference to Newtonsoft.Json v13.0.2 (and removes a few unused references).
+
+## [5.0.1] - 2022-11-09
+
+### Changed
+
+- Modified the default value of the parameter 'pageSize' from 100 to 1000.
+- Modified the method Equipments.Get() in order to add a few optional parameters as 'page' and 'pageSize'.
+
 ## [5.0.0] - 2022-06-01
 
 ### Added
