@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using JohnsonControls.Metasys.BasicServices;
@@ -23,6 +25,8 @@ namespace MetasysServices_TestClient.Forms
         private List<StreamMessage> _alarmEvents;
         private StreamMessage _auditEvent = null;
         private List<StreamMessage> _auditEvents;
+
+        private List<Point> _points;
 
         public Streams()
         {
@@ -230,5 +234,79 @@ namespace MetasysServices_TestClient.Forms
             }
         }
 
+        private void BtnGetPointsID_Click(object sender, EventArgs e)
+        {
+            _points = new List<Point>();
+            string modbusPath = "EEC-ADX-13:SNE00108D0B84B3/Modbus.";
+            string controllerName = "Controller";
+            string pointPrefixes = "TT,SP,Window,Light,STS,MOD";
+            string[] prefix = pointPrefixes.Split(',');
+            string itemReference = "";
+
+
+            for (int c = 1; c <=16; c++)
+            {
+                string cnum = c.ToString();
+                if (c < 10) cnum = "0" + cnum;
+
+                foreach (string pre in prefix)
+                {
+                    for (int i = 1; i<=15; i++)
+                    {
+                        string idx = i.ToString();
+                        if (i<10) idx = "0" + idx;
+
+                        itemReference = modbusPath + controllerName + cnum + "." + pre + idx;
+
+                        Guid id = _client.GetObjectIdentifier(itemReference);
+                        if (id != null)
+                        {
+                            _points.Add(new Point(){Name= pre + idx, Id = id, ItemReference = itemReference });
+                            Thread.Sleep(100);
+                        }
+                    }
+                }
+                Thread.Sleep(200);
+            }
+            //Assigh the list of points to the datagridview
+            DgvTestUtilsPoints.DataSource = _points;
+
+
+        }
+
+        private void BtnGenerateConfigFile_Click(object sender, EventArgs e)
+        {
+            if (_points != null)
+            {
+                Newtonsoft.Json.Linq.JArray arrayOfRequests = new Newtonsoft.Json.Linq.JArray();
+
+                foreach (Point p in _points)
+                {
+                    Newtonsoft.Json.Linq.JObject pnt = new Newtonsoft.Json.Linq.JObject();
+                    pnt.Add(propertyName: "id", value: p.ItemReference);
+                    pnt.Add(propertyName: "relativeUrl", value: p.Id.ToString() + "/attributes/presentValue");
+
+                    arrayOfRequests.Add(pnt);
+                }
+
+                Newtonsoft.Json.Linq.JObject body = new Newtonsoft.Json.Linq.JObject();
+                body.Add(propertyName: "Method", value: "GET");
+                body.Add(propertyName: "requests", value: arrayOfRequests);
+
+                Newtonsoft.Json.Linq.JObject subscription = new Newtonsoft.Json.Linq.JObject();
+                subscription.Add(propertyName: "RelativeUrl", value: "api/v5/objects/batch");
+                subscription.Add(propertyName: "Method", value: "POST");
+                subscription.Add(propertyName: "Params", value: null);
+                subscription.Add(propertyName: "Body", value: body);
+
+                Newtonsoft.Json.Linq.JArray arrayOfSubscriptions = new Newtonsoft.Json.Linq.JArray();
+                arrayOfSubscriptions.Add(subscription);
+
+                Newtonsoft.Json.Linq.JObject configFile = new Newtonsoft.Json.Linq.JObject();
+                configFile.Add(propertyName: "Subscriptions", value: arrayOfSubscriptions);
+
+                File.WriteAllText(@"c:\Temp\SubscriptionConfig1440.json", configFile.ToString());
+            }
+        }
     }
 }

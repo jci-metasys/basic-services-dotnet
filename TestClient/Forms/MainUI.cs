@@ -19,6 +19,7 @@ namespace MetasysServices_TestClient
         private MetasysClient _client;
 
         private Boolean _enableTabs = false;
+        private readonly Activities _frmActivities = new Activities();
         private readonly Alarms _frmAlarms = new Alarms();
         private readonly Audits _frmAudits = new Audits();
         private readonly Enumerations _frmEnumerations = new Enumerations();
@@ -46,6 +47,7 @@ namespace MetasysServices_TestClient
             ToolTip.SetToolTip(BtnRefresh, "Use method: 'Refresh()'");
             ToolTip.SetToolTip(BtnGetAccessToken, "Use method: 'GetAccessToken()'");
 
+            _frmActivities.InitForm(_client, TpgActivity);
             _frmAlarms.InitForm(_client, TpgAlarm);
             _frmAudits.InitForm(_client, TpgAudit);
             _frmEnumerations.InitForm(_client, TpgEnumeration);
@@ -67,6 +69,7 @@ namespace MetasysServices_TestClient
             _client = new MetasysClient(txtHost.Text, true, version, culture);
             if (_client != null)
             {
+                _frmActivities.Client = _client;
                 _frmAlarms.Client = _client;
                 _frmAudits.Client = _client;
                 _frmEnumerations.Client = _client;

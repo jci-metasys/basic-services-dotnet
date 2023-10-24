@@ -74,6 +74,13 @@ namespace MetasysServices_TestClient.Forms
             this.TxtAuditEvents_RequestID = new System.Windows.Forms.TextBox();
             this.LblAuditEvents_RequestID = new System.Windows.Forms.Label();
             this.TmrRefreshCOVValue = new System.Windows.Forms.Timer(this.components);
+            this.TpgTestUtils = new System.Windows.Forms.TabPage();
+            this.TlpTestUtils = new System.Windows.Forms.TableLayoutPanel();
+            this.TxtModbusPath = new System.Windows.Forms.TextBox();
+            this.LblModbusPath = new System.Windows.Forms.Label();
+            this.BtnGetPointsID = new System.Windows.Forms.Button();
+            this.DgvTestUtilsPoints = new System.Windows.Forms.DataGridView();
+            this.BtnGenerateConfigFile = new System.Windows.Forms.Button();
             this.TabMain.SuspendLayout();
             this.TpgCOVValue.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvCOVValue)).BeginInit();
@@ -85,6 +92,9 @@ namespace MetasysServices_TestClient.Forms
             ((System.ComponentModel.ISupportInitialize)(this.DgvAlarmEvents)).BeginInit();
             this.TpgAuditEvents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvAuditEvents)).BeginInit();
+            this.TpgTestUtils.SuspendLayout();
+            this.TlpTestUtils.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvTestUtilsPoints)).BeginInit();
             this.SuspendLayout();
             // 
             // TabMain
@@ -94,6 +104,7 @@ namespace MetasysServices_TestClient.Forms
             this.TabMain.Controls.Add(this.TpgCOVValues);
             this.TabMain.Controls.Add(this.TpgAlarmEvents);
             this.TabMain.Controls.Add(this.TpgAuditEvents);
+            this.TabMain.Controls.Add(this.TpgTestUtils);
             this.TabMain.ItemSize = new System.Drawing.Size(84, 25);
             this.TabMain.Location = new System.Drawing.Point(12, 12);
             this.TabMain.Name = "TabMain";
@@ -564,6 +575,92 @@ namespace MetasysServices_TestClient.Forms
             this.TmrRefreshCOVValue.Interval = 1000;
             this.TmrRefreshCOVValue.Tick += new System.EventHandler(this.TmrRefreshCOVValue_Tick);
             // 
+            // TpgTestUtils
+            // 
+            this.TpgTestUtils.Controls.Add(this.TlpTestUtils);
+            this.TpgTestUtils.Location = new System.Drawing.Point(4, 29);
+            this.TpgTestUtils.Name = "TpgTestUtils";
+            this.TpgTestUtils.Size = new System.Drawing.Size(1060, 508);
+            this.TpgTestUtils.TabIndex = 4;
+            this.TpgTestUtils.Text = "Test Utils";
+            this.TpgTestUtils.UseVisualStyleBackColor = true;
+            // 
+            // TlpTestUtils
+            // 
+            this.TlpTestUtils.ColumnCount = 4;
+            this.TlpTestUtils.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpTestUtils.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.TlpTestUtils.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpTestUtils.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpTestUtils.Controls.Add(this.TxtModbusPath, 2, 1);
+            this.TlpTestUtils.Controls.Add(this.LblModbusPath, 1, 1);
+            this.TlpTestUtils.Controls.Add(this.BtnGetPointsID, 1, 2);
+            this.TlpTestUtils.Controls.Add(this.DgvTestUtilsPoints, 2, 2);
+            this.TlpTestUtils.Controls.Add(this.BtnGenerateConfigFile, 1, 4);
+            this.TlpTestUtils.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TlpTestUtils.Location = new System.Drawing.Point(0, 0);
+            this.TlpTestUtils.Name = "TlpTestUtils";
+            this.TlpTestUtils.RowCount = 6;
+            this.TlpTestUtils.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpTestUtils.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpTestUtils.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpTestUtils.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpTestUtils.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpTestUtils.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpTestUtils.Size = new System.Drawing.Size(1060, 508);
+            this.TlpTestUtils.TabIndex = 0;
+            // 
+            // TxtModbusPath
+            // 
+            this.TxtModbusPath.Location = new System.Drawing.Point(177, 23);
+            this.TxtModbusPath.Name = "TxtModbusPath";
+            this.TxtModbusPath.Size = new System.Drawing.Size(100, 20);
+            this.TxtModbusPath.TabIndex = 0;
+            // 
+            // LblModbusPath
+            // 
+            this.LblModbusPath.AutoSize = true;
+            this.LblModbusPath.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblModbusPath.Location = new System.Drawing.Point(23, 23);
+            this.LblModbusPath.Margin = new System.Windows.Forms.Padding(3);
+            this.LblModbusPath.Name = "LblModbusPath";
+            this.LblModbusPath.Size = new System.Drawing.Size(148, 20);
+            this.LblModbusPath.TabIndex = 1;
+            this.LblModbusPath.Text = "Modbus path";
+            this.LblModbusPath.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // BtnGetPointsID
+            // 
+            this.BtnGetPointsID.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnGetPointsID.Location = new System.Drawing.Point(23, 49);
+            this.BtnGetPointsID.Name = "BtnGetPointsID";
+            this.BtnGetPointsID.Size = new System.Drawing.Size(148, 23);
+            this.BtnGetPointsID.TabIndex = 2;
+            this.BtnGetPointsID.Text = "Get Points ID";
+            this.BtnGetPointsID.UseVisualStyleBackColor = true;
+            this.BtnGetPointsID.Click += new System.EventHandler(this.BtnGetPointsID_Click);
+            // 
+            // DgvTestUtilsPoints
+            // 
+            this.DgvTestUtilsPoints.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvTestUtilsPoints.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvTestUtilsPoints.Location = new System.Drawing.Point(177, 49);
+            this.DgvTestUtilsPoints.Name = "DgvTestUtilsPoints";
+            this.TlpTestUtils.SetRowSpan(this.DgvTestUtilsPoints, 2);
+            this.DgvTestUtilsPoints.Size = new System.Drawing.Size(860, 150);
+            this.DgvTestUtilsPoints.TabIndex = 3;
+            // 
+            // BtnGenerateConfigFile
+            // 
+            this.BtnGenerateConfigFile.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnGenerateConfigFile.Location = new System.Drawing.Point(23, 205);
+            this.BtnGenerateConfigFile.Name = "BtnGenerateConfigFile";
+            this.BtnGenerateConfigFile.Size = new System.Drawing.Size(148, 23);
+            this.BtnGenerateConfigFile.TabIndex = 4;
+            this.BtnGenerateConfigFile.Text = "Generate Config File";
+            this.BtnGenerateConfigFile.UseVisualStyleBackColor = true;
+            this.BtnGenerateConfigFile.Click += new System.EventHandler(this.BtnGenerateConfigFile_Click);
+            // 
             // Streams
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -587,6 +684,10 @@ namespace MetasysServices_TestClient.Forms
             this.TpgAuditEvents.ResumeLayout(false);
             this.TpgAuditEvents.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvAuditEvents)).EndInit();
+            this.TpgTestUtils.ResumeLayout(false);
+            this.TlpTestUtils.ResumeLayout(false);
+            this.TlpTestUtils.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvTestUtilsPoints)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -637,5 +738,12 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.Button BtnCOVValues_KeepAlive;
         private System.Windows.Forms.Label LblCOVValues_StartTime;
         private System.Windows.Forms.TextBox TxtCOVValues_StartTime;
+        private System.Windows.Forms.TabPage TpgTestUtils;
+        private System.Windows.Forms.TableLayoutPanel TlpTestUtils;
+        private System.Windows.Forms.TextBox TxtModbusPath;
+        private System.Windows.Forms.Label LblModbusPath;
+        private System.Windows.Forms.Button BtnGetPointsID;
+        private System.Windows.Forms.DataGridView DgvTestUtilsPoints;
+        private System.Windows.Forms.Button BtnGenerateConfigFile;
     }
 }

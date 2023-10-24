@@ -37,7 +37,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Max API version supported by this SDK.
         /// </summary>
-        public ApiVersion MaxVersionSupported { get; } = ApiVersion.v4;
+        public ApiVersion MaxVersionSupported { get; } = ApiVersion.v5;
 
         /// <summary>
         /// The current Culture Used for localization.
@@ -88,8 +88,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="logErrors">Set this flag to false to disable logging of client errors.</param>
         public BasicServiceProvider(IFlurlClient client, ApiVersion version, bool logErrors = true)
         {
-            Client = client ?? throw new ArgumentNullException(nameof(client),
-                                              "FlurlClient can not be null.");
+            Client = client ?? throw new ArgumentNullException(nameof(client), "FlurlClient can not be null.");
             Version = version;
             LogClientErrors = logErrors;
         }
@@ -230,7 +229,6 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObjectType>> GetResourceTypesAsync(string resource, string pathSegment)
         {
             List<MetasysObjectType> types = new List<MetasysObjectType>() { };
-
             try
             {
                 var response = await Client.Request(new Url(resource)
@@ -750,7 +748,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
-        /// Perform multiple requests (PUT) to the Server with a single HTTP call asynchronously.
+        /// Perform multiple requests (PUT or PATCH) to the Server with a single HTTP call asynchronously.
         /// </summary>
         /// <param name="endpoint"></param>
         /// <param name="requests"></param>
@@ -769,7 +767,7 @@ namespace JohnsonControls.Metasys.BasicServices
             foreach (var r in requests)
             {
                 Url relativeUrl = new Url(r.ObjectId.ToString());
-                relativeUrl.AppendPathSegments(paths); // e.g. "00000000-0000-0000-0000-000000000001/annotations"
+                relativeUrl.AppendPathSegments(paths); // e.g. "00000000-0000-0000-0000-000000000001/discard"
 
                 object body;
                 switch (paths[0])
@@ -824,6 +822,90 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             return responseToken;
         }
+
+        protected async Task<JToken> PatchBatchRequestAsync(string endpoint, IEnumerable<BatchRequestParam> requests, params string[] paths)
+        {
+            // Create URL with base resource
+            Url url = new Url(endpoint);
+            // Concatenate batch segment to use batch request and prepare the list of requests
+            url.AppendPathSegments("batch");
+            var objectsRequests = new List<ObjectRequest>();
+            // Concatenate batch segment to use batch request and prepare the list of requests  
+            foreach (var r in requests)
+            {
+                string activityManagementStatus = "";
+                if (r.ActivityManagementStatus == "discarded" || r.ActivityManagementStatus == "acknowledged")
+                {
+                    activityManagementStatus = r.ActivityManagementStatus;
+                }
+                else
+                {
+                    //exception
+                }
+
+                string annotationText = annotationText = r.Resource;
+
+                //Define the specific relativeUrl (NOTE: since v5 it contains the 'full' base Url)
+                Url relativeUrl = new Url(Client.BaseUrl);
+                object body;
+                switch (r.ActivityType)
+                {
+                    case "alarm":
+                        relativeUrl.AppendPathSegments("alarms");
+                        relativeUrl.AppendPathSegments(r.ObjectId.ToString());                
+                        break;
+                    case "audit":
+                        relativeUrl.AppendPathSegments("audits");
+                        relativeUrl.AppendPathSegments(r.ObjectId.ToString());
+                        break;
+                    default:
+                        break;
+                };
+
+                // Create the 'body' object
+                if (activityManagementStatus.Length > 0 && annotationText.Length > 0) 
+                { body = new { activityManagementStatus, annotationText }; 
+                } else if (activityManagementStatus.Length > 0) 
+                { body = new { activityManagementStatus };
+                } else if (activityManagementStatus.Length > 0)
+                { body = new { annotationText }; 
+                } else 
+                { body = null; }
+
+
+                // Use the object id concatenated to the resource to uniquely identify each request
+                objectsRequests.Add(new ObjectRequest
+                {
+                    Id = r.ObjectId.ToString() + '_' + r.Resource,
+                    RelativeUrl = relativeUrl,
+                    Body = body
+                });
+
+            }
+
+            JToken responseToken = null;
+            try
+            {
+                if ( Version > ApiVersion.v4)
+                {
+                    // Post the list of requests and return responses as JToken
+                    var response = await Client.Request(url)
+                                                .PostJsonAsync(new BatchRequest { Method = "PATCH", Requests = objectsRequests })
+                                                .ConfigureAwait(false);
+                    responseToken = JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+                }
+                else
+                {
+                    //exception
+                }
+            }
+            catch (FlurlHttpException e)
+            {
+                ThrowHttpException(e);
+            }
+            return responseToken;
+        }
+
 
         /// <summary>
         /// Check if the selected API version is supported by the SDK

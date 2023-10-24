@@ -86,7 +86,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// A link to the object on which the activity was generated.
         /// </summary>
-        [JsonProperty(Required = Required.Always)]
+        [JsonProperty(Required = Required.Default)]
         public string ObjectUrl { get; set; }
 
         /// <summary>

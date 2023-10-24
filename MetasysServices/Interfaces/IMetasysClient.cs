@@ -29,6 +29,11 @@ namespace JohnsonControls.Metasys.BasicServices
         //CultureInfo Culture { get; set; }
 
         /// <summary>
+        /// Services for Activities.
+        /// </summary>
+        IActivityService Activities { get; set; }
+
+        /// <summary>
         /// Services for Alarms.
         /// </summary>
         IAlarmsService Alarms { get; set; }

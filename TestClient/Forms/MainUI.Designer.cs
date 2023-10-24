@@ -61,6 +61,7 @@
             this.TpgMiscellanea = new System.Windows.Forms.TabPage();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.TpgActivity = new System.Windows.Forms.TabPage();
             this.TabMain.SuspendLayout();
             this.TpgLogin.SuspendLayout();
             this.SuspendLayout();
@@ -168,6 +169,7 @@
             this.cmbVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVersion.FormattingEnabled = true;
             this.cmbVersion.Items.AddRange(new object[] {
+            "v5",
             "v4",
             "v3",
             "v2"});
@@ -212,6 +214,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TabMain.Controls.Add(this.TpgLogin);
+            this.TabMain.Controls.Add(this.TpgActivity);
             this.TabMain.Controls.Add(this.TpgAlarm);
             this.TabMain.Controls.Add(this.TpgAudit);
             this.TabMain.Controls.Add(this.TpgEnumeration);
@@ -388,6 +391,16 @@
             this.TpgMiscellanea.TabIndex = 6;
             this.TpgMiscellanea.Text = "MISCELLANEA";
             // 
+            // TpgActivity
+            // 
+            this.TpgActivity.BackColor = System.Drawing.SystemColors.Control;
+            this.TpgActivity.Location = new System.Drawing.Point(4, 34);
+            this.TpgActivity.Name = "TpgActivity";
+            this.TpgActivity.Padding = new System.Windows.Forms.Padding(3);
+            this.TpgActivity.Size = new System.Drawing.Size(1080, 450);
+            this.TpgActivity.TabIndex = 12;
+            this.TpgActivity.Text = "ACTIVITIES";
+            // 
             // MainUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -439,6 +452,7 @@
         private System.Windows.Forms.TabPage TpgSpace;
         private System.Windows.Forms.Label LblLogin_Title1;
         private System.Windows.Forms.TabPage TpgStream;
+        private System.Windows.Forms.TabPage TpgActivity;
     }
 }
 

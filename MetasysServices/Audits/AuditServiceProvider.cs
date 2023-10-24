@@ -39,11 +39,14 @@ namespace JohnsonControls.Metasys.BasicServices
             CheckVersion(Version);
 
             var response = await GetRequestAsync("audits", null, auditId).ConfigureAwait(false);
-            if (response["item"] != null) {
+            if (response["item"] != null) 
+            {
                 response = response["item"];
             }
+
             var auditData = JsonConvert.DeserializeObject<Audit>(response.ToString());
-            if (Version == ApiVersion.v3 || Version == ApiVersion.v4) {
+            if (Version > ApiVersion.v2) 
+            {
                 auditData = CreateItem(auditData);
             }
             return auditData;
@@ -57,13 +60,16 @@ namespace JohnsonControls.Metasys.BasicServices
             var dictionary = GetParameters(auditFilter);
 
             var response = await GetPagedResultsAsync<Audit>("audits", dictionary).ConfigureAwait(false);
-            if (Version == ApiVersion.v3 || Version == ApiVersion.v4) {
+            if (Version > ApiVersion.v2) 
+            {
                 List<Audit> audits = new List<Audit>();
-                foreach (var item in response.Items) {
+                foreach (var item in response.Items) 
+                {
                     audits.Add(CreateItem(item));
                 }
 
-                response = new PagedResult<Audit> {
+                response = new PagedResult<Audit> 
+                {
                     Items = audits,
                     CurrentPage = response.CurrentPage,
                     PageCount = response.PageCount,
@@ -82,12 +88,15 @@ namespace JohnsonControls.Metasys.BasicServices
             var dictionary = GetParameters(auditFilter);
 
             var response = await GetPagedResultsAsync<Audit>("objects", dictionary, objectId, BaseParam).ConfigureAwait(false);
-            if (Version == ApiVersion.v3 || Version == ApiVersion.v4) {
+            if (Version > ApiVersion.v2) 
+            {
                 List<Audit> audits = new List<Audit>();
-                foreach (var item in response.Items) {
+                foreach (var item in response.Items) 
+                {
                     audits.Add(CreateItem(item));
                 }
-                response = new PagedResult<Audit> {
+                response = new PagedResult<Audit> 
+                {
                     Items = audits,
                     CurrentPage = response.CurrentPage,
                     PageCount = response.PageCount,
@@ -152,7 +161,6 @@ namespace JohnsonControls.Metasys.BasicServices
             return GetAnnotationsAsync(auditId).GetAwaiter().GetResult();
         }
 
-
         /// <inheritdoc/>
         public void Discard(Guid id, string annotationText)
         {
@@ -163,9 +171,11 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task DiscardAsync(Guid id, string annotationText)
         {
             try {
+                CheckVersion(Version);
+
                 if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); };
 
-                if (Version < ApiVersion.v4)
+                if (Version == ApiVersion.v3)
                 {
                     //This is valid for API v3
                     var response_v3 = await Client.Request(new Url("audits")
@@ -173,9 +183,9 @@ namespace JohnsonControls.Metasys.BasicServices
                     .PutJsonAsync(new { annotationText })
                     .ConfigureAwait(false);
 
-                } else
+                } else if (Version > ApiVersion.v3)
                 {
-                    //For API v4 the endpoint and the body are different
+                    //For API v4, v5 the endpoint and the body are different
                     string activityManagementStatus = "discarded";
                     var response_v4 = await Client.Request(new Url("audits")
                     .AppendPathSegments(id))
@@ -200,7 +210,8 @@ namespace JohnsonControls.Metasys.BasicServices
             try {
                 CheckVersion(Version);
 
-                if (Version == ApiVersion.v3 || Version == ApiVersion.v4) {
+                if (Version > ApiVersion.v2) 
+                {
                     var response = await Client.Request(new Url("audits")
                     .AppendPathSegments(id, "annotations"))
                     .PostJsonAsync(new { text })
@@ -226,7 +237,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 CheckVersion(Version);
 
-                if (Version == ApiVersion.v3 || Version == ApiVersion.v4)
+                if (Version > ApiVersion.v2)
                 {
                     if (requests == null) { return null; }
 
@@ -257,7 +268,7 @@ namespace JohnsonControls.Metasys.BasicServices
             try {
                 CheckVersion(Version);
 
-                if (Version == ApiVersion.v3 || Version == ApiVersion.v4) 
+                if (Version > ApiVersion.v2) 
                 {
                     if (requests == null) { return null; }
 

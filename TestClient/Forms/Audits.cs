@@ -257,5 +257,10 @@ namespace MetasysServices_TestClient.Forms
                 }
             }
         }
+
+        private void Audits_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

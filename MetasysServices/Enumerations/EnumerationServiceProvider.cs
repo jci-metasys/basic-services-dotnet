@@ -43,43 +43,46 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysEnumeration>> GetAsync()
         {
+            CheckVersion(Version);
+
             List<MetasysEnumeration> enums = new List<MetasysEnumeration>() { };
 
-            if (Version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
-            try
-            {
-                var response = await Client.Request(new Url("enumerations"))
-                    .GetJsonAsync<JToken>()
-                    .ConfigureAwait(false);
+            if (Version > ApiVersion.v3) 
+            { 
                 try
                 {
-                    var items = response["items"];
-                    dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(items.ToString());
-                    foreach (KeyValuePair<string, object> kvp in kvpList)
+                    var response = await Client.Request(new Url("enumerations"))
+                        .GetJsonAsync<JToken>()
+                        .ConfigureAwait(false);
+                    try
                     {
-                        if (kvp.Key.Length > 0)
+                        var items = response["items"];
+                        dynamic kvpList = JsonConvert.DeserializeObject<ExpandoObject>(items.ToString());
+                        foreach (KeyValuePair<string, object> kvp in kvpList)
                         {
-                            var itm = kvp.Value as IDictionary<string, object>;
-                            String key = kvp.Key;
-                            String name = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
-                            bool isTwoState = bool.Parse((itm.ContainsKey("isTwoState")) ? itm["isTwoState"].ToString() : Convert.ToString(false));
-                            bool isMultiState = bool.Parse((itm.ContainsKey("isMultiState")) ? itm["isMultiState"].ToString() : Convert.ToString(false));
-                            int numberOfStates = int.Parse((itm.ContainsKey("numberOfStates")) ? itm["numberOfStates"].ToString() : Convert.ToString(0));
+                            if (kvp.Key.Length > 0)
+                            {
+                                var itm = kvp.Value as IDictionary<string, object>;
+                                String key = kvp.Key;
+                                String name = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
+                                bool isTwoState = bool.Parse((itm.ContainsKey("isTwoState")) ? itm["isTwoState"].ToString() : Convert.ToString(false));
+                                bool isMultiState = bool.Parse((itm.ContainsKey("isMultiState")) ? itm["isMultiState"].ToString() : Convert.ToString(false));
+                                int numberOfStates = int.Parse((itm.ContainsKey("numberOfStates")) ? itm["numberOfStates"].ToString() : Convert.ToString(0));
 
-                            var enumItem = new MetasysEnumeration(key, name, isTwoState, isMultiState, numberOfStates, Culture);
-                            enums.Add(enumItem);
+                                var enumItem = new MetasysEnumeration(key, name, isTwoState, isMultiState, numberOfStates, Culture);
+                                enums.Add(enumItem);
+                            }
                         }
                     }
+                    catch (System.NullReferenceException e)
+                    { throw new MetasysHttpParsingException(response.ToString(), e); }
                 }
-                catch (System.NullReferenceException e)
-                {
-                    throw new MetasysHttpParsingException(response.ToString(), e);
-                }
+                catch (FlurlHttpException e)
+                { ThrowHttpException(e); }
             }
-            catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
+            else
+            { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+
             return enums;
         }
 
@@ -92,33 +95,34 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task CreateAsync(string name, IEnumerable<String> values)
         {
+            CheckVersion(Version);
             try
             {
-                if (Version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
-                //Check if the name is not blank or the length of the list of members is >= 2
-                if (name.Length > 0 && values.Count() >= 2)
-                {
-                    JObject body = new JObject();
-                    JObject item = new JObject();
-                    JArray members = new JArray();
-                    item.Add(propertyName: "name", value: name);
-                    foreach (String v in values)
+                if (Version > ApiVersion.v3) 
+                { 
+                    //Check if the name is not blank or the length of the list of members is >= 2
+                    if (name.Length > 0 && values.Count() >= 2)
                     {
-                        members.Add(v.ToString());
+                        JObject body = new JObject();
+                        JObject item = new JObject();
+                        JArray members = new JArray();
+                        item.Add(propertyName: "name", value: name);
+                        foreach (String v in values)
+                        {
+                            members.Add(v.ToString());
+                        }
+                        item.Add(propertyName: "members", value: members);
+                        body.Add(propertyName: "item", value: item);
+                        // Post the list of requests and return responses as JToken
+                        var response = await Client.Request(new Url("enumerations"))
+                                                    .PostJsonAsync(body)
+                                                    .ConfigureAwait(false);
                     }
-                    item.Add(propertyName: "members", value: members);
-                    body.Add(propertyName: "item", value: item);
-                    // Post the list of requests and return responses as JToken
-                    var response = await Client.Request(new Url("enumerations"))
-                                                .PostJsonAsync(body)
-                                                .ConfigureAwait(false);
-
-                }
+                }else 
+                { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
             }
             catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
+            { ThrowHttpException(e); }
         }
 
         // GetValues ------------------------------------------------------------------------------------------------------------------------------------
@@ -142,33 +146,35 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task EditAsync(String id, string name, IEnumerable<String> values)
         {
+            CheckVersion(Version);
             try
             {
-                if (Version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
-                //Check if the name is not blank or the length of the list of members is >= 2
-                if (name.Length > 0 && values.Count() >= 2)
-                {
-                    JObject body = new JObject();
-                    JObject item = new JObject();
-                    JObject members = new JObject();
-                    item.Add(propertyName: "name", value: name);
-                    for (int i = 0; i < values.Count(); i++)
+                if (Version > ApiVersion.v3) 
+                { 
+                    //Check if the name is not blank or the length of the list of members is >= 2
+                    if (name.Length > 0 && values.Count() >= 2)
                     {
-                        members.Add(propertyName: id + "." + i.ToString(), value: JObject.FromObject(new { name = values.ToList()[i] }));
+                        JObject body = new JObject();
+                        JObject item = new JObject();
+                        JObject members = new JObject();
+                        item.Add(propertyName: "name", value: name);
+                        for (int i = 0; i < values.Count(); i++)
+                        {
+                            members.Add(propertyName: id + "." + i.ToString(), value: JObject.FromObject(new { name = values.ToList()[i] }));
+                        }
+                        item.Add(propertyName: "members", value: members);
+                        body.Add(propertyName: "item", value: item);
+                        // Patch the list of requests and return responses as JToken
+                        var response = await Client.Request(new Url("enumerations")
+                                                    .AppendPathSegments(id))
+                                                    .PatchJsonAsync(body)
+                                                    .ConfigureAwait(false);
                     }
-                    item.Add(propertyName: "members", value: members);
-                    body.Add(propertyName: "item", value: item);
-                    // Patch the list of requests and return responses as JToken
-                    var response = await Client.Request(new Url("enumerations")
-                                                .AppendPathSegments(id))
-                                                .PatchJsonAsync(body)
-                                                .ConfigureAwait(false);
-                }
+                }else
+                { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
             }
             catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
+            { ThrowHttpException(e); }
         }
 
         // Replace ----------------------------------------------------------------------------------------------------------------------------------------
@@ -180,33 +186,35 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task ReplaceAsync(String id, string name, IEnumerable<String> values)
         {
+            CheckVersion(Version);
             try
             {
-                if (Version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
-                //Check if the name is not blank or the length of the list of members is >= 2
-                if (id.Length > 0 && name.Length > 0 && values.Count() >= 2)
+                if (Version > ApiVersion.v3) 
                 {
-                    JObject body = new JObject();
-                    JObject item = new JObject();
-                    JArray members = new JArray();
-                    item.Add(propertyName: "name", value: name);
-                    foreach (String v in values)
+                    //Check if the name is not blank or the length of the list of members is >= 2
+                    if (id.Length > 0 && name.Length > 0 && values.Count() >= 2)
                     {
-                        members.Add(v.ToString());
+                        JObject body = new JObject();
+                        JObject item = new JObject();
+                        JArray members = new JArray();
+                        item.Add(propertyName: "name", value: name);
+                        foreach (String v in values)
+                        {
+                            members.Add(v.ToString());
+                        }
+                        item.Add(propertyName: "members", value: members);
+                        body.Add(propertyName: "item", value: item);
+                        // Put the list of requests and return responses as JToken
+                        var response = await Client.Request(new Url("enumerations")
+                                                        .AppendPathSegments(id))
+                                                        .PutJsonAsync(body)
+                                                        .ConfigureAwait(false);
                     }
-                    item.Add(propertyName: "members", value: members);
-                    body.Add(propertyName: "item", value: item);
-                    // Put the list of requests and return responses as JToken
-                    var response = await Client.Request(new Url("enumerations")
-                                                    .AppendPathSegments(id))
-                                                    .PutJsonAsync(body)
-                                                    .ConfigureAwait(false);
-                }
+                }else 
+                { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
             }
             catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
+            { ThrowHttpException(e); }
         }
 
         // Delete ----------------------------------------------------------------------------------------------------------------------------------------
@@ -218,18 +226,20 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task DeleteAsync(string id)
         {
+            CheckVersion(Version);
             try
             {
-                if (Version < ApiVersion.v4) { throw new MetasysUnsupportedApiVersion(Version.ToString());}
-               var response = await Client.Request(new Url("enumerations")
-                                                            .AppendPathSegments(id))
-                                                            .DeleteAsync()
-                                                            .ConfigureAwait(false);
+                if (Version > ApiVersion.v3) 
+                { 
+                    var response = await Client.Request(new Url("enumerations")
+                                                                .AppendPathSegments(id))
+                                                                .DeleteAsync()
+                                                                .ConfigureAwait(false);
+                }else 
+                { throw new MetasysUnsupportedApiVersion(Version.ToString());}
             }
             catch (FlurlHttpException e)
-            {
-                ThrowHttpException(e);
-            }
+            { ThrowHttpException(e); }
         }
     }
 }

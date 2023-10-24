@@ -73,9 +73,26 @@ namespace JohnsonControls.Metasys.ComServices
         /// </returns>
         string Localize(string resource, string cultureInfo);
 
+        #region "Activities" //---------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Retrieves a collection of alarms.
+        /// </summary>
+        /// <param name="activityFilter">The activity model to filter activities.</param>
+        /// <returns>The list of activities with details.</returns>
+        IComPagedResult GetActivities(IComActivityFilter activityFilter);
+
+        /// <summary>
+        /// Perform many Activity Actions given a list of requests containing a few info as: Id of the Alarm/Audits, text for the Annotations, Action Type ...
+        /// </summary>
+        /// <param name="requests">List of BatchRequestParam to specify the id of the audits and the text of the annotations to discard.</param>
+        /// <returns>A list of BatchRequestParam with all the specified attributes.</returns>
+        string[] ActivityActionMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requests);
+
+        #endregion
+
 
         #region "Alarms" //---------------------------------------------------------------------------------------------------------------------------
-         /// <summary>
+        /// <summary>
         /// Retrieves a collection of alarms.
         /// </summary>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>

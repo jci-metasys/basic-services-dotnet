@@ -145,6 +145,45 @@ namespace JohnsonControls.Metasys.ComServices
         }
 
 
+        #region "Activities" // =========================================================================================================
+        //GetActivities -----------------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public IComPagedResult GetActivities(IComActivityFilter activityFilter)
+        {
+            var mapActivityFilter = Mapper.Map<ActivityFilter>(activityFilter);
+            PagedResult<Activity> activityItems = Client.Activities.Get(mapActivityFilter);
+            return Mapper.Map<IComPagedResult>(activityItems);
+        }
+
+        //ActivityActionMultiple ------------------------------------------------------------------------------------------------------
+        /// <inheritdoc />
+        public string[] ActivityActionMultiple([In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] string[] requestParams)
+        {
+            // Note: MarshalAs decorator is needed when return type is void, otherwise will cause a VBA error on Automation type not supported when passing array
+            var requests = new List<BatchRequestParam>();
+            foreach (var request in requestParams)
+            {
+                string[] param = request.Split('|');
+                if (param.GetUpperBound(0) >= 4)
+                {
+                    requests.Add(new BatchRequestParam { ObjectId = new Guid(param[0]), Resource = param[1], ActivityType = param[2], ActivityManagementStatus = param[4] });
+                }
+            }
+            var response = Client.Activities.ActionMultiple(requests);
+
+            string[] result = new string[response.Count()];
+            int i = 0;
+            foreach (var res in response)
+            {
+                result[i] = res.Id.ToString() + "|" + res.Status.ToString() + "|" + res.Annotation;
+                i++;
+            }
+            return result;
+        }
+
+        #endregion
+
+
         #region "Alarms" // =========================================================================================================
         //GetAlarms -----------------------------------------------------------------------------------------------------------------
         /// <inheritdoc />

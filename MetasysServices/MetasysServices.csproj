@@ -14,12 +14,12 @@
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
     <PackageReleaseNotes>- Added methods: 
-    GetObjects(Guid objectId, string objectType)
-    GetObjectsAsync(Guid objectId, string objectType)
+    Activity.Get(ActivityFilter activityFilter)
+    Activity.ActionMultiple(IEnumerable&lt;BatchRequestParam&gt; requests)
 - Added the related method to the COM component:
     GetObjects(string id, string type)</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>5.0.3</Version>    
+    <Version>6.0.0</Version>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

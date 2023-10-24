@@ -31,6 +31,9 @@ namespace JohnsonControls.Metasys.BasicServices
         protected Dictionary<string, Guid> IdentifiersDictionary = new Dictionary<string, Guid>();
 
         /// <inheritdoc/>
+        public IActivityService Activities { get; set; }
+
+        /// <inheritdoc/>
 		public IAlarmsService Alarms { get; set; }
 
         /// <inheritdoc/>
@@ -98,6 +101,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 version = value;
                 // set base url and all related services to the new value
                 InitFlurlClient(Hostname);
+                if (Activities != null) { Activities.Version = version.Value; }
                 if (Alarms != null) { Alarms.Version = version.Value; }
                 if (Audits != null) { Audits.Version = version.Value; }
                 if (Enumerations != null) { Enumerations.Version = version.Value; }
@@ -138,6 +142,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
                 culture = value;
                 // set all related services to the new value
+                if (Activities != null) { Activities.Culture = culture; }
                 if (Alarms != null) { Alarms.Culture = culture; }
                 if (Audits != null) { Audits.Culture = culture; }
                 if (Enumerations != null) { Enumerations.Culture = culture; }
@@ -205,6 +210,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 LogClientErrors = logClientErrors;
                 Version = version;
                 // Init related services
+                Activities = new ActivityServiceProvider(Client, version, logClientErrors);
                 Alarms = new AlarmServiceProvider(Client, version, logClientErrors);
                 Audits = new AuditServiceProvider(Client, version, logClientErrors);
                 Enumerations = new EnumerationServiceProvider(Client, version, logClientErrors);
