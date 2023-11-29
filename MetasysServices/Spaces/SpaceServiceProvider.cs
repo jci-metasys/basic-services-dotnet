@@ -48,39 +48,49 @@ namespace JohnsonControls.Metasys.BasicServices
 
         // Get ---------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public IEnumerable<MetasysObject> Get(SpaceTypeEnum? type = null)
+        public IEnumerable<MetasysObject> Get(SpaceTypeEnum? type = null, int? page = null, int? pageSize = null)
         {
-            return GetAsync(type).GetAwaiter().GetResult();
+            return GetAsync(type, page, pageSize).GetAwaiter().GetResult();
         }
         /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetAsync(SpaceTypeEnum? type = null)
+        public async Task<IEnumerable<MetasysObject>> GetAsync(SpaceTypeEnum? type = null, int? page = null, int? pageSize = null)
         {
             CheckVersion(Version);
-            Dictionary<string, string> parameters = null;
-            if (type != null)
-            {
-                // Init Dictionary with Space Type parameter
-                parameters = new Dictionary<string, string>() { { "type", ((int)type).ToString() } };
-            }
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            //// The the page default value (1)
+            //if (page == null) page = 1;
+            //// The the pageSize default value (100)
+            //if (pageSize == null) pageSize = 100;
+            //if (pageSize != null && pageSize > 1000) pageSize = 1000;
+            //Add parameters
+            if (type != null) parameters.Add("type", ((int)type).ToString());
+            if (page != null && page > 0) parameters.Add("Page", page.ToString());
+            if (pageSize != null && pageSize > 0 && pageSize <= 1000) parameters.Add("PageSize", pageSize.ToString());
+
             var spaces = await GetAllAvailablePagesAsync("spaces", parameters).ConfigureAwait(false);
             return ToMetasysObject(spaces, Version, type: MetasysObjectTypeEnum.Space);
         }
 
         /// <inheritdoc/>
-        public IEnumerable<MetasysObject> Get(string type)
+        public IEnumerable<MetasysObject> Get(string type, int? page = null, int? pageSize = null)
         {
-            return GetAsync(type).GetAwaiter().GetResult();
+            return GetAsync(type, page, pageSize).GetAwaiter().GetResult();
         }
         /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetAsync(string type)
+        public async Task<IEnumerable<MetasysObject>> GetAsync(string type, int? page = null, int? pageSize = null)
         {
             CheckVersion(Version);
-            Dictionary<string, string> parameters = null;
-            if (type != null)
-            {
-                // Init Dictionary with Space Type parameter
-                parameters = new Dictionary<string, string>() { { "type", type } };
-            }
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            // The the page default value (1)
+            //if (page == null) page = 1;
+            //// The the pageSize default value (100)
+            //if (pageSize == null) pageSize = 100;
+            //if (pageSize != null && pageSize > 1000) pageSize = 1000;
+            //Add parameters
+            if (type != null) parameters.Add("type", type);
+            if (page != null && page > 0 && parameters != null) parameters.Add("Page", page.ToString());
+            if (pageSize != null && pageSize > 0 && parameters != null) parameters.Add("PageSize", pageSize.ToString());
+
             var spaces = await GetAllAvailablePagesAsync("spaces", parameters).ConfigureAwait(false);
             return ToMetasysObject(spaces, Version, type: MetasysObjectTypeEnum.Space);
         }

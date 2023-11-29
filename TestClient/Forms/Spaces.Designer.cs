@@ -31,12 +31,17 @@ namespace MetasysServices_TestClient.Forms
         {
             this.TabMain = new System.Windows.Forms.TabControl();
             this.TpgGetSpaces = new System.Windows.Forms.TabPage();
-            this.TlpMain = new System.Windows.Forms.TableLayoutPanel();
+            this.LblSpacePage = new System.Windows.Forms.TableLayoutPanel();
             this.LblSpaceType = new System.Windows.Forms.Label();
             this.BtnGetSpaces = new System.Windows.Forms.Button();
             this.DgvGetSpaces = new System.Windows.Forms.DataGridView();
             this.CmbGetSpaces = new System.Windows.Forms.ComboBox();
             this.ChkGetSpaces = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.NudSpacePage = new System.Windows.Forms.NumericUpDown();
+            this.LblSpacePageSize = new System.Windows.Forms.Label();
+            this.NudSpacePageSize = new System.Windows.Forms.NumericUpDown();
+            this.LblSpaceNumberOfRows = new System.Windows.Forms.Label();
             this.TpgGetSpaceChildren = new System.Windows.Forms.TabPage();
             this.TlpGetSpaceChildren = new System.Windows.Forms.TableLayoutPanel();
             this.LblGetSpaceChildren_Guid = new System.Windows.Forms.Label();
@@ -67,8 +72,10 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGetServedByEquipment = new System.Windows.Forms.DataGridView();
             this.TabMain.SuspendLayout();
             this.TpgGetSpaces.SuspendLayout();
-            this.TlpMain.SuspendLayout();
+            this.LblSpacePage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetSpaces)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NudSpacePage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NudSpacePageSize)).BeginInit();
             this.TpgGetSpaceChildren.SuspendLayout();
             this.TlpGetSpaceChildren.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetSpaceChildren)).BeginInit();
@@ -103,7 +110,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             // TpgGetSpaces
             // 
-            this.TpgGetSpaces.Controls.Add(this.TlpMain);
+            this.TpgGetSpaces.Controls.Add(this.LblSpacePage);
             this.TpgGetSpaces.Location = new System.Drawing.Point(4, 29);
             this.TpgGetSpaces.Name = "TpgGetSpaces";
             this.TpgGetSpaces.Padding = new System.Windows.Forms.Padding(3);
@@ -112,30 +119,36 @@ namespace MetasysServices_TestClient.Forms
             this.TpgGetSpaces.Text = "GetSpaces";
             this.TpgGetSpaces.UseVisualStyleBackColor = true;
             // 
-            // TlpMain
+            // LblSpacePage
             // 
-            this.TlpMain.ColumnCount = 5;
-            this.TlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.TlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.TlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpMain.Controls.Add(this.LblSpaceType, 1, 1);
-            this.TlpMain.Controls.Add(this.BtnGetSpaces, 2, 2);
-            this.TlpMain.Controls.Add(this.DgvGetSpaces, 2, 3);
-            this.TlpMain.Controls.Add(this.CmbGetSpaces, 2, 1);
-            this.TlpMain.Controls.Add(this.ChkGetSpaces, 3, 1);
-            this.TlpMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TlpMain.Location = new System.Drawing.Point(3, 3);
-            this.TlpMain.Name = "TlpMain";
-            this.TlpMain.RowCount = 4;
-            this.TlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpMain.Size = new System.Drawing.Size(1046, 498);
-            this.TlpMain.TabIndex = 0;
+            this.LblSpacePage.ColumnCount = 5;
+            this.LblSpacePage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.LblSpacePage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.LblSpacePage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.LblSpacePage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.LblSpacePage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.LblSpacePage.Controls.Add(this.LblSpaceType, 1, 1);
+            this.LblSpacePage.Controls.Add(this.BtnGetSpaces, 2, 4);
+            this.LblSpacePage.Controls.Add(this.DgvGetSpaces, 2, 5);
+            this.LblSpacePage.Controls.Add(this.CmbGetSpaces, 2, 1);
+            this.LblSpacePage.Controls.Add(this.ChkGetSpaces, 3, 1);
+            this.LblSpacePage.Controls.Add(this.label1, 1, 2);
+            this.LblSpacePage.Controls.Add(this.NudSpacePage, 2, 2);
+            this.LblSpacePage.Controls.Add(this.LblSpacePageSize, 1, 3);
+            this.LblSpacePage.Controls.Add(this.NudSpacePageSize, 2, 3);
+            this.LblSpacePage.Controls.Add(this.LblSpaceNumberOfRows, 1, 5);
+            this.LblSpacePage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblSpacePage.Location = new System.Drawing.Point(3, 3);
+            this.LblSpacePage.Name = "LblSpacePage";
+            this.LblSpacePage.RowCount = 6;
+            this.LblSpacePage.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.LblSpacePage.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LblSpacePage.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LblSpacePage.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LblSpacePage.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LblSpacePage.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.LblSpacePage.Size = new System.Drawing.Size(1046, 498);
+            this.LblSpacePage.TabIndex = 0;
             // 
             // LblSpaceType
             // 
@@ -153,7 +166,7 @@ namespace MetasysServices_TestClient.Forms
             // BtnGetSpaces
             // 
             this.BtnGetSpaces.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGetSpaces.Location = new System.Drawing.Point(169, 50);
+            this.BtnGetSpaces.Location = new System.Drawing.Point(169, 102);
             this.BtnGetSpaces.MinimumSize = new System.Drawing.Size(260, 0);
             this.BtnGetSpaces.Name = "BtnGetSpaces";
             this.BtnGetSpaces.Size = new System.Drawing.Size(804, 23);
@@ -165,11 +178,11 @@ namespace MetasysServices_TestClient.Forms
             // DgvGetSpaces
             // 
             this.DgvGetSpaces.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.TlpMain.SetColumnSpan(this.DgvGetSpaces, 2);
+            this.LblSpacePage.SetColumnSpan(this.DgvGetSpaces, 2);
             this.DgvGetSpaces.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetSpaces.Location = new System.Drawing.Point(169, 79);
+            this.DgvGetSpaces.Location = new System.Drawing.Point(169, 131);
             this.DgvGetSpaces.Name = "DgvGetSpaces";
-            this.DgvGetSpaces.Size = new System.Drawing.Size(854, 416);
+            this.DgvGetSpaces.Size = new System.Drawing.Size(854, 364);
             this.DgvGetSpaces.TabIndex = 3;
             // 
             // CmbGetSpaces
@@ -198,6 +211,83 @@ namespace MetasysServices_TestClient.Forms
             this.ChkGetSpaces.Text = "Null";
             this.ChkGetSpaces.UseVisualStyleBackColor = true;
             this.ChkGetSpaces.CheckedChanged += new System.EventHandler(this.ChkGetSpaces_CheckedChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Location = new System.Drawing.Point(23, 50);
+            this.label1.Margin = new System.Windows.Forms.Padding(3);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(140, 20);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Page";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // NudSpacePage
+            // 
+            this.NudSpacePage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NudSpacePage.Location = new System.Drawing.Point(169, 50);
+            this.NudSpacePage.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NudSpacePage.Name = "NudSpacePage";
+            this.NudSpacePage.Size = new System.Drawing.Size(804, 20);
+            this.NudSpacePage.TabIndex = 8;
+            this.NudSpacePage.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // LblSpacePageSize
+            // 
+            this.LblSpacePageSize.AutoSize = true;
+            this.LblSpacePageSize.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblSpacePageSize.Location = new System.Drawing.Point(23, 76);
+            this.LblSpacePageSize.Margin = new System.Windows.Forms.Padding(3);
+            this.LblSpacePageSize.Name = "LblSpacePageSize";
+            this.LblSpacePageSize.Size = new System.Drawing.Size(140, 20);
+            this.LblSpacePageSize.TabIndex = 9;
+            this.LblSpacePageSize.Text = "Page Size";
+            this.LblSpacePageSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // NudSpacePageSize
+            // 
+            this.NudSpacePageSize.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NudSpacePageSize.Location = new System.Drawing.Point(169, 76);
+            this.NudSpacePageSize.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.NudSpacePageSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NudSpacePageSize.Name = "NudSpacePageSize";
+            this.NudSpacePageSize.Size = new System.Drawing.Size(804, 20);
+            this.NudSpacePageSize.TabIndex = 10;
+            this.NudSpacePageSize.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // LblSpaceNumberOfRows
+            // 
+            this.LblSpaceNumberOfRows.AutoSize = true;
+            this.LblSpaceNumberOfRows.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblSpaceNumberOfRows.Location = new System.Drawing.Point(23, 131);
+            this.LblSpaceNumberOfRows.Margin = new System.Windows.Forms.Padding(3);
+            this.LblSpaceNumberOfRows.Name = "LblSpaceNumberOfRows";
+            this.LblSpaceNumberOfRows.Size = new System.Drawing.Size(140, 364);
+            this.LblSpaceNumberOfRows.TabIndex = 11;
+            this.LblSpaceNumberOfRows.Text = "Rows:";
+            this.LblSpaceNumberOfRows.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // TpgGetSpaceChildren
             // 
@@ -565,9 +655,11 @@ namespace MetasysServices_TestClient.Forms
             this.Text = "Spaces";
             this.TabMain.ResumeLayout(false);
             this.TpgGetSpaces.ResumeLayout(false);
-            this.TlpMain.ResumeLayout(false);
-            this.TlpMain.PerformLayout();
+            this.LblSpacePage.ResumeLayout(false);
+            this.LblSpacePage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvGetSpaces)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NudSpacePage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NudSpacePageSize)).EndInit();
             this.TpgGetSpaceChildren.ResumeLayout(false);
             this.TlpGetSpaceChildren.ResumeLayout(false);
             this.TlpGetSpaceChildren.PerformLayout();
@@ -595,7 +687,7 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.TabControl TabMain;
         private System.Windows.Forms.TabPage TpgGetSpaces;
         private System.Windows.Forms.TabPage TpgGetSpaceChildren;
-        private System.Windows.Forms.TableLayoutPanel TlpMain;
+        private System.Windows.Forms.TableLayoutPanel LblSpacePage;
         private System.Windows.Forms.Label LblSpaceType;
         private System.Windows.Forms.Button BtnGetSpaces;
         private System.Windows.Forms.DataGridView DgvGetSpaces;
@@ -628,5 +720,10 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.TextBox TxtGetServedByEquipment_EquipmentID;
         private System.Windows.Forms.Button BtnGetServedByEquipment;
         private System.Windows.Forms.DataGridView DgvGetServedByEquipment;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown NudSpacePage;
+        private System.Windows.Forms.Label LblSpacePageSize;
+        private System.Windows.Forms.NumericUpDown NudSpacePageSize;
+        private System.Windows.Forms.Label LblSpaceNumberOfRows;
     }
 }

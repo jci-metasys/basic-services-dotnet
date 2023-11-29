@@ -68,6 +68,9 @@ namespace MetasysServices_TestClient.Forms
 
         private void BtnGetSpaces_Click(object sender, EventArgs e)
         {
+            DgvGetSpaces.DataSource = null;
+            LblSpaceNumberOfRows.Text = "";
+
             IEnumerable<MetasysObject> result;
             if (ChkGetSpaces.Checked)
             {
@@ -75,18 +78,22 @@ namespace MetasysServices_TestClient.Forms
             }
             else
             {
+                int page = (int)NudSpacePage.Value;
+                int pageSize = (int)NudSpacePageSize.Value;
                 if (_client.Version > ApiVersion.v3) 
                 {
                     string spaceType = (string)CmbGetSpaces.SelectedValue;
-                    result = _client.Spaces.Get(spaceType);
+                    result = _client.Spaces.Get(spaceType, page, pageSize);
                 }
                 else
                 {
                     SpaceTypeEnum spaceType = (SpaceTypeEnum)CmbGetSpaces.SelectedValue;
-                    result = _client.Spaces.Get(spaceType);
+                    result = _client.Spaces.Get(spaceType, page, pageSize);
                 }
             }
             DgvGetSpaces.DataSource = result;
+
+            LblSpaceNumberOfRows.Text = DgvGetSpaces.Rows.Count.ToString();
         }
 
         private void ChkGetSpaces_CheckedChanged(object sender, EventArgs e)

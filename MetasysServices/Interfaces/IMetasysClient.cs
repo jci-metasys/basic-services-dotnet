@@ -18,6 +18,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         string Hostname { get; set; }
 
+        /// <summary>
+        /// The timeout of https request.
+        /// </summary>
+        int Timeout { get; set; }
+
         ///// <summary>
         ///// The Metasys server's Api version.
         ///// </summary>

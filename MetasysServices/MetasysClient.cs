@@ -58,7 +58,6 @@ namespace JohnsonControls.Metasys.BasicServices
         public ITrendService Trends { get; set; }
 
         private string hostname;
-
         /// <inheritdoc/>
         public string Hostname
         {
@@ -77,6 +76,21 @@ namespace JohnsonControls.Metasys.BasicServices
                 hostname = value;
             }
         }
+
+        private int timeout = 300;
+        /// <inheritdoc/>
+        public int Timeout
+        {
+            get
+            {
+                return timeout;
+            }
+            set
+            {
+                timeout = value;
+            }
+        }
+
 
         private ApiVersion? version;
 
@@ -165,15 +179,20 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                 };
+                
                 HttpClient httpClient = new HttpClient(httpClientHandler)
                 {
                     BaseAddress = new Uri($"https://{hostname}"
                     .AppendPathSegments("api", Version))
                 };
+                httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+
+                FlurlHttp.Configure(settings => settings.Timeout = TimeSpan.FromSeconds(timeout));
                 Client = new FlurlClient(httpClient);
             }
             else
             {
+                FlurlHttp.Configure(settings => settings.Timeout = TimeSpan.FromSeconds(timeout));
                 Client = new FlurlClient($"https://{hostname}"
                     .AppendPathSegments("api", Version));
             }
@@ -198,7 +217,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="version">The server's Api version.</param>
         /// <param name="cultureInfo">Localization culture for Metasys enumeration translations.</param>
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
-        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v2, CultureInfo cultureInfo = null, bool logClientErrors = true)
+        /// <param name="timeout">Set the Timeout (in seconds) of the https request.</param>
+        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v4, CultureInfo cultureInfo = null, bool logClientErrors = true, int timeout = 300)
         {
             try
             {
@@ -218,10 +238,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 NetworkDevices = new NetworkDeviceServiceProvider(Client, version, logClientErrors);
                 Spaces = new SpaceServiceProvider(Client, version, logClientErrors);
                 Trends = new TrendServiceProvider(Client, version, logClientErrors);
-                if (Version > ApiVersion.v3)
-                {
-                    Streams = new StreamServiceProvider(Client, hostname, version, logClientErrors);
-                }
+                if (Version > ApiVersion.v3) Streams = new StreamServiceProvider(Client, hostname, version, logClientErrors);
+                
 
                 base.Version = version;
             }
