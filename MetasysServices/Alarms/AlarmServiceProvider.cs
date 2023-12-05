@@ -41,7 +41,8 @@ namespace JohnsonControls.Metasys.BasicServices
             
             List<Alarm> alarms = new List<Alarm>();
             var response = await GetPagedResultsAsync<Alarm>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);
-            if (Version == ApiVersion.v3 || Version == ApiVersion.v4) {
+            if (Version > ApiVersion.v2) 
+            {
                 foreach (var item in response.Items) {
                     alarms.Add(CreateItem(item));
                 }
@@ -71,7 +72,8 @@ namespace JohnsonControls.Metasys.BasicServices
             if (response["items"] != null) response = response["items"];
             
             var alarmData = JsonConvert.DeserializeObject<Alarm>(response.ToString());
-            if (Version == ApiVersion.v3 || Version == ApiVersion.v4) {
+            if (Version > ApiVersion.v2) 
+            {
                 alarmData = CreateItem(alarmData);
             } 
             return alarmData;
@@ -89,11 +91,14 @@ namespace JohnsonControls.Metasys.BasicServices
 
             List<Alarm> alarms = new List<Alarm>();
             var response = await GetPagedResultsAsync<Alarm>("objects", ToDictionary(alarmFilter), objectId, "alarms").ConfigureAwait(false);
-            if (Version == ApiVersion.v3 || Version == ApiVersion.v4) {
-                foreach (var item in response.Items) {
+            if (Version > ApiVersion.v2) 
+            {
+                foreach (var item in response.Items) 
+                {
                     alarms.Add(CreateItem(item));
                 }
-                response = new PagedResult<Alarm> {
+                response = new PagedResult<Alarm> 
+                {
                     Items = alarms,
                     CurrentPage = response.CurrentPage,
                     PageCount = response.PageCount,
@@ -116,12 +121,15 @@ namespace JohnsonControls.Metasys.BasicServices
 
             List<Alarm> alarms = new List<Alarm>();
             var response = await GetPagedResultsAsync<Alarm>("networkDevices", ToDictionary(alarmFilter), networkDeviceId, "alarms").ConfigureAwait(false);
-            if (Version == ApiVersion.v3 || Version == ApiVersion.v4) {
-                foreach (var item in response.Items) {
+            if (Version > ApiVersion.v2) 
+            {
+                foreach (var item in response.Items) 
+                {
                     alarms.Add(CreateItem(item));
                 }
 
-                response = new PagedResult<Alarm> {
+                response = new PagedResult<Alarm> 
+                {
                     Items = alarms,
                     CurrentPage = response.CurrentPage,
                     PageCount = response.PageCount,
@@ -141,6 +149,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         private async Task EditAsync(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
         {
+            CheckVersion(Version);
+
             if (Version > ApiVersion.v3)
             {
                 JObject body = new JObject();
@@ -170,6 +180,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task DiscardAsync(Guid alarmId, string annotationText = null)
         {
+            CheckVersion(Version);
+
             if (Version > ApiVersion.v3)
             {
                 JObject body = new JObject();
@@ -199,6 +211,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task AcknowledgeAsync(Guid alarmId, string annotationText = null)
         {
+            CheckVersion(Version);
+
             if (Version > ApiVersion.v3)
             {
                 JObject body = new JObject();
@@ -228,6 +242,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<AlarmAnnotation>> GetAnnotationsAsync(Guid alarmId)
         {
+            CheckVersion(Version);
+
             // Retrieve JSON collection of Annotation
             var annotations = await GetAllAvailablePagesAsync("alarms", null, alarmId.ToString(), "annotations").ConfigureAwait(false);
             List<AlarmAnnotation> annotationsList = new List<AlarmAnnotation>();
@@ -243,7 +259,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             try
             {
-                if (Version == ApiVersion.v3)
+                if (Version > ApiVersion.v2)
                 {
                     var triggerValue = new TriggerValue
                     {

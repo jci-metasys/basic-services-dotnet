@@ -14,6 +14,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>Metasys 11.0</summary>
         v3,
         /// <summary>Metasys 12.0</summary>
-        v4
+        v4,
+        /// <summary>Metasys 13.0</summary>
+        v5
     }
 }

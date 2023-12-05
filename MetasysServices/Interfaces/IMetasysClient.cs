@@ -18,6 +18,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         string Hostname { get; set; }
 
+        /// <summary>
+        /// The timeout of https request.
+        /// </summary>
+        int Timeout { get; set; }
+
         ///// <summary>
         ///// The Metasys server's Api version.
         ///// </summary>
@@ -27,6 +32,11 @@ namespace JohnsonControls.Metasys.BasicServices
         ///// The current Culture Used for Metasys client localization.
         ///// </summary>
         //CultureInfo Culture { get; set; }
+
+        /// <summary>
+        /// Services for Activities.
+        /// </summary>
+        IActivityService Activities { get; set; }
 
         /// <summary>
         /// Services for Alarms.

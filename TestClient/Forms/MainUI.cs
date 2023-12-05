@@ -19,6 +19,7 @@ namespace MetasysServices_TestClient
         private MetasysClient _client;
 
         private Boolean _enableTabs = false;
+        private readonly Activities _frmActivities = new Activities();
         private readonly Alarms _frmAlarms = new Alarms();
         private readonly Audits _frmAudits = new Audits();
         private readonly Enumerations _frmEnumerations = new Enumerations();
@@ -46,6 +47,7 @@ namespace MetasysServices_TestClient
             ToolTip.SetToolTip(BtnRefresh, "Use method: 'Refresh()'");
             ToolTip.SetToolTip(BtnGetAccessToken, "Use method: 'GetAccessToken()'");
 
+            _frmActivities.InitForm(_client, TpgActivity);
             _frmAlarms.InitForm(_client, TpgAlarm);
             _frmAudits.InitForm(_client, TpgAudit);
             _frmEnumerations.InitForm(_client, TpgEnumeration);
@@ -64,9 +66,12 @@ namespace MetasysServices_TestClient
             CultureInfo culture = new CultureInfo("en-US");
             //Create a new 'client' object
             ApiVersion version = (ApiVersion)Enum.Parse(typeof(ApiVersion), cmbVersion.Text);
-            _client = new MetasysClient(txtHost.Text, true, version, culture);
+            int timeout; 
+            _ = int.TryParse(TxtTimeout.Text.ToString(), out timeout);
+            _client = new MetasysClient(txtHost.Text, true, version, culture,timeout: timeout != 0 ? timeout: 300);
             if (_client != null)
             {
+                _frmActivities.Client = _client;
                 _frmAlarms.Client = _client;
                 _frmAudits.Client = _client;
                 _frmEnumerations.Client = _client;

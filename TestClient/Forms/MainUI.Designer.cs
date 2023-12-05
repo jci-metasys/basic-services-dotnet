@@ -49,6 +49,7 @@
             this.LblLogin_Title1 = new System.Windows.Forms.Label();
             this.BtnGetAccessToken = new System.Windows.Forms.Button();
             this.BtnRefresh = new System.Windows.Forms.Button();
+            this.TpgActivity = new System.Windows.Forms.TabPage();
             this.TpgAlarm = new System.Windows.Forms.TabPage();
             this.TpgAudit = new System.Windows.Forms.TabPage();
             this.TpgEnumeration = new System.Windows.Forms.TabPage();
@@ -61,6 +62,9 @@
             this.TpgMiscellanea = new System.Windows.Forms.TabPage();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.TxtTimeout = new System.Windows.Forms.TextBox();
+            this.LblTimeout = new System.Windows.Forms.Label();
+            this.LblTimeoutExample = new System.Windows.Forms.Label();
             this.TabMain.SuspendLayout();
             this.TpgLogin.SuspendLayout();
             this.SuspendLayout();
@@ -70,16 +74,16 @@
             this.rcbToken.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rcbToken.Location = new System.Drawing.Point(100, 190);
+            this.rcbToken.Location = new System.Drawing.Point(100, 218);
             this.rcbToken.Name = "rcbToken";
             this.rcbToken.ReadOnly = true;
-            this.rcbToken.Size = new System.Drawing.Size(972, 250);
+            this.rcbToken.Size = new System.Drawing.Size(972, 222);
             this.rcbToken.TabIndex = 15;
             this.rcbToken.Text = "";
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(102, 154);
+            this.btnLogin.Location = new System.Drawing.Point(102, 189);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(100, 23);
             this.btnLogin.TabIndex = 14;
@@ -168,6 +172,7 @@
             this.cmbVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVersion.FormattingEnabled = true;
             this.cmbVersion.Items.AddRange(new object[] {
+            "v5",
             "v4",
             "v3",
             "v2"});
@@ -193,13 +198,13 @@
             this.lblVersionExample.Name = "lblVersionExample";
             this.lblVersionExample.Size = new System.Drawing.Size(65, 13);
             this.lblVersionExample.TabIndex = 25;
-            this.lblVersionExample.Text = "Example: v4";
+            this.lblVersionExample.Text = "Example: v5";
             // 
             // lblToken
             // 
             this.lblToken.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblToken.AutoSize = true;
-            this.lblToken.Location = new System.Drawing.Point(53, 190);
+            this.lblToken.Location = new System.Drawing.Point(53, 218);
             this.lblToken.Name = "lblToken";
             this.lblToken.Size = new System.Drawing.Size(41, 13);
             this.lblToken.TabIndex = 26;
@@ -212,6 +217,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TabMain.Controls.Add(this.TpgLogin);
+            this.TabMain.Controls.Add(this.TpgActivity);
             this.TabMain.Controls.Add(this.TpgAlarm);
             this.TabMain.Controls.Add(this.TpgAudit);
             this.TabMain.Controls.Add(this.TpgEnumeration);
@@ -233,6 +239,9 @@
             // TpgLogin
             // 
             this.TpgLogin.BackColor = System.Drawing.SystemColors.Control;
+            this.TpgLogin.Controls.Add(this.LblTimeoutExample);
+            this.TpgLogin.Controls.Add(this.LblTimeout);
+            this.TpgLogin.Controls.Add(this.TxtTimeout);
             this.TpgLogin.Controls.Add(this.LblLogin_Title1);
             this.TpgLogin.Controls.Add(this.BtnGetAccessToken);
             this.TpgLogin.Controls.Add(this.BtnRefresh);
@@ -264,13 +273,13 @@
             this.LblLogin_Title1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LblLogin_Title1.Location = new System.Drawing.Point(7, 7);
             this.LblLogin_Title1.Name = "LblLogin_Title1";
-            this.LblLogin_Title1.Size = new System.Drawing.Size(332, 16);
+            this.LblLogin_Title1.Size = new System.Drawing.Size(331, 16);
             this.LblLogin_Title1.TabIndex = 29;
             this.LblLogin_Title1.Text = "Functions: TryLogin, Refresh, GetAccessToken";
             // 
             // BtnGetAccessToken
             // 
-            this.BtnGetAccessToken.Location = new System.Drawing.Point(326, 154);
+            this.BtnGetAccessToken.Location = new System.Drawing.Point(326, 189);
             this.BtnGetAccessToken.Name = "BtnGetAccessToken";
             this.BtnGetAccessToken.Size = new System.Drawing.Size(114, 23);
             this.BtnGetAccessToken.TabIndex = 28;
@@ -280,13 +289,23 @@
             // 
             // BtnRefresh
             // 
-            this.BtnRefresh.Location = new System.Drawing.Point(210, 154);
+            this.BtnRefresh.Location = new System.Drawing.Point(210, 189);
             this.BtnRefresh.Name = "BtnRefresh";
             this.BtnRefresh.Size = new System.Drawing.Size(99, 23);
             this.BtnRefresh.TabIndex = 27;
             this.BtnRefresh.Text = "Refresh";
             this.BtnRefresh.UseVisualStyleBackColor = true;
             this.BtnRefresh.Click += new System.EventHandler(this.BtnRefresh_Click);
+            // 
+            // TpgActivity
+            // 
+            this.TpgActivity.BackColor = System.Drawing.SystemColors.Control;
+            this.TpgActivity.Location = new System.Drawing.Point(4, 34);
+            this.TpgActivity.Name = "TpgActivity";
+            this.TpgActivity.Padding = new System.Windows.Forms.Padding(3);
+            this.TpgActivity.Size = new System.Drawing.Size(1080, 450);
+            this.TpgActivity.TabIndex = 12;
+            this.TpgActivity.Text = "ACTIVITIES";
             // 
             // TpgAlarm
             // 
@@ -388,6 +407,32 @@
             this.TpgMiscellanea.TabIndex = 6;
             this.TpgMiscellanea.Text = "MISCELLANEA";
             // 
+            // TxtTimeout
+            // 
+            this.TxtTimeout.Location = new System.Drawing.Point(103, 154);
+            this.TxtTimeout.Name = "TxtTimeout";
+            this.TxtTimeout.Size = new System.Drawing.Size(98, 20);
+            this.TxtTimeout.TabIndex = 30;
+            // 
+            // LblTimeout
+            // 
+            this.LblTimeout.AutoSize = true;
+            this.LblTimeout.Location = new System.Drawing.Point(3, 157);
+            this.LblTimeout.Name = "LblTimeout";
+            this.LblTimeout.Size = new System.Drawing.Size(91, 13);
+            this.LblTimeout.TabIndex = 31;
+            this.LblTimeout.Text = "Request Timeout:";
+            this.LblTimeout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LblTimeoutExample
+            // 
+            this.LblTimeoutExample.AutoSize = true;
+            this.LblTimeoutExample.Location = new System.Drawing.Point(208, 157);
+            this.LblTimeoutExample.Name = "LblTimeoutExample";
+            this.LblTimeoutExample.Size = new System.Drawing.Size(209, 13);
+            this.LblTimeoutExample.TabIndex = 32;
+            this.LblTimeoutExample.Text = "Example: 100 (optional, default is 300 sec.)";
+            // 
             // MainUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -439,6 +484,10 @@
         private System.Windows.Forms.TabPage TpgSpace;
         private System.Windows.Forms.Label LblLogin_Title1;
         private System.Windows.Forms.TabPage TpgStream;
+        private System.Windows.Forms.TabPage TpgActivity;
+        private System.Windows.Forms.Label LblTimeoutExample;
+        private System.Windows.Forms.Label LblTimeout;
+        private System.Windows.Forms.TextBox TxtTimeout;
     }
 }
 

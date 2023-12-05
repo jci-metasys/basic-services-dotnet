@@ -42,7 +42,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<MetasysObject> FindByIdAsync(Guid networkDeviceId)
         {
-            //if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+            CheckVersion(Version);
             var response = await GetRequestAsync("networkDevices", null, networkDeviceId).ConfigureAwait(false);
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Equipment);
         }
@@ -61,6 +61,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetAsync(string type = null)
         {
+            CheckVersion(Version);
             // Note: the name of the parameter 'Type' changes according to the API version
             string typeParamName = Version > ApiVersion.v3 ? "objectType" : "type";
             var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { typeParamName, type } }).ConfigureAwait(false);
@@ -70,6 +71,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetByClassificationAsync(string classification = null)
         {
+            CheckVersion(Version);
             var response = await this.GetAllAvailablePagesAsync("networkDevices", new Dictionary<string, string> { { "classification", classification } }).ConfigureAwait(false);
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Object);
         }
@@ -82,6 +84,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetAsync(NetworkDeviceTypeEnum networkDevicetype)
         {
+            CheckVersion(Version);
             string type = Convert.ToString((int)networkDevicetype);
             return await GetAsync(type);
         }
@@ -95,14 +98,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObjectType>> GetTypesAsync()
         {
+            CheckVersion(Version);
             if (Version < ApiVersion.v4)
-            {
-                return await GetResourceTypesAsync("networkDevices", "availableTypes").ConfigureAwait(false);
-            }
+            { return await GetResourceTypesAsync("networkDevices", "availableTypes").ConfigureAwait(false); }
             else
-            {
-                return await RetrieveNetworkDeviceTypesAsync().ConfigureAwait(false);
-            }
+            { return await RetrieveNetworkDeviceTypesAsync().ConfigureAwait(false); }
         }
 
         // GetChildren ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -114,8 +114,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetChildrenAsync(Guid networkDeviceId)
         {
-            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
-
+            CheckVersion(Version);
             var response = await GetAllAvailablePagesAsync("networkDevices", null, networkDeviceId.ToString(), "networkDevices").ConfigureAwait(false);
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Object);
         }
@@ -129,8 +128,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetHostingAnEquipmentAsync(Guid equipmentId)
         {
-            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
-
+            CheckVersion(Version);
             var response = await GetAllAvailablePagesAsync("equipment", null, equipmentId.ToString(), "networkDevices").ConfigureAwait(false);
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Object);
         }
@@ -144,8 +142,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetServingASpaceAsync(Guid spaceId)
         {
-            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
-
+            CheckVersion(Version);
             var response = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "networkDevices").ConfigureAwait(false);
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Object);
         }

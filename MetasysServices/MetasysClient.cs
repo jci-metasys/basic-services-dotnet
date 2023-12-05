@@ -31,6 +31,9 @@ namespace JohnsonControls.Metasys.BasicServices
         protected Dictionary<string, Guid> IdentifiersDictionary = new Dictionary<string, Guid>();
 
         /// <inheritdoc/>
+        public IActivityService Activities { get; set; }
+
+        /// <inheritdoc/>
 		public IAlarmsService Alarms { get; set; }
 
         /// <inheritdoc/>
@@ -55,7 +58,6 @@ namespace JohnsonControls.Metasys.BasicServices
         public ITrendService Trends { get; set; }
 
         private string hostname;
-
         /// <inheritdoc/>
         public string Hostname
         {
@@ -74,6 +76,21 @@ namespace JohnsonControls.Metasys.BasicServices
                 hostname = value;
             }
         }
+
+        private int timeout = 300;
+        /// <inheritdoc/>
+        public int Timeout
+        {
+            get
+            {
+                return timeout;
+            }
+            set
+            {
+                timeout = value;
+            }
+        }
+
 
         private ApiVersion? version;
 
@@ -98,6 +115,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 version = value;
                 // set base url and all related services to the new value
                 InitFlurlClient(Hostname);
+                if (Activities != null) { Activities.Version = version.Value; }
                 if (Alarms != null) { Alarms.Version = version.Value; }
                 if (Audits != null) { Audits.Version = version.Value; }
                 if (Enumerations != null) { Enumerations.Version = version.Value; }
@@ -138,6 +156,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 }
                 culture = value;
                 // set all related services to the new value
+                if (Activities != null) { Activities.Culture = culture; }
                 if (Alarms != null) { Alarms.Culture = culture; }
                 if (Audits != null) { Audits.Culture = culture; }
                 if (Enumerations != null) { Enumerations.Culture = culture; }
@@ -160,15 +179,20 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                 };
+                
                 HttpClient httpClient = new HttpClient(httpClientHandler)
                 {
                     BaseAddress = new Uri($"https://{hostname}"
                     .AppendPathSegments("api", Version))
                 };
+                httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+
+                FlurlHttp.Configure(settings => settings.Timeout = TimeSpan.FromSeconds(timeout));
                 Client = new FlurlClient(httpClient);
             }
             else
             {
+                FlurlHttp.Configure(settings => settings.Timeout = TimeSpan.FromSeconds(timeout));
                 Client = new FlurlClient($"https://{hostname}"
                     .AppendPathSegments("api", Version));
             }
@@ -193,18 +217,21 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="version">The server's Api version.</param>
         /// <param name="cultureInfo">Localization culture for Metasys enumeration translations.</param>
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
-        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v2, CultureInfo cultureInfo = null, bool logClientErrors = true)
+        /// <param name="timeout">Set the Timeout (in seconds) of the https request.</param>
+        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v2, CultureInfo cultureInfo = null, bool logClientErrors = true, int timeout = 300)
         {
             try
             {
                 IgnoreCertificateErrors = ignoreCertificateErrors;
                 Hostname = hostname;
+                Timeout = timeout;
                 // Set Metasys culture if specified, otherwise use current machine Culture.
                 Culture = cultureInfo ?? CultureInfo.CurrentCulture;
                 // Set preferences about logging
                 LogClientErrors = logClientErrors;
                 Version = version;
                 // Init related services
+                Activities = new ActivityServiceProvider(Client, version, logClientErrors);
                 Alarms = new AlarmServiceProvider(Client, version, logClientErrors);
                 Audits = new AuditServiceProvider(Client, version, logClientErrors);
                 Enumerations = new EnumerationServiceProvider(Client, version, logClientErrors);
@@ -212,10 +239,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 NetworkDevices = new NetworkDeviceServiceProvider(Client, version, logClientErrors);
                 Spaces = new SpaceServiceProvider(Client, version, logClientErrors);
                 Trends = new TrendServiceProvider(Client, version, logClientErrors);
-                if (Version > ApiVersion.v3)
-                {
-                    Streams = new StreamServiceProvider(Client, hostname, version, logClientErrors);
-                }
+                if (Version > ApiVersion.v3) Streams = new StreamServiceProvider(Client, hostname, version, logClientErrors);
+                
 
                 base.Version = version;
             }

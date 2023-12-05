@@ -41,7 +41,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<MetasysObject> FindByIdAsync(Guid equipmentId)
         {
-            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
+            CheckVersion(Version);
+
             var response = await GetRequestAsync("equipment", null, equipmentId).ConfigureAwait(false);
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Equipment);
         }
@@ -56,11 +57,12 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<IEnumerable<MetasysObject>> GetAsync(int? page = null, int? pageSize = null)
         {
             CheckVersion(Version);
+
             Dictionary<string, string> parameters = null;
             if ((page != null && page > 0) | (pageSize != null && pageSize > 0)) parameters = new Dictionary<string, string>();
 
-            if (page != null && page > 0 && parameters != null) parameters.Add("Page", page.ToString());
-            if (pageSize != null && pageSize > 0 && parameters != null) parameters.Add("PageSize", pageSize.ToString());
+            if (page != null && page > 0 && parameters != null) parameters.Add("page", page.ToString());
+            if (pageSize != null && pageSize > 0 && parameters != null) parameters.Add("pageSize", pageSize.ToString());
 
             var equipment = await GetAllAvailablePagesAsync("equipment", parameters).ConfigureAwait(false);
             return ToMetasysObject(equipment, Version, MetasysObjectTypeEnum.Equipment);
@@ -75,6 +77,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysPoint>> GetPointsAsync(Guid equipmentId, bool readAttributeValue = true)
         {
+            CheckVersion(Version);
+
             List<MetasysPoint> points = new List<MetasysPoint>() { }; List<Guid> guids = new List<Guid>();
             List<MetasysPoint> pointsWithAttribute = new List<MetasysPoint>() { };
             var response = await GetAllAvailablePagesAsync("equipment", null, equipmentId.ToString(), "points").ConfigureAwait(false);
@@ -128,6 +132,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetServingASpaceAsync(Guid spaceId)
         {
+            CheckVersion(Version);
+
             var spaceEquipment = await GetAllAvailablePagesAsync("spaces", null, spaceId.ToString(), "equipment").ConfigureAwait(false);
             return ToMetasysObject(spaceEquipment, Version, MetasysObjectTypeEnum.Equipment);
         }
@@ -141,6 +147,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetHostedByNetworkDeviceAsync(Guid networkDeviceId)
         {
+            CheckVersion(Version);
+
             var spaceEquipment = await GetAllAvailablePagesAsync("networkDevices", null, networkDeviceId.ToString(), "equipment").ConfigureAwait(false);
             return ToMetasysObject(spaceEquipment, Version, MetasysObjectTypeEnum.Equipment);
         }
@@ -154,8 +162,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetServedByEquipmentAsync(Guid equipmentId)
         {
-            if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
-            
+            CheckVersion(Version);
+
             var response = await GetAllAvailablePagesAsync("equipment", null, equipmentId.ToString(), "equipment").ConfigureAwait(false);
             return ToMetasysObject(response, Version, MetasysObjectTypeEnum.Equipment);
         }
@@ -169,9 +177,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetServingAnEquipmentAsync(Guid equipmentId)
         {
+            CheckVersion(Version);
+
             var spaceEquipment = await GetAllAvailablePagesAsync("equipment", null, equipmentId.ToString(), "upstreamEquipment").ConfigureAwait(false);
             return ToMetasysObject(spaceEquipment, Version, MetasysObjectTypeEnum.Equipment);
         }
-
     }
 }

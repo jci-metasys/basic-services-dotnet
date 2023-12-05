@@ -108,7 +108,8 @@ namespace JohnsonControls.Metasys.BasicServices
 
             try
             {
-                Description = token["description"].Value<string>();
+                Description = token.Contains("description") ? token["description"].Value<string>(): null;
+                //Description = token["description"].Value<string>();
             }
             catch
             {
@@ -150,7 +151,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 try
                 {
                     // Object Type is available since API v3 only on object detail. 
-                    ObjectType= token["objectType"].Value<string>();
+                    ObjectType = token.Contains("objectType") ? token["objectType"].Value<string>() : null;
+                    //ObjectType = token["objectType"].Value<string>(); //Old code
                 }
                 catch
                 {
@@ -159,7 +161,8 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             try
             {
-                CategoryUrl = token["categoryUrl"].Value<string>();
+                CategoryUrl = token.Contains("categoryUrl") ? token["categoryUrl"].Value<string>() : null;
+                //CategoryUrl = token["categoryUrl"].Value<string>();
             }
             catch
             {
@@ -167,7 +170,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             try
             {
-                ObjectCategory = token["objectCategory"].Value<string>();
+                ObjectCategory = token.Contains("objectCategory") ? token["objectCategory"].Value<string>() : null;                
             }
             catch
             {
@@ -176,7 +179,8 @@ namespace JohnsonControls.Metasys.BasicServices
 
             try
             {
-                EquipmentDefinitionName = token["type"].Value<string>();
+                EquipmentDefinitionName = token.Contains("type") ? token["type"].Value<string>() : null;
+                //EquipmentDefinitionName = token["type"].Value<string>();
             }
             catch
             {

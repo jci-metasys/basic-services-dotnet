@@ -35,6 +35,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public PagedResult<Sample> GetSamples(Guid objectId, int attributeId, TimeFilter filter)
         {
+            CheckVersion(Version);
             if (Version > ApiVersion.v3)
             {
                 //Convert the numeric attributeID to the equivalent enumerated text in order to use the new method valid only when version > v3

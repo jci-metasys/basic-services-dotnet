@@ -10,15 +10,17 @@ namespace JohnsonControls.Metasys.BasicServices
 
     public class BatchRequestParam
     {
-        /// <summary>
-        /// Id to identify the object
-        /// </summary>
+        /// <summary> Id to identify the object
         public Guid ObjectId { get; set; }
 
-        /// <summary>
-        /// String that could represent a text resource as, for instance, a text annotation
-        /// </summary>
+        /// <summary> String that could represent a text resource as, for instance, a text annotation
         public string Resource { get; set; }
+
+        /// <summary> Activity Type. The possible values are: 'alarm', 'audit'
+        public string ActivityType { get; set; } = "";
+
+        /// <summary> Activity Management Status. The possible values are: 'discarded' (for Alarms and Audits), 'acknowledged' (for Audits)
+        public string ActivityManagementStatus { get; set; } = "";
 
     }
 }
