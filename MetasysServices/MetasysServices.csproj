@@ -13,11 +13,16 @@
     <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
-    <PackageReleaseNotes>- Added methods: 
+    <PackageReleaseNotes>- Made changes to support Metasys API v5 (Metasys 13): 
+- For example, added new methods as: 
     Activity.Get(ActivityFilter activityFilter)
     Activity.ActionMultiple(IEnumerable&lt;BatchRequestParam&gt; requests)
 - Added the related method to the COM component:
-    GetObjects(string id, string type)</PackageReleaseNotes>
+    GetActivities(IComActivityFilter activityFilter)
+    ActivityActionMultiple(string[] requestParams)
+- Added the possibility to specify the timeout parameter for https requests
+- Added new parameters to the method: Spaces.Get()
+- Added new parameters to the related COM method: GetSpaces()</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Version>6.0.0</Version>    
   </PropertyGroup>

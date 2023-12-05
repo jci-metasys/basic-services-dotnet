@@ -565,28 +565,28 @@ namespace JohnsonControls.Metasys.BasicServices
             // Init our dictionary for paging
             if (parameters == null) parameters = new Dictionary<string, string>();
          
-            if (!parameters.ContainsKey("Page"))
+            if (!parameters.ContainsKey("page"))
             {
-                parameters.Add("Page", page.ToString());
+                parameters.Add("page", page.ToString());
             } 
             else
             {
-                Int32.TryParse(parameters["Page"], out page);
+                Int32.TryParse(parameters["page"], out page);
                 if (page > 0) buildAggregateResponse = false; // This handles the case when it has been passed a specific Page number so the response will not be aggregate
             }
-            if (!parameters.ContainsKey("PageSize"))
+            if (!parameters.ContainsKey("pageSize"))
             {
-                parameters.Add("PageSize", pageSize.ToString());
+                parameters.Add("pageSize", pageSize.ToString());
             }else
             {
-                Int32.TryParse(parameters["PageSize"], out pageSize);
+                Int32.TryParse(parameters["pageSize"], out pageSize);
             }
 
             while (hasNext)
             {
                 hasNext = false;
                 // Just overwrite page parameter
-                parameters["Page"] = page.ToString();
+                parameters["page"] = page.ToString();
                 var response = await GetPagedResultsAsync<JToken>(resource, parameters, pathSegments).ConfigureAwait(false);
             var total = response.Total;
                 if (total > 0)

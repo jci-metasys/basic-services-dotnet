@@ -509,9 +509,12 @@ namespace JohnsonControls.Metasys.ComServices
         /// Gets all network devices.
         /// </summary>
         /// <param name="type">Optional type number as a string</param>
+        /// <param name="page">Optional, the page numer of items to return (default = 1).</param>
+        /// <param name="pageSize">Optional, the maximum number of items to return in the response (default = 100, max = 1000).</param>
+        /// <param name="sort">Optional, the criteria to use when sorting results (default = name).</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        object GetSpaces(string type = null);
+        object GetSpaces(string type = null, int? page = null, int? pageSize = null, string sort = null);
 
         /// <summary>
         /// Gets children spaces of the given space.

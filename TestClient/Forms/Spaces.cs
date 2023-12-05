@@ -64,6 +64,8 @@ namespace MetasysServices_TestClient.Forms
                 CmbGetSpaces.DisplayMember = "Description";
                 CmbGetSpaces.ValueMember = "value";
             }
+
+            CmbGetSpaces_Sort.SelectedIndex = 0;
         }
 
         private void BtnGetSpaces_Click(object sender, EventArgs e)
@@ -80,15 +82,17 @@ namespace MetasysServices_TestClient.Forms
             {
                 int page = (int)NudSpacePage.Value;
                 int pageSize = (int)NudSpacePageSize.Value;
+                string sort = CmbGetSpaces_Sort.Text;
+                if (sort.Length == 0) sort = null;
                 if (_client.Version > ApiVersion.v3) 
                 {
                     string spaceType = (string)CmbGetSpaces.SelectedValue;
-                    result = _client.Spaces.Get(spaceType, page, pageSize);
+                    result = _client.Spaces.Get(spaceType, page, pageSize, sort);
                 }
                 else
                 {
                     SpaceTypeEnum spaceType = (SpaceTypeEnum)CmbGetSpaces.SelectedValue;
-                    result = _client.Spaces.Get(spaceType, page, pageSize);
+                    result = _client.Spaces.Get(spaceType, page, pageSize, sort);
                 }
             }
             DgvGetSpaces.DataSource = result;
@@ -151,6 +155,11 @@ namespace MetasysServices_TestClient.Forms
                 var result = _client.Spaces.GetServedByEquipment(equipmentGuid);
                 DgvGetServedByEquipment.DataSource = result;
             }
+        }
+
+        private void Spaces_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

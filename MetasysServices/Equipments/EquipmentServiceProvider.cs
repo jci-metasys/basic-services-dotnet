@@ -61,8 +61,8 @@ namespace JohnsonControls.Metasys.BasicServices
             Dictionary<string, string> parameters = null;
             if ((page != null && page > 0) | (pageSize != null && pageSize > 0)) parameters = new Dictionary<string, string>();
 
-            if (page != null && page > 0 && parameters != null) parameters.Add("Page", page.ToString());
-            if (pageSize != null && pageSize > 0 && parameters != null) parameters.Add("PageSize", pageSize.ToString());
+            if (page != null && page > 0 && parameters != null) parameters.Add("page", page.ToString());
+            if (pageSize != null && pageSize > 0 && parameters != null) parameters.Add("pageSize", pageSize.ToString());
 
             var equipment = await GetAllAvailablePagesAsync("equipment", parameters).ConfigureAwait(false);
             return ToMetasysObject(equipment, Version, MetasysObjectTypeEnum.Equipment);

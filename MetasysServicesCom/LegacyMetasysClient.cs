@@ -669,7 +669,7 @@ namespace JohnsonControls.Metasys.ComServices
         #region "Spaces" // =========================================================================================================
         //GetSpaces -----------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public object GetSpaces(string type = null)
+        public object GetSpaces(string type = null, int? page = null, int? pageSize = null, string sort = null)
         {
             SpaceTypeEnum? spaceType = null;
             if (type != null)
@@ -678,7 +678,7 @@ namespace JohnsonControls.Metasys.ComServices
                 spaceType = (SpaceTypeEnum)Enum.Parse(typeof(SpaceTypeEnum), type);
             }
             // Note: need a generic object as return type in order to map correctly to VBA type array
-            var res = Client.Spaces.Get(spaceType);
+            var res = Client.Spaces.Get(spaceType, page, pageSize, sort);
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 

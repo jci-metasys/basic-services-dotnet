@@ -218,12 +218,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="cultureInfo">Localization culture for Metasys enumeration translations.</param>
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
         /// <param name="timeout">Set the Timeout (in seconds) of the https request.</param>
-        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v4, CultureInfo cultureInfo = null, bool logClientErrors = true, int timeout = 300)
+        public MetasysClient(string hostname, bool ignoreCertificateErrors = false, ApiVersion version = ApiVersion.v2, CultureInfo cultureInfo = null, bool logClientErrors = true, int timeout = 300)
         {
             try
             {
                 IgnoreCertificateErrors = ignoreCertificateErrors;
                 Hostname = hostname;
+                Timeout = timeout;
                 // Set Metasys culture if specified, otherwise use current machine Culture.
                 Culture = cultureInfo ?? CultureInfo.CurrentCulture;
                 // Set preferences about logging

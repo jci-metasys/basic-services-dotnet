@@ -81,6 +81,9 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Keep the Stream Alive](#keep-the-stream-alive)
   - ['Ad-Hoc' call](#ad-hoc-call)
     - [SendAsync](#sendasync)
+  - [Activities](#Activities)
+    - [Get Activities](#get-activities)
+    - [Multiple Actions](#multiple-actions)
 - [Usage (COM)](#usage-com)
   - [Creating a Client](#creating-a-client-1)
   - [Login and Access Tokens](#login-and-access-tokens-1)
@@ -228,9 +231,11 @@ There are four optional parameters when creating a new client:
   
   **WARNING: You should not ignore certificate errors on a production site. Doing so puts your server at risk of a man-in-the-middle attack.**  
 
-- apiVersion: If your server is not a current 10.1 Metasys server or later this SDK will not function correctly. The version parameter takes in an ApiVersion enumeration value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is v2, for Metasys 11 the api version is v3.
-- cultureInfo: To set the language for localization specify the target culture with a CultureInfo object. The default culture is en-US.
-- logClientErrors: Set this flag to false to disable logging of client errors. By default the library logs any communication error with the Metasys Server in this path: "C:\ProgramData\Johnson Controls\Metasys Services\Logs".
+- apiVersion: if your server is not a current 10.1 Metasys server or later this SDK will not function correctly. The version parameter takes in an ApiVersion enumeration value that defaults to the most current release of Metasys. For Metasys 10.1 the api version is v2, for Metasys 11 the api version is v3, for Metasys 12 the api version is v4 and for Metasys 13 the api version is v5.
+- cultureInfo: to set the language for localization specify the target culture with a CultureInfo object. The default culture is en-US.
+- logClientErrors: set this flag to false to disable logging of client errors. By default the library logs any communication error with the Metasys Server in this path: "C:\ProgramData\Johnson Controls\Metasys Services\Logs".
+- timeout: to set the timeout (in seconds) of the https requests. The default timeut value is 300 sec.
+
   
 Example: the following code shows how to create a client that ignores certificate errors for a v12 Metasys server with Italian translations of values:
 
@@ -916,7 +921,7 @@ foreach (var type in spaceTypes)
 
 #### Get Spaces
 To get all available spaces use the method **`Spaces.Get`** (method *GetSpaces* is deprecated). 
-This method returns a list of 'MetasysObject' objects. This accepts an optional type as enum to filter the response.  
+This method returns a list of 'MetasysObject' objects. This accepts some optional parameters as type (enum), page (int), pageSize (int) and sort (string) to filter the response.  
 ```csharp
 // Retrieves the list of Buildings using SpaceTypeEnum helper
 List<MetasysObject> buildings = client.GetSpaces(SpaceTypeEnum.Building).ToList();
@@ -1457,6 +1462,36 @@ a value for **`cancellationToken`** that specifies the cancellation token to can
 <br/>
 
 
+### Activities
+All services about activities are provided by **`Activities`** local instance of MetasysClient.  
+<br/>
+#### Get Activities
+To get all available alarms or audits (now they are known as 'activities') you can use the method **`Activities.Get`**.  
+This method will return a 'PagedResult' with a list of 'Activity' objects.  
+This accepts an 'ActivityFilter' object to filter the response and specify if the activity is related to Alarms or Audits. 
+In the Activity filter you can specify parameters as:
+- ActivityType: limit the activities returned to a specific type. Possible values: 'alarm', 'audit'.
+- StartTime: earliest start time.
+- EndTime: latest end time.
+- IncludeDiscarded: the flag to include discarded activity.
+- Sort: The criteria to use when sorting results.
+- Equipment: Filter by list of equipment identifiers.
+- Object: Filter by list of object identifiers.
+- Space: Filter by list of space identifiers.
+- PriorityRange: The inclusive priority range, from 0 to 255, of the alarm.
+- Type: Limits the alarms returned to specified types.
+- IncludeAcknowledged: Determines whether acknowledged alarms will be included in the results.
+- IncludeAcknowledgementRequired: Determines whether activities which can be acknowledged are included in the results. Default = true.
+- IncludeAcknowledgementNotRequired: Determines whether activities which can not be acknowledged are included in the results. Default: true.
+- Category: The authorization category of the requested activities.
+- OriginApplication: The origin application property indicates which application in Metasys generated the audit message.
+- ClassLevel: The class level of an audit indicates the class or family the audit belongs to.
+- ActionType: The action type property indicates the user or system action performed.
+- User: The user property indicates which user initiated the action being audited.
+
+#### Multiple Actions
+This method **`Activities.ActionMultiple`** is useful to perform batch actions as discard/acknowledge an alarm/audit given a list of requests containing the info necessary to perform the actions.
+It takes a list of 'BatchRequestParam' objects (specifing the list of Audit or Alarm Guids and annotations) and it returns a list of 'Result' objects.
 
 ## Usage (COM)
 
