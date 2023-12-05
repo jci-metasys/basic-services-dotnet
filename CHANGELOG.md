@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.0.0] - 2023-12-05
+The main purpose of this release is to add the support for Metasys API v5 (provided by Metasys 13) as well as many enhancements of the library.
+
+### Added
+Specifically, as example, it provides the new 'Activities' service including some new methods as:
+- Activities.Get(ActivityFilter activityFilter)
+- Activities.GetSync(ActivityFilter activityFilter)
+- Activities.ActionMultiple(IEnumerable requests)
+- Activities.ActionMultipleAsync(IEnumerable requests)
+  
+It also provides the corresponding new methods via COM component.
+- GetActivities(IComActivityFilter activityFilter)
+- ActivityActionMultiple(string[] requestParams)
+
+Also, it includes the possibility to handle a few extra parameters as, for example, the 'timeout' for https requests as well as the 'page', 'pageSize' and 'sort' for the method to retrieve the spaces.
+
+## [5.0.3] - 2023-02-15
+
+### Added
+Added the new methods:
+- GetObjects(Guid objectId, string objectType)
+- GetObjectsAsync(Guid objectId, string objectType)
+  
+Added the related method to the COM component:
+- GetObjects(string id, string type)
+  
 ## [5.0.2] - 2023-02-07
 
 ### Added
