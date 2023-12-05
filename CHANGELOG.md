@@ -16,7 +16,7 @@ Specifically, as example, it provides the new 'Activities' service including som
 - Activities.GetSync(ActivityFilter activityFilter)
 - Activities.ActionMultiple(IEnumerable requests)
 - Activities.ActionMultipleAsync(IEnumerable requests)
-  
+
 It also provides the corresponding new methods via COM component.
 - GetActivities(IComActivityFilter activityFilter)
 - ActivityActionMultiple(string[] requestParams)
@@ -29,10 +29,10 @@ Also, it includes the possibility to handle a few extra parameters as, for examp
 Added the new methods:
 - GetObjects(Guid objectId, string objectType)
 - GetObjectsAsync(Guid objectId, string objectType)
-  
+
 Added the related method to the COM component:
 - GetObjects(string id, string type)
-  
+
 ## [5.0.2] - 2023-02-07
 
 ### Added
@@ -257,7 +257,12 @@ First Release.
 - LegacyMetasysClient for compatibility with COM services.
 - Automatic enumeration translations for supported languages.
 
-[Unreleased]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.1.0...HEAD
+[Unreleased]: https://github.com/metasys-server/basic-services-dotnet/compare/v6.0.0...HEAD
+[6.0.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v5.0.3...v6.0.0
+[5.0.3]: https://github.com/metasys-server/basic-services-dotnet/compare/v5.0.2...v5.0.3
+[5.0.2]: https://github.com/metasys-server/basic-services-dotnet/compare/v5.0.1...v5.0.2
+[5.0.1]: https://github.com/metasys-server/basic-services-dotnet/compare/v5.0.0...v5.0.1
+[5.0.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.2.0...v5.0.0
 [4.2.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.1.0...v4.2.0
 [4.1.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v3.5.1...v4.0.0
