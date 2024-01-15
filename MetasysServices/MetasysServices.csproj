@@ -5,7 +5,7 @@
     <RootNamespace>JohnsonControls.Metasys.BasicServices</RootNamespace>
     <LangVersion>7.3</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Copyright>© 2020-2023 Johnson Controls</Copyright>
+    <Copyright>© 2020-2024 Johnson Controls</Copyright>
     <Company>Johnson Controls Int.</Company>
     <Product>Metasys Services</Product>
     <Authors>Johnson Controls</Authors>
@@ -13,18 +13,9 @@
     <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
-    <PackageReleaseNotes>- Made changes to support Metasys API v5 (Metasys 13): 
-- For example, added new methods as: 
-    Activity.Get(ActivityFilter activityFilter)
-    Activity.ActionMultiple(IEnumerable&lt;BatchRequestParam&gt; requests)
-- Added the related method to the COM component:
-    GetActivities(IComActivityFilter activityFilter)
-    ActivityActionMultiple(string[] requestParams)
-- Added the possibility to specify the timeout parameter for https requests
-- Added new parameters to the method: Spaces.Get()
-- Added new parameters to the related COM method: GetSpaces()</PackageReleaseNotes>
+    <PackageReleaseNotes>- Made change to MetasysObject to fix an issue related to the property ObjectType that was never populated.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>6.0.0</Version>    
+    <Version>6.0.1</Version>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

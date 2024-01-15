@@ -80,6 +80,11 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public MetasysObject() { }
 
+        /// <summary>
+        /// Classification of the object
+        /// </summary>
+        public string Classification { get; set; }
+
         internal MetasysObject(JToken token, ApiVersion version, IEnumerable<MetasysObject> children = null, CultureInfo cultureInfo = null, MetasysObjectTypeEnum? type =null)
         {
             _CultureInfo = cultureInfo;           
@@ -87,6 +92,7 @@ namespace JohnsonControls.Metasys.BasicServices
             ChildrenCount = Children?.Count()??0; // Children count is 0 when children is null                                 
             Type = type;
 
+            JObject jobj = token.ToObject<JObject>();
             try
             {
                 Id = new Guid(token["id"].Value<string>());
@@ -99,7 +105,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
             try
             {
-                Name = token["name"].Value<string>();
+                Name = jobj.ContainsKey("name") ? token["name"].Value<string>() : null;
             }
             catch
             {
@@ -108,8 +114,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
             try
             {
-                Description = token.Contains("description") ? token["description"].Value<string>(): null;
-                //Description = token["description"].Value<string>();
+                Description = jobj.ContainsKey("description") ? token["description"].Value<string>(): null;
             }
             catch
             {
@@ -151,8 +156,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 try
                 {
                     // Object Type is available since API v3 only on object detail. 
-                    ObjectType = token.Contains("objectType") ? token["objectType"].Value<string>() : null;
-                    //ObjectType = token["objectType"].Value<string>(); //Old code
+                    ObjectType = jobj.ContainsKey("objectType") ? token["objectType"].Value<string>() : null;
                 }
                 catch
                 {
@@ -161,8 +165,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             try
             {
-                CategoryUrl = token.Contains("categoryUrl") ? token["categoryUrl"].Value<string>() : null;
-                //CategoryUrl = token["categoryUrl"].Value<string>();
+                CategoryUrl = jobj.ContainsKey("categoryUrl") ? token["categoryUrl"].Value<string>() : null;
             }
             catch
             {
@@ -170,7 +173,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             try
             {
-                ObjectCategory = token.Contains("objectCategory") ? token["objectCategory"].Value<string>() : null;                
+                ObjectCategory = jobj.ContainsKey("objectCategory") ? token["objectCategory"].Value<string>() : null;                
             }
             catch
             {
@@ -179,13 +182,21 @@ namespace JohnsonControls.Metasys.BasicServices
 
             try
             {
-                EquipmentDefinitionName = token.Contains("type") ? token["type"].Value<string>() : null;
-                //EquipmentDefinitionName = token["type"].Value<string>();
+                EquipmentDefinitionName = jobj.ContainsKey("type") ? token["type"].Value<string>() : null;
             }
             catch
             {
                 EquipmentDefinitionName = null;
             }
+            try
+            {
+                Classification = jobj.ContainsKey("classification") ? token["classification"].Value<string>() : null;
+            }
+            catch
+            {
+                Classification = null;
+            }
+            jobj = null;
         }
 
         /// <summary>
