@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.0.1] - 2024-01-15
+### Changed
+- Made changes to MetasysObject to fix an issue related to the property ObjectType that wasn't properly populated.
+
 ## [6.0.0] - 2023-12-05
 The main purpose of this release is to add the support for Metasys API v5 (provided by Metasys 13) as well as many enhancements of the library.
 
@@ -257,7 +261,13 @@ First Release.
 - LegacyMetasysClient for compatibility with COM services.
 - Automatic enumeration translations for supported languages.
 
-[Unreleased]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.1.0...HEAD
+[Unreleased]: https://github.com/metasys-server/basic-services-dotnet/compare/v6.0.1...HEAD
+[6.0.1]: https://github.com/metasys-server/basic-services-dotnet/compare/v6.0.0...v6.0.1
+[6.0.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v5.0.3...v6.0.0
+[5.0.3]: https://github.com/metasys-server/basic-services-dotnet/compare/v5.0.2...v5.0.3
+[5.0.2]: https://github.com/metasys-server/basic-services-dotnet/compare/v5.0.1...v5.0.2
+[5.0.1]: https://github.com/metasys-server/basic-services-dotnet/compare/v5.0.0...v5.0.1
+[5.0.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.2.0...v5.0.0
 [4.2.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.1.0...v4.2.0
 [4.1.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/metasys-server/basic-services-dotnet/compare/v3.5.1...v4.0.0

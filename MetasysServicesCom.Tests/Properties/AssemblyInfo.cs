@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Johnson Controls")]
 [assembly: AssemblyProduct("MetasysServicesCom.Tests")]
-[assembly: AssemblyCopyright("© 2020-2023 Johnson Controls")]
+[assembly: AssemblyCopyright("© 2020-2024 Johnson Controls")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -16,5 +16,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("c6ad9c27-b7dd-4520-9c03-a0efca68fb51")]
 
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("6.0.0.0")]
-[assembly: AssemblyFileVersion("6.0.0.0")]
+[assembly: AssemblyVersion("6.0.1.0")]
+[assembly: AssemblyFileVersion("6.0.1.0")]

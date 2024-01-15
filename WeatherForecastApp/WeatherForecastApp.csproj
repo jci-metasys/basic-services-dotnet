@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <Copyright>© 2020-2023 Johnson Controls</Copyright>
+    <Copyright>© 2020-2024 Johnson Controls</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
