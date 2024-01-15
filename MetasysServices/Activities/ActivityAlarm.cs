@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
+    /// <summary> Provides ActivityAlarm Item </summary>
+    /// <remarks> This is available since Metasys API v5. </remarks>
     public class ActivityAlarm
     {
         /// <summary> Alarm message </summary>
@@ -63,17 +65,14 @@ namespace JohnsonControls.Metasys.BasicServices
             // Calculate hash on each properties one by one
             if (Message != null)
                 code = (code * 7) + Message.GetHashCode();
-            if (this.IsAckRequired != null)
                 code = (code * 7) + IsAckRequired.GetHashCode();
             if (this.Type != null)
                 code = (code * 7) + Type.GetHashCode();
-            if (this.Priority != null)
                 code = (code * 7) + Priority.GetHashCode();
             if (this.Category != null)
                 code = (code * 7) + Category.GetHashCode();
             if (this.AnnotationsUrl != null)
                 code = (code * 7) + AnnotationsUrl.GetHashCode();
-            if (this.AnnotationCount != null)
                 code = (code * 7) + AnnotationCount.GetHashCode();
             if (this.Self != null)
                 code = (code * 7) + Self.GetHashCode();

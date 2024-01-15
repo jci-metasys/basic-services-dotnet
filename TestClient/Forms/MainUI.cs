@@ -66,8 +66,7 @@ namespace MetasysServices_TestClient
             CultureInfo culture = new CultureInfo("en-US");
             //Create a new 'client' object
             ApiVersion version = (ApiVersion)Enum.Parse(typeof(ApiVersion), cmbVersion.Text);
-            int timeout; 
-            _ = int.TryParse(TxtTimeout.Text.ToString(), out timeout);
+            _ = int.TryParse(TxtTimeout.Text.ToString(), out int timeout);
             _client = new MetasysClient(txtHost.Text, true, version, culture,timeout: timeout != 0 ? timeout: 300);
             if (_client != null)
             {

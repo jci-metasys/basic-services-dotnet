@@ -572,14 +572,12 @@ namespace JohnsonControls.Metasys.BasicServices
             else
             {
                 Int32.TryParse(parameters["page"], out page);
-                if (page > 0) buildAggregateResponse = false; // This handles the case when it has been passed a specific Page number so the response will not be aggregate
+                if (page > 0) 
+                    buildAggregateResponse = false; // This handles the case when it has been passed a specific Page number so the response will not be aggregate
             }
             if (!parameters.ContainsKey("pageSize"))
             {
                 parameters.Add("pageSize", pageSize.ToString());
-            }else
-            {
-                Int32.TryParse(parameters["pageSize"], out pageSize);
             }
 
             while (hasNext)
@@ -826,7 +824,13 @@ namespace JohnsonControls.Metasys.BasicServices
             return responseToken;
         }
 
-        protected async Task<JToken> PatchBatchRequestAsync(string endpoint, IEnumerable<BatchRequestParam> requests, params string[] paths)
+        /// <summary>
+        /// Perform multiple requests (PATCH) to the Server with a single HTTP call asynchronously.
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="requests"></param>
+        /// <returns></returns>
+        protected async Task<JToken> PatchBatchRequestAsync(string endpoint, IEnumerable<BatchRequestParam> requests)
         {
             // Create URL with base resource
             Url url = new Url(endpoint);
@@ -846,7 +850,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     //exception
                 }
 
-                string annotationText = annotationText = r.Resource;
+                string annotationText = r.Resource;
 
                 //Define the specific relativeUrl (NOTE: since v5 it contains the 'full' base Url)
                 Url relativeUrl = new Url(Client.BaseUrl);
@@ -883,7 +887,6 @@ namespace JohnsonControls.Metasys.BasicServices
                     RelativeUrl = relativeUrl,
                     Body = body
                 });
-
             }
 
             JToken responseToken = null;

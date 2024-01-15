@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
+    /// <summary> Provides ActivityAudit Item </summary>
+    /// <remarks> This is available since Metasys API v5. </remarks>
     public class ActivityAudit
     {
         /// <summary> Fully qualified enumeration for Action Type. </summary>
@@ -95,7 +97,6 @@ namespace JohnsonControls.Metasys.BasicServices
                 code = (code * 7) + Description.GetHashCode();
             if (this.AnnotationsUrl != null)
                 code = (code * 7) + AnnotationsUrl.GetHashCode();
-            if (this.AnnotationCount != null)
                 code = (code * 7) + AnnotationCount.GetHashCode();
             return code;
         }

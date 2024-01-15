@@ -17,8 +17,6 @@ namespace JohnsonControls.Metasys.BasicServices
 
     class ActivityServiceProvider : BasicServiceProvider, IActivityService
     {
-        private readonly CultureInfo _CultureInfo = new CultureInfo("en-US");
-
         /// <summary>
         /// Initializes a new instance of <see cref="ActivityServiceProvider"/> with supplied data.
         /// </summary>
@@ -47,9 +45,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 if (Version == ApiVersion.v5)
                 {
                     foreach (var item in response.Items)
-                    {
-                        activities.Add(CreateItem(item, activityFilter.ActivityType));
-                    }
+                        activities.Add(item);
+
                     response = new PagedResult<Activity>
                     {
                         Items = activities,
@@ -63,7 +60,6 @@ namespace JohnsonControls.Metasys.BasicServices
             }else
             { 
                 throw new MetasysUnsupportedApiVersion(Version.ToString());
-                return null;
             };
         }
 
@@ -82,9 +78,10 @@ namespace JohnsonControls.Metasys.BasicServices
 
                 if (Version > ApiVersion.v4)
                 {
-                    if (requests == null) { return null; }
+                    if (requests == null) 
+                        return null;
 
-                    var response = await PatchBatchRequestAsync("activities", requests, "").ConfigureAwait(false);
+                    var response = await PatchBatchRequestAsync("activities", requests).ConfigureAwait(false);
                     return ToResult(response);
                 }
                 else
@@ -111,36 +108,16 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 var respIds = r["id"].Value<string>().Split('_');
 
-                Result resultItem = new Result();
-                resultItem.Id = new Guid(respIds[0]); ;
-                resultItem.Status = r["status"].Value<int>();
-                resultItem.Annotation = respIds[1];
+                Result resultItem = new Result
+                {
+                    Id = new Guid(respIds[0]),
+                    Status = r["status"].Value<int>(),
+                    Annotation = respIds[1]
+                };
                 results.Add(resultItem);
             }
             return results;
         }
 
-        private Activity CreateItem(Activity item, string activityType)
-        {
-            try
-            {
-
-                //switch (activityType)
-                //{
-                //    case 'alarm':
-                        
-                //        break;
-                //    case 'audit':
-                //        break;
-                //}
-
-            }
-            catch (ArgumentNullException e)
-            {
-                // Something went wrong on object parsing
-                throw new MetasysObjectException(e);
-            }
-            return item;
-        }
     }
 }

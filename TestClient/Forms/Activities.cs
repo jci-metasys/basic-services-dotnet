@@ -55,13 +55,14 @@ namespace MetasysServices_TestClient.Forms
                 activityFilter.ActivityType = CmbGet_ActivityType.Text;
                 activityFilter.StartTime = DtpGet_StartTime.Value;
                 activityFilter.EndTime = DtpGet_EndTime.Value;
-                if (CmbGet_Sort.Text.Length > 0) { activityFilter.Sort = CmbGet_Sort.Text; };
-                activityFilter.IncludeDiscarded = ChkGet_IncludeDiscarded.Checked;
-                activityFilter.IncludeAcknowledged = ChkGet_IncludeAcknowledged.Checked;
-                activityFilter.IncludeAcknowledgementRequired = ChkGet_IncludeAcknowledmentRequired.Checked;
-                activityFilter.IncludeAcknowledgementNotRequired = ChkGet_IncludeAcknowledgementNotRequired.Checked;
-                if (filter_Type.Length > 0) { activityFilter.Type = filter_Type.Split(','); };
-                if (filter_originApplication.Length > 0) { activityFilter.OriginApplication = filter_originApplication.Split(','); };
+
+                //if (CmbGet_Sort.Text.Length > 0) { activityFilter.Sort = CmbGet_Sort.Text; };
+                //activityFilter.IncludeDiscarded = ChkGet_IncludeDiscarded.Checked;
+                //activityFilter.IncludeAcknowledged = ChkGet_IncludeAcknowledged.Checked;
+                //activityFilter.IncludeAcknowledgementRequired = ChkGet_IncludeAcknowledmentRequired.Checked;
+                //activityFilter.IncludeAcknowledgementNotRequired = ChkGet_IncludeAcknowledgementNotRequired.Checked;
+                //if (filter_Type.Length > 0) { activityFilter.Type = filter_Type.Split(','); };
+                //if (filter_originApplication.Length > 0) { activityFilter.OriginApplication = filter_originApplication.Split(','); };
 
 
             }

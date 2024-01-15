@@ -32,7 +32,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         IEnumerable<MetasysObject> Get(SpaceTypeEnum? type = null, int? page = null, int? pageSize = null, string sort = null);
-        /// <inheritdoc cref="ISpaceService.Get(SpaceTypeEnum?)"/>
+        /// <inheritdoc cref="ISpaceService.Get(SpaceTypeEnum?, int?, int?, string)"/>
         Task<IEnumerable<MetasysObject>> GetAsync(SpaceTypeEnum? type = null, int? page = null, int? pageSize = null, string sort = null);
 
 
@@ -45,7 +45,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="pageSize">Optional, the maximum number of items to return in the response (default = 100, max = 1000).</param>
         /// <param name="sort">Optional, the criteria to use when sorting results (default = name).</param>
         IEnumerable<MetasysObject> Get(string type, int? page = null, int? pageSize = null, string sort = null);
-        /// <inheritdoc cref="ISpaceService.Get(string)"/>
+        /// <inheritdoc cref="ISpaceService.Get(string, int?, int?, string)"/>
         Task<IEnumerable<MetasysObject>> GetAsync(string type, int? page = null, int? pageSize = null, string sort = null);
 
         // GetSpaceChildren ---------------------------------------------------------------------------------------------------------------
