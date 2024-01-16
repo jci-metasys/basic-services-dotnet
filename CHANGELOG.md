@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [6.0.1] - 2024-01-15
 ### Changed
 - Made changes to MetasysObject to fix an issue related to the property ObjectType that wasn't properly populated.
+- Added a few comments and removed some unnecessary code.
+- Fixed a minor issue in the TestApp project.
 
 ## [6.0.0] - 2023-12-05
 The main purpose of this release is to add the support for Metasys API v5 (provided by Metasys 13) as well as many enhancements of the library.
