@@ -46,9 +46,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="obj"></param>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is AccessToken)
+            if (obj != null && obj is AccessToken token)
             {
-                var other = (AccessToken)obj;
+                var other = token;
                 return (this.Token == null && other.Token == null || (this.Token != null && other.Token != null &&
                     other.Token.Equals(this.Token) &&
                     other.Expires.Equals(this.Expires) &&

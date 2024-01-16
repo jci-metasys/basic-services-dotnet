@@ -12,8 +12,6 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public class MetasysObject: Utils.ObjectUtil
     {
-        private CultureInfo _CultureInfo;
-
         /// <summary>The item reference of the Metasys object.</summary>
         [JsonProperty(Required = Required.Always)]
         public string ItemReference { set; get; }
@@ -85,9 +83,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public string Classification { get; set; }
 
-        internal MetasysObject(JToken token, ApiVersion version, IEnumerable<MetasysObject> children = null, CultureInfo cultureInfo = null, MetasysObjectTypeEnum? type =null)
+        internal MetasysObject(JToken token, ApiVersion version, IEnumerable<MetasysObject> children = null, MetasysObjectTypeEnum? type =null)
         {
-            _CultureInfo = cultureInfo;           
             Children = children??new List<MetasysObject>(); // Return empty list by convention for null         
             ChildrenCount = Children?.Count()??0; // Children count is 0 when children is null                                 
             Type = type;
@@ -196,7 +193,6 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 Classification = null;
             }
-            jobj = null;
         }
 
         /// <summary>
@@ -214,9 +210,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="obj"></param>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is MetasysObject)
+            if (obj != null && obj is MetasysObject @object)
             {
-                var other = (MetasysObject)obj;
+                var other = @object;
                 bool areEqual = ((this.Id == null && other.Id == null) || (this.Id != null && this.Id.Equals(other.Id))) &&
                     ((this.ItemReference == null && other.ItemReference == null) || 
                         (this.ItemReference != null && this.ItemReference.Equals(other.ItemReference))) &&

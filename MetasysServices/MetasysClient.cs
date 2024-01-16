@@ -179,13 +179,13 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                 };
-                
+
                 HttpClient httpClient = new HttpClient(httpClientHandler)
                 {
                     BaseAddress = new Uri($"https://{hostname}"
-                    .AppendPathSegments("api", Version))
+                    .AppendPathSegments("api", Version)),
+                    Timeout = TimeSpan.FromSeconds(timeout)
                 };
-                httpClient.Timeout = TimeSpan.FromSeconds(timeout);
 
                 FlurlHttp.Configure(settings => settings.Timeout = TimeSpan.FromSeconds(timeout));
                 Client = new FlurlClient(httpClient);
@@ -239,7 +239,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 NetworkDevices = new NetworkDeviceServiceProvider(Client, version, logClientErrors);
                 Spaces = new SpaceServiceProvider(Client, version, logClientErrors);
                 Trends = new TrendServiceProvider(Client, version, logClientErrors);
-                if (Version > ApiVersion.v3) Streams = new StreamServiceProvider(Client, hostname, version, logClientErrors);
+                if (Version > ApiVersion.v3) Streams = new StreamServiceProvider(Client, version, logClientErrors);
                 
 
                 base.Version = version;
@@ -613,9 +613,8 @@ namespace JohnsonControls.Metasys.BasicServices
                     token = token["items"];
                 }
                 List<Command> commands = new List<Command>();
-                var array = token as JArray;
 
-                if (array != null)
+                if (token is JArray array)
                 {
                     foreach (JObject command in array.Cast<JObject>())
                     {
@@ -878,12 +877,8 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 HttpResponseMessage response = await Client.Request("refreshToken").GetAsync().ConfigureAwait(false);
-                var date = response.Headers.Date;
-                if (date == null)
-                {
-                    throw new MetasysHttpException("Cannot read date time from HTTP response of Metasys Server.", response.ToString());
-                }
-                serverTime = date.Value.UtcDateTime;
+                var date = response.Headers.Date ?? throw new MetasysHttpException("Cannot read date time from HTTP response of Metasys Server.", response.ToString());
+                serverTime = date.UtcDateTime;
             }
             catch (FlurlHttpException e)
             {
@@ -893,13 +888,6 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         #endregion
-
-
-        /// <summary>Use to log an error message from an asynchronous context.</summary>
-        private async Task LogErrorAsync(String message)
-        {
-            await Console.Error.WriteLineAsync(message).ConfigureAwait(false);
-        }
 
         /// <summary>
         /// Creates a new AccessToken from a JToken and sets the client's authorization header if successful.

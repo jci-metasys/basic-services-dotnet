@@ -28,7 +28,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            Assert.AreEqual(0, audits.Items.Count());
+            Assert.AreEqual(0, audits.Items.Count);
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            PrintMessage($"TestGetSpacesMissingValuesThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetSpacesMissingValuesThrowsException: {e.Message}");
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            PrintMessage($"TestGetAuditsUnauthorizedThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetAuditsUnauthorizedThrowsException: {e.Message}");
         }
     }
 }

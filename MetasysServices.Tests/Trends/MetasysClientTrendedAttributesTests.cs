@@ -30,7 +30,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/trendedAttributes")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            Assert.AreEqual(0, trendedAttributes.Count());
+            Assert.AreEqual(0, trendedAttributes.Count);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/trendedAttributes")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            PrintMessage($"TestGetTrendedAttributesNotFoundThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetTrendedAttributesNotFoundThrowsException: {e.Message}");
         }
        
         [Test]
@@ -104,7 +104,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/trendedAttributes")
                  .WithVerb(HttpMethod.Get)
                  .Times(1);
-            PrintMessage($"TestGetTrendedAttributesMissingValuesThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetTrendedAttributesMissingValuesThrowsException: {e.Message}");
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/trendedAttributes")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            PrintMessage($"TestGetTrendedAttributesUnauthorizedThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetTrendedAttributesUnauthorizedThrowsException: {e.Message}");
         }
     }
 }

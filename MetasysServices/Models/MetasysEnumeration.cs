@@ -9,8 +9,6 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public struct MetasysEnumeration
     {
-        private CultureInfo _CultureInfo;
-
         /// <summary>
         /// Key that identifies the Enumeration set.
         /// </summary>
@@ -36,9 +34,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public int NumberOfStates { private set; get; }
 
-        internal MetasysEnumeration(string key, string name, bool isTwoState, bool isMultiState, int numberOfStates, CultureInfo cultureInfo = null)
+        internal MetasysEnumeration(string key, string name, bool isTwoState, bool isMultiState, int numberOfStates)
         {
-            _CultureInfo = cultureInfo;
             Key = key;
             Name = name;
             IsTwoState = isTwoState;
@@ -51,9 +48,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is MetasysEnumeration)
+            if (obj != null && obj is MetasysEnumeration enumeration)
             {
-                var o = (MetasysEnumeration)obj;
+                var o = enumeration;
                 return this.Key == o.Key && this.Name == o.Name && this.IsTwoState == o.IsTwoState
                     && this.IsMultiState == o.IsMultiState && this.NumberOfStates == o.NumberOfStates;
             }

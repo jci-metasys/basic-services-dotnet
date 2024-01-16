@@ -77,7 +77,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms/{mockid}/annotations")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            PrintMessage($"TestGetAlarmAnnotationsMissingValuesThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetAlarmAnnotationsMissingValuesThrowsException: {e.Message}");
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms/{mockid}/annotations")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            PrintMessage($"TestGetAlarmAnnotationsUnauthorizedThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetAlarmAnnotationsUnauthorizedThrowsException: {e.Message}");
         }
     }
 }

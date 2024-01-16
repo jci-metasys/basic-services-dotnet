@@ -20,8 +20,6 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public sealed class SpaceServiceProvider : BasicServiceProvider, ISpaceService
     {
-        private readonly CultureInfo _CultureInfo = new CultureInfo("en-US");
-
         /// <summary>
         /// Initializes a new instance of <see cref="NetworkDeviceServiceProvider"/> with supplied data.
         /// </summary>

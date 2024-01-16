@@ -30,7 +30,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            Assert.AreEqual(0, samples.Items.Count());
+            Assert.AreEqual(0, samples.Items.Count);
             Assert.AreEqual(0, samples.Total);
         }
 
@@ -43,7 +43,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            PrintMessage($"TestGetSamplesNotFoundThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetSamplesNotFoundThrowsException: {e.Message}");
         }
        
         [Test]
@@ -144,7 +144,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                  .WithVerb(HttpMethod.Get)
                  .Times(1);
-            PrintMessage($"TestGetSamplesMissingItemsThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetSamplesMissingItemsThrowsException: {e.Message}");
         }
 
         [Test]
@@ -166,7 +166,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                  .WithVerb(HttpMethod.Get)
                  .Times(1);
-            PrintMessage($"TestGetSamplesMissingValuesThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetSamplesMissingValuesThrowsException: {e.Message}");
         }
 
         [Test]
@@ -178,7 +178,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/attributes/85/samples")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            PrintMessage($"TestGetSamplesUnauthorizedThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetSamplesUnauthorizedThrowsException: {e.Message}");
         }
     }
 }

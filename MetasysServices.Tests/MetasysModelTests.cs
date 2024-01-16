@@ -10,11 +10,7 @@ namespace MetasysServices.Tests
 {
     public class MetasysModelTests
     {
-        private const string Reliable = "reliabilityEnumSet.reliable";
-        private const string PriorityNone = "writePriorityEnumSet.priorityNone";
-        private const string Unsupported = "statusEnumSet.unsupportedObjectType";
-        private const string Array = "dataTypeEnumSet.arrayDataType";
-        private static readonly CultureInfo testCulture = new CultureInfo("en-US");
+        private static readonly CultureInfo testCulture = new("en-US");
 
         [Test]
         public void TestAccessTokenEqual()
@@ -70,8 +66,8 @@ namespace MetasysServices.Tests
                 "\"minItems\": 6,",
                 "\"maxItems\": 6 }");
             string commandCopy = command.Clone().ToString();
-            Command cmd = new Command(JToken.Parse(command), testCulture, ApiVersion.v2);
-            Command cmdCopy = new Command(JToken.Parse(commandCopy), testCulture, ApiVersion.v2);
+            Command cmd = new(JToken.Parse(command), testCulture, ApiVersion.v2);
+            Command cmdCopy = new(JToken.Parse(commandCopy), testCulture, ApiVersion.v2);
 
             Assert.AreEqual(cmd.GetHashCode(), cmdCopy.GetHashCode());
             Assert.AreEqual(cmd, cmdCopy);
@@ -110,13 +106,13 @@ namespace MetasysServices.Tests
                     $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
             }
             string objCopy = obj.Clone().ToString();
-            MetasysObject child = new MetasysObject(JToken.Parse(obj2), version, null, testCulture);
-            MetasysObject childCopy = new MetasysObject(JToken.Parse(obj2), version, null, testCulture);
-            List<MetasysObject> childlist = new List<MetasysObject>() { child };
-            List<MetasysObject> childlistCopy = new List<MetasysObject>() { childCopy };
+            MetasysObject child = new(JToken.Parse(obj2), version, null);
+            MetasysObject childCopy = new(JToken.Parse(obj2), version, null);
+            List<MetasysObject> childlist = new() { child };
+            List<MetasysObject> childlistCopy = new() { childCopy };
 
-            MetasysObject metObj = new MetasysObject(JToken.Parse(obj), version, childlist, testCulture);
-            MetasysObject metObjCopy = new MetasysObject(JToken.Parse(objCopy), version, childlistCopy, testCulture);
+            MetasysObject metObj = new(JToken.Parse(obj), version, childlist);
+            MetasysObject metObjCopy = new(JToken.Parse(objCopy), version, childlistCopy);
 
             Assert.AreEqual(metObj.GetHashCode(), metObjCopy.GetHashCode());
             Assert.AreEqual(metObj, metObjCopy);
@@ -126,9 +122,9 @@ namespace MetasysServices.Tests
         [Test]
         public void TestMetasysObjectTypeEqual()
         {
-            MetasysObjectType type = new MetasysObjectType(185, "objectTypeEnumSet.n50Class",
+            MetasysObjectType type = new(185, "objectTypeEnumSet.n50Class",
                 "NAE55-NIE59", testCulture);
-            MetasysObjectType typeCopy = new MetasysObjectType(185, "objectTypeEnumSet.n50Class",
+            MetasysObjectType typeCopy = new(185, "objectTypeEnumSet.n50Class",
                 "NAE55-NIE59", testCulture);
             Assert.AreEqual(type.GetHashCode(), typeCopy.GetHashCode());
             Assert.AreEqual(type, typeCopy);
@@ -137,8 +133,8 @@ namespace MetasysServices.Tests
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
         public void TestVariantArrayEqual(ApiVersion version) {
-            Guid id = new Guid("11111111-2222-3333-4444-555555555555");
-            Guid idCopy = new Guid("11111111-2222-3333-4444-555555555555");
+            Guid id = new("11111111-2222-3333-4444-555555555555");
+            Guid idCopy = new("11111111-2222-3333-4444-555555555555");
             string json1, json2;
             if (version < ApiVersion.v3) {
                 json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
@@ -147,8 +143,8 @@ namespace MetasysServices.Tests
                 json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
                 json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
             }
-            Variant v = new Variant(id, JToken.Parse(json1), "attr", testCulture, version);
-            Variant vCopy = new Variant(idCopy, JToken.Parse(json2), "attr", testCulture, version);
+            Variant v = new(id, JToken.Parse(json1), "attr", testCulture, version);
+            Variant vCopy = new(idCopy, JToken.Parse(json2), "attr", testCulture, version);
             Assert.AreEqual(v.GetHashCode(), vCopy.GetHashCode());
             Assert.AreEqual(v, vCopy);
         }
@@ -156,8 +152,8 @@ namespace MetasysServices.Tests
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
         public void TestVariantEqual(ApiVersion version) {
-            Guid id = new Guid("11111111-2222-3333-4444-555555555555");
-            Guid idCopy = new Guid("11111111-2222-3333-4444-555555555555");
+            Guid id = new("11111111-2222-3333-4444-555555555555");
+            Guid idCopy = new("11111111-2222-3333-4444-555555555555");
             string data;
             if (version < ApiVersion.v3) {
                 data = @"{
@@ -182,8 +178,8 @@ namespace MetasysServices.Tests
             }
             string dataCopy = data.Clone().ToString();
 
-            Variant v = new Variant(id, JToken.Parse(data), "presentValue", testCulture, version);
-            Variant vCopy = new Variant(idCopy, JToken.Parse(dataCopy), "presentValue", testCulture, version);
+            Variant v = new(id, JToken.Parse(data), "presentValue", testCulture, version);
+            Variant vCopy = new(idCopy, JToken.Parse(dataCopy), "presentValue", testCulture, version);
             Assert.AreEqual(v.GetHashCode(), vCopy.GetHashCode());
             Assert.AreEqual(v, vCopy);
         }
@@ -191,8 +187,8 @@ namespace MetasysServices.Tests
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
         public void TestVariantMultipleEqual(ApiVersion version) {
-            Guid id = new Guid("11111111-2222-3333-4444-555555555555");
-            Guid idCopy = new Guid("11111111-2222-3333-4444-555555555555");
+            Guid id = new("11111111-2222-3333-4444-555555555555");
+            Guid idCopy = new("11111111-2222-3333-4444-555555555555");
             string json;
             if (version < ApiVersion.v3) {
                 json = @"{
@@ -207,13 +203,13 @@ namespace MetasysServices.Tests
                         }
                     }";
             }
-            Variant v = new Variant(id, JToken.Parse(json), "attr", testCulture, version);
-            Variant vCopy = new Variant(idCopy, JToken.Parse(json), "attr", testCulture, version);
-            List<Variant> vlist = new List<Variant>() { v };
-            List<Variant> vlistCopy = new List<Variant>() { vCopy };
+            Variant v = new(id, JToken.Parse(json), "attr", testCulture, version);
+            Variant vCopy = new(idCopy, JToken.Parse(json), "attr", testCulture, version);
+            List<Variant> vlist = new() { v };
+            List<Variant> vlistCopy = new() { vCopy };
 
-            VariantMultiple vm = new VariantMultiple(id, vlist);
-            VariantMultiple vmCopy = new VariantMultiple(idCopy, vlistCopy);
+            VariantMultiple vm = new(id, vlist);
+            VariantMultiple vmCopy = new(idCopy, vlistCopy);
 
             Assert.AreEqual(vm.GetHashCode(), vmCopy.GetHashCode());
             Assert.AreEqual(vm, vmCopy);
@@ -272,8 +268,8 @@ namespace MetasysServices.Tests
                     "}],",
                 "\"minItems\": 1,",
                 "\"maxItems\": 1 }");
-            Command cmd1 = new Command(JToken.Parse(command1), testCulture, ApiVersion.v2);
-            Command cmd2 = new Command(JToken.Parse(command2), testCulture, ApiVersion.v2);
+            Command cmd1 = new(JToken.Parse(command1), testCulture, ApiVersion.v2);
+            Command cmd2 = new(JToken.Parse(command2), testCulture, ApiVersion.v2);
 
             Assert.AreNotEqual(cmd1.GetHashCode(), cmd2.GetHashCode());
             Assert.AreNotEqual(cmd1, cmd2);
@@ -323,15 +319,15 @@ namespace MetasysServices.Tests
                     "\"description\": \"description3\",",
                     $"\"type\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
             }
-            MetasysObject child = new MetasysObject(JToken.Parse(obj3), version, null, testCulture);
-            MetasysObject child2 = new MetasysObject(JToken.Parse(obj3), version, null, testCulture);
-            List<MetasysObject> childlist = new List<MetasysObject>() { child };
-            List<MetasysObject> childlist2 = new List<MetasysObject>() { child2 };
+            MetasysObject child = new(JToken.Parse(obj3), version, null);
+            MetasysObject child2 = new(JToken.Parse(obj3), version, null);
+            List<MetasysObject> childlist = new() { child };
+            List<MetasysObject> childlist2 = new() { child2 };
 
-            MetasysObject metObj = new MetasysObject(JToken.Parse(obj), version, childlist, testCulture);
-            MetasysObject metObj2 = new MetasysObject(JToken.Parse(obj2), version, childlist2, testCulture);
-            MetasysObject metObj3 = new MetasysObject(JToken.Parse(obj), version, null, testCulture);
-            MetasysObject metObj4 = new MetasysObject(JToken.Parse(obj2), version, null, testCulture);
+            MetasysObject metObj = new(JToken.Parse(obj), version, childlist);
+            MetasysObject metObj2 = new(JToken.Parse(obj2), version, childlist2);
+            MetasysObject metObj3 = new(JToken.Parse(obj), version, null);
+            MetasysObject metObj4 = new(JToken.Parse(obj2), version, null);
 
             Assert.AreNotEqual(metObj.GetHashCode(), metObj2.GetHashCode());
             Assert.AreNotEqual(metObj, metObj2);
@@ -342,9 +338,9 @@ namespace MetasysServices.Tests
         [Test]
         public void TestMetasysObjectTypeDoesNotEqual()
         {
-            MetasysObjectType type = new MetasysObjectType(185, "objectTypeEnumSet.n50Class",
+            MetasysObjectType type = new(185, "objectTypeEnumSet.n50Class",
                 "NAE55-NIE59", testCulture);
-            MetasysObjectType type2 = new MetasysObjectType(195, "objectTypeEnumSet.fieldBusClass",
+            MetasysObjectType type2 = new(195, "objectTypeEnumSet.fieldBusClass",
                 "Field Bus MSTP", testCulture);
             Assert.AreNotEqual(type.GetHashCode(), type2.GetHashCode());
             Assert.AreNotEqual(type, type2);
@@ -353,8 +349,8 @@ namespace MetasysServices.Tests
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
         public void TestVariantArrayDoesNotEqual(ApiVersion version) {
-            Guid id = new Guid("11111111-2222-3333-4444-555555555555");
-            Guid id2 = new Guid("11111111-2222-3333-4444-555555555555");
+            Guid id = new("11111111-2222-3333-4444-555555555555");
+            Guid id2 = new("11111111-2222-3333-4444-555555555555");
 
             string json1, json2;
             if (version < ApiVersion.v3) {
@@ -364,8 +360,8 @@ namespace MetasysServices.Tests
                 json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
                 json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 3 ] }}";
             }
-            Variant v = new Variant(id, JToken.Parse(json1), "attr", testCulture, version);
-            Variant v2 = new Variant(id2, JToken.Parse(json2), "attr", testCulture, version);
+            Variant v = new(id, JToken.Parse(json1), "attr", testCulture, version);
+            Variant v2 = new(id2, JToken.Parse(json2), "attr", testCulture, version);
             Assert.AreNotEqual(v.GetHashCode(), v2.GetHashCode());
             Assert.AreNotEqual(v, v2);
         }
@@ -373,7 +369,7 @@ namespace MetasysServices.Tests
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
         public void TestVariantDoesNotEqual(ApiVersion version) {
-            Guid id = new Guid("11111111-2222-3333-4444-555555555555");
+            Guid id = new("11111111-2222-3333-4444-555555555555");
             string data, data2, data3;
             if (version < ApiVersion.v3) {
                 data = @"{
@@ -431,9 +427,9 @@ namespace MetasysServices.Tests
                     }";
             }
 
-            Variant v = new Variant(id, JToken.Parse(data), "presentValue", testCulture, version);
-            Variant v2 = new Variant(id, JToken.Parse(data2), "presentValue", testCulture, version);
-            Variant v3 = new Variant(id, JToken.Parse(data3), "presentValue", testCulture, version);
+            Variant v = new(id, JToken.Parse(data), "presentValue", testCulture, version);
+            Variant v2 = new(id, JToken.Parse(data2), "presentValue", testCulture, version);
+            Variant v3 = new(id, JToken.Parse(data3), "presentValue", testCulture, version);
             Assert.AreNotEqual(v.GetHashCode(), v2.GetHashCode());
             Assert.AreNotEqual(v, v2);
             Assert.AreNotEqual(v.GetHashCode(), v3.GetHashCode());
@@ -443,8 +439,8 @@ namespace MetasysServices.Tests
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
         public void TestVariantMultipleDoesNotEqual(ApiVersion version) {
-            Guid id = new Guid("11111111-2222-3333-4444-555555555555");
-            Guid id2 = new Guid("11111111-2222-3333-4444-555555555555");
+            Guid id = new("11111111-2222-3333-4444-555555555555");
+            Guid id2 = new("11111111-2222-3333-4444-555555555555");
             string json1, json2;
             if (version < ApiVersion.v3) {
                 json1 = @"{
@@ -469,13 +465,13 @@ namespace MetasysServices.Tests
                         }
                     }";
             }
-            Variant v = new Variant(id, JToken.Parse(json1), "attr", testCulture, version);
-            Variant v2 = new Variant(id2, JToken.Parse(json2), "attr", testCulture, version);
-            List<Variant> vlist = new List<Variant>() { v };
-            List<Variant> vlist2 = new List<Variant>() { v2 };
+            Variant v = new(id, JToken.Parse(json1), "attr", testCulture, version);
+            Variant v2 = new(id2, JToken.Parse(json2), "attr", testCulture, version);
+            List<Variant> vlist = new() { v };
+            List<Variant> vlist2 = new() { v2 };
 
-            VariantMultiple vm = new VariantMultiple(id, vlist);
-            VariantMultiple vm2 = new VariantMultiple(id2, vlist2);
+            VariantMultiple vm = new(id, vlist);
+            VariantMultiple vm2 = new(id2, vlist2);
 
             Assert.AreNotEqual(vm.GetHashCode(), vm2.GetHashCode());
             Assert.AreNotEqual(vm, vm2);

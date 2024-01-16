@@ -10,12 +10,12 @@ namespace MetasysServices.Tests
 {
     public abstract class MetasysClientTestsBase
     {
-        protected static readonly Guid mockid = new Guid("11111111-2222-3333-4444-555555555555");
+        protected static readonly Guid mockid = new("11111111-2222-3333-4444-555555555555");
         protected const string date1 = "2030-01-01T00:00:00Z";
         protected static readonly DateTime dateTime1 = DateTime.Parse(date1).ToUniversalTime();
         protected const string date2 = "2030-01-01T00:01:00Z";
         protected static readonly DateTime dateTime2 = DateTime.Parse(date2).ToUniversalTime();
-        protected static readonly CultureInfo testCulture = new CultureInfo("en-US");
+        protected static readonly CultureInfo testCulture = new("en-US");
 
         protected MetasysClient client;
         protected HttpTest httpTest;
@@ -23,7 +23,7 @@ namespace MetasysServices.Tests
         /// <summary>
         /// Default timeline filter by one day.
         /// </summary>
-        protected TimeFilter TimeFilter = new TimeFilter
+        protected TimeFilter TimeFilter = new()
         {
             StartTime = new DateTime(2020, 1, 20),
             EndTime = new DateTime(2020, 1, 21)
@@ -32,7 +32,7 @@ namespace MetasysServices.Tests
         /// <summary>
         /// Default alarm filter by one month.
         /// </summary>
-        protected AlarmFilter AlarmFilter = new AlarmFilter
+        protected AlarmFilter AlarmFilter = new()
         {
             StartTime = new DateTime(2019, 12, 20),
             EndTime = new DateTime(2020, 1, 21)
@@ -110,7 +110,7 @@ namespace MetasysServices.Tests
         /// <summary>
         /// Default audit filter by one month.
         /// </summary>
-        protected AuditFilter AuditFilter = new AuditFilter
+        protected AuditFilter AuditFilter = new()
         {
             StartTime = new DateTime(2019, 12, 20),
             EndTime = new DateTime(2020, 1, 21)
@@ -175,7 +175,7 @@ namespace MetasysServices.Tests
         /// <summary>
         /// Use this method to control the "dotnet test" console message printing.
         /// </summary>
-        protected void PrintMessage(string message, bool isException)
+        protected static void PrintMessage(string message)
         {
             Console.Error.WriteLine(message);
         }

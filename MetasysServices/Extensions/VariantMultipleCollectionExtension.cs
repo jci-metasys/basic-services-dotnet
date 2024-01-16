@@ -20,11 +20,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public static Variant FindAttributeByName(this VariantMultiple source, string name)
         {
             var value = source.Values.SingleOrDefault(s => s.Attribute == name);
-            if (value == null)
-            {
-                throw new MetasysException($"Attribute not found in the Variant collection ({name}).");
-            }
-            return value;
+            return value ?? throw new MetasysException($"Attribute not found in the Variant collection ({name}).");
         }
 
         /// <summary>
@@ -36,11 +32,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public static VariantMultiple FindById(this IEnumerable<VariantMultiple> source, Guid id)
         {
             var multiples = source.FirstOrDefault(f => f.Id == id);
-            if (multiples == null)
-            {
-                throw new Exception($"VariantMultiple not found in the collection ({id}).");
-            }
-            return multiples;
+            return multiples ?? throw new Exception($"VariantMultiple not found in the collection ({id}).");
         }
     }
 }

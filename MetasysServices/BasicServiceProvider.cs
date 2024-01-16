@@ -382,7 +382,7 @@ namespace JohnsonControls.Metasys.BasicServices
                             String name = (itm.ContainsKey("name")) ? itm["name"].ToString() : String.Empty;
                             int value = int.Parse((itm.ContainsKey("value")) ? itm["value"].ToString() : Convert.ToString(-1));
 
-                            var enumValue = new MetasysEnumValue(key, name, value, Culture);
+                            var enumValue = new MetasysEnumValue(key, name, value);
                             enums.Add(enumValue);
                         }
                     }

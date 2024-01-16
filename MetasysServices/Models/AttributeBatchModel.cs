@@ -6,13 +6,13 @@ namespace JohnsonControls.Metasys.BasicServices
 {
     internal class AttributeBatchModel
     {
-        public string method { get; set; }
-        public List<Request> requests { get; set; }
+        public string Method { get; set; }
+        public List<Request> Requests { get; set; }
     }
 
     internal class Request
     {
-        public string id { get; set; }
-        public string relativeUrl { get; set; }
+        public string Id { get; set; }
+        public string RelativeUrl { get; set; }
     }
 }

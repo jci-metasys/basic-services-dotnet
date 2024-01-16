@@ -21,8 +21,6 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public sealed class NetworkDeviceServiceProvider : BasicServiceProvider, INetworkDeviceService
     {
-        private readonly CultureInfo _CultureInfo = new CultureInfo("en-US");
-
         /// <summary>
         /// Initializes a new instance of <see cref="NetworkDeviceServiceProvider"/> with supplied data.
         /// </summary>

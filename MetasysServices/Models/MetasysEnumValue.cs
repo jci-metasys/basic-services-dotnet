@@ -10,8 +10,6 @@ namespace JohnsonControls.Metasys.BasicServices
 
     public struct MetasysEnumValue
     {
-        private CultureInfo _CultureInfo;
-
         /// <summary>
         /// Key that identifies the Enumeration Value.
         /// </summary>
@@ -27,9 +25,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public int Value { private set; get; }
 
-        internal MetasysEnumValue(string key, string name, int value, CultureInfo cultureInfo = null)
+        internal MetasysEnumValue(string key, string name, int value)
         {
-            _CultureInfo = cultureInfo;
             Key = key;
             Name = name;
             Value = value;
@@ -40,9 +37,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is MetasysEnumValue)
+            if (obj != null && obj is MetasysEnumValue value)
             {
-                var o = (MetasysEnumValue)obj;
+                var o = value;
                 return this.Key == o.Key && this.Name == o.Name && this.Value == o.Value;
             }
             return false;

@@ -76,7 +76,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits/{mockid}/annotations")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            PrintMessage($"TestGetAuditAnnotationsMissingValuesThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetAuditAnnotationsMissingValuesThrowsException: {e.Message}");
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace MetasysServices.Tests
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/audits/{mockid}/annotations")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
-            PrintMessage($"TestGetAuditAnnotationsUnauthorizedThrowsException: {e.Message}", true);
+            PrintMessage($"TestGetAuditAnnotationsUnauthorizedThrowsException: {e.Message}");
         }
 
     }

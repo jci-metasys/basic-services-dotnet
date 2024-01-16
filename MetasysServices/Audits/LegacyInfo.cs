@@ -45,9 +45,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is LegacyInfo)
+            if (obj != null && obj is LegacyInfo info)
             {
-                var o = (LegacyInfo)obj;
+                var o = info;
                 // Compare each properties one by one for better performance
                 return this.FullyQualifiedItemReference == o.FullyQualifiedItemReference
                     && this.ItemName == o.ItemName

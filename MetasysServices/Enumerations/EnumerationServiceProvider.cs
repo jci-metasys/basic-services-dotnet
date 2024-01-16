@@ -22,8 +22,6 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </summary>
     public sealed class EnumerationServiceProvider : BasicServiceProvider, IEnumerationService
     {
-        private readonly CultureInfo _CultureInfo = new CultureInfo("en-US");
-
         /// <summary>
         /// Initializes a new instance of <see cref="NetworkDeviceServiceProvider"/> with supplied data.
         /// </summary>
@@ -69,7 +67,7 @@ namespace JohnsonControls.Metasys.BasicServices
                                 bool isMultiState = bool.Parse((itm.ContainsKey("isMultiState")) ? itm["isMultiState"].ToString() : Convert.ToString(false));
                                 int numberOfStates = int.Parse((itm.ContainsKey("numberOfStates")) ? itm["numberOfStates"].ToString() : Convert.ToString(0));
 
-                                var enumItem = new MetasysEnumeration(key, name, isTwoState, isMultiState, numberOfStates, Culture);
+                                var enumItem = new MetasysEnumeration(key, name, isTwoState, isMultiState, numberOfStates);
                                 enums.Add(enumItem);
                             }
                         }

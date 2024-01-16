@@ -40,9 +40,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is AuditData)
+            if (obj != null && obj is AuditData data)
             {
-                var o = (AuditData)obj;
+                var o = data;
                 // Compare each properties one by one for better performance
                 return this.Unit == o.Unit
                     && this.Precision == o.Precision

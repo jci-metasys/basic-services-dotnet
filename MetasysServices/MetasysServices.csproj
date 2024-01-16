@@ -15,6 +15,7 @@
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
     <PackageReleaseNotes>- Made change to MetasysObject to fix an issue related to the property ObjectType that was never populated.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<PackageReadmeFile>readme.md</PackageReadmeFile>
     <Version>6.0.1</Version>    
   </PropertyGroup>
 
@@ -42,6 +43,10 @@
     <None Remove="Resources\MetasysResources.zh-Hant.resources" />
     <None Remove="Resources\MetasysResources.zh-TW.resources" />
     <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+	<None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
