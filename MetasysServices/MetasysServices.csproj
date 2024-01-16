@@ -15,7 +15,7 @@
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
     <PackageReleaseNotes>- Made change to MetasysObject to fix an issue related to the property ObjectType that was never populated.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-	<PackageReadmeFile>readme.md</PackageReadmeFile>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>6.0.1</Version>    
   </PropertyGroup>
 
