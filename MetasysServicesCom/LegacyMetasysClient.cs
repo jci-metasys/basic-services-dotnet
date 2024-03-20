@@ -193,6 +193,13 @@ namespace JohnsonControls.Metasys.ComServices
             PagedResult<Alarm> alarmItems = Client.Alarms.Get(mapAlarmFilter);
             return Mapper.Map<IComPagedResult>(alarmItems);
         }
+        /// <inheritdoc />
+        public IComPagedResult GetAlarms(IComAlarmFilterV4Plus alarmFilterV4Plus)
+        {
+            var mapAlarmFilterV4Plus = Mapper.Map<AlarmFilterV4Plus>(alarmFilterV4Plus);
+            PagedResult<Alarm> alarmItems = Client.Alarms.Get(mapAlarmFilterV4Plus);
+            return Mapper.Map<IComPagedResult>(alarmItems);
+        }
 
         //GetSingleAlarm ------------------------------------------------------------------------------------------------------------
         /// <inheritdoc />

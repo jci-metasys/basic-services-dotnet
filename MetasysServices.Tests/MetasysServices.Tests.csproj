@@ -5,7 +5,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <Version>6.0.1</Version>
+    <Version>6.0.2</Version>
 
     <Copyright>© 2020-2024 Johnson Controls</Copyright>
   </PropertyGroup>

@@ -93,13 +93,19 @@ namespace JohnsonControls.Metasys.ComServices
 
         #region "Alarms" //---------------------------------------------------------------------------------------------------------------------------
         /// <summary>
-        /// Retrieves a collection of alarms.
+        /// Retrieves a collection of alarms (for v2 or v3).
         /// </summary>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms with details.</returns>
         IComPagedResult GetAlarms(IComFilterAlarm alarmFilter);
+        /// <summary>
+        /// Retrieves a collection of alarm (for v4+).
+        /// </summary>
+        /// <param name="alarmFilterV4Plus">The alarm model to filter alarms.</param>
+        /// <returns>The list of alarms with details.</returns>
+        IComPagedResult GetAlarms(IComAlarmFilterV4Plus alarmFilterV4Plus);
 
-       /// <summary>
+        /// <summary>
         /// Retrieves the specified alarm.
         /// </summary>
         /// <param name="alarmId">The identifier of the alarm.</param>
