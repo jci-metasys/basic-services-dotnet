@@ -38,24 +38,67 @@ namespace JohnsonControls.Metasys.BasicServices
         public async Task<PagedResult<Alarm>> GetAsync(AlarmFilter alarmFilter)
         {
             CheckVersion(Version);
-            
-            List<Alarm> alarms = new List<Alarm>();
-            var response = await GetPagedResultsAsync<Alarm>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);
-            if (Version > ApiVersion.v2) 
+            // This method is valid only for API v2 or v3.
+            if (Version == ApiVersion.v2 || Version == ApiVersion.v3)
             {
-                foreach (var item in response.Items) {
-                    alarms.Add(CreateItem(item));
+                List<Alarm> alarms = new List<Alarm>();
+                var response = await GetPagedResultsAsync<Alarm>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);
+                if (Version > ApiVersion.v2) 
+                {
+                    foreach (var item in response.Items) {
+                        alarms.Add(CreateItem(item));
+                    }
+                    response = new PagedResult<Alarm> {
+                    Items = alarms,
+                    CurrentPage = response.CurrentPage,
+                    PageCount = response.PageCount,
+                    PageSize = response.PageSize,
+                    Total = response.Total
+                    };
                 }
-                response = new PagedResult<Alarm> {
-                Items = alarms,
-                CurrentPage = response.CurrentPage,
-                PageCount = response.PageCount,
-                PageSize = response.PageSize,
-                Total = response.Total
-                };
-            }
-            return response;
+                return response;
+            } else
+            {
+                throw new MetasysUnsupportedApiVersion(Version.ToString());
+            };
         }
+
+        /// <inheritdoc/>
+        public PagedResult<Alarm> Get(AlarmFilterV4Plus alarmFilter)
+        {
+            return GetAsync(alarmFilter).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<PagedResult<Alarm>> GetAsync(AlarmFilterV4Plus alarmFilter)
+        {
+            CheckVersion(Version);
+            // This method is valid only from API v4 on.
+            if (Version >= ApiVersion.v4)
+            {
+                List<Alarm> alarms = new List<Alarm>();
+                var response = await GetPagedResultsAsync<Alarm>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);
+                if (Version > ApiVersion.v2)
+                {
+                    foreach (var item in response.Items)
+                    {
+                        alarms.Add(CreateItem(item));
+                    }
+                    response = new PagedResult<Alarm>
+                    {
+                        Items = alarms,
+                        CurrentPage = response.CurrentPage,
+                        PageCount = response.PageCount,
+                        PageSize = response.PageSize,
+                        Total = response.Total
+                    };
+                }
+                return response;
+            } else
+            {
+                throw new MetasysUnsupportedApiVersion(Version.ToString());
+            };
+        }
+
 
         //FindById ------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>

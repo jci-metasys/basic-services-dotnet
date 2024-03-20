@@ -52,7 +52,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         // --------------------------------------------------------------------------------------------------
         /// <summary>
-        /// Retrieves a collection of alarms.
+        /// Retrieves a collection of alarms using API v2 or v3.
         /// </summary>
         /// <param name="alarmFilter">The alarm model to filter alarms.</param>
         /// <returns>The list of alarms with details.</returns>
@@ -60,6 +60,16 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <inheritdoc cref="IAlarmsService.Get(AlarmFilter)"/>
         Task<PagedResult<Alarm>> GetAsync(AlarmFilter alarmFilter);
+
+        /// <summary>
+        /// Retrieves a collection of alarms from API v4 on.
+        /// </summary>
+        /// <param name="alarmFilter">The alarm model to filter alarms.</param>
+        /// <returns>The list of alarms with details.</returns>
+        PagedResult<Alarm> Get(AlarmFilterV4Plus alarmFilter);
+
+        /// <inheritdoc cref="IAlarmsService.Get(AlarmFilterV4Plus)"/>
+        Task<PagedResult<Alarm>> GetAsync(AlarmFilterV4Plus alarmFilter);
 
         // --------------------------------------------------------------------------------------------------
         /// <summary>

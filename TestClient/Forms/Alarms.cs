@@ -14,12 +14,13 @@ namespace MetasysServices_TestClient.Forms
 {
     public partial class Alarms : Form
     {
-        private MetasysClient _client;
         public MetasysClient Client
         {
             get { return _client; }
-            set { _client = value; }
+            set { _client = value; }      
         }
+        private MetasysClient _client;
+
 
         public Alarms()
         {
@@ -28,47 +29,93 @@ namespace MetasysServices_TestClient.Forms
         public void InitForm(MetasysClient client, TabPage container)
         {
             _client = client;
-
+            
             TabMain.Visible = false;
             TabMain.Parent = container;
             TabMain.Dock = DockStyle.Fill;
             TabMain.Visible = true;
+            DtpGet_StartTime.Value = DateTime.Now.AddDays(-1);
+            DtpGet_EndTime.Value = DateTime.Now;
+            if (Client != null)
+            {
+                // The following params are validy only for v2 or v3
+                ChkGet_ExcludeAcknowledged.Visible = (_client.Version == ApiVersion.v2 || _client.Version == ApiVersion.v3);
+                ChkGet_ExcludeDiscarded.Visible = (_client.Version == ApiVersion.v2 || _client.Version == ApiVersion.v3);
+                // The following params are validy only from v4 on
+                LblGet_IncludeDiscarded.Visible = (_client.Version > ApiVersion.v3);
+                CmbGet_IncludeDiscarded.Visible = (_client.Version > ApiVersion.v3);
+                LblGet_IncludeAcknowledged.Visible = (_client.Version > ApiVersion.v3);
+                CmdGet_IncludeAcknowledged.Visible = (_client.Version > ApiVersion.v3);
+            }        
+                
         }
 
         private void BtnGet_Click(object sender, EventArgs e)
         {
             DgvGet.DataSource = null;
             bool noFilters = ChkGet_NoFilters.Checked;
+
             DateTime startTime = DtpGet_StartTime.Value;
             DateTime endTime = DtpGet_EndTime.Value;
-            bool excludeAcknowledged = ChkGet_ExcludeAcknowledged.Checked;
-            bool excludeDiscarded = ChkGet_ExcludeDiscarded.Checked;
+
+            int page;
+            if (!int.TryParse(TxtGet_Page.Text, out page))
+                page = -1;
+
+            int pageSize;
+            if (!int.TryParse(TxtGet_PageSize.Text, out pageSize))
+                pageSize = -1;
+
+
+            PagedResult<Alarm> result;
 
             if (_client != null )
             {
-                AlarmFilter alarmFilter;
-                if (!noFilters)
+                if (_client.Version == ApiVersion.v2 || _client.Version == ApiVersion.v3)
                 {
-                    alarmFilter = new AlarmFilter
+                    AlarmFilter alarmFilter = new AlarmFilter { };
+                    if (!noFilters)
                     {
-                        StartTime = startTime,
-                        EndTime = endTime,
-                        ExcludeAcknowledged = excludeAcknowledged,
-                        ExcludeDiscarded = excludeDiscarded
-                    };
-                }
-                else
+                        alarmFilter.StartTime = startTime;
+                        alarmFilter.EndTime = endTime;
+                        alarmFilter.ExcludeAcknowledged = ChkGet_ExcludeAcknowledged.Checked;
+                        alarmFilter.ExcludeDiscarded = ChkGet_ExcludeDiscarded.Checked;
+
+                        if (page > 0) alarmFilter.Page = page;
+                        if (pageSize > 0) alarmFilter.PageSize = pageSize;
+                    }
+                    // call the method
+                    result = _client.Alarms.Get(alarmFilter);
+                } else
                 {
-                    alarmFilter = new AlarmFilter { };
-                };
-                // call the method
-                PagedResult<Alarm> result = _client.Alarms.Get(alarmFilter);
+                    AlarmFilterV4Plus alarmFilterV4Plus = new AlarmFilterV4Plus { }; ;
+                    if (!noFilters)
+                    {
+                        alarmFilterV4Plus.StartTime = startTime;
+                        alarmFilterV4Plus.EndTime = endTime;
+
+                        if (CmbGet_IncludeDiscarded.SelectedIndex > 0)
+                            alarmFilterV4Plus.IncludeDiscarded = (CmbGet_IncludeDiscarded.SelectedIndex == 2);
+
+                        if (CmdGet_IncludeAcknowledged.SelectedIndex > 0)
+                            alarmFilterV4Plus.IncludeDiscarded = (CmdGet_IncludeAcknowledged.SelectedIndex == 2);
+
+                        if (page > 0) alarmFilterV4Plus.Page = page;
+                        if (pageSize > 0) alarmFilterV4Plus.PageSize = pageSize;
+                    }
+
+                    // call the method
+                    result = _client.Alarms.Get(alarmFilterV4Plus);
+                }
+
                 if (result != null)
                 {
                     if (result.PageCount > 0)
                     {
                         DgvGet.DataSource = result.Items;
-                    }
+                        LblGet_ItemCounter.Text = "Items: " + result.Items.Count.ToString();
+                    } else
+                        LblGet_ItemCounter.Text = "Items: 0";
                 }
             }
         }

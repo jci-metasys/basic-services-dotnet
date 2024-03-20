@@ -40,6 +40,8 @@ namespace MetasysServices_TestClient.Forms
 
             CmbGet_ActivityType.SelectedIndex = 0;
             CmbGet_Sort.SelectedIndex = 0;
+            CmbGet_IncludeDiscarded.SelectedIndex = 0;
+            CmdGet_IncludeAcknowledged.SelectedIndex = 0;
         }
 
         private void BtnGet_Click(object sender, EventArgs e)
@@ -47,24 +49,40 @@ namespace MetasysServices_TestClient.Forms
             DgvGet.DataSource = null;
             ActivityFilter activityFilter;
             if (!ChkGet_NoFilters.Checked)
-            {
-
-        
+            { 
                 activityFilter = new ActivityFilter();
 
                 activityFilter.ActivityType = CmbGet_ActivityType.Text;
                 activityFilter.StartTime = DtpGet_StartTime.Value;
                 activityFilter.EndTime = DtpGet_EndTime.Value;
 
-                //if (CmbGet_Sort.Text.Length > 0) { activityFilter.Sort = CmbGet_Sort.Text; };
-                //activityFilter.IncludeDiscarded = ChkGet_IncludeDiscarded.Checked;
-                //activityFilter.IncludeAcknowledged = ChkGet_IncludeAcknowledged.Checked;
-                //activityFilter.IncludeAcknowledgementRequired = ChkGet_IncludeAcknowledmentRequired.Checked;
-                //activityFilter.IncludeAcknowledgementNotRequired = ChkGet_IncludeAcknowledgementNotRequired.Checked;
+                if (CmbGet_Sort.Text.Length > 0) { activityFilter.Sort = CmbGet_Sort.Text; };
+                switch (CmbGet_IncludeDiscarded.SelectedIndex)
+                {
+                    case 1:
+                        activityFilter.IncludeDiscarded = false;
+                        break;
+                    case 2:
+                        activityFilter.IncludeDiscarded = true;
+                        break;
+                }
+                switch (CmdGet_IncludeAcknowledged.SelectedIndex)
+                {
+                    case 1:
+                        activityFilter.IncludeAcknowledged = false;
+                        break;
+                    case 2:
+                        activityFilter.IncludeAcknowledged = true;
+                        break;
+                }
+                // Only in case of 'alarm'
+                if (activityFilter.ActivityType == "alarm")
+                {
+                    activityFilter.IncludeAcknowledgementRequired = ChkGet_IncludeAcknowledmentRequired.Checked;
+                    activityFilter.IncludeAcknowledgementNotRequired = ChkGet_IncludeAcknowledgementNotRequired.Checked;
+                }
                 //if (filter_Type.Length > 0) { activityFilter.Type = filter_Type.Split(','); };
                 //if (filter_originApplication.Length > 0) { activityFilter.OriginApplication = filter_originApplication.Split(','); };
-
-
             }
             else
             {
@@ -75,7 +93,10 @@ namespace MetasysServices_TestClient.Forms
             if ((result != null) && (result.PageCount > 0))
             {
                 DgvGet.DataSource = result.Items;
-            }
+                LblGet_ItemCounter.Text = "Items: " + result.Items.Count.ToString();
+            } else
+                LblGet_ItemCounter.Text = "Items: 0";
+
 
         }
 
@@ -135,6 +156,11 @@ namespace MetasysServices_TestClient.Forms
                     }
                 }
             }
+        }
+
+        private void ChkGet_NoFilters_CheckedChanged(object sender, EventArgs e)
+        {
+            TlpGet_Filters.Enabled = !ChkGet_NoFilters.Checked;
         }
     }
 }

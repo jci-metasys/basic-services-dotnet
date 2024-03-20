@@ -5,16 +5,27 @@ using System.Text;
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
-    /// Filters to get activity items
+    /// Filters to get activity items.
     /// </summary>
-
-    public class ActivityFilter : TimeFilter
+    public class ActivityFilter
     {
         /// <summary> Limit the activities returned to a specific type. </summary>
         /// <remarks> Possible values: 'alarm', 'audit'. </remarks>
         public string ActivityType { get; set; }
 
-        /// <summary> The flag to include discarded activity. </summary>
+        /// <summary>
+        /// Earliest start time.
+        /// </summary>
+        public DateTime? StartTime { get; set; }
+
+        /// <summary>
+        /// Latest end time.
+        /// </summary>
+        public DateTime? EndTime { get; set; }
+
+        /// <summary> 
+        /// The flag to include discarded activity. 
+        /// </summary>
         public bool? IncludeDiscarded { get; set; }
 
         /// <summary> The criteria to use when sorting results. </summary>
@@ -40,10 +51,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary> Determines whether acknowledged alarms will be included in the results. Default: (missing). </summary>
         public bool? IncludeAcknowledged { get; set; }
 
-        /// <summary> Determines whether activities which can be acknowledged are included in the results. Default: true. </summary>
+        /// <summary> 
+        /// Determines whether activities which can be acknowledged are included in the results. Default: true. 
+        /// </summary>
+        /// <remarks> This property can to be used only in case ActivityType = 'alarm'. </remarks>
         public bool? IncludeAcknowledgementRequired { get; set; }
 
-        /// <summary> Determines whether activities which can not be acknowledged are included in the results. Default: true. </summary>
+        /// <summary> 
+        /// Determines whether activities which can not be acknowledged are included in the results. Default: true. 
+        /// </summary>
+        /// <remarks> This property can to be used only in case ActivityType = 'alarm'. </remarks>
         public bool? IncludeAcknowledgementNotRequired { get; set; }
 
         /// <summary> The authorization category of the requested activities. </summary>

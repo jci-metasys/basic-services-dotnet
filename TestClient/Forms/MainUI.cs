@@ -17,7 +17,7 @@ namespace MetasysServices_TestClient
     public partial class MainUI : Form
     {
         private MetasysClient _client;
-
+        private ApiVersion _version;
         private Boolean _enableTabs = false;
         private readonly Activities _frmActivities = new Activities();
         private readonly Alarms _frmAlarms = new Alarms();
@@ -65,13 +65,14 @@ namespace MetasysServices_TestClient
             //Define the 'language' to use 
             CultureInfo culture = new CultureInfo("en-US");
             //Create a new 'client' object
-            ApiVersion version = (ApiVersion)Enum.Parse(typeof(ApiVersion), cmbVersion.Text);
+            _version = (ApiVersion)Enum.Parse(typeof(ApiVersion), cmbVersion.Text);
             _ = int.TryParse(TxtTimeout.Text.ToString(), out int timeout);
-            _client = new MetasysClient(txtHost.Text, true, version, culture,timeout: timeout != 0 ? timeout: 300);
+            _client = new MetasysClient(txtHost.Text, true, _version, culture,timeout: timeout != 0 ? timeout: 300);
             if (_client != null)
             {
                 _frmActivities.Client = _client;
                 _frmAlarms.Client = _client;
+                _frmAlarms.InitForm(_client, TpgAlarm);
                 _frmAudits.Client = _client;
                 _frmEnumerations.Client = _client;
                 _frmEquipments.Client = _client;

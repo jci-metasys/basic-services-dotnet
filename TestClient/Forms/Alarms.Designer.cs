@@ -110,6 +110,15 @@ namespace MetasysServices_TestClient.Forms
             this.TxtDiscardAlarm_Result = new System.Windows.Forms.TextBox();
             this.LblDiscardAlarm_Result = new System.Windows.Forms.Label();
             this.LblDiscard_Title = new System.Windows.Forms.Label();
+            this.LblGet_IncludeDiscarded = new System.Windows.Forms.Label();
+            this.CmbGet_IncludeDiscarded = new System.Windows.Forms.ComboBox();
+            this.LblGet_IncludeAcknowledged = new System.Windows.Forms.Label();
+            this.CmdGet_IncludeAcknowledged = new System.Windows.Forms.ComboBox();
+            this.LblGet_ItemCounter = new System.Windows.Forms.Label();
+            this.LblGet_Page = new System.Windows.Forms.Label();
+            this.LblGet_PageSize = new System.Windows.Forms.Label();
+            this.TxtGet_Page = new System.Windows.Forms.TextBox();
+            this.TxtGet_PageSize = new System.Windows.Forms.TextBox();
             this.TabMain.SuspendLayout();
             this.TpgGet.SuspendLayout();
             this.TlpGet.SuspendLayout();
@@ -175,6 +184,7 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGet.Controls.Add(this.BtnGet, 2, 2);
             this.TlpGet.Controls.Add(this.DgvGet, 2, 3);
             this.TlpGet.Controls.Add(this.LblGet_Title, 0, 0);
+            this.TlpGet.Controls.Add(this.LblGet_ItemCounter, 1, 3);
             this.TlpGet.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGet.Location = new System.Drawing.Point(3, 3);
             this.TlpGet.Name = "TlpGet";
@@ -194,9 +204,9 @@ namespace MetasysServices_TestClient.Forms
             this.LblGet_Filters.Margin = new System.Windows.Forms.Padding(3);
             this.LblGet_Filters.MinimumSize = new System.Drawing.Size(140, 0);
             this.LblGet_Filters.Name = "LblGet_Filters";
-            this.LblGet_Filters.Size = new System.Drawing.Size(140, 52);
+            this.LblGet_Filters.Size = new System.Drawing.Size(140, 102);
             this.LblGet_Filters.TabIndex = 0;
-            this.LblGet_Filters.Text = "Filters:";
+            this.LblGet_Filters.Text = "FILTERS:";
             this.LblGet_Filters.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // TlpGet_Filters
@@ -214,13 +224,23 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGet_Filters.Controls.Add(this.DtpGet_EndTime, 3, 0);
             this.TlpGet_Filters.Controls.Add(this.ChkGet_ExcludeAcknowledged, 1, 1);
             this.TlpGet_Filters.Controls.Add(this.ChkGet_ExcludeDiscarded, 3, 1);
+            this.TlpGet_Filters.Controls.Add(this.LblGet_IncludeDiscarded, 0, 2);
+            this.TlpGet_Filters.Controls.Add(this.CmbGet_IncludeDiscarded, 1, 2);
+            this.TlpGet_Filters.Controls.Add(this.LblGet_IncludeAcknowledged, 2, 2);
+            this.TlpGet_Filters.Controls.Add(this.CmdGet_IncludeAcknowledged, 3, 2);
+            this.TlpGet_Filters.Controls.Add(this.LblGet_Page, 0, 3);
+            this.TlpGet_Filters.Controls.Add(this.LblGet_PageSize, 2, 3);
+            this.TlpGet_Filters.Controls.Add(this.TxtGet_Page, 1, 3);
+            this.TlpGet_Filters.Controls.Add(this.TxtGet_PageSize, 3, 3);
             this.TlpGet_Filters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGet_Filters.Location = new System.Drawing.Point(169, 25);
             this.TlpGet_Filters.Name = "TlpGet_Filters";
-            this.TlpGet_Filters.RowCount = 2;
-            this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TlpGet_Filters.Size = new System.Drawing.Size(610, 52);
+            this.TlpGet_Filters.RowCount = 4;
+            this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpGet_Filters.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.TlpGet_Filters.Size = new System.Drawing.Size(610, 102);
             this.TlpGet_Filters.TabIndex = 1;
             // 
             // LblGet_StartTime
@@ -230,7 +250,7 @@ namespace MetasysServices_TestClient.Forms
             this.LblGet_StartTime.Location = new System.Drawing.Point(3, 3);
             this.LblGet_StartTime.Margin = new System.Windows.Forms.Padding(3);
             this.LblGet_StartTime.Name = "LblGet_StartTime";
-            this.LblGet_StartTime.Size = new System.Drawing.Size(55, 20);
+            this.LblGet_StartTime.Size = new System.Drawing.Size(93, 20);
             this.LblGet_StartTime.TabIndex = 0;
             this.LblGet_StartTime.Text = "Start Time";
             this.LblGet_StartTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -238,19 +258,19 @@ namespace MetasysServices_TestClient.Forms
             // DtpGet_StartTime
             // 
             this.DtpGet_StartTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DtpGet_StartTime.Location = new System.Drawing.Point(64, 3);
+            this.DtpGet_StartTime.Location = new System.Drawing.Point(102, 3);
             this.DtpGet_StartTime.Name = "DtpGet_StartTime";
-            this.DtpGet_StartTime.Size = new System.Drawing.Size(239, 20);
+            this.DtpGet_StartTime.Size = new System.Drawing.Size(188, 20);
             this.DtpGet_StartTime.TabIndex = 1;
             // 
             // LblGet_EndTime
             // 
             this.LblGet_EndTime.AutoSize = true;
             this.LblGet_EndTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGet_EndTime.Location = new System.Drawing.Point(309, 3);
+            this.LblGet_EndTime.Location = new System.Drawing.Point(296, 3);
             this.LblGet_EndTime.Margin = new System.Windows.Forms.Padding(3);
             this.LblGet_EndTime.Name = "LblGet_EndTime";
-            this.LblGet_EndTime.Size = new System.Drawing.Size(52, 20);
+            this.LblGet_EndTime.Size = new System.Drawing.Size(116, 20);
             this.LblGet_EndTime.TabIndex = 2;
             this.LblGet_EndTime.Text = "End Time";
             this.LblGet_EndTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -258,18 +278,18 @@ namespace MetasysServices_TestClient.Forms
             // DtpGet_EndTime
             // 
             this.DtpGet_EndTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DtpGet_EndTime.Location = new System.Drawing.Point(367, 3);
+            this.DtpGet_EndTime.Location = new System.Drawing.Point(418, 3);
             this.DtpGet_EndTime.Name = "DtpGet_EndTime";
-            this.DtpGet_EndTime.Size = new System.Drawing.Size(240, 20);
+            this.DtpGet_EndTime.Size = new System.Drawing.Size(189, 20);
             this.DtpGet_EndTime.TabIndex = 3;
             // 
             // ChkGet_ExcludeAcknowledged
             // 
             this.ChkGet_ExcludeAcknowledged.AutoSize = true;
             this.ChkGet_ExcludeAcknowledged.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChkGet_ExcludeAcknowledged.Location = new System.Drawing.Point(64, 29);
+            this.ChkGet_ExcludeAcknowledged.Location = new System.Drawing.Point(102, 29);
             this.ChkGet_ExcludeAcknowledged.Name = "ChkGet_ExcludeAcknowledged";
-            this.ChkGet_ExcludeAcknowledged.Size = new System.Drawing.Size(239, 20);
+            this.ChkGet_ExcludeAcknowledged.Size = new System.Drawing.Size(188, 17);
             this.ChkGet_ExcludeAcknowledged.TabIndex = 4;
             this.ChkGet_ExcludeAcknowledged.Text = "Exclude Acknowledged";
             this.ChkGet_ExcludeAcknowledged.UseVisualStyleBackColor = true;
@@ -278,9 +298,9 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.ChkGet_ExcludeDiscarded.AutoSize = true;
             this.ChkGet_ExcludeDiscarded.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChkGet_ExcludeDiscarded.Location = new System.Drawing.Point(367, 29);
+            this.ChkGet_ExcludeDiscarded.Location = new System.Drawing.Point(418, 29);
             this.ChkGet_ExcludeDiscarded.Name = "ChkGet_ExcludeDiscarded";
-            this.ChkGet_ExcludeDiscarded.Size = new System.Drawing.Size(240, 20);
+            this.ChkGet_ExcludeDiscarded.Size = new System.Drawing.Size(189, 17);
             this.ChkGet_ExcludeDiscarded.TabIndex = 5;
             this.ChkGet_ExcludeDiscarded.Text = "Exclude Discarded";
             this.ChkGet_ExcludeDiscarded.UseVisualStyleBackColor = true;
@@ -291,7 +311,7 @@ namespace MetasysServices_TestClient.Forms
             this.ChkGet_NoFilters.Dock = System.Windows.Forms.DockStyle.Left;
             this.ChkGet_NoFilters.Location = new System.Drawing.Point(785, 25);
             this.ChkGet_NoFilters.Name = "ChkGet_NoFilters";
-            this.ChkGet_NoFilters.Size = new System.Drawing.Size(70, 52);
+            this.ChkGet_NoFilters.Size = new System.Drawing.Size(70, 102);
             this.ChkGet_NoFilters.TabIndex = 2;
             this.ChkGet_NoFilters.Text = "No Filters";
             this.ChkGet_NoFilters.UseVisualStyleBackColor = true;
@@ -301,7 +321,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.TlpGet.SetColumnSpan(this.BtnGet, 2);
             this.BtnGet.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGet.Location = new System.Drawing.Point(169, 83);
+            this.BtnGet.Location = new System.Drawing.Point(169, 133);
             this.BtnGet.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnGet.Name = "BtnGet";
             this.BtnGet.Size = new System.Drawing.Size(686, 23);
@@ -315,9 +335,9 @@ namespace MetasysServices_TestClient.Forms
             this.DgvGet.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.TlpGet.SetColumnSpan(this.DgvGet, 2);
             this.DgvGet.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGet.Location = new System.Drawing.Point(169, 112);
+            this.DgvGet.Location = new System.Drawing.Point(169, 162);
             this.DgvGet.Name = "DgvGet";
-            this.DgvGet.Size = new System.Drawing.Size(686, 479);
+            this.DgvGet.Size = new System.Drawing.Size(686, 429);
             this.DgvGet.TabIndex = 4;
             // 
             // LblGet_Title
@@ -1190,6 +1210,109 @@ namespace MetasysServices_TestClient.Forms
             this.LblDiscard_Title.Text = "Allows for discarding an alarm.";
             this.LblDiscard_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // LblGet_IncludeDiscarded
+            // 
+            this.LblGet_IncludeDiscarded.AutoSize = true;
+            this.LblGet_IncludeDiscarded.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGet_IncludeDiscarded.Location = new System.Drawing.Point(3, 52);
+            this.LblGet_IncludeDiscarded.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGet_IncludeDiscarded.Name = "LblGet_IncludeDiscarded";
+            this.LblGet_IncludeDiscarded.Size = new System.Drawing.Size(93, 21);
+            this.LblGet_IncludeDiscarded.TabIndex = 19;
+            this.LblGet_IncludeDiscarded.Text = "Include Discarded";
+            this.LblGet_IncludeDiscarded.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // CmbGet_IncludeDiscarded
+            // 
+            this.CmbGet_IncludeDiscarded.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CmbGet_IncludeDiscarded.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CmbGet_IncludeDiscarded.FormattingEnabled = true;
+            this.CmbGet_IncludeDiscarded.Items.AddRange(new object[] {
+            "<null>",
+            "false",
+            "true"});
+            this.CmbGet_IncludeDiscarded.Location = new System.Drawing.Point(102, 52);
+            this.CmbGet_IncludeDiscarded.Name = "CmbGet_IncludeDiscarded";
+            this.CmbGet_IncludeDiscarded.Size = new System.Drawing.Size(188, 21);
+            this.CmbGet_IncludeDiscarded.TabIndex = 20;
+            // 
+            // LblGet_IncludeAcknowledged
+            // 
+            this.LblGet_IncludeAcknowledged.AutoSize = true;
+            this.LblGet_IncludeAcknowledged.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGet_IncludeAcknowledged.Location = new System.Drawing.Point(296, 52);
+            this.LblGet_IncludeAcknowledged.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGet_IncludeAcknowledged.Name = "LblGet_IncludeAcknowledged";
+            this.LblGet_IncludeAcknowledged.Size = new System.Drawing.Size(116, 21);
+            this.LblGet_IncludeAcknowledged.TabIndex = 21;
+            this.LblGet_IncludeAcknowledged.Text = "Include Acknowledged";
+            this.LblGet_IncludeAcknowledged.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // CmdGet_IncludeAcknowledged
+            // 
+            this.CmdGet_IncludeAcknowledged.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CmdGet_IncludeAcknowledged.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CmdGet_IncludeAcknowledged.FormattingEnabled = true;
+            this.CmdGet_IncludeAcknowledged.Items.AddRange(new object[] {
+            "<null>",
+            "false",
+            "true"});
+            this.CmdGet_IncludeAcknowledged.Location = new System.Drawing.Point(418, 52);
+            this.CmdGet_IncludeAcknowledged.Name = "CmdGet_IncludeAcknowledged";
+            this.CmdGet_IncludeAcknowledged.Size = new System.Drawing.Size(189, 21);
+            this.CmdGet_IncludeAcknowledged.TabIndex = 22;
+            // 
+            // LblGet_ItemCounter
+            // 
+            this.LblGet_ItemCounter.AutoSize = true;
+            this.LblGet_ItemCounter.Dock = System.Windows.Forms.DockStyle.Top;
+            this.LblGet_ItemCounter.Location = new System.Drawing.Point(23, 162);
+            this.LblGet_ItemCounter.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGet_ItemCounter.Name = "LblGet_ItemCounter";
+            this.LblGet_ItemCounter.Size = new System.Drawing.Size(140, 13);
+            this.LblGet_ItemCounter.TabIndex = 7;
+            this.LblGet_ItemCounter.Text = "Items:";
+            // 
+            // LblGet_Page
+            // 
+            this.LblGet_Page.AutoSize = true;
+            this.LblGet_Page.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGet_Page.Location = new System.Drawing.Point(3, 79);
+            this.LblGet_Page.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGet_Page.Name = "LblGet_Page";
+            this.LblGet_Page.Size = new System.Drawing.Size(93, 20);
+            this.LblGet_Page.TabIndex = 23;
+            this.LblGet_Page.Text = "Page";
+            this.LblGet_Page.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LblGet_PageSize
+            // 
+            this.LblGet_PageSize.AutoSize = true;
+            this.LblGet_PageSize.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGet_PageSize.Location = new System.Drawing.Point(296, 79);
+            this.LblGet_PageSize.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGet_PageSize.Name = "LblGet_PageSize";
+            this.LblGet_PageSize.Size = new System.Drawing.Size(116, 20);
+            this.LblGet_PageSize.TabIndex = 24;
+            this.LblGet_PageSize.Text = "Page Size";
+            this.LblGet_PageSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtGet_Page
+            // 
+            this.TxtGet_Page.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtGet_Page.Location = new System.Drawing.Point(102, 79);
+            this.TxtGet_Page.Name = "TxtGet_Page";
+            this.TxtGet_Page.Size = new System.Drawing.Size(188, 20);
+            this.TxtGet_Page.TabIndex = 25;
+            // 
+            // TxtGet_PageSize
+            // 
+            this.TxtGet_PageSize.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtGet_PageSize.Location = new System.Drawing.Point(418, 79);
+            this.TxtGet_PageSize.Name = "TxtGet_PageSize";
+            this.TxtGet_PageSize.Size = new System.Drawing.Size(189, 20);
+            this.TxtGet_PageSize.TabIndex = 26;
+            // 
             // Alarms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1316,5 +1439,14 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.TextBox TxtDiscardAlarm_Result;
         private System.Windows.Forms.Label LblDiscardAlarm_Result;
         private System.Windows.Forms.Label LblDiscard_Title;
+        private System.Windows.Forms.Label LblGet_IncludeDiscarded;
+        private System.Windows.Forms.ComboBox CmbGet_IncludeDiscarded;
+        private System.Windows.Forms.Label LblGet_IncludeAcknowledged;
+        private System.Windows.Forms.ComboBox CmdGet_IncludeAcknowledged;
+        private System.Windows.Forms.Label LblGet_ItemCounter;
+        private System.Windows.Forms.Label LblGet_Page;
+        private System.Windows.Forms.Label LblGet_PageSize;
+        private System.Windows.Forms.TextBox TxtGet_Page;
+        private System.Windows.Forms.TextBox TxtGet_PageSize;
     }
 }

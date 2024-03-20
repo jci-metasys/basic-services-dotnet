@@ -5,7 +5,7 @@ using System.Text;
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
-    /// Filters to get alarms
+    /// Filters to get alarms when using API v2 or v3.
     /// </summary>
     public class AlarmFilter : TimeFilter
     {       
@@ -20,22 +20,26 @@ namespace JohnsonControls.Metasys.BasicServices
         public int? Type { get; set; }
 
         /// <summary>
-        /// The flag to exclude pending alarms Default: false.
+        /// The flag to exclude pending alarms. Default: false.
+        /// This is considered when using API v2 and v3
         /// </summary>
         public bool? ExcludePending { get; set; }
 
         /// <summary>
-        /// The flag to exclude acknowledged alarms Default: false.
+        /// The flag to exclude acknowledged alarms. Default: false.
+        /// This is considered when using API v2 and v3
         /// </summary>
         public bool? ExcludeAcknowledged { get; set; }
 
         /// <summary>
-        /// The flag to exclude discarded alarms Default: false.
+        /// The flag to exclude discarded alarms. Default: false.
+        /// This is considered when using API v2 and v3
         /// </summary>
         public bool? ExcludeDiscarded { get; set; }
 
         /// <summary>
         /// The attribute of the requested alarms.
+        /// This is considered when using API v2 and v3
         /// </summary>
         public int? Attribute { get; set; }
 

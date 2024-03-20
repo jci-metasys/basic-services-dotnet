@@ -645,6 +645,17 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var json = JsonConvert.SerializeObject(obj);
             var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            // Check and in case removes some items not allowed for a specific request
+            String activityType;
+            if (dictionary.TryGetValue("ActivityType", out activityType))
+            {
+                if (activityType == "audit")
+                {
+                    dictionary.Remove("IncludeAcknowledgementRequired");
+                    dictionary.Remove("IncludeAcknowledgementNotRequired");
+                }
+            }  
+
             return dictionary;
         }
 

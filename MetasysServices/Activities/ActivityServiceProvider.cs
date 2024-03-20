@@ -14,7 +14,6 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Provide items for the endpoints of the Metasys Activities API.
     /// </summary>
-
     class ActivityServiceProvider : BasicServiceProvider, IActivityService
     {
         /// <summary>
@@ -27,7 +26,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
         }
 
-        //Get ----------------------------------------------------------------------------------------------------------------------
+        // List Activities ----------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public PagedResult<Activity> Get(ActivityFilter activityFilter)
         {
@@ -38,24 +37,23 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             CheckVersion(Version);
 
-            if (Version > ApiVersion.v4)
+            if (Version >= ApiVersion.v4)
             {
                 List<Activity> activities = new List<Activity>();
                 var response = await GetPagedResultsAsync<Activity>("activities", ToDictionary(activityFilter)).ConfigureAwait(false);
-                if (Version == ApiVersion.v5)
-                {
-                    foreach (var item in response.Items)
-                        activities.Add(item);
+                
+                foreach (var item in response.Items)
+                    activities.Add(item);
 
-                    response = new PagedResult<Activity>
-                    {
-                        Items = activities,
-                        CurrentPage = response.CurrentPage,
-                        PageCount = response.PageCount,
-                        PageSize = response.PageSize,
-                        Total = response.Total
-                    };
-                }
+                response = new PagedResult<Activity>
+                {
+                    Items = activities,
+                    CurrentPage = response.CurrentPage,
+                    PageCount = response.PageCount,
+                    PageSize = response.PageSize,
+                    Total = response.Total
+                };
+
                 return response;
             }else
             { 
@@ -63,6 +61,7 @@ namespace JohnsonControls.Metasys.BasicServices
             };
         }
 
+        // Batch operations ------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
         public IEnumerable<Result> ActionMultiple(IEnumerable<BatchRequestParam> requests)
         {
@@ -76,7 +75,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 CheckVersion(Version);
 
-                if (Version > ApiVersion.v4)
+                if (Version >= ApiVersion.v4)
                 {
                     if (requests == null) 
                         return null;
@@ -95,6 +94,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 return null;
             }
         }
+
 
         /// <summary>
         /// Convert a JToken batch request response into VariantMultiple.
