@@ -45,6 +45,8 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Get a Single Space](#get-a-single-space)
     - [Get Spaces Served by an Equipment](#get-spaces-served-by-an-equipment)
     - [Get Spaces Served by a Network Device](#get-spaces-served-by-a-network-device)
+  - [Activities](#activities)
+    - [Get Activities](#get-activities)
   - [Alarms](#alarms)
     - [Get Alarms](#get-alarms)
     - [Get Single Alarm](#get-single-alarm)
@@ -983,13 +985,99 @@ To retrieve the spaces served by the specified network device instance use the m
 This method returns a list of 'MetasysObject' objects and expect the network device Id as parameter.
 <br/>
 
+### Activities
 
+> Available since API v4
+
+
+All services about activities are provided by **`Activities`** local instance of MetasysClient.  
+
+Since API v4 **`Activities`** services replace some services provided by 
+**`Alarms`** and **`Audits`** as **`Alarms.Get`** or **`Audits.Get`** that 
+are deprecated from API v4 on.<br/>
+
+#### Get Activities
+To get all available alarms or audits use the method **`Activities.Get`** and 
+set the parameter **`ActivityType`** to **`alarm`** or **`audit`**.  
+This method returns a 'PagedResult' with a list of 'Activity' objects and 
+expects an 'ActivityFilter' object to filter the response.
+
+```csharp
+ActivityFilter activityFilter = new ActivityFilter
+{
+    StartTime = new DateTime(2023, 10, 15),
+    EndTime = new DateTime(2023, 10, 18),
+    ActivityType = "alarm",
+    IncludeAcknowledged = false,
+    IncludeDiscarded = true
+};
+PagedResult<Activity> activitiesPager = client.Activities.Get(activityFilter);
+
+// Prints the number of records fetched and paging information
+Console.WriteLine("Total:" + activitiesPager.Total);
+Console.WriteLine("Current page:" + activitiesPager.CurrentPage);
+Console.WriteLine("Page size:" + activitiesPager.PageSize);
+Console.WriteLine("Pages:" + activitiesPager.PageCount);
+/* Console Output: Start                       
+    Total:8802
+    Current page:1
+    Page size:100
+    Pages:89
+Console Output: End */
+
+Activity activity = activitiesPager.Items.ElementAt(0);
+Console.WriteLine(activity);
+/* Console Output: Start                       
+{
+    "id": "7ba495a9-1e24-4894-9729-1f474a1b5ef0",
+    "itemReference": "EECMI-ADX-13:SNE00108D0AD2F6",
+    "objectName": "M4-SNC25150-0",
+    "activityManagementStatus": "discarded",
+    "discardedTime": "2024-01-18T16:12:46.763Z",
+    "creationTime": "2023-10-18T17:35:55Z",
+    "spaces": [],
+    "equipment": [],
+    "objectUrl": "https://10.164.104.103/api/v5/objects/f4dd71f5-5703-54ff-81ae-4ee021e32f6d",
+    "objectId": "f4dd71f5-5703-54ff-81ae-4ee021e32f6d",
+    "alarm": {
+        "message": "EECMI-ADX-13:SNE00108D0AD2F6 is online",
+        "alarmGeneratorObject": null,
+        "isAckRequired": true,
+        "acknowledgedTime": null,
+        "type": "alarmValueEnumSet.avOnline",
+        "priority": 106,
+        "category": "objectCategoryEnumSet.systemCategory",
+        "annotationsUrl": "https://10.164.104.103/api/v5/alarms/7ba495a9-1e24-4894-9729-1f474a1b5ef0/annotations",
+        "annotationsCount": 1,
+        "self": "https://10.164.104.103/api/v5/alarms/7ba495a9-1e24-4894-9729-1f474a1b5ef0",
+        "triggerValue": {
+            "item": "",
+            "schema": {
+                "type": "string",
+                "metasysType": "string",
+                "units": {
+                    "id": "unitEnumSet.noUnits",
+                    "title": ""
+                }
+            }
+        },
+        "description": "",
+        "associatedGraphic": null
+    }
+},    
+Console Output: End */
+```
+<br/>
 
 ### Alarms
 All services about alarms are provided by **`Alarms`** local instance of MetasysClient.  
 <br/>
 
 #### Get Alarms
+
+> ***`Deprecated from API v4 on`***
+>
+
 To get all available alarms use the method **`Alarms.Get`**.  
 This method returns a 'PagedResult' with a list of 'Alarm' objects and expects an 'AlarmFilter' object to filter the response.
 
@@ -1092,6 +1180,7 @@ This method returns a collection of AlarmAnnotation objects and expect an alarm 
 <br/>
 
 #### Acknowledge an Alarm
+
 > Available since API v4
 > 
 To allow for acknowledging an alarm you can use the method **`Alarms.Acknowlege`**.  
@@ -1112,6 +1201,10 @@ All services about audits are provided by **`Audits`** local instance of Metasys
 <br/>
 
 #### Get Audits
+
+> ***`Deprecated from API v4 on`***
+>
+
 To get all available audits you can use the method **`Audits.Get`**.  
 This method will return a 'PagedResult' with a list of 'Audit' objects.  
 This accepts an 'AuditFilter' object to filter the response. 
