@@ -1,7 +1,5 @@
-﻿using JohnsonControls.Metasys.BasicServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -314,7 +312,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
         IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false, bool includeExtensions = false);
-        /// <inheritdoc cref="IMetasysClient.GetObjects(Guid, int, bool)"/>
+        /// <inheritdoc cref="IMetasysClient.GetObjects(Guid, int, bool, bool)"/>
         Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, bool includeInternalObjects = false, bool includeExtensions = false);
 
         /// <summary>

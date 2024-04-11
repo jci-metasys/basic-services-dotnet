@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -30,7 +28,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <summary> The criteria to use when sorting results. </summary>
         /// <remarks> Possible values: 'creationTime', '-creationTime', 'priority', '-priority'. Default: 'creationTime'</remarks>
-        public new string Sort { get; set; }
+        public string Sort { get; set; }
 
         /// <summary> Filter by list of equipment identifiers. </summary>
         public string[] Equipment { get; set; }
