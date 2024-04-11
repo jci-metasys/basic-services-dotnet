@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace JohnsonControls.Metasys.ComServices
 {
@@ -282,7 +280,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// </summary>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        object GetEquipment(int? page = null, int? pageSize = null);
+        object GetEquipment(int page = 1, int pageSize = 100);
 
         /// <summary>
         /// Retrieves the collection of equipment instances that are hosted by the specified network device or its children.
@@ -387,9 +385,11 @@ namespace JohnsonControls.Metasys.ComServices
         /// </remarks>
         /// <param name="id"></param>
         /// <param name="levels">The depth of the children to retrieve.</param>
+        /// <param name="includeInternalObjects">Set it to true to see also internal objects that are not displayed in the Metasys tree. </param>      
+        /// <param name="includeExtensions">Set it to true to get also the extensions of the object.</param>      
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>        
-        object GetObjects(string id, int levels = 1);
+        object GetObjects(string id, int levels = 1, bool includeInternalObjects = false, bool includeExtensions = false);
 
         /// <summary>
         /// Gets all child objects given a parent Guid and object type.
@@ -520,7 +520,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="sort">Optional, the criteria to use when sorting results (default = name).</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        object GetSpaces(string type = null, int? page = null, int? pageSize = null, string sort = null);
+        object GetSpaces(string type = null, int page = 1, int pageSize = 100, string sort = null);
 
         /// <summary>
         /// Gets children spaces of the given space.
@@ -637,7 +637,7 @@ namespace JohnsonControls.Metasys.ComServices
         ///// Event fired when a COV value changes
         ///// </summary>
         //event EventHandler<StreamEventArgs> StreamCOVValueChanged;
-        
+
 
 
         /// <summary>
@@ -688,7 +688,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// Call the related API to keep the Stream Alive 
         /// </summary>
         void KeepStreamAlive();
-        
+
         #endregion
 
 

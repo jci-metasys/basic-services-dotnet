@@ -78,10 +78,36 @@ namespace MetasysServices_TestClient.Forms
             this.TpgReadPropertyMultiple = new System.Windows.Forms.TabPage();
             this.TlpReadPropertyMultiple = new System.Windows.Forms.TableLayoutPanel();
             this.LblReadPropertyMultiple_Params = new System.Windows.Forms.Label();
+            this.BtnReadPropertyMultiple = new System.Windows.Forms.Button();
+            this.DgvReadPropertyMultiple_Result = new System.Windows.Forms.DataGridView();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.DgvReadPropertyMultiple_Ids = new System.Windows.Forms.DataGridView();
+            this.DgvReadPropertyMultiple_Ids_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DgvReadPropertyMultiple_Attrs = new System.Windows.Forms.DataGridView();
+            this.DgvReadPropertyMultiple_Attrs_Attribute = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TpgWriteProperty = new System.Windows.Forms.TabPage();
             this.TlpWriteProperty = new System.Windows.Forms.TableLayoutPanel();
+            this.LblWriteProperty_ObjectId = new System.Windows.Forms.Label();
+            this.TxtWriteProperty_ObjectId = new System.Windows.Forms.TextBox();
+            this.LblWriteProperty_AttributeName = new System.Windows.Forms.Label();
+            this.TxtWriteProperty_AttributeName = new System.Windows.Forms.TextBox();
+            this.LblWriteProperty_NewValue = new System.Windows.Forms.Label();
+            this.TxtWriteProperty_NewValue = new System.Windows.Forms.TextBox();
+            this.BtnWriteProperty = new System.Windows.Forms.Button();
+            this.LblWriteProperty_Result = new System.Windows.Forms.Label();
+            this.TxtWriteProperty_Result = new System.Windows.Forms.TextBox();
             this.TpgWritePropertyMultiple = new System.Windows.Forms.TabPage();
             this.TlpWritePropertyMultiple = new System.Windows.Forms.TableLayoutPanel();
+            this.LblWritePropertyMultiple_Params = new System.Windows.Forms.Label();
+            this.TlpWritepropertyMultiple_Params = new System.Windows.Forms.TableLayoutPanel();
+            this.DgvWritePropertyMultiple_Ids = new System.Windows.Forms.DataGridView();
+            this.DgvWritePropertyMultiple_Ids_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DgvWritePropertyMultiple_Attrs = new System.Windows.Forms.DataGridView();
+            this.DgvWritePropertyMultiple_Attrs_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DgvWritePropertyMultiple_Attrs_Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BtnWritePropertyMultiple = new System.Windows.Forms.Button();
+            this.LblWritePropertMultiple_Result = new System.Windows.Forms.Label();
+            this.TxtWritePropertyMultiple_Result = new System.Windows.Forms.TextBox();
             this.TpgSendCommand = new System.Windows.Forms.TabPage();
             this.TlpSendCommand = new System.Windows.Forms.TableLayoutPanel();
             this.LblSendCommand_ObjectId = new System.Windows.Forms.Label();
@@ -93,32 +119,8 @@ namespace MetasysServices_TestClient.Forms
             this.BtnSendCommand = new System.Windows.Forms.Button();
             this.LblSendCommand_Result = new System.Windows.Forms.Label();
             this.TxtSendCommand_Result = new System.Windows.Forms.TextBox();
-            this.DgvReadPropertyMultiple_Ids = new System.Windows.Forms.DataGridView();
-            this.BtnReadPropertyMultiple = new System.Windows.Forms.Button();
-            this.DgvReadPropertyMultiple_Result = new System.Windows.Forms.DataGridView();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.DgvReadPropertyMultiple_Ids_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DgvReadPropertyMultiple_Attrs = new System.Windows.Forms.DataGridView();
-            this.LblWriteProperty_ObjectId = new System.Windows.Forms.Label();
-            this.TxtWriteProperty_ObjectId = new System.Windows.Forms.TextBox();
-            this.LblWriteProperty_AttributeName = new System.Windows.Forms.Label();
-            this.TxtWriteProperty_AttributeName = new System.Windows.Forms.TextBox();
-            this.LblWriteProperty_NewValue = new System.Windows.Forms.Label();
-            this.TxtWriteProperty_NewValue = new System.Windows.Forms.TextBox();
-            this.BtnWriteProperty = new System.Windows.Forms.Button();
-            this.LblWriteProperty_Result = new System.Windows.Forms.Label();
-            this.DgvReadPropertyMultiple_Attrs_Attribute = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TxtWriteProperty_Result = new System.Windows.Forms.TextBox();
-            this.LblWritePropertyMultiple_Params = new System.Windows.Forms.Label();
-            this.TlpWritepropertyMultiple_Params = new System.Windows.Forms.TableLayoutPanel();
-            this.DgvWritePropertyMultiple_Ids = new System.Windows.Forms.DataGridView();
-            this.DgvWritePropertyMultiple_Attrs = new System.Windows.Forms.DataGridView();
-            this.DgvWritePropertyMultiple_Ids_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DgvWritePropertyMultiple_Attrs_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DgvWritePropertyMultiple_Attrs_Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BtnWritePropertyMultiple = new System.Windows.Forms.Button();
-            this.LblWritePropertMultiple_Result = new System.Windows.Forms.Label();
-            this.TxtWritePropertyMultiple_Result = new System.Windows.Forms.TextBox();
+            this.LblGetObjects_IncludeExtensions = new System.Windows.Forms.Label();
+            this.ChkGetObjects_IncludeExtensions = new System.Windows.Forms.CheckBox();
             this.TabMain.SuspendLayout();
             this.TpgGetObjectIdentifier.SuspendLayout();
             this.TlpGetObjectIdentifier.SuspendLayout();
@@ -136,19 +138,19 @@ namespace MetasysServices_TestClient.Forms
             this.TlpReadProperty.SuspendLayout();
             this.TpgReadPropertyMultiple.SuspendLayout();
             this.TlpReadPropertyMultiple.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Result)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Ids)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Attrs)).BeginInit();
             this.TpgWriteProperty.SuspendLayout();
             this.TlpWriteProperty.SuspendLayout();
             this.TpgWritePropertyMultiple.SuspendLayout();
             this.TlpWritePropertyMultiple.SuspendLayout();
-            this.TpgSendCommand.SuspendLayout();
-            this.TlpSendCommand.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Ids)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Result)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Attrs)).BeginInit();
             this.TlpWritepropertyMultiple_Params.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvWritePropertyMultiple_Ids)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DgvWritePropertyMultiple_Attrs)).BeginInit();
+            this.TpgSendCommand.SuspendLayout();
+            this.TlpSendCommand.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabMain
@@ -280,17 +282,20 @@ namespace MetasysServices_TestClient.Forms
             this.TlpGetObjects.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TlpGetObjects.Controls.Add(this.LblGetObjects_ParentID, 1, 1);
             this.TlpGetObjects.Controls.Add(this.TxtGetObjects_ParentID, 2, 1);
-            this.TlpGetObjects.Controls.Add(this.BtnGetObjects, 2, 4);
-            this.TlpGetObjects.Controls.Add(this.DgvGetObjects, 2, 5);
-            this.TlpGetObjects.Controls.Add(this.LblGetObjects_IncludeInternalObjects, 1, 3);
-            this.TlpGetObjects.Controls.Add(this.ChkGetObjects_IncludeInternalObjects, 2, 3);
+            this.TlpGetObjects.Controls.Add(this.BtnGetObjects, 2, 5);
+            this.TlpGetObjects.Controls.Add(this.DgvGetObjects, 2, 6);
+            this.TlpGetObjects.Controls.Add(this.LblGetObjects_IncludeInternalObjects, 1, 4);
+            this.TlpGetObjects.Controls.Add(this.ChkGetObjects_IncludeInternalObjects, 2, 4);
             this.TlpGetObjects.Controls.Add(this.LblGetObjects_Levels, 1, 2);
             this.TlpGetObjects.Controls.Add(this.NupGetObject_Levels, 2, 2);
+            this.TlpGetObjects.Controls.Add(this.LblGetObjects_IncludeExtensions, 1, 3);
+            this.TlpGetObjects.Controls.Add(this.ChkGetObjects_IncludeExtensions, 2, 3);
             this.TlpGetObjects.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TlpGetObjects.Location = new System.Drawing.Point(3, 3);
             this.TlpGetObjects.Name = "TlpGetObjects";
-            this.TlpGetObjects.RowCount = 6;
+            this.TlpGetObjects.RowCount = 7;
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TlpGetObjects.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -323,7 +328,7 @@ namespace MetasysServices_TestClient.Forms
             // BtnGetObjects
             // 
             this.BtnGetObjects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnGetObjects.Location = new System.Drawing.Point(169, 101);
+            this.BtnGetObjects.Location = new System.Drawing.Point(169, 127);
             this.BtnGetObjects.MinimumSize = new System.Drawing.Size(130, 0);
             this.BtnGetObjects.Name = "BtnGetObjects";
             this.BtnGetObjects.Size = new System.Drawing.Size(731, 23);
@@ -336,16 +341,16 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.DgvGetObjects.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DgvGetObjects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvGetObjects.Location = new System.Drawing.Point(169, 130);
+            this.DgvGetObjects.Location = new System.Drawing.Point(169, 156);
             this.DgvGetObjects.Name = "DgvGetObjects";
-            this.DgvGetObjects.Size = new System.Drawing.Size(731, 418);
+            this.DgvGetObjects.Size = new System.Drawing.Size(731, 392);
             this.DgvGetObjects.TabIndex = 3;
             // 
             // LblGetObjects_IncludeInternalObjects
             // 
             this.LblGetObjects_IncludeInternalObjects.AutoSize = true;
             this.LblGetObjects_IncludeInternalObjects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblGetObjects_IncludeInternalObjects.Location = new System.Drawing.Point(23, 75);
+            this.LblGetObjects_IncludeInternalObjects.Location = new System.Drawing.Point(23, 101);
             this.LblGetObjects_IncludeInternalObjects.Margin = new System.Windows.Forms.Padding(3);
             this.LblGetObjects_IncludeInternalObjects.Name = "LblGetObjects_IncludeInternalObjects";
             this.LblGetObjects_IncludeInternalObjects.Size = new System.Drawing.Size(140, 20);
@@ -357,7 +362,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.ChkGetObjects_IncludeInternalObjects.AutoSize = true;
             this.ChkGetObjects_IncludeInternalObjects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChkGetObjects_IncludeInternalObjects.Location = new System.Drawing.Point(169, 75);
+            this.ChkGetObjects_IncludeInternalObjects.Location = new System.Drawing.Point(169, 101);
             this.ChkGetObjects_IncludeInternalObjects.MinimumSize = new System.Drawing.Size(0, 20);
             this.ChkGetObjects_IncludeInternalObjects.Name = "ChkGetObjects_IncludeInternalObjects";
             this.ChkGetObjects_IncludeInternalObjects.Size = new System.Drawing.Size(731, 20);
@@ -389,7 +394,7 @@ namespace MetasysServices_TestClient.Forms
             1,
             0,
             0,
-            0});
+            -2147483648});
             this.NupGetObject_Levels.Name = "NupGetObject_Levels";
             this.NupGetObject_Levels.Size = new System.Drawing.Size(731, 20);
             this.NupGetObject_Levels.TabIndex = 7;
@@ -790,6 +795,77 @@ namespace MetasysServices_TestClient.Forms
             this.LblReadPropertyMultiple_Params.Text = "Parameters:";
             this.LblReadPropertyMultiple_Params.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // BtnReadPropertyMultiple
+            // 
+            this.BtnReadPropertyMultiple.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnReadPropertyMultiple.Location = new System.Drawing.Point(169, 123);
+            this.BtnReadPropertyMultiple.Name = "BtnReadPropertyMultiple";
+            this.BtnReadPropertyMultiple.Size = new System.Drawing.Size(731, 23);
+            this.BtnReadPropertyMultiple.TabIndex = 2;
+            this.BtnReadPropertyMultiple.Text = "ReadPropertyMultiple";
+            this.BtnReadPropertyMultiple.UseVisualStyleBackColor = true;
+            this.BtnReadPropertyMultiple.Click += new System.EventHandler(this.BtnReadPropertyMultiple_Click);
+            // 
+            // DgvReadPropertyMultiple_Result
+            // 
+            this.DgvReadPropertyMultiple_Result.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvReadPropertyMultiple_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvReadPropertyMultiple_Result.Location = new System.Drawing.Point(169, 152);
+            this.DgvReadPropertyMultiple_Result.Name = "DgvReadPropertyMultiple_Result";
+            this.DgvReadPropertyMultiple_Result.Size = new System.Drawing.Size(731, 396);
+            this.DgvReadPropertyMultiple_Result.TabIndex = 3;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.DgvReadPropertyMultiple_Ids, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.DgvReadPropertyMultiple_Attrs, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(169, 23);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 94F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(731, 94);
+            this.tableLayoutPanel1.TabIndex = 4;
+            // 
+            // DgvReadPropertyMultiple_Ids
+            // 
+            this.DgvReadPropertyMultiple_Ids.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvReadPropertyMultiple_Ids.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DgvReadPropertyMultiple_Ids_Id});
+            this.DgvReadPropertyMultiple_Ids.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvReadPropertyMultiple_Ids.Location = new System.Drawing.Point(3, 3);
+            this.DgvReadPropertyMultiple_Ids.Name = "DgvReadPropertyMultiple_Ids";
+            this.DgvReadPropertyMultiple_Ids.Size = new System.Drawing.Size(359, 88);
+            this.DgvReadPropertyMultiple_Ids.TabIndex = 1;
+            // 
+            // DgvReadPropertyMultiple_Ids_Id
+            // 
+            this.DgvReadPropertyMultiple_Ids_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DgvReadPropertyMultiple_Ids_Id.HeaderText = "Object ID (GUID)";
+            this.DgvReadPropertyMultiple_Ids_Id.MinimumWidth = 140;
+            this.DgvReadPropertyMultiple_Ids_Id.Name = "DgvReadPropertyMultiple_Ids_Id";
+            // 
+            // DgvReadPropertyMultiple_Attrs
+            // 
+            this.DgvReadPropertyMultiple_Attrs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvReadPropertyMultiple_Attrs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DgvReadPropertyMultiple_Attrs_Attribute});
+            this.DgvReadPropertyMultiple_Attrs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvReadPropertyMultiple_Attrs.Location = new System.Drawing.Point(368, 3);
+            this.DgvReadPropertyMultiple_Attrs.Name = "DgvReadPropertyMultiple_Attrs";
+            this.DgvReadPropertyMultiple_Attrs.Size = new System.Drawing.Size(360, 88);
+            this.DgvReadPropertyMultiple_Attrs.TabIndex = 2;
+            // 
+            // DgvReadPropertyMultiple_Attrs_Attribute
+            // 
+            this.DgvReadPropertyMultiple_Attrs_Attribute.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DgvReadPropertyMultiple_Attrs_Attribute.HeaderText = "Object Property";
+            this.DgvReadPropertyMultiple_Attrs_Attribute.Name = "DgvReadPropertyMultiple_Attrs_Attribute";
+            // 
             // TpgWriteProperty
             // 
             this.TpgWriteProperty.Controls.Add(this.TlpWriteProperty);
@@ -831,6 +907,99 @@ namespace MetasysServices_TestClient.Forms
             this.TlpWriteProperty.Size = new System.Drawing.Size(923, 551);
             this.TlpWriteProperty.TabIndex = 0;
             // 
+            // LblWriteProperty_ObjectId
+            // 
+            this.LblWriteProperty_ObjectId.AutoSize = true;
+            this.LblWriteProperty_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblWriteProperty_ObjectId.Location = new System.Drawing.Point(23, 23);
+            this.LblWriteProperty_ObjectId.Margin = new System.Windows.Forms.Padding(3);
+            this.LblWriteProperty_ObjectId.MinimumSize = new System.Drawing.Size(140, 0);
+            this.LblWriteProperty_ObjectId.Name = "LblWriteProperty_ObjectId";
+            this.LblWriteProperty_ObjectId.Size = new System.Drawing.Size(140, 20);
+            this.LblWriteProperty_ObjectId.TabIndex = 0;
+            this.LblWriteProperty_ObjectId.Text = "Object ID (GUID):";
+            this.LblWriteProperty_ObjectId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtWriteProperty_ObjectId
+            // 
+            this.TxtWriteProperty_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtWriteProperty_ObjectId.Location = new System.Drawing.Point(169, 23);
+            this.TxtWriteProperty_ObjectId.Name = "TxtWriteProperty_ObjectId";
+            this.TxtWriteProperty_ObjectId.Size = new System.Drawing.Size(731, 20);
+            this.TxtWriteProperty_ObjectId.TabIndex = 1;
+            // 
+            // LblWriteProperty_AttributeName
+            // 
+            this.LblWriteProperty_AttributeName.AutoSize = true;
+            this.LblWriteProperty_AttributeName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblWriteProperty_AttributeName.Location = new System.Drawing.Point(23, 49);
+            this.LblWriteProperty_AttributeName.Margin = new System.Windows.Forms.Padding(3);
+            this.LblWriteProperty_AttributeName.Name = "LblWriteProperty_AttributeName";
+            this.LblWriteProperty_AttributeName.Size = new System.Drawing.Size(140, 20);
+            this.LblWriteProperty_AttributeName.TabIndex = 2;
+            this.LblWriteProperty_AttributeName.Text = "Property Name:";
+            this.LblWriteProperty_AttributeName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtWriteProperty_AttributeName
+            // 
+            this.TxtWriteProperty_AttributeName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtWriteProperty_AttributeName.Location = new System.Drawing.Point(169, 49);
+            this.TxtWriteProperty_AttributeName.Name = "TxtWriteProperty_AttributeName";
+            this.TxtWriteProperty_AttributeName.Size = new System.Drawing.Size(731, 20);
+            this.TxtWriteProperty_AttributeName.TabIndex = 3;
+            // 
+            // LblWriteProperty_NewValue
+            // 
+            this.LblWriteProperty_NewValue.AutoSize = true;
+            this.LblWriteProperty_NewValue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblWriteProperty_NewValue.Location = new System.Drawing.Point(23, 75);
+            this.LblWriteProperty_NewValue.Margin = new System.Windows.Forms.Padding(3);
+            this.LblWriteProperty_NewValue.Name = "LblWriteProperty_NewValue";
+            this.LblWriteProperty_NewValue.Size = new System.Drawing.Size(140, 20);
+            this.LblWriteProperty_NewValue.TabIndex = 4;
+            this.LblWriteProperty_NewValue.Text = "New Value:";
+            this.LblWriteProperty_NewValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtWriteProperty_NewValue
+            // 
+            this.TxtWriteProperty_NewValue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtWriteProperty_NewValue.Location = new System.Drawing.Point(169, 75);
+            this.TxtWriteProperty_NewValue.Name = "TxtWriteProperty_NewValue";
+            this.TxtWriteProperty_NewValue.Size = new System.Drawing.Size(731, 20);
+            this.TxtWriteProperty_NewValue.TabIndex = 5;
+            // 
+            // BtnWriteProperty
+            // 
+            this.BtnWriteProperty.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnWriteProperty.Location = new System.Drawing.Point(169, 101);
+            this.BtnWriteProperty.Name = "BtnWriteProperty";
+            this.BtnWriteProperty.Size = new System.Drawing.Size(731, 23);
+            this.BtnWriteProperty.TabIndex = 6;
+            this.BtnWriteProperty.Text = "WriteProperty";
+            this.BtnWriteProperty.UseVisualStyleBackColor = true;
+            this.BtnWriteProperty.Click += new System.EventHandler(this.BtnWriteProperty_Click);
+            // 
+            // LblWriteProperty_Result
+            // 
+            this.LblWriteProperty_Result.AutoSize = true;
+            this.LblWriteProperty_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblWriteProperty_Result.Location = new System.Drawing.Point(23, 130);
+            this.LblWriteProperty_Result.Margin = new System.Windows.Forms.Padding(3);
+            this.LblWriteProperty_Result.Name = "LblWriteProperty_Result";
+            this.LblWriteProperty_Result.Size = new System.Drawing.Size(140, 20);
+            this.LblWriteProperty_Result.TabIndex = 7;
+            this.LblWriteProperty_Result.Text = "Result:";
+            this.LblWriteProperty_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtWriteProperty_Result
+            // 
+            this.TxtWriteProperty_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtWriteProperty_Result.Location = new System.Drawing.Point(169, 130);
+            this.TxtWriteProperty_Result.Name = "TxtWriteProperty_Result";
+            this.TxtWriteProperty_Result.ReadOnly = true;
+            this.TxtWriteProperty_Result.Size = new System.Drawing.Size(731, 20);
+            this.TxtWriteProperty_Result.TabIndex = 8;
+            // 
             // TpgWritePropertyMultiple
             // 
             this.TpgWritePropertyMultiple.Controls.Add(this.TlpWritePropertyMultiple);
@@ -865,6 +1034,110 @@ namespace MetasysServices_TestClient.Forms
             this.TlpWritePropertyMultiple.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TlpWritePropertyMultiple.Size = new System.Drawing.Size(923, 551);
             this.TlpWritePropertyMultiple.TabIndex = 0;
+            // 
+            // LblWritePropertyMultiple_Params
+            // 
+            this.LblWritePropertyMultiple_Params.AutoSize = true;
+            this.LblWritePropertyMultiple_Params.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblWritePropertyMultiple_Params.Location = new System.Drawing.Point(23, 23);
+            this.LblWritePropertyMultiple_Params.Margin = new System.Windows.Forms.Padding(3);
+            this.LblWritePropertyMultiple_Params.MinimumSize = new System.Drawing.Size(140, 0);
+            this.LblWritePropertyMultiple_Params.Name = "LblWritePropertyMultiple_Params";
+            this.LblWritePropertyMultiple_Params.Size = new System.Drawing.Size(140, 94);
+            this.LblWritePropertyMultiple_Params.TabIndex = 0;
+            this.LblWritePropertyMultiple_Params.Text = "Parameters:";
+            this.LblWritePropertyMultiple_Params.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TlpWritepropertyMultiple_Params
+            // 
+            this.TlpWritepropertyMultiple_Params.ColumnCount = 2;
+            this.TlpWritepropertyMultiple_Params.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TlpWritepropertyMultiple_Params.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TlpWritepropertyMultiple_Params.Controls.Add(this.DgvWritePropertyMultiple_Ids, 0, 0);
+            this.TlpWritepropertyMultiple_Params.Controls.Add(this.DgvWritePropertyMultiple_Attrs, 1, 0);
+            this.TlpWritepropertyMultiple_Params.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TlpWritepropertyMultiple_Params.Location = new System.Drawing.Point(169, 23);
+            this.TlpWritepropertyMultiple_Params.Name = "TlpWritepropertyMultiple_Params";
+            this.TlpWritepropertyMultiple_Params.RowCount = 1;
+            this.TlpWritepropertyMultiple_Params.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.TlpWritepropertyMultiple_Params.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 94F));
+            this.TlpWritepropertyMultiple_Params.Size = new System.Drawing.Size(731, 94);
+            this.TlpWritepropertyMultiple_Params.TabIndex = 1;
+            // 
+            // DgvWritePropertyMultiple_Ids
+            // 
+            this.DgvWritePropertyMultiple_Ids.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvWritePropertyMultiple_Ids.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DgvWritePropertyMultiple_Ids_Id});
+            this.DgvWritePropertyMultiple_Ids.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvWritePropertyMultiple_Ids.Location = new System.Drawing.Point(3, 3);
+            this.DgvWritePropertyMultiple_Ids.Name = "DgvWritePropertyMultiple_Ids";
+            this.DgvWritePropertyMultiple_Ids.Size = new System.Drawing.Size(359, 88);
+            this.DgvWritePropertyMultiple_Ids.TabIndex = 0;
+            // 
+            // DgvWritePropertyMultiple_Ids_Id
+            // 
+            this.DgvWritePropertyMultiple_Ids_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DgvWritePropertyMultiple_Ids_Id.HeaderText = "Object ID (GUID)";
+            this.DgvWritePropertyMultiple_Ids_Id.Name = "DgvWritePropertyMultiple_Ids_Id";
+            // 
+            // DgvWritePropertyMultiple_Attrs
+            // 
+            this.DgvWritePropertyMultiple_Attrs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DgvWritePropertyMultiple_Attrs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DgvWritePropertyMultiple_Attrs_Name,
+            this.DgvWritePropertyMultiple_Attrs_Value});
+            this.DgvWritePropertyMultiple_Attrs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DgvWritePropertyMultiple_Attrs.Location = new System.Drawing.Point(368, 3);
+            this.DgvWritePropertyMultiple_Attrs.Name = "DgvWritePropertyMultiple_Attrs";
+            this.DgvWritePropertyMultiple_Attrs.Size = new System.Drawing.Size(360, 88);
+            this.DgvWritePropertyMultiple_Attrs.TabIndex = 1;
+            // 
+            // DgvWritePropertyMultiple_Attrs_Name
+            // 
+            this.DgvWritePropertyMultiple_Attrs_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.DgvWritePropertyMultiple_Attrs_Name.HeaderText = "Property Name";
+            this.DgvWritePropertyMultiple_Attrs_Name.MinimumWidth = 140;
+            this.DgvWritePropertyMultiple_Attrs_Name.Name = "DgvWritePropertyMultiple_Attrs_Name";
+            this.DgvWritePropertyMultiple_Attrs_Name.Width = 140;
+            // 
+            // DgvWritePropertyMultiple_Attrs_Value
+            // 
+            this.DgvWritePropertyMultiple_Attrs_Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.DgvWritePropertyMultiple_Attrs_Value.HeaderText = "Property New Value";
+            this.DgvWritePropertyMultiple_Attrs_Value.Name = "DgvWritePropertyMultiple_Attrs_Value";
+            // 
+            // BtnWritePropertyMultiple
+            // 
+            this.BtnWritePropertyMultiple.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BtnWritePropertyMultiple.Location = new System.Drawing.Point(169, 123);
+            this.BtnWritePropertyMultiple.Name = "BtnWritePropertyMultiple";
+            this.BtnWritePropertyMultiple.Size = new System.Drawing.Size(731, 23);
+            this.BtnWritePropertyMultiple.TabIndex = 2;
+            this.BtnWritePropertyMultiple.Text = "WritePropertyMultiple";
+            this.BtnWritePropertyMultiple.UseVisualStyleBackColor = true;
+            this.BtnWritePropertyMultiple.Click += new System.EventHandler(this.BtnWritePropertyMultiple_Click);
+            // 
+            // LblWritePropertMultiple_Result
+            // 
+            this.LblWritePropertMultiple_Result.AutoSize = true;
+            this.LblWritePropertMultiple_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblWritePropertMultiple_Result.Location = new System.Drawing.Point(23, 152);
+            this.LblWritePropertMultiple_Result.Margin = new System.Windows.Forms.Padding(3);
+            this.LblWritePropertMultiple_Result.Name = "LblWritePropertMultiple_Result";
+            this.LblWritePropertMultiple_Result.Size = new System.Drawing.Size(140, 20);
+            this.LblWritePropertMultiple_Result.TabIndex = 3;
+            this.LblWritePropertMultiple_Result.Text = "Result:";
+            this.LblWritePropertMultiple_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtWritePropertyMultiple_Result
+            // 
+            this.TxtWritePropertyMultiple_Result.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TxtWritePropertyMultiple_Result.Location = new System.Drawing.Point(169, 152);
+            this.TxtWritePropertyMultiple_Result.Name = "TxtWritePropertyMultiple_Result";
+            this.TxtWritePropertyMultiple_Result.ReadOnly = true;
+            this.TxtWritePropertyMultiple_Result.Size = new System.Drawing.Size(731, 20);
+            this.TxtWritePropertyMultiple_Result.TabIndex = 4;
             // 
             // TpgSendCommand
             // 
@@ -1003,273 +1276,28 @@ namespace MetasysServices_TestClient.Forms
             this.TxtSendCommand_Result.Size = new System.Drawing.Size(731, 20);
             this.TxtSendCommand_Result.TabIndex = 8;
             // 
-            // DgvReadPropertyMultiple_Ids
+            // LblGetObjects_IncludeExtensions
             // 
-            this.DgvReadPropertyMultiple_Ids.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvReadPropertyMultiple_Ids.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.DgvReadPropertyMultiple_Ids_Id});
-            this.DgvReadPropertyMultiple_Ids.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvReadPropertyMultiple_Ids.Location = new System.Drawing.Point(3, 3);
-            this.DgvReadPropertyMultiple_Ids.Name = "DgvReadPropertyMultiple_Ids";
-            this.DgvReadPropertyMultiple_Ids.Size = new System.Drawing.Size(359, 88);
-            this.DgvReadPropertyMultiple_Ids.TabIndex = 1;
+            this.LblGetObjects_IncludeExtensions.AutoSize = true;
+            this.LblGetObjects_IncludeExtensions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LblGetObjects_IncludeExtensions.Location = new System.Drawing.Point(23, 75);
+            this.LblGetObjects_IncludeExtensions.Margin = new System.Windows.Forms.Padding(3);
+            this.LblGetObjects_IncludeExtensions.Name = "LblGetObjects_IncludeExtensions";
+            this.LblGetObjects_IncludeExtensions.Size = new System.Drawing.Size(140, 20);
+            this.LblGetObjects_IncludeExtensions.TabIndex = 8;
+            this.LblGetObjects_IncludeExtensions.Text = "Include Extensions";
+            this.LblGetObjects_IncludeExtensions.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // BtnReadPropertyMultiple
+            // ChkGetObjects_IncludeExtensions
             // 
-            this.BtnReadPropertyMultiple.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnReadPropertyMultiple.Location = new System.Drawing.Point(169, 123);
-            this.BtnReadPropertyMultiple.Name = "BtnReadPropertyMultiple";
-            this.BtnReadPropertyMultiple.Size = new System.Drawing.Size(731, 23);
-            this.BtnReadPropertyMultiple.TabIndex = 2;
-            this.BtnReadPropertyMultiple.Text = "ReadPropertyMultiple";
-            this.BtnReadPropertyMultiple.UseVisualStyleBackColor = true;
-            this.BtnReadPropertyMultiple.Click += new System.EventHandler(this.BtnReadPropertyMultiple_Click);
-            // 
-            // DgvReadPropertyMultiple_Result
-            // 
-            this.DgvReadPropertyMultiple_Result.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvReadPropertyMultiple_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvReadPropertyMultiple_Result.Location = new System.Drawing.Point(169, 152);
-            this.DgvReadPropertyMultiple_Result.Name = "DgvReadPropertyMultiple_Result";
-            this.DgvReadPropertyMultiple_Result.Size = new System.Drawing.Size(731, 396);
-            this.DgvReadPropertyMultiple_Result.TabIndex = 3;
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.DgvReadPropertyMultiple_Ids, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.DgvReadPropertyMultiple_Attrs, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(169, 23);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(731, 94);
-            this.tableLayoutPanel1.TabIndex = 4;
-            // 
-            // DgvReadPropertyMultiple_Ids_Id
-            // 
-            this.DgvReadPropertyMultiple_Ids_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.DgvReadPropertyMultiple_Ids_Id.HeaderText = "Object ID (GUID)";
-            this.DgvReadPropertyMultiple_Ids_Id.MinimumWidth = 140;
-            this.DgvReadPropertyMultiple_Ids_Id.Name = "DgvReadPropertyMultiple_Ids_Id";
-            // 
-            // DgvReadPropertyMultiple_Attrs
-            // 
-            this.DgvReadPropertyMultiple_Attrs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvReadPropertyMultiple_Attrs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.DgvReadPropertyMultiple_Attrs_Attribute});
-            this.DgvReadPropertyMultiple_Attrs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvReadPropertyMultiple_Attrs.Location = new System.Drawing.Point(368, 3);
-            this.DgvReadPropertyMultiple_Attrs.Name = "DgvReadPropertyMultiple_Attrs";
-            this.DgvReadPropertyMultiple_Attrs.Size = new System.Drawing.Size(360, 88);
-            this.DgvReadPropertyMultiple_Attrs.TabIndex = 2;
-            // 
-            // LblWriteProperty_ObjectId
-            // 
-            this.LblWriteProperty_ObjectId.AutoSize = true;
-            this.LblWriteProperty_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblWriteProperty_ObjectId.Location = new System.Drawing.Point(23, 23);
-            this.LblWriteProperty_ObjectId.Margin = new System.Windows.Forms.Padding(3);
-            this.LblWriteProperty_ObjectId.MinimumSize = new System.Drawing.Size(140, 0);
-            this.LblWriteProperty_ObjectId.Name = "LblWriteProperty_ObjectId";
-            this.LblWriteProperty_ObjectId.Size = new System.Drawing.Size(140, 20);
-            this.LblWriteProperty_ObjectId.TabIndex = 0;
-            this.LblWriteProperty_ObjectId.Text = "Object ID (GUID):";
-            this.LblWriteProperty_ObjectId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TxtWriteProperty_ObjectId
-            // 
-            this.TxtWriteProperty_ObjectId.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtWriteProperty_ObjectId.Location = new System.Drawing.Point(169, 23);
-            this.TxtWriteProperty_ObjectId.Name = "TxtWriteProperty_ObjectId";
-            this.TxtWriteProperty_ObjectId.Size = new System.Drawing.Size(731, 20);
-            this.TxtWriteProperty_ObjectId.TabIndex = 1;
-            // 
-            // LblWriteProperty_AttributeName
-            // 
-            this.LblWriteProperty_AttributeName.AutoSize = true;
-            this.LblWriteProperty_AttributeName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblWriteProperty_AttributeName.Location = new System.Drawing.Point(23, 49);
-            this.LblWriteProperty_AttributeName.Margin = new System.Windows.Forms.Padding(3);
-            this.LblWriteProperty_AttributeName.Name = "LblWriteProperty_AttributeName";
-            this.LblWriteProperty_AttributeName.Size = new System.Drawing.Size(140, 20);
-            this.LblWriteProperty_AttributeName.TabIndex = 2;
-            this.LblWriteProperty_AttributeName.Text = "Property Name:";
-            this.LblWriteProperty_AttributeName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TxtWriteProperty_AttributeName
-            // 
-            this.TxtWriteProperty_AttributeName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtWriteProperty_AttributeName.Location = new System.Drawing.Point(169, 49);
-            this.TxtWriteProperty_AttributeName.Name = "TxtWriteProperty_AttributeName";
-            this.TxtWriteProperty_AttributeName.Size = new System.Drawing.Size(731, 20);
-            this.TxtWriteProperty_AttributeName.TabIndex = 3;
-            // 
-            // LblWriteProperty_NewValue
-            // 
-            this.LblWriteProperty_NewValue.AutoSize = true;
-            this.LblWriteProperty_NewValue.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblWriteProperty_NewValue.Location = new System.Drawing.Point(23, 75);
-            this.LblWriteProperty_NewValue.Margin = new System.Windows.Forms.Padding(3);
-            this.LblWriteProperty_NewValue.Name = "LblWriteProperty_NewValue";
-            this.LblWriteProperty_NewValue.Size = new System.Drawing.Size(140, 20);
-            this.LblWriteProperty_NewValue.TabIndex = 4;
-            this.LblWriteProperty_NewValue.Text = "New Value:";
-            this.LblWriteProperty_NewValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TxtWriteProperty_NewValue
-            // 
-            this.TxtWriteProperty_NewValue.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtWriteProperty_NewValue.Location = new System.Drawing.Point(169, 75);
-            this.TxtWriteProperty_NewValue.Name = "TxtWriteProperty_NewValue";
-            this.TxtWriteProperty_NewValue.Size = new System.Drawing.Size(731, 20);
-            this.TxtWriteProperty_NewValue.TabIndex = 5;
-            // 
-            // BtnWriteProperty
-            // 
-            this.BtnWriteProperty.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnWriteProperty.Location = new System.Drawing.Point(169, 101);
-            this.BtnWriteProperty.Name = "BtnWriteProperty";
-            this.BtnWriteProperty.Size = new System.Drawing.Size(731, 23);
-            this.BtnWriteProperty.TabIndex = 6;
-            this.BtnWriteProperty.Text = "WriteProperty";
-            this.BtnWriteProperty.UseVisualStyleBackColor = true;
-            this.BtnWriteProperty.Click += new System.EventHandler(this.BtnWriteProperty_Click);
-            // 
-            // LblWriteProperty_Result
-            // 
-            this.LblWriteProperty_Result.AutoSize = true;
-            this.LblWriteProperty_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblWriteProperty_Result.Location = new System.Drawing.Point(23, 130);
-            this.LblWriteProperty_Result.Margin = new System.Windows.Forms.Padding(3);
-            this.LblWriteProperty_Result.Name = "LblWriteProperty_Result";
-            this.LblWriteProperty_Result.Size = new System.Drawing.Size(140, 20);
-            this.LblWriteProperty_Result.TabIndex = 7;
-            this.LblWriteProperty_Result.Text = "Result:";
-            this.LblWriteProperty_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // DgvReadPropertyMultiple_Attrs_Attribute
-            // 
-            this.DgvReadPropertyMultiple_Attrs_Attribute.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.DgvReadPropertyMultiple_Attrs_Attribute.HeaderText = "Object Property";
-            this.DgvReadPropertyMultiple_Attrs_Attribute.Name = "DgvReadPropertyMultiple_Attrs_Attribute";
-            // 
-            // TxtWriteProperty_Result
-            // 
-            this.TxtWriteProperty_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtWriteProperty_Result.Location = new System.Drawing.Point(169, 130);
-            this.TxtWriteProperty_Result.Name = "TxtWriteProperty_Result";
-            this.TxtWriteProperty_Result.ReadOnly = true;
-            this.TxtWriteProperty_Result.Size = new System.Drawing.Size(731, 20);
-            this.TxtWriteProperty_Result.TabIndex = 8;
-            // 
-            // LblWritePropertyMultiple_Params
-            // 
-            this.LblWritePropertyMultiple_Params.AutoSize = true;
-            this.LblWritePropertyMultiple_Params.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblWritePropertyMultiple_Params.Location = new System.Drawing.Point(23, 23);
-            this.LblWritePropertyMultiple_Params.Margin = new System.Windows.Forms.Padding(3);
-            this.LblWritePropertyMultiple_Params.MinimumSize = new System.Drawing.Size(140, 0);
-            this.LblWritePropertyMultiple_Params.Name = "LblWritePropertyMultiple_Params";
-            this.LblWritePropertyMultiple_Params.Size = new System.Drawing.Size(140, 94);
-            this.LblWritePropertyMultiple_Params.TabIndex = 0;
-            this.LblWritePropertyMultiple_Params.Text = "Parameters:";
-            this.LblWritePropertyMultiple_Params.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TlpWritepropertyMultiple_Params
-            // 
-            this.TlpWritepropertyMultiple_Params.ColumnCount = 2;
-            this.TlpWritepropertyMultiple_Params.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TlpWritepropertyMultiple_Params.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TlpWritepropertyMultiple_Params.Controls.Add(this.DgvWritePropertyMultiple_Ids, 0, 0);
-            this.TlpWritepropertyMultiple_Params.Controls.Add(this.DgvWritePropertyMultiple_Attrs, 1, 0);
-            this.TlpWritepropertyMultiple_Params.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TlpWritepropertyMultiple_Params.Location = new System.Drawing.Point(169, 23);
-            this.TlpWritepropertyMultiple_Params.Name = "TlpWritepropertyMultiple_Params";
-            this.TlpWritepropertyMultiple_Params.RowCount = 1;
-            this.TlpWritepropertyMultiple_Params.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TlpWritepropertyMultiple_Params.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TlpWritepropertyMultiple_Params.Size = new System.Drawing.Size(731, 94);
-            this.TlpWritepropertyMultiple_Params.TabIndex = 1;
-            // 
-            // DgvWritePropertyMultiple_Ids
-            // 
-            this.DgvWritePropertyMultiple_Ids.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvWritePropertyMultiple_Ids.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.DgvWritePropertyMultiple_Ids_Id});
-            this.DgvWritePropertyMultiple_Ids.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvWritePropertyMultiple_Ids.Location = new System.Drawing.Point(3, 3);
-            this.DgvWritePropertyMultiple_Ids.Name = "DgvWritePropertyMultiple_Ids";
-            this.DgvWritePropertyMultiple_Ids.Size = new System.Drawing.Size(359, 88);
-            this.DgvWritePropertyMultiple_Ids.TabIndex = 0;
-            // 
-            // DgvWritePropertyMultiple_Attrs
-            // 
-            this.DgvWritePropertyMultiple_Attrs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvWritePropertyMultiple_Attrs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.DgvWritePropertyMultiple_Attrs_Name,
-            this.DgvWritePropertyMultiple_Attrs_Value});
-            this.DgvWritePropertyMultiple_Attrs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DgvWritePropertyMultiple_Attrs.Location = new System.Drawing.Point(368, 3);
-            this.DgvWritePropertyMultiple_Attrs.Name = "DgvWritePropertyMultiple_Attrs";
-            this.DgvWritePropertyMultiple_Attrs.Size = new System.Drawing.Size(360, 88);
-            this.DgvWritePropertyMultiple_Attrs.TabIndex = 1;
-            // 
-            // DgvWritePropertyMultiple_Ids_Id
-            // 
-            this.DgvWritePropertyMultiple_Ids_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.DgvWritePropertyMultiple_Ids_Id.HeaderText = "Object ID (GUID)";
-            this.DgvWritePropertyMultiple_Ids_Id.Name = "DgvWritePropertyMultiple_Ids_Id";
-            // 
-            // DgvWritePropertyMultiple_Attrs_Name
-            // 
-            this.DgvWritePropertyMultiple_Attrs_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.DgvWritePropertyMultiple_Attrs_Name.HeaderText = "Property Name";
-            this.DgvWritePropertyMultiple_Attrs_Name.MinimumWidth = 140;
-            this.DgvWritePropertyMultiple_Attrs_Name.Name = "DgvWritePropertyMultiple_Attrs_Name";
-            this.DgvWritePropertyMultiple_Attrs_Name.Width = 140;
-            // 
-            // DgvWritePropertyMultiple_Attrs_Value
-            // 
-            this.DgvWritePropertyMultiple_Attrs_Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.DgvWritePropertyMultiple_Attrs_Value.HeaderText = "Property New Value";
-            this.DgvWritePropertyMultiple_Attrs_Value.Name = "DgvWritePropertyMultiple_Attrs_Value";
-            // 
-            // BtnWritePropertyMultiple
-            // 
-            this.BtnWritePropertyMultiple.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnWritePropertyMultiple.Location = new System.Drawing.Point(169, 123);
-            this.BtnWritePropertyMultiple.Name = "BtnWritePropertyMultiple";
-            this.BtnWritePropertyMultiple.Size = new System.Drawing.Size(731, 23);
-            this.BtnWritePropertyMultiple.TabIndex = 2;
-            this.BtnWritePropertyMultiple.Text = "WritePropertyMultiple";
-            this.BtnWritePropertyMultiple.UseVisualStyleBackColor = true;
-            this.BtnWritePropertyMultiple.Click += new System.EventHandler(this.BtnWritePropertyMultiple_Click);
-            // 
-            // LblWritePropertMultiple_Result
-            // 
-            this.LblWritePropertMultiple_Result.AutoSize = true;
-            this.LblWritePropertMultiple_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LblWritePropertMultiple_Result.Location = new System.Drawing.Point(23, 152);
-            this.LblWritePropertMultiple_Result.Margin = new System.Windows.Forms.Padding(3);
-            this.LblWritePropertMultiple_Result.Name = "LblWritePropertMultiple_Result";
-            this.LblWritePropertMultiple_Result.Size = new System.Drawing.Size(140, 20);
-            this.LblWritePropertMultiple_Result.TabIndex = 3;
-            this.LblWritePropertMultiple_Result.Text = "Result:";
-            this.LblWritePropertMultiple_Result.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TxtWritePropertyMultiple_Result
-            // 
-            this.TxtWritePropertyMultiple_Result.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TxtWritePropertyMultiple_Result.Location = new System.Drawing.Point(169, 152);
-            this.TxtWritePropertyMultiple_Result.Name = "TxtWritePropertyMultiple_Result";
-            this.TxtWritePropertyMultiple_Result.ReadOnly = true;
-            this.TxtWritePropertyMultiple_Result.Size = new System.Drawing.Size(731, 20);
-            this.TxtWritePropertyMultiple_Result.TabIndex = 4;
+            this.ChkGetObjects_IncludeExtensions.AutoSize = true;
+            this.ChkGetObjects_IncludeExtensions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ChkGetObjects_IncludeExtensions.Location = new System.Drawing.Point(169, 75);
+            this.ChkGetObjects_IncludeExtensions.MinimumSize = new System.Drawing.Size(0, 20);
+            this.ChkGetObjects_IncludeExtensions.Name = "ChkGetObjects_IncludeExtensions";
+            this.ChkGetObjects_IncludeExtensions.Size = new System.Drawing.Size(731, 20);
+            this.ChkGetObjects_IncludeExtensions.TabIndex = 9;
+            this.ChkGetObjects_IncludeExtensions.UseVisualStyleBackColor = true;
             // 
             // Objects
             // 
@@ -1302,22 +1330,22 @@ namespace MetasysServices_TestClient.Forms
             this.TpgReadPropertyMultiple.ResumeLayout(false);
             this.TlpReadPropertyMultiple.ResumeLayout(false);
             this.TlpReadPropertyMultiple.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Result)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Ids)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Attrs)).EndInit();
             this.TpgWriteProperty.ResumeLayout(false);
             this.TlpWriteProperty.ResumeLayout(false);
             this.TlpWriteProperty.PerformLayout();
             this.TpgWritePropertyMultiple.ResumeLayout(false);
             this.TlpWritePropertyMultiple.ResumeLayout(false);
             this.TlpWritePropertyMultiple.PerformLayout();
-            this.TpgSendCommand.ResumeLayout(false);
-            this.TlpSendCommand.ResumeLayout(false);
-            this.TlpSendCommand.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Ids)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Result)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DgvReadPropertyMultiple_Attrs)).EndInit();
             this.TlpWritepropertyMultiple_Params.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DgvWritePropertyMultiple_Ids)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DgvWritePropertyMultiple_Attrs)).EndInit();
+            this.TpgSendCommand.ResumeLayout(false);
+            this.TlpSendCommand.ResumeLayout(false);
+            this.TlpSendCommand.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1414,5 +1442,7 @@ namespace MetasysServices_TestClient.Forms
         private System.Windows.Forms.Button BtnWritePropertyMultiple;
         private System.Windows.Forms.Label LblWritePropertMultiple_Result;
         private System.Windows.Forms.TextBox TxtWritePropertyMultiple_Result;
+        private System.Windows.Forms.Label LblGetObjects_IncludeExtensions;
+        private System.Windows.Forms.CheckBox ChkGetObjects_IncludeExtensions;
     }
 }

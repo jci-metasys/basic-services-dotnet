@@ -31,42 +31,42 @@ namespace JohnsonControls.Metasys.ComServices
         /// <remarks> 
         /// Possible values from 'alarmValueEnumSet' Metasys enum set. Example: 'alarmValueEnumSet.avHighLimit'. 
         /// </remarks>
-         string[] Type { get; set; }
+        string Type { get; set; }
 
         /// <summary> 
         /// Determines whether acknowledged alarms will be included in the results. Default: (missing). 
         /// </summary>
-        bool? IncludeAcknowledged { get; set; }
+        bool IncludeAcknowledged { get; set; }
 
         /// <summary> 
         /// The flag to include discarded alarms. Default: (missing). 
         /// </summary>
-        bool? IncludeDiscarded { get; set; }
+        bool IncludeDiscarded { get; set; }
 
         /// <summary> 
         /// Determines whether activities which can be acknowledged are included in the results. Default: true. 
         /// </summary>
-        bool? IncludeAcknowledgementRequired { get; set; }
+        bool IncludeAcknowledgementRequired { get; set; }
 
         /// <summary> 
         /// Determines whether activities which can not be acknowledged are included in the results. Default: true. 
         /// </summary>
-        bool? IncludeAcknowledgementNotRequired { get; set; }
+        bool IncludeAcknowledgementNotRequired { get; set; }
 
         /// <summary> 
         /// Filter by list of equipment identifiers. 
         /// </summary>
-        string[] Equipment { get; set; }
+        string Equipment { get; set; }
 
         /// <summary> 
         /// Filter by list of object identifiers. 
         /// </summary>
-        string[] Object { get; set; }
+        string Object { get; set; }
 
         /// <summary> 
         /// Filter by list of space identifiers. 
         /// </summary>
-        string[] Space { get; set; }
+        string Space { get; set; }
 
         /// <summary> 
         /// The authorization category of the requested alarms. 
@@ -74,7 +74,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <remarks> 
         /// Possible values from 'objectCategoryEnumSet' Metasys enum set. Example: 'objectCategoryEnumSet.hvacCategory'. 
         /// </remarks>
-        string[] Category { get; set; }
+        string Category { get; set; }
 
     }
 }

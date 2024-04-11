@@ -1,17 +1,17 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Net;
 using Flurl;
 using Flurl.Http;
-using Newtonsoft.Json.Linq;
-using System.Net.Http;
 using JohnsonControls.Metasys.BasicServices.Utils;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
-using System.Timers;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
 
 
 namespace JohnsonControls.Metasys.BasicServices
@@ -69,7 +69,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 // No need to init base url on first call (already done on Version set)
                 if (hostname != null && hostname != value) // it's the same hostname: no changes
-                {                   
+                {
                     // reset the base client according to settings
                     InitFlurlClient(value);
                 }
@@ -240,7 +240,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 Spaces = new SpaceServiceProvider(Client, version, logClientErrors);
                 Trends = new TrendServiceProvider(Client, version, logClientErrors);
                 if (Version > ApiVersion.v3) Streams = new StreamServiceProvider(Client, version, logClientErrors);
-                
+
 
                 base.Version = version;
             }
@@ -342,12 +342,12 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         // Refresh2 ------------------------------------------------------------------------------------------------------------------
-        
+
         private AccessToken Refresh2()
         {
             return Refresh2Async().GetAwaiter().GetResult();
         }
-        
+
         private async Task<AccessToken> Refresh2Async()
         {
             try
@@ -490,12 +490,12 @@ namespace JohnsonControls.Metasys.BasicServices
         #region "OBJECTS" // ========================================================================================================
         // GetObjects ---------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false)
+        public IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false, bool includeExtensions = false)
         {
-            return GetObjectsAsync(id, levels, includeInternalObjects).GetAwaiter().GetResult();
+            return GetObjectsAsync(id, levels, includeInternalObjects, includeExtensions).GetAwaiter().GetResult();
         }
         /// <inheritdoc/>
-        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels, bool includeInternalObjects = false)
+        public async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels, bool includeInternalObjects = false, bool includeExtensions = false)
         {
             Dictionary<string, string> parameters = null;
             if (Version == ApiVersion.v3)
@@ -511,10 +511,10 @@ namespace JohnsonControls.Metasys.BasicServices
                 // Since API v3 we could use the includeInternalObjects parameter
                 parameters = new Dictionary<string, string>
                 {
-                    { "includeInternal", includeInternalObjects.ToString() }, //This param has different name when version > v3
+                    { "depth", levels.ToString() },
                     { "flatten", "true".ToString() }, //This parameter is needed to get the data in a 'flat' way and keep consistency in the logic to retrieve the objects
-                    { "includeExtensions", "true".ToString() },
-                    { "depth", "2".ToString() }
+                    { "includeExtensions", includeExtensions.ToString() },
+                    { "includeInternal", includeInternalObjects.ToString() } //This param has different name when version > v3
                 };
             }
 
@@ -549,7 +549,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
 
             var objects = await GetObjectChildrenAsync(objectId, parameters).ConfigureAwait(false);
-            
+
             return ToMetasysObject(objects, Version);
         }
 
@@ -827,7 +827,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetSpacesAsync(SpaceTypeEnum? type = null)
-        {            
+        {
             return await Spaces.GetAsync(type);
         }
 
@@ -940,7 +940,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 Enabled = true
             };
 
-            _timer.Elapsed +=  (object sender, ElapsedEventArgs e) =>
+            _timer.Elapsed += (object sender, ElapsedEventArgs e) =>
             {
                 DateTime now = DateTime.UtcNow;
                 if (now > this.RefreshDateTime)
@@ -1231,7 +1231,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     throw new UriFormatException("HTTP request can not be made. Scheme or Host is invalid.");
                 }
                 return new Url(requestUri);
-            } 
+            }
             else
             {
                 return new Url(Url.Combine(baseUri.GetLeftPart(UriPartial.Authority), "/api/", requestUri));

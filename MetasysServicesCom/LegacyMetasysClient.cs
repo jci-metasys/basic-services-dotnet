@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using JohnsonControls.Metasys.BasicServices;
-using JohnsonControls.Metasys.BasicServices.Utils;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using MetasysAttribute = JohnsonControls.Metasys.BasicServices.MetasysAttribute;
-using System.Globalization;
-using System.Net.Security;
 
 namespace JohnsonControls.Metasys.ComServices
 {
@@ -55,6 +53,7 @@ namespace JohnsonControls.Metasys.ComServices
                 cfg.CreateMap<Command, IComCommand>();
                 cfg.CreateMap<MetasysObjectType, IComMetasysObjectType>();
                 cfg.CreateMap<IComFilterAlarm, AlarmFilter>();
+                cfg.CreateMap<IComAlarmFilterV4Plus, AlarmFilterV4Plus>();
                 cfg.CreateMap<Alarm, IComAlarm>();
                 cfg.CreateMap<Sample, IComSample>();
                 cfg.CreateMap<IComTimeFilter, TimeFilter>();
@@ -94,7 +93,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <inheritdoc/>
         public string TryLogin2(string username, string password, bool refresh = true)
         {
-            string res ;
+            string res;
             try
             {
                 AccessToken accToken = Client.TryLogin(username, password, refresh);
@@ -244,7 +243,7 @@ namespace JohnsonControls.Metasys.ComServices
         public void AcknowledgeAlarm(string alarmId, string annotationText = null)
         {
             Guid guid = Guid.Parse(alarmId);
-            Client.Alarms.Acknowledge(guid,  annotationText);
+            Client.Alarms.Acknowledge(guid, annotationText);
         }
         //DiscardAlarm -----------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
@@ -420,7 +419,7 @@ namespace JohnsonControls.Metasys.ComServices
         #region "Equipments" // =====================================================================================================
         //GetEquipment --------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public object GetEquipment(int? page = null, int? pageSize = null)
+        public object GetEquipment(int page = 1, int pageSize = 100)
         {
             // Note: need a generic object as return type in order to map correctly to VBA type array
             var res = Client.Equipments.Get(page, pageSize);
@@ -464,7 +463,7 @@ namespace JohnsonControls.Metasys.ComServices
         }
         /// <inheritdoc/>
         public object GetSpaceEquipment(string spaceId) //This method is deprecated and you should use 'GetEquipmentServingASpace()'
-        {       
+        {
             return GetEquipmentsServingASpace(spaceId);
         }
 
@@ -547,10 +546,10 @@ namespace JohnsonControls.Metasys.ComServices
         #region "Objects" // ========================================================================================================
         //GetObjects ----------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public object GetObjects(string id, int levels = 1)
+        public object GetObjects(string id, int levels = 1, bool includeInternalObjects = false, bool includeExtensions = false)
         {
             Guid guid = new Guid(id);
-            var res = Client.GetObjects(guid, levels).ToList();
+            var res = Client.GetObjects(guid, levels, includeInternalObjects, includeExtensions).ToList();
             return Mapper.Map<IComMetasysObject[]>(res);
         }
 
@@ -676,7 +675,7 @@ namespace JohnsonControls.Metasys.ComServices
         #region "Spaces" // =========================================================================================================
         //GetSpaces -----------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public object GetSpaces(string type = null, int? page = null, int? pageSize = null, string sort = null)
+        public object GetSpaces(string type = null, int page = 1, int pageSize = 100, string sort = null)
         {
             SpaceTypeEnum? spaceType = null;
             if (type != null)

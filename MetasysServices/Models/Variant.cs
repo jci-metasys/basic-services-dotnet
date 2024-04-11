@@ -1,8 +1,8 @@
-using System;
-using System.Globalization;
+using JohnsonControls.Metasys.BasicServices.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using JohnsonControls.Metasys.BasicServices.Utils;
+using System;
+using System.Globalization;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -21,6 +21,12 @@ namespace JohnsonControls.Metasys.BasicServices
         private const string Unsupported = "statusEnumSet.unsupportedObjectType";
 
         private const string Array = "dataTypeEnumSet.arrayDataType";
+
+        /// <summary>The string representation of the item type.</summary>
+        /// <value>
+        /// Type of the item (e.g. 'string', 'numeric', 'boolean', 'object').
+        /// </value>
+        public string ItemType { private set; get; }
 
         /// <summary>The string representation of the value.</summary>
         /// <value>
@@ -49,6 +55,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// 1 if true or numeric value not equal to 0.
         /// </value>
         public bool BooleanValue { private set; get; }
+
+        /// <summary>The object representation of the value.</summary>
+        /// <value>
+        /// Object value specified as Json.
+        /// </value>
+        public object ObjectValue { private set; get; }
 
         /// <summary>An array of Variant values.</summary>
         /// <value>Null unless value is an array.</value>
@@ -99,7 +111,8 @@ namespace JohnsonControls.Metasys.BasicServices
 
         private CultureInfo _CultureInfo;
 
-        internal Variant() {
+        internal Variant()
+        {
         }
 
         internal Variant(Guid id, JToken token, string attribute, CultureInfo cultureInfo, ApiVersion apiVersion)
@@ -114,7 +127,7 @@ namespace JohnsonControls.Metasys.BasicServices
             PriorityEnumerationKey = null;
             StringValueEnumerationKey = null;
             StringValue = null;
-            NumericValue = 1;
+            NumericValue = 0;
             ArrayValue = null;
             BooleanValue = false;
             ProcessToken(token);
@@ -130,30 +143,34 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         private void ProcessToken(JToken token)
         {
-            if (token == null || token["item"]== null || token ["item"][Attribute] == null)
+            if (token == null || token["item"] == null || token["item"][Attribute] == null)
             {
                 // return unsupported attribute result
-                NumericValue = 1;
+                ItemType = "unsupported";
+                NumericValue = 0;
                 StringValueEnumerationKey = Unsupported;
                 StringValue = ResourceManager.Localize(StringValueEnumerationKey, _CultureInfo);
                 return;
             }
-            JToken attributeToken=token["item"][Attribute];           
+            JToken attributeToken = token["item"][Attribute];
             // switch on attributeToken type and set the fields appropriately
             switch (attributeToken.Type)
             {
                 case JTokenType.Integer:
+                    ItemType = "numeric";
                     NumericValue = attributeToken.Value<double>();
                     StringValue = NumericValue.ToString(_CultureInfo);
                     BooleanValue = Convert.ToBoolean(NumericValue);
                     ArrayValue = null;
                     break;
                 case JTokenType.Float:
+                    ItemType = "numeric";
                     NumericValue = attributeToken.Value<double>();
                     StringValue = NumericValue.ToString(_CultureInfo);
                     BooleanValue = Convert.ToBoolean(NumericValue);
                     break;
                 case JTokenType.String:
+                    ItemType = "string";
                     NumericValue = 0;
                     StringValueEnumerationKey = attributeToken.Value<string>();
                     StringValue = ResourceManager.Localize(StringValueEnumerationKey, _CultureInfo);
@@ -162,6 +179,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     ProcessArray(attributeToken);
                     break;
                 case JTokenType.Boolean:
+                    ItemType = "boolean";
                     if ((bool)(attributeToken) == true)
                     {
                         NumericValue = 1;
@@ -182,13 +200,19 @@ namespace JohnsonControls.Metasys.BasicServices
                         // From v3 onwards presentValue is threated like other attributes and additional information are moved in Condition property.
                         ProcessPresentValue(attributeToken);
                     }
+                    else
+                    {
+                        ItemType = "object";
+                        ObjectValue = attributeToken;
+                    }
                     break;
                 default:
-                    NumericValue = 1;
+                    NumericValue = 0;
                     StringValueEnumerationKey = Unsupported;
                     StringValue = ResourceManager.Localize(StringValueEnumerationKey, _CultureInfo);
+                    ObjectValue = null;
                     break;
-            }          
+            }
         }
 
         /// <summary>Parses a JArray and adds each item as a Variant.</summary>
@@ -265,7 +289,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 PriorityEnumerationKey = priorityToken.ToString();
                 Priority = ResourceManager.Localize(PriorityEnumerationKey, _CultureInfo);
-            }          
+            }
         }
 
         /// <summary>

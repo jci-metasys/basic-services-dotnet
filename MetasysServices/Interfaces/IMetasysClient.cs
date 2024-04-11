@@ -1,17 +1,17 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// An HTTP client for consuming the most commonly used endpoints of the Metasys API.
     /// </summary>
-    public interface IMetasysClient :IBasicService
+    public interface IMetasysClient : IBasicService
     {
         /// <summary>
         /// The hostname of Metasys API server.
@@ -239,7 +239,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, IEnumerable<(string Attribute, object Value)> attributeValues);
         /// <inheritdoc cref="IMetasysClient.WritePropertyMultiple(IEnumerable{Guid}, Dictionary{string, object})"/>
-        Task WritePropertyMultipleAsync(IEnumerable<Guid> ids,  Dictionary<string, object> attributeValues);
+        Task WritePropertyMultipleAsync(IEnumerable<Guid> ids, Dictionary<string, object> attributeValues);
 
 
         /// <summary>
@@ -306,15 +306,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <remarks>
         /// A level of 1 only retrieves immediate children of the parent object.
         /// </remarks>
-        /// <param name="id"></param>
+        /// <param name="id">The ID of the parent object.</param>
         /// <param name="levels">The depth of the children to retrieve.</param>
         /// <param name="includeInternalObjects">Set it to true to see also internal objects that are not displayed in the Metasys tree. </param>      
+        /// <param name="includeExtensions">Set it to true to get also the extensions of the object.</param>      
         /// <remarks> The flag includeInternalObjects applies since Metasys API v3. </remarks>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false);
+        IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false, bool includeExtensions = false);
         /// <inheritdoc cref="IMetasysClient.GetObjects(Guid, int, bool)"/>
-        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, bool includeInternalObjects = false);
+        Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, bool includeInternalObjects = false, bool includeExtensions = false);
 
         /// <summary>
         /// Gets all child objects given a parent Guid and object type.

@@ -13,11 +13,11 @@
     <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
-    <PackageReleaseNotes>- Fixed issue related to the method 'Activities.Get()'
-- Enhanced method 'Alarms.Get()' to support params for v4+</PackageReleaseNotes>
+    <PackageReleaseNotes>- Fixed issue related to the method 'GetObjects()'
+- Enhanced methods 'ReadProperty()' and 'ReadPropertyMultiple()'</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>6.0.2</Version>    
+    <Version>6.0.3</Version>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

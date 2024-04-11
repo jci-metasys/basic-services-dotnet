@@ -1,13 +1,8 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace MetasysServices_TestClient.Forms
 {
@@ -50,11 +45,12 @@ namespace MetasysServices_TestClient.Forms
             DgvGetObjects.DataSource = null;
             string guid = TxtGetObjects_ParentID.Text;
             int levels = (int)NupGetObject_Levels.Value;
+            bool includeExtensions = ChkGetObjects_IncludeExtensions.Checked;
             bool includeInternalObjects = ChkGetObjects_IncludeInternalObjects.Checked;
             if (guid.Length > 0)
             {
                 Guid parentId = new Guid(guid);
-                var result = _client.GetObjects(parentId, levels, includeInternalObjects);
+                var result = _client.GetObjects(parentId, levels, includeInternalObjects, includeExtensions);
                 DgvGetObjects.DataSource = result;
             }
         }
@@ -154,7 +150,7 @@ namespace MetasysServices_TestClient.Forms
                     }
                     else
                     {
-                        List<object>  objValues = new List<object>();
+                        List<object> objValues = new List<object>();
                         if (double.TryParse(values, out double numericValue))
                         {
                             objValues.Add(numericValue);
@@ -212,7 +208,7 @@ namespace MetasysServices_TestClient.Forms
 
                         foreach (var i in result)
                         {
-                            foreach(Variant v in i.Values)
+                            foreach (Variant v in i.Values)
                             {
                                 values.Add(v);
                             }
@@ -242,7 +238,7 @@ namespace MetasysServices_TestClient.Forms
                     _client.WriteProperty(id, attributeName, newValue);
                     TxtWriteProperty_Result.Text = "OK";
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     TxtSendCommand_Result.Text = "Error: " + ex.Message;
                 }
