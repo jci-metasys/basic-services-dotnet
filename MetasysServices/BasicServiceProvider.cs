@@ -37,7 +37,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Max API version supported by this SDK.
         /// </summary>
-        public ApiVersion MaxVersionSupported { get; } = ApiVersion.v5;
+        public ApiVersion MaxVersionSupported { get; } = ApiVersion.v6;
 
         /// <summary>
         /// The current Culture Used for localization.

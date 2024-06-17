@@ -22,7 +22,9 @@ namespace JohnsonControls.Metasys.BasicServices
     public class MetasysClient : BasicServiceProvider, IMetasysClient
     {
 
-        /// <summary>The flag used to control automatic session refreshing.</summary>
+        /// <summary>
+        /// The flag used to control automatic session refreshing.
+        /// </summary>
         protected bool RefreshToken;
 
         /// <summary>
