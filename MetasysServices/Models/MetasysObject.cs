@@ -82,6 +82,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Classification of the object
         /// </summary>
         public string Classification { get; set; }
+        private const string DefaultClassification = "object";
 
         internal MetasysObject(JToken token, ApiVersion version, IEnumerable<MetasysObject> children = null, MetasysObjectTypeEnum? type =null)
         {
@@ -187,11 +188,19 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             try
             {
-                Classification = jobj.ContainsKey("classification") ? token["classification"].Value<string>() : null;
+                if (jobj.ContainsKey("classification")) 
+                {
+                    var tokenValue = token["classification"].Value<string>().Trim();
+                    Classification = tokenValue == string.Empty ? DefaultClassification : tokenValue;
+                }
+                else
+                {
+                    Classification = DefaultClassification;
+                }
             }
             catch
             {
-                Classification = null;
+                Classification = DefaultClassification;
             }
         }
 
