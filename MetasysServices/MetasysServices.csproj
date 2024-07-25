@@ -14,7 +14,8 @@
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
     <PackageReleaseNotes>- Fixed issue related to the method 'GetObjects()'
-- Updated the dictionaries of all the supported locales</PackageReleaseNotes>
+- Updated the dictionaries of all the supported locales
+- Cleaned up unnecessary code</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>6.0.4</Version>    

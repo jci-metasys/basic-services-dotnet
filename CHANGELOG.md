@@ -7,16 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.0.4] - 2024-07-25
+### Changed
+- Fixed issue related to the method 'GetObjects()' (specifically related to the attribute 'Classification')
+- Updated the dictionaries of all the supported locales.
+- Reviewed and cleaned up unnecessary code.
+
 ## [6.0.3] - 2024-04-11
 ### Changed
 - Fixed issue related to the method 'GetObjects()' (the parameter 'levels' was not properly handled)
 - Enhanced methods 'ReadProperty()' and 'ReadPropertyMultiple()'
 - Enhanced the TestClient app in order to support the latest changes.
+
 ## [6.0.2] - 2024-03-20
 ### Changed
 - Fixed issue related to the method that is retrieving the list of Activities when API v4 was selected.
 - Added the new parameters of the method 'alarms.get()' supported from API v4 on.
 - Enhanced the TestClient app in order to support the latest changes.
+
 ## [6.0.1] - 2024-01-15
 ### Changed
 - Made changes to MetasysObject to fix an issue related to the property ObjectType that wasn't properly populated.
@@ -273,7 +281,8 @@ First Release.
 - LegacyMetasysClient for compatibility with COM services.
 - Automatic enumeration translations for supported languages.
 
-[Unreleased]: https://github.com/metasys-server/basic-services-dotnet/compare/v6.0.3...HEAD
+[Unreleased]: https://github.com/metasys-server/basic-services-dotnet/compare/v6.0.4...HEAD
+[6.0.4]: https://github.com/metasys-server/basic-services-dotnet/compare/v6.0.3...v6.0.4
 [6.0.3]: https://github.com/metasys-server/basic-services-dotnet/compare/v6.0.2...v6.0.3
 [6.0.2]: https://github.com/metasys-server/basic-services-dotnet/compare/v6.0.1...v6.0.2
 [6.0.1]: https://github.com/metasys-server/basic-services-dotnet/compare/v6.0.0...v6.0.1

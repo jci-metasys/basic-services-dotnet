@@ -2,8 +2,8 @@
 {
     public static class PubConstants
     {
-        public const string HOST_IP = "10.164.104.98";
-        public const string USER_NAME = "APIUser";
-        public const string PASSWORD = "5S!SEurope";
+        public const string HOST_IP = "";
+        public const string USER_NAME = "";
+        public const string PASSWORD = "";
     }
 }
