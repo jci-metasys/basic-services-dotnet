@@ -205,10 +205,26 @@ namespace MetasysServices_TestClient.Forms
             this.CmbLocalize_CultureInfo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CmbLocalize_CultureInfo.FormattingEnabled = true;
             this.CmbLocalize_CultureInfo.Items.AddRange(new object[] {
+            "cs-CZ",
+            "de-DE",
             "en-US",
-            "it-IT",
+            "es-ES",
             "fr-FR",
-            "de-DE"});
+            "hu-HU",
+            "it-IT",
+            "ja-JP",
+            "ko-KR",
+            "nb-NO",
+            "nl-NL",
+            "pl-PL",
+            "pt-BR",
+            "ru-RU",
+            "sv-SE",
+            "tr-TR",
+            "zh-CN",
+            "zh-TW",
+            "zh-Hans-CN",
+            "zh-Hant-TW"});
             this.CmbLocalize_CultureInfo.Location = new System.Drawing.Point(169, 49);
             this.CmbLocalize_CultureInfo.Name = "CmbLocalize_CultureInfo";
             this.CmbLocalize_CultureInfo.Size = new System.Drawing.Size(570, 21);
