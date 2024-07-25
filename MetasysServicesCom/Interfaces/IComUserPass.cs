@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.ComServices
 {
@@ -12,13 +8,13 @@ namespace JohnsonControls.Metasys.ComServices
     /// </summary>
     [ComVisible(true)]
     [Guid("e27dbdfb-3e70-4a68-b4a9-0ca67019f3b9")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]    
+    [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface IComUserPass
     {
         /// <summary>
         /// Username's credentials
         /// </summary>
-        string Username { get;  set; }
+        string Username { get; set; }
 
         /// <summary>
         /// Password's credentials

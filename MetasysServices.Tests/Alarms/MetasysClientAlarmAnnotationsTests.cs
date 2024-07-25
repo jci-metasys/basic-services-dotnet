@@ -1,8 +1,6 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 
@@ -13,7 +11,7 @@ namespace MetasysServices.Tests
     /// </summary>
     public class MetasysClientAlarmAnnotationsTests : MetasysClientTestsBase
     {
-             
+
         [Test]
         public void TestGetAlarmAnnotationsNone()
         {
@@ -31,7 +29,7 @@ namespace MetasysServices.Tests
                 .Times(1);
             Assert.AreEqual(0, annotations.Count());
         }
-     
+
         [Test]
         public void TestGetAlarmAnnotationsOnePage()
         {
@@ -52,12 +50,12 @@ namespace MetasysServices.Tests
                 .Times(1);
             var expected = JsonConvert.DeserializeObject<AlarmAnnotation>(AlarmAnnotation);
             Assert.AreEqual(expected, annotations.ElementAt(0));
-        }             
+        }
 
         [Test]
         public void TestAlarmAnnotationMissingValuesThrowsException()
         {
-            string AlarmAnnotation= string.Concat("{",
+            string AlarmAnnotation = string.Concat("{",
                 "\"text\": \"", "annotation test", "\",",
                 "\"user\": \"metasyssysagent\"}");
             var response = @"
@@ -70,8 +68,8 @@ namespace MetasysServices.Tests
                 }
             ";
             httpTest.RespondWith(response);
-           
-            var e = Assert.Throws<MetasysObjectException>(() => 
+
+            var e = Assert.Throws<MetasysObjectException>(() =>
                 client.Alarms.GetAnnotations(mockid));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms/{mockid}/annotations")

@@ -1,15 +1,15 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// Provides alarm Item
     /// </summary>
-    public class Alarm 
+    public class Alarm
     {
         /// <summary>
         /// URI that points back to this resource

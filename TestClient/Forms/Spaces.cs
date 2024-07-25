@@ -1,13 +1,10 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace MetasysServices_TestClient.Forms
 {
@@ -84,7 +81,7 @@ namespace MetasysServices_TestClient.Forms
                 int pageSize = (int)NudSpacePageSize.Value;
                 string sort = CmbGetSpaces_Sort.Text;
                 if (sort.Length == 0) sort = null;
-                if (_client.Version > ApiVersion.v3) 
+                if (_client.Version > ApiVersion.v3)
                 {
                     string spaceType = (string)CmbGetSpaces.SelectedValue;
                     result = _client.Spaces.Get(spaceType, page, pageSize, sort);

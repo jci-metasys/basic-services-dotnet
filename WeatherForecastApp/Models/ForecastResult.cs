@@ -1,7 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WeatherForecastApp
 {
@@ -15,7 +12,7 @@ namespace WeatherForecastApp
         public int cnt { get; set; }
         public Forecast[] list { get; set; }
     }
-  
+
     public class Forecast
     {
         public int dt { get; set; }
@@ -56,7 +53,7 @@ namespace WeatherForecastApp
     public class Rain
     {
         [JsonProperty("3h")]
-        public float ThreeHours { get; set; }      
+        public float ThreeHours { get; set; }
     }
 
     public class Snow
@@ -77,6 +74,6 @@ namespace WeatherForecastApp
         public string description { get; set; }
         public string icon { get; set; }
     }
-   
+
 
 }

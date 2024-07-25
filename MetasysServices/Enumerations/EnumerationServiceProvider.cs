@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Flurl;
+using Flurl.Http;
+using JohnsonControls.Metasys.BasicServices.Utils;
+using log4net.Config;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Flurl;
-using Flurl.Http;
-using log4net.Config;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using JohnsonControls.Metasys.BasicServices.Utils;
-using System.Dynamic;
 
 
 namespace JohnsonControls.Metasys.BasicServices
@@ -45,8 +45,8 @@ namespace JohnsonControls.Metasys.BasicServices
 
             List<MetasysEnumeration> enums = new List<MetasysEnumeration>() { };
 
-            if (Version > ApiVersion.v3) 
-            { 
+            if (Version > ApiVersion.v3)
+            {
                 try
                 {
                     var response = await Client.Request(new Url("enumerations"))
@@ -96,8 +96,8 @@ namespace JohnsonControls.Metasys.BasicServices
             CheckVersion(Version);
             try
             {
-                if (Version > ApiVersion.v3) 
-                { 
+                if (Version > ApiVersion.v3)
+                {
                     //Check if the name is not blank or the length of the list of members is >= 2
                     if (name.Length > 0 && values.Count() >= 2)
                     {
@@ -116,7 +116,8 @@ namespace JohnsonControls.Metasys.BasicServices
                                                     .PostJsonAsync(body)
                                                     .ConfigureAwait(false);
                     }
-                }else 
+                }
+                else
                 { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
             }
             catch (FlurlHttpException e)
@@ -147,8 +148,8 @@ namespace JohnsonControls.Metasys.BasicServices
             CheckVersion(Version);
             try
             {
-                if (Version > ApiVersion.v3) 
-                { 
+                if (Version > ApiVersion.v3)
+                {
                     //Check if the name is not blank or the length of the list of members is >= 2
                     if (name.Length > 0 && values.Count() >= 2)
                     {
@@ -168,7 +169,8 @@ namespace JohnsonControls.Metasys.BasicServices
                                                     .PatchJsonAsync(body)
                                                     .ConfigureAwait(false);
                     }
-                }else
+                }
+                else
                 { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
             }
             catch (FlurlHttpException e)
@@ -187,7 +189,7 @@ namespace JohnsonControls.Metasys.BasicServices
             CheckVersion(Version);
             try
             {
-                if (Version > ApiVersion.v3) 
+                if (Version > ApiVersion.v3)
                 {
                     //Check if the name is not blank or the length of the list of members is >= 2
                     if (id.Length > 0 && name.Length > 0 && values.Count() >= 2)
@@ -208,7 +210,8 @@ namespace JohnsonControls.Metasys.BasicServices
                                                         .PutJsonAsync(body)
                                                         .ConfigureAwait(false);
                     }
-                }else 
+                }
+                else
                 { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
             }
             catch (FlurlHttpException e)
@@ -227,14 +230,15 @@ namespace JohnsonControls.Metasys.BasicServices
             CheckVersion(Version);
             try
             {
-                if (Version > ApiVersion.v3) 
-                { 
+                if (Version > ApiVersion.v3)
+                {
                     var response = await Client.Request(new Url("enumerations")
                                                                 .AppendPathSegments(id))
                                                                 .DeleteAsync()
                                                                 .ConfigureAwait(false);
-                }else 
-                { throw new MetasysUnsupportedApiVersion(Version.ToString());}
+                }
+                else
+                { throw new MetasysUnsupportedApiVersion(Version.ToString()); }
             }
             catch (FlurlHttpException e)
             { ThrowHttpException(e); }

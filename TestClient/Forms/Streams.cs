@@ -1,16 +1,11 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using JohnsonControls.Metasys.BasicServices;
-using Newtonsoft.Json;
 
 namespace MetasysServices_TestClient.Forms
 {
@@ -153,7 +148,7 @@ namespace MetasysServices_TestClient.Forms
                     ids.Add(guid);
                 }
             }
-            if (ids.Count > 0 )
+            if (ids.Count > 0)
             {
                 _client.Streams.StartReadingCOVAsync(ids);
                 TxtCOVValues_StartTime.Text = DateTime.Now.ToString();
@@ -228,7 +223,7 @@ namespace MetasysServices_TestClient.Forms
                 _client.Streams.KeepAlive(accessToken);
                 MessageBox.Show("OK");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
@@ -244,24 +239,24 @@ namespace MetasysServices_TestClient.Forms
             string itemReference = "";
 
 
-            for (int c = 1; c <=16; c++)
+            for (int c = 1; c <= 16; c++)
             {
                 string cnum = c.ToString();
                 if (c < 10) cnum = "0" + cnum;
 
                 foreach (string pre in prefix)
                 {
-                    for (int i = 1; i<=15; i++)
+                    for (int i = 1; i <= 15; i++)
                     {
                         string idx = i.ToString();
-                        if (i<10) idx = "0" + idx;
+                        if (i < 10) idx = "0" + idx;
 
                         itemReference = modbusPath + controllerName + cnum + "." + pre + idx;
 
                         Guid id = _client.GetObjectIdentifier(itemReference);
                         if (id != null)
                         {
-                            _points.Add(new Point(){Name= pre + idx, Id = id, ItemReference = itemReference });
+                            _points.Add(new Point() { Name = pre + idx, Id = id, ItemReference = itemReference });
                             Thread.Sleep(100);
                         }
                     }

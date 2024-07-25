@@ -1,9 +1,9 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.ComServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using JohnsonControls.Metasys.BasicServices;
-using JohnsonControls.Metasys.ComServices;
 
 namespace MetasysServicesComExampleApp.FeaturesDemo
 {

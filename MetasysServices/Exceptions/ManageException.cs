@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Flurl.Http;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using Flurl.Http;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -23,11 +23,11 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             if (exception.GetType() == typeof(FlurlParsingException))
             {
-                throw new MetasysHttpParsingException((FlurlParsingException) exception);
+                throw new MetasysHttpParsingException((FlurlParsingException)exception);
             }
             else if (exception.GetType() == typeof(FlurlHttpTimeoutException))
             {
-                throw new MetasysHttpTimeoutException((FlurlHttpTimeoutException) exception);
+                throw new MetasysHttpTimeoutException((FlurlHttpTimeoutException)exception);
             }
             else
             {

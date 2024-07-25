@@ -1,18 +1,18 @@
+using Flurl.Http;
+using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.BasicServices.Enums;
+using Newtonsoft.Json.Linq;
+using Nito.AsyncEx;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Linq;
-using NUnit.Framework;
-using Newtonsoft.Json.Linq;
-using JohnsonControls.Metasys.BasicServices;
-using Nito.AsyncEx;
-using System.Threading.Tasks;
-using JohnsonControls.Metasys.BasicServices.Enums;
-using Flurl.Http;
 using System.IO;
-using System.Text;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MetasysServices.Tests
 {

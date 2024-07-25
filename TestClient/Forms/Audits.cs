@@ -1,13 +1,8 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using JohnsonControls.Metasys.BasicServices;
 
 
 namespace MetasysServices_TestClient.Forms

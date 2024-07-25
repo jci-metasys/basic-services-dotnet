@@ -41,9 +41,9 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var code = 13;
             // Calculate hash on each properties one by one
-            code = (code * 7) + this.Id.GetHashCode();                       
+            code = (code * 7) + this.Id.GetHashCode();
             if (this.Description != null)
-                code = (code * 7) + Description.GetHashCode();           
+                code = (code * 7) + Description.GetHashCode();
             return code;
         }
 

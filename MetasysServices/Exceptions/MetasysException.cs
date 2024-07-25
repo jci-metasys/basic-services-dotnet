@@ -1,6 +1,6 @@
-using System;
 using Flurl;
 using Flurl.Http;
+using System;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -40,7 +40,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Initializes a new instance of the MetasysUnsupportedApiVersion with a predefined message given the API Version
         /// </summary>
         /// <param name="version"></param>
-        public MetasysUnsupportedApiVersion(string version):base($"Invalid or not supported Api version ({version})")
+        public MetasysUnsupportedApiVersion(string version) : base($"Invalid or not supported Api version ({version})")
         {
         }
     }
@@ -65,7 +65,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Initializes a new instance of the MetasysHttpException class using the Flurl.Http.FlurlHttpException class.
         /// </summary>
         /// <param name="e">The Flurl.Http exception.</param>
-        public MetasysHttpException(FlurlHttpException e) : base(e.Message, e.InnerException) { 
+        public MetasysHttpException(FlurlHttpException e) : base(e.Message, e.InnerException)
+        {
             this.Call = e.Call;
             this.ResponseBody = e.GetResponseStringAsync().GetAwaiter().GetResult();
         }
@@ -76,7 +77,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="message"></param>
         /// <param name="response"></param>
         /// <param name="inner">The inner exception.</param>
-        public MetasysHttpException(string message, string response, Exception inner) : base(message, inner) { 
+        public MetasysHttpException(string message, string response, Exception inner) : base(message, inner)
+        {
             this.Call = null;
             this.ResponseBody = response;
         }
@@ -87,7 +89,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="message"></param>
         /// <param name="response"></param>
         /// <returns></returns>
-        public MetasysHttpException(string message, string response) : base(message) { 
+        public MetasysHttpException(string message, string response) : base(message)
+        {
             this.Call = null;
             this.ResponseBody = response;
         }
@@ -124,23 +127,26 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="message">The original exception message.</param>
         /// <param name="response">The Http response.</param>
         /// <param name="inner">The inner exception.</param>
-        public MetasysHttpParsingException(string message, string response, Exception inner) : 
-            base(message, response, inner) { }
+        public MetasysHttpParsingException(string message, string response, Exception inner) :
+            base(message, response, inner)
+        { }
 
         /// <summary>
         /// Initializes a new instance of the MetasysHttpParsingException class with an inner exception.
         /// </summary>
         /// <param name="response">The Http response.</param>
         /// <param name="inner">The inner exception.</param>
-        public MetasysHttpParsingException(string response, Exception inner) : 
-            base("Error occurred when parsing the Http response.", response, inner) { }
+        public MetasysHttpParsingException(string response, Exception inner) :
+            base("Error occurred when parsing the Http response.", response, inner)
+        { }
 
         /// <summary>
         /// Initializes a new generic instance of the MetasysHttpParsingException class.
         /// </summary>
         /// <param name="response">The Http response.</param>
         public MetasysHttpParsingException(string response) : base(
-            "Error occurred when parsing the Http response.", response) { }
+            "Error occurred when parsing the Http response.", response)
+        { }
     }
 
     /// <summary>
@@ -176,7 +182,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="response">The Http response.</param>
         /// <param name="inner">The inner exception.</param>
         public MetasysTokenException(string response, Exception inner) :
-            base($"Could not create AccessToken from response.", response, inner) { }
+            base($"Could not create AccessToken from response.", response, inner)
+        { }
     }
 
     /// <summary>
@@ -191,7 +198,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="response">The argument passed to the Guid constructor.</param>
         /// <param name="inner">The inner exception.</param>
         public MetasysGuidException(string response, Exception inner) :
-            base($"Could not create Guid from response.", response, inner) { }
+            base($"Could not create Guid from response.", response, inner)
+        { }
     }
 
     /// <summary>
@@ -210,7 +218,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="response">The Http response.</param>
         /// <param name="inner">The inner exception.</param>
         public MetasysPropertyException(string response, Exception inner) :
-            base($"Could not create Variant from response.", response, inner) { }
+            base($"Could not create Variant from response.", response, inner)
+        { }
     }
 
     /// <summary>
@@ -225,7 +234,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="response">The Http response.</param>
         /// <param name="inner">The inner exception.</param>
         public MetasysCommandException(string response, Exception inner) :
-            base($"Could not create Command from response.", response, inner) { }
+            base($"Could not create Command from response.", response, inner)
+        { }
     }
 
     /// <summary>
@@ -240,14 +250,16 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="response">The Http response.</param>
         /// <param name="inner">The inner exception.</param>
         public MetasysObjectException(string response, Exception inner) :
-            base($"Could not create MetasysObject from response.", response, inner) { }
+            base($"Could not create MetasysObject from response.", response, inner)
+        { }
 
         /// <summary>
         /// Initializes a new instance of the MetasysObjectException.
         /// </summary>
         /// <param name="inner">The inner exception.</param>
         public MetasysObjectException(Exception inner) :
-            base($"An error occurred while creating the MetasysObject.", inner) { }
+            base($"An error occurred while creating the MetasysObject.", inner)
+        { }
     }
 
     /// <summary>
@@ -262,6 +274,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="response">The Http response.</param>
         /// <param name="inner">The inner exception.</param>
         public MetasysObjectTypeException(string response, Exception inner) :
-            base($"Could not create MetasysObjectType from response.", response, inner) { }
+            base($"Could not create MetasysObjectType from response.", response, inner)
+        { }
     }
 }

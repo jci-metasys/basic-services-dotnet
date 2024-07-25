@@ -1,8 +1,8 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.ComServices;
+using System;
 using System.Globalization;
 using System.Reflection;
-using JohnsonControls.Metasys.BasicServices;
-using JohnsonControls.Metasys.ComServices;
 
 namespace MetasysServicesComExampleApp.FeaturesDemo
 {

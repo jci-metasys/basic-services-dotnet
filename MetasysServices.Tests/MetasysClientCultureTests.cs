@@ -1,9 +1,8 @@
-using System;
-using NUnit.Framework;
 using JohnsonControls.Metasys.BasicServices;
-using System.Globalization;
-using System.Diagnostics;
 using JohnsonControls.Metasys.BasicServices.Utils;
+using NUnit.Framework;
+using System.Diagnostics;
+using System.Globalization;
 
 namespace MetasysServices.Tests
 {
@@ -15,7 +14,7 @@ namespace MetasysServices.Tests
         private const string Array = "dataTypeEnumSet.arrayDataType";
         MetasysClient client;
 
-        [OneTimeSetUp] 
+        [OneTimeSetUp]
         public void Init()
         {
             client = new MetasysClient("hostname");

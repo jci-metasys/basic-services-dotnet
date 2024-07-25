@@ -1,8 +1,8 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using JohnsonControls.Metasys.BasicServices;
-using Newtonsoft.Json;
 
 namespace JohnsonControls.Metasys.BasicServices
 {

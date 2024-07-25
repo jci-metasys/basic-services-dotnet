@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using JohnsonControls.Metasys.BasicServices;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Globalization;
+using System.Windows.Forms;
 
 
 namespace MetasysServices_TestClient.Forms
@@ -38,7 +31,7 @@ namespace MetasysServices_TestClient.Forms
 
         private void BtnGetServerTime_Click(object sender, EventArgs e)
         {
-            TxtGetServerTime_Result.Text="";
+            TxtGetServerTime_Result.Text = "";
             try
             {
                 var serverDateTime = _client.GetServerTime();

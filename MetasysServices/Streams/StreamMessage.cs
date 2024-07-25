@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -183,7 +183,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     if (jObj.ContainsKey(group) && (jObj[group] != null))
                     {
                         JObject grp = (JObject)jObj[group];
-                        
+
                         if ((grp.ContainsKey(field)) && (grp[field] != null))
                         {
                             res = grp[field].Value<string>();

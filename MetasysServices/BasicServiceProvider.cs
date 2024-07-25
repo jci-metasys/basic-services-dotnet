@@ -1,27 +1,27 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Resources;
-using System.Net;
-using System.Collections;
-using Flurl;
+﻿using Flurl;
 using Flurl.Http;
+using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.BasicServices.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Net.Http;
-using JohnsonControls.Metasys.BasicServices.Utils;
-using JohnsonControls.Metasys.BasicServices;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Globalization;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Resources;
+using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// Base abstract class to be extended on specific provider implementation.
     /// </summary>
-    public abstract class BasicServiceProvider: ObjectUtil
+    public abstract class BasicServiceProvider : ObjectUtil
     {
         /// <summary>The http client.</summary>
         protected IFlurlClient Client;
@@ -97,7 +97,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Return Metasys Object representation from a generic JSON object tree.
         /// </summary>
         /// <returns></returns>
-        protected List<MetasysObject> ToMetasysObject(IEnumerable<TreeObject> objects, ApiVersion version, MetasysObjectTypeEnum? objectType=null)
+        protected List<MetasysObject> ToMetasysObject(IEnumerable<TreeObject> objects, ApiVersion version, MetasysObjectTypeEnum? objectType = null)
         {
             Version = version;
             if (objects == null)
@@ -108,7 +108,7 @@ namespace JohnsonControls.Metasys.BasicServices
             List<MetasysObject> metasysObjects = new List<MetasysObject>();
             foreach (var o in objects)
             {
-                metasysObjects.Add(new MetasysObject(o.Item, Version, ToMetasysObject(o.Children, Version), type:objectType));
+                metasysObjects.Add(new MetasysObject(o.Item, Version, ToMetasysObject(o.Children, Version), type: objectType));
             }
             return metasysObjects;
         }
@@ -120,7 +120,7 @@ namespace JohnsonControls.Metasys.BasicServices
         protected MetasysObject ToMetasysObject(JToken item, ApiVersion version, MetasysObjectTypeEnum? objectType = null)
         {
             Version = version;
-            return new MetasysObject(item, Version, null, type:objectType);
+            return new MetasysObject(item, Version, null, type: objectType);
         }
         /// <summary>
         /// Return Metasys Object representation from a generic JSON object List.
@@ -132,7 +132,7 @@ namespace JohnsonControls.Metasys.BasicServices
             List<MetasysObject> objects = new List<MetasysObject>();
             foreach (var i in items)
             {
-                objects.Add(ToMetasysObject(i, Version, objectType:type));
+                objects.Add(ToMetasysObject(i, Version, objectType: type));
             }
             return objects;
         }
@@ -564,15 +564,15 @@ namespace JohnsonControls.Metasys.BasicServices
 
             // Init our dictionary for paging
             if (parameters == null) parameters = new Dictionary<string, string>();
-         
+
             if (!parameters.ContainsKey("page"))
             {
                 parameters.Add("page", page.ToString());
-            } 
+            }
             else
             {
                 Int32.TryParse(parameters["page"], out page);
-                if (page > 0) 
+                if (page > 0)
                     buildAggregateResponse = false; // This handles the case when it has been passed a specific Page number so the response will not be aggregate
             }
             if (!parameters.ContainsKey("pageSize"))
@@ -586,7 +586,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 // Just overwrite page parameter
                 parameters["page"] = page.ToString();
                 var response = await GetPagedResultsAsync<JToken>(resource, parameters, pathSegments).ConfigureAwait(false);
-            var total = response.Total;
+                var total = response.Total;
                 if (total > 0)
                 {
                     aggregatedResponse.AddRange(response.Items);
@@ -654,7 +654,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     dictionary.Remove("IncludeAcknowledgementRequired");
                     dictionary.Remove("IncludeAcknowledgementNotRequired");
                 }
-            }  
+            }
 
             return dictionary;
         }
@@ -668,7 +668,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="paths"></param>
         /// <returns></returns>
         protected async Task<JToken> GetBatchRequestAsync(string endpoint, IEnumerable<Guid> ids, IEnumerable<string> resources, params string[] paths)
-        {         
+        {
             // Create URL with base resource
             Url url = new Url(endpoint);
             // Concatenate batch segment to use batch request and prepare the list of requests
@@ -690,10 +690,10 @@ namespace JohnsonControls.Metasys.BasicServices
             try
             {
                 // Post the list of requests and return responses as JToken
-                var response= await Client.Request(url)
-                                            .PostJsonAsync(new BatchRequest {Method = "GET", Requests=objectsRequests})
+                var response = await Client.Request(url)
+                                            .PostJsonAsync(new BatchRequest { Method = "GET", Requests = objectsRequests })
                                             .ConfigureAwait(false);
-                responseToken= JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+                responseToken = JToken.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
             }
             catch (FlurlHttpException e)
             {
@@ -733,11 +733,14 @@ namespace JohnsonControls.Metasys.BasicServices
                         body = null;
                         break;
                 };
-                
+
                 // Use the object id concatenated to the resource to uniquely identify each request
-                objectsRequests.Add(new ObjectRequest { Id = r.ObjectId.ToString() + '_' + r.Resource, 
-                                                        RelativeUrl = relativeUrl, 
-                                                        Body = body});
+                objectsRequests.Add(new ObjectRequest
+                {
+                    Id = r.ObjectId.ToString() + '_' + r.Resource,
+                    RelativeUrl = relativeUrl,
+                    Body = body
+                });
 
                 //Body = new ObjectBody {Text = r.Resource }
             }
@@ -870,7 +873,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     case "alarm":
                         relativeUrl.AppendPathSegments("alarms");
-                        relativeUrl.AppendPathSegments(r.ObjectId.ToString());                
+                        relativeUrl.AppendPathSegments(r.ObjectId.ToString());
                         break;
                     case "audit":
                         relativeUrl.AppendPathSegments("audits");
@@ -881,13 +884,19 @@ namespace JohnsonControls.Metasys.BasicServices
                 };
 
                 // Create the 'body' object
-                if (activityManagementStatus.Length > 0 && annotationText.Length > 0) 
-                { body = new { activityManagementStatus, annotationText }; 
-                } else if (activityManagementStatus.Length > 0) 
-                { body = new { activityManagementStatus };
-                } else if (activityManagementStatus.Length > 0)
-                { body = new { annotationText }; 
-                } else 
+                if (activityManagementStatus.Length > 0 && annotationText.Length > 0)
+                {
+                    body = new { activityManagementStatus, annotationText };
+                }
+                else if (activityManagementStatus.Length > 0)
+                {
+                    body = new { activityManagementStatus };
+                }
+                else if (activityManagementStatus.Length > 0)
+                {
+                    body = new { annotationText };
+                }
+                else
                 { body = null; }
 
 
@@ -903,7 +912,7 @@ namespace JohnsonControls.Metasys.BasicServices
             JToken responseToken = null;
             try
             {
-                if ( Version > ApiVersion.v4)
+                if (Version > ApiVersion.v4)
                 {
                     // Post the list of requests and return responses as JToken
                     var response = await Client.Request(url)

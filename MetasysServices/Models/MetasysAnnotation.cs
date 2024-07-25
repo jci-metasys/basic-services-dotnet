@@ -29,6 +29,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Action of the annotation.
         /// </summary>
         [JsonProperty(Required = Required.Always)]
-        public string Action { get; set; }       
+        public string Action { get; set; }
     }
 }

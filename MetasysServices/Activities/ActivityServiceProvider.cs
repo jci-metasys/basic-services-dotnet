@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
-using Flurl;
+﻿using Flurl;
 using Flurl.Http;
+using JohnsonControls.Metasys.BasicServices.Utils;
 using log4net.Config;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using JohnsonControls.Metasys.BasicServices.Utils;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -41,7 +41,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 List<Activity> activities = new List<Activity>();
                 var response = await GetPagedResultsAsync<Activity>("activities", ToDictionary(activityFilter)).ConfigureAwait(false);
-                
+
                 foreach (var item in response.Items)
                     activities.Add(item);
 
@@ -55,8 +55,9 @@ namespace JohnsonControls.Metasys.BasicServices
                 };
 
                 return response;
-            }else
-            { 
+            }
+            else
+            {
                 throw new MetasysUnsupportedApiVersion(Version.ToString());
             };
         }
@@ -77,7 +78,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
                 if (Version >= ApiVersion.v4)
                 {
-                    if (requests == null) 
+                    if (requests == null)
                         return null;
 
                     var response = await PatchBatchRequestAsync("activities", requests).ConfigureAwait(false);

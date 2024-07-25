@@ -1,4 +1,11 @@
-﻿using System;
+﻿using Flurl;
+using Flurl.Http;
+using JohnsonControls.Metasys.BasicServices.Enums;
+using JohnsonControls.Metasys.BasicServices.Utils;
+using log4net.Config;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,13 +13,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Flurl;
-using Flurl.Http;
-using log4net.Config;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using JohnsonControls.Metasys.BasicServices.Utils;
-using JohnsonControls.Metasys.BasicServices.Enums;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -156,7 +156,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var devices = await GetAllAvailablePagesAsync("networkDevices").ConfigureAwait(false);
                 List<NetworkDevice> networkDevices = ToNetworkDevice(devices, Version);
                 //Get the Object Type enumeration Set (Set ID = 508)
-                
+
                 List<MetasysEnumValue> enums = (List<MetasysEnumValue>)GetEnumValuesAsync("objectTypeEnumSet").GetAwaiter().GetResult();
 
                 //Make the joine of the two lists in order to get only the enum values that are related to the network devices

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
@@ -13,7 +13,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         public GeneralDemo(MetasysClient client)
         {
             this.client = client;
-            log = new LogInitializer (typeof(GeneralDemo));
+            log = new LogInitializer(typeof(GeneralDemo));
         }
         public void Run()
         {

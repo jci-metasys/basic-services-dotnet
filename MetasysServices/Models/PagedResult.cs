@@ -87,7 +87,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 else
                 {
                     //Revert this change when Audits response doesn't involve redundant entries
-                    CurrentPage = page.ToString().Contains(",") ? Int32.Parse(page.Split(',')[0]) : Int32.Parse(page);                    
+                    CurrentPage = page.ToString().Contains(",") ? Int32.Parse(page.Split(',')[0]) : Int32.Parse(page);
                 }
                 if (pageSize != null)
                 {
@@ -98,7 +98,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     PageSize = 100; // Default value
                 }
-                PageCount =(int) Math.Ceiling((decimal)Total / PageSize);
+                PageCount = (int)Math.Ceiling((decimal)Total / PageSize);
                 Items = JsonConvert.DeserializeObject<List<T>>(response["items"].ToString());
             }
             catch (Exception e)

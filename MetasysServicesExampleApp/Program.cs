@@ -1,6 +1,6 @@
-﻿using System;
-using JohnsonControls.Metasys.BasicServices;
+﻿using JohnsonControls.Metasys.BasicServices;
 using MetasysServicesExampleApp.FeaturesDemo;
+using System;
 
 
 namespace MetasysServicesExampleApp

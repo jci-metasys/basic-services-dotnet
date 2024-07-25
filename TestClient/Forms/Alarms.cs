@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using JohnsonControls.Metasys.BasicServices;
 
 
 namespace MetasysServices_TestClient.Forms
@@ -17,7 +11,7 @@ namespace MetasysServices_TestClient.Forms
         public MetasysClient Client
         {
             get { return _client; }
-            set { _client = value; }      
+            set { _client = value; }
         }
         private MetasysClient _client;
 
@@ -29,7 +23,7 @@ namespace MetasysServices_TestClient.Forms
         public void InitForm(MetasysClient client, TabPage container)
         {
             _client = client;
-            
+
             TabMain.Visible = false;
             TabMain.Parent = container;
             TabMain.Dock = DockStyle.Fill;
@@ -46,8 +40,8 @@ namespace MetasysServices_TestClient.Forms
                 CmbGet_IncludeDiscarded.Visible = (_client.Version > ApiVersion.v3);
                 LblGet_IncludeAcknowledged.Visible = (_client.Version > ApiVersion.v3);
                 CmdGet_IncludeAcknowledged.Visible = (_client.Version > ApiVersion.v3);
-            }        
-                
+            }
+
         }
 
         private void BtnGet_Click(object sender, EventArgs e)
@@ -69,7 +63,7 @@ namespace MetasysServices_TestClient.Forms
 
             PagedResult<Alarm> result;
 
-            if (_client != null )
+            if (_client != null)
             {
                 if (_client.Version == ApiVersion.v2 || _client.Version == ApiVersion.v3)
                 {
@@ -86,7 +80,8 @@ namespace MetasysServices_TestClient.Forms
                     }
                     // call the method
                     result = _client.Alarms.Get(alarmFilter);
-                } else
+                }
+                else
                 {
                     AlarmFilterV4Plus alarmFilterV4Plus = new AlarmFilterV4Plus { }; ;
                     if (!noFilters)
@@ -114,7 +109,8 @@ namespace MetasysServices_TestClient.Forms
                     {
                         DgvGet.DataSource = result.Items;
                         LblGet_ItemCounter.Text = "Items: " + result.Items.Count.ToString();
-                    } else
+                    }
+                    else
                         LblGet_ItemCounter.Text = "Items: 0";
                 }
             }
@@ -250,7 +246,7 @@ namespace MetasysServices_TestClient.Forms
                 Guid alarmGuid = new Guid(alarmId);
                 try
                 {
-                     _client.Alarms.Acknowledge(alarmGuid,  annotationText);
+                    _client.Alarms.Acknowledge(alarmGuid, annotationText);
                     TxtAckAlarm_Result.Text = "OK, done";
                 }
                 catch (MetasysHttpException ex)

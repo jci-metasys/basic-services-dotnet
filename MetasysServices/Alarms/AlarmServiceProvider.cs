@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
-using Flurl;
+﻿using Flurl;
 using Flurl.Http;
+using JohnsonControls.Metasys.BasicServices.Utils;
 using log4net.Config;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using JohnsonControls.Metasys.BasicServices.Utils;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -24,7 +24,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="client">The FlurlClient to get response from URL.</param>
         /// <param name="version">The server's Api version.</param>
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
-        public AlarmServiceProvider(IFlurlClient client, ApiVersion version, bool logClientErrors=true):base(client, version, logClientErrors)
+        public AlarmServiceProvider(IFlurlClient client, ApiVersion version, bool logClientErrors = true) : base(client, version, logClientErrors)
         {
         }
 
@@ -43,21 +43,24 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 List<Alarm> alarms = new List<Alarm>();
                 var response = await GetPagedResultsAsync<Alarm>("alarms", ToDictionary(alarmFilter)).ConfigureAwait(false);
-                if (Version > ApiVersion.v2) 
+                if (Version > ApiVersion.v2)
                 {
-                    foreach (var item in response.Items) {
+                    foreach (var item in response.Items)
+                    {
                         alarms.Add(CreateItem(item));
                     }
-                    response = new PagedResult<Alarm> {
-                    Items = alarms,
-                    CurrentPage = response.CurrentPage,
-                    PageCount = response.PageCount,
-                    PageSize = response.PageSize,
-                    Total = response.Total
+                    response = new PagedResult<Alarm>
+                    {
+                        Items = alarms,
+                        CurrentPage = response.CurrentPage,
+                        PageCount = response.PageCount,
+                        PageSize = response.PageSize,
+                        Total = response.Total
                     };
                 }
                 return response;
-            } else
+            }
+            else
             {
                 throw new MetasysUnsupportedApiVersion(Version.ToString());
             };
@@ -93,7 +96,8 @@ namespace JohnsonControls.Metasys.BasicServices
                     };
                 }
                 return response;
-            } else
+            }
+            else
             {
                 throw new MetasysUnsupportedApiVersion(Version.ToString());
             };
@@ -113,12 +117,12 @@ namespace JohnsonControls.Metasys.BasicServices
 
             var response = await GetRequestAsync("alarms", null, alarmId).ConfigureAwait(false);
             if (response["items"] != null) response = response["items"];
-            
+
             var alarmData = JsonConvert.DeserializeObject<Alarm>(response.ToString());
-            if (Version > ApiVersion.v2) 
+            if (Version > ApiVersion.v2)
             {
                 alarmData = CreateItem(alarmData);
-            } 
+            }
             return alarmData;
         }
 
@@ -134,13 +138,13 @@ namespace JohnsonControls.Metasys.BasicServices
 
             List<Alarm> alarms = new List<Alarm>();
             var response = await GetPagedResultsAsync<Alarm>("objects", ToDictionary(alarmFilter), objectId, "alarms").ConfigureAwait(false);
-            if (Version > ApiVersion.v2) 
+            if (Version > ApiVersion.v2)
             {
-                foreach (var item in response.Items) 
+                foreach (var item in response.Items)
                 {
                     alarms.Add(CreateItem(item));
                 }
-                response = new PagedResult<Alarm> 
+                response = new PagedResult<Alarm>
                 {
                     Items = alarms,
                     CurrentPage = response.CurrentPage,
@@ -164,14 +168,14 @@ namespace JohnsonControls.Metasys.BasicServices
 
             List<Alarm> alarms = new List<Alarm>();
             var response = await GetPagedResultsAsync<Alarm>("networkDevices", ToDictionary(alarmFilter), networkDeviceId, "alarms").ConfigureAwait(false);
-            if (Version > ApiVersion.v2) 
+            if (Version > ApiVersion.v2)
             {
-                foreach (var item in response.Items) 
+                foreach (var item in response.Items)
                 {
                     alarms.Add(CreateItem(item));
                 }
 
-                response = new PagedResult<Alarm> 
+                response = new PagedResult<Alarm>
                 {
                     Items = alarms,
                     CurrentPage = response.CurrentPage,

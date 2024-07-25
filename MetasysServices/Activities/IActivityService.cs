@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Flurl.Http;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
-using Flurl.Http;
 
 namespace JohnsonControls.Metasys.BasicServices
 {

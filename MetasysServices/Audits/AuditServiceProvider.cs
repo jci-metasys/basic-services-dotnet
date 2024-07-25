@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Flurl;
+using Flurl.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,10 +13,6 @@ using System.Net.Http;
 using System.Reflection;
 using System.Resources;
 using System.Threading.Tasks;
-using Flurl;
-using Flurl.Http;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -39,13 +39,13 @@ namespace JohnsonControls.Metasys.BasicServices
             CheckVersion(Version);
 
             var response = await GetRequestAsync("audits", null, auditId).ConfigureAwait(false);
-            if (response["item"] != null) 
+            if (response["item"] != null)
             {
                 response = response["item"];
             }
 
             var auditData = JsonConvert.DeserializeObject<Audit>(response.ToString());
-            if (Version > ApiVersion.v2) 
+            if (Version > ApiVersion.v2)
             {
                 auditData = CreateItem(auditData);
             }
@@ -60,15 +60,15 @@ namespace JohnsonControls.Metasys.BasicServices
             var dictionary = GetParameters(auditFilter);
 
             var response = await GetPagedResultsAsync<Audit>("audits", dictionary).ConfigureAwait(false);
-            if (Version > ApiVersion.v2) 
+            if (Version > ApiVersion.v2)
             {
                 List<Audit> audits = new List<Audit>();
-                foreach (var item in response.Items) 
+                foreach (var item in response.Items)
                 {
                     audits.Add(CreateItem(item));
                 }
 
-                response = new PagedResult<Audit> 
+                response = new PagedResult<Audit>
                 {
                     Items = audits,
                     CurrentPage = response.CurrentPage,
@@ -88,14 +88,14 @@ namespace JohnsonControls.Metasys.BasicServices
             var dictionary = GetParameters(auditFilter);
 
             var response = await GetPagedResultsAsync<Audit>("objects", dictionary, objectId, BaseParam).ConfigureAwait(false);
-            if (Version > ApiVersion.v2) 
+            if (Version > ApiVersion.v2)
             {
                 List<Audit> audits = new List<Audit>();
-                foreach (var item in response.Items) 
+                foreach (var item in response.Items)
                 {
                     audits.Add(CreateItem(item));
                 }
-                response = new PagedResult<Audit> 
+                response = new PagedResult<Audit>
                 {
                     Items = audits,
                     CurrentPage = response.CurrentPage,
@@ -170,7 +170,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task DiscardAsync(Guid id, string annotationText)
         {
-            try {
+            try
+            {
                 CheckVersion(Version);
 
                 if (Version < ApiVersion.v3) { throw new MetasysUnsupportedApiVersion(Version.ToString()); };
@@ -183,7 +184,8 @@ namespace JohnsonControls.Metasys.BasicServices
                     .PutJsonAsync(new { annotationText })
                     .ConfigureAwait(false);
 
-                } else if (Version > ApiVersion.v3)
+                }
+                else if (Version > ApiVersion.v3)
                 {
                     //For API v4, v5 the endpoint and the body are different
                     string activityManagementStatus = "discarded";
@@ -192,7 +194,8 @@ namespace JohnsonControls.Metasys.BasicServices
                     .PatchJsonAsync(new { annotationText, activityManagementStatus })
                     .ConfigureAwait(false);
                 }
-            } catch (FlurlHttpException e)
+            }
+            catch (FlurlHttpException e)
             {
                 ThrowHttpException(e);
             }
@@ -207,19 +210,24 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task AddAnnotationAsync(Guid id, string text)
         {
-            try {
+            try
+            {
                 CheckVersion(Version);
 
-                if (Version > ApiVersion.v2) 
+                if (Version > ApiVersion.v2)
                 {
                     var response = await Client.Request(new Url("audits")
                     .AppendPathSegments(id, "annotations"))
                     .PostJsonAsync(new { text })
                     .ConfigureAwait(false);
-                } else {
+                }
+                else
+                {
                     throw new MetasysUnsupportedApiVersion(Version.ToString());
                 }
-            } catch (FlurlHttpException e) {
+            }
+            catch (FlurlHttpException e)
+            {
                 ThrowHttpException(e);
             }
         }
@@ -265,21 +273,24 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public async Task<IEnumerable<Result>> DiscardMultipleAsync(IEnumerable<BatchRequestParam> requests)
         {
-            try {
+            try
+            {
                 CheckVersion(Version);
 
-                if (Version > ApiVersion.v2) 
+                if (Version > ApiVersion.v2)
                 {
                     if (requests == null) { return null; }
 
                     var response = await PutBatchRequestAsync("audits", requests, "discard").ConfigureAwait(false);
                     return ToResult(response);
-                } 
-                else 
+                }
+                else
                 {
                     throw new MetasysUnsupportedApiVersion(Version.ToString());
                 }
-            } catch (FlurlHttpException e) {
+            }
+            catch (FlurlHttpException e)
+            {
                 ThrowHttpException(e);
                 return null;
             }
@@ -287,7 +298,8 @@ namespace JohnsonControls.Metasys.BasicServices
 
         private Audit CreateItem(Audit item)
         {
-            try {
+            try
+            {
                 var stringAuditData = item.ToString();
                 var data = JObject.Parse(stringAuditData);
                 item.ActionType = data["ActionType"].Value<string>();
@@ -299,7 +311,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     {
                         item.PreData = new AuditData
                         {
-                            Unit = GetJObjectValue(data,"PreData","unit"),
+                            Unit = GetJObjectValue(data, "PreData", "unit"),
                             Precision = GetJObjectValue(data, "PreData", "precision"),
                             Value = GetJObjectValue(data, "PreData", "value"),
                             Type = GetJObjectValue(data, "PreData", "type")
@@ -329,39 +341,53 @@ namespace JohnsonControls.Metasys.BasicServices
                     }
                 }
 
-                if (data["Parameters"].ToString() == "[]") {
+                if (data["Parameters"].ToString() == "[]")
+                {
                     item.Parameters = data["Parameters"].ToString();
-                } else {
-                    if (data["Parameters"].ToString() != null) {
-                        if (data["Parameters"].HasValues) {
-                            item.Parameters = new AuditData {
-                                Unit = GetJObjectValue(data,"Parameters","unit"),
+                }
+                else
+                {
+                    if (data["Parameters"].ToString() != null)
+                    {
+                        if (data["Parameters"].HasValues)
+                        {
+                            item.Parameters = new AuditData
+                            {
+                                Unit = GetJObjectValue(data, "Parameters", "unit"),
                                 Precision = GetJObjectValue(data, "Parameters", "precision"),
                                 Value = GetJObjectValue(data, "Parameters", "value"),
                                 Type = GetJObjectValue(data, "Parameters", "type")
                             };
-                        } else {
+                        }
+                        else
+                        {
                             item.Parameters = data["Parameters"].Value<string>() != null ? data["Parameters"].ToString() : null;
                         }
                     }
                 }
 
-                if (data["Legacy"].ToString() != null) {
-                    if (data["Legacy"].HasValues) {
-                        item.Legacy = new LegacyInfo {
+                if (data["Legacy"].ToString() != null)
+                {
+                    if (data["Legacy"].HasValues)
+                    {
+                        item.Legacy = new LegacyInfo
+                        {
                             FullyQualifiedItemReference = data["Legacy"]["fullyQualifiedItemReference"].Value<string>(),
                             ItemName = data["Legacy"]["itemName"].Value<string>(),
                             ClassLevel = data["Legacy"]["classLevel"].Value<string>(),
                             OriginApplication = data["Legacy"]["originApplication"].Value<string>(),
                             Description = data["Legacy"]["description"].Value<string>()
                         };
-                    } else {
+                    }
+                    else
+                    {
                         item.Legacy = data["Legacy"].Value<string>() != null ? data["Legacy"].ToString() : null;
                     }
                 }
             }
 
-            catch (ArgumentNullException e) {
+            catch (ArgumentNullException e)
+            {
                 // Something went wrong on object parsing
                 throw new MetasysObjectException(e);
             }
@@ -376,7 +402,8 @@ namespace JohnsonControls.Metasys.BasicServices
         private IEnumerable<Result> ToResult(JToken response)
         {
             List<Result> results = new List<Result>();
-            foreach (var r in response["responses"]) {
+            foreach (var r in response["responses"])
+            {
                 var respIds = r["id"].Value<string>().Split('_');
 
                 Result resultItem = new Result();
@@ -393,9 +420,12 @@ namespace JohnsonControls.Metasys.BasicServices
             var csvString = string.Empty;
             Type enumList = typeof(T);
 
-            foreach (Enum item in Enum.GetValues(enumList)) {
-                if (enumerableItem.HasFlag(item)) {
-                    if (!string.IsNullOrEmpty(csvString)) {
+            foreach (Enum item in Enum.GetValues(enumList))
+            {
+                if (enumerableItem.HasFlag(item))
+                {
+                    if (!string.IsNullOrEmpty(csvString))
+                    {
                         csvString += ",";
                     }
                     csvString += GetEnumDescription(item);
@@ -410,7 +440,8 @@ namespace JohnsonControls.Metasys.BasicServices
 
             DescriptionAttribute[] attributes = fi.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
 
-            if (attributes != null && attributes.Any()) {
+            if (attributes != null && attributes.Any())
+            {
                 return attributes.First().Description;
             }
             return value.ToString();
@@ -423,7 +454,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 if (jObj != null)
                 {
-                    if ((jObj.ContainsKey(group)) && (jObj[group] != null) )
+                    if ((jObj.ContainsKey(group)) && (jObj[group] != null))
                     {
                         if ((jObj[group].Contains(field)) && (jObj[group][field] != null))
                         {
@@ -448,23 +479,23 @@ namespace JohnsonControls.Metasys.BasicServices
                 //Check the value of the param 'OriginApplication', If blank remove the parameter
                 string originApplications = GetEnumCsv<OriginApplicationsEnum>(auditFilter.OriginApplications);
                 if (string.IsNullOrEmpty(originApplications))
-                    { dictionary.Remove("OriginApplications"); }
+                { dictionary.Remove("OriginApplications"); }
                 else
-                    { dictionary["OriginApplications"] = originApplications; }
+                { dictionary["OriginApplications"] = originApplications; }
 
                 //Check the value of the param 'ActionTypes', If blank remove the parameter
                 string actionTypes = GetEnumCsv<ActionTypeEnum>(auditFilter.ActionTypes);
                 if (string.IsNullOrEmpty(actionTypes))
-                    { dictionary.Remove("ActionTypes"); }
+                { dictionary.Remove("ActionTypes"); }
                 else
-                    { dictionary["ActionTypes"] = actionTypes; }
+                { dictionary["ActionTypes"] = actionTypes; }
 
                 //Check the value of the param 'ActionTypes', If blank remove the parameter
                 string classesLevels = GetEnumCsv<ClassLevelsEnum>(auditFilter.ClassesLevels);
                 if (string.IsNullOrEmpty(classesLevels))
-                    { dictionary.Remove("ClassesLevels"); }
+                { dictionary.Remove("ClassesLevels"); }
                 else
-                    { dictionary["ClassesLevels"] = classesLevels; }
+                { dictionary["ClassesLevels"] = classesLevels; }
 
                 if (Version == ApiVersion.v4)
                 {

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
+﻿using JohnsonControls.Metasys.BasicServices;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using JohnsonControls.Metasys.BasicServices;
+using System.Linq;
+using System.Net.Http;
 
 namespace MetasysServices.Tests
 {

@@ -9,7 +9,7 @@ namespace JohnsonControls.Metasys.ComServices
     [Guid("02E91329-DA34-446F-9D9C-396D805C6966")]
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
-    public class ComAuditFilter :  IComAuditFilter
+    public class ComAuditFilter : IComAuditFilter
     {
         /// <inheritdoc/>
         public string StartTime { get; set; }

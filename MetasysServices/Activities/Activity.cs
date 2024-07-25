@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary> Provides Activity Item </summary>
     /// <remarks> This is available since Metasys API v5. </remarks>
-    public class Activity 
+    public class Activity
     {
         /// <summary> Activity Unique Identifier (GUID) </summary>
         [JsonProperty(Required = Required.Always)]
@@ -64,7 +64,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var o = activity;
                 // Compare each properties one by one for better performance
                 return this.Id == o.Id && this.ItemReference == o.ItemReference && this.ObjectName == o.ObjectName
-                    && this.ActivityManagementStatus == o.ActivityManagementStatus && this.ItemReference == o.ItemReference 
+                    && this.ActivityManagementStatus == o.ActivityManagementStatus && this.ItemReference == o.ItemReference
                     && this.Spaces == o.Spaces && this.Equipment == o.Equipment && this.ObjectId == o.ObjectId
                     && this.Alarm == o.Alarm && this.Audit == o.Audit;
             }

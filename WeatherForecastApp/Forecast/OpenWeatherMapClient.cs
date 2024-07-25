@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
+using System;
 using System.Net.Http;
-using System.Configuration;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace WeatherForecastApp
@@ -17,12 +14,12 @@ namespace WeatherForecastApp
             // Init client and set our API client
             client = new HttpClient();
             this.apiKey = apiKey;
-            client.BaseAddress = new Uri("http://api.openweathermap.org");           
+            client.BaseAddress = new Uri("http://api.openweathermap.org");
         }
 
         public async Task<ForecastResult> GetForecast(double latitude, double longitude)
         {
-            var uri=new UriBuilder($"{client.BaseAddress.ToString()}/data/2.5/forecast");
+            var uri = new UriBuilder($"{client.BaseAddress.ToString()}/data/2.5/forecast");
             uri.Query = $"APPID={this.apiKey}&lat={latitude}&lon={longitude}&units=metric";
             var response = await client.GetAsync(uri.ToString());
             var stringResult = await response.Content.ReadAsStringAsync();

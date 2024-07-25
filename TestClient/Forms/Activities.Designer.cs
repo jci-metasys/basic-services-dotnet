@@ -151,7 +151,7 @@ namespace MetasysServices_TestClient.Forms
             // 
             this.TlpGet_Filters.AutoSize = true;
             this.TlpGet_Filters.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.TlpGet_Filters.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.TlpGet_Filters.BackColor = System.Drawing.SystemColors.Control;
             this.TlpGet_Filters.ColumnCount = 4;
             this.TlpGet_Filters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.TlpGet_Filters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));

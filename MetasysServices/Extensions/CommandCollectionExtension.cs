@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -9,7 +9,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// A helper to work with Command collections.
     /// </summary>
     public static class CommandCollectionExtension
-    {      
+    {
         /// <summary>
         /// Returns the Command in the collection with the given ID.
         /// </summary>

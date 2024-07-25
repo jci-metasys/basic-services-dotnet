@@ -1,13 +1,7 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using JohnsonControls.Metasys.BasicServices;
 
 
 namespace MetasysServices_TestClient.Forms
@@ -47,7 +41,7 @@ namespace MetasysServices_TestClient.Forms
             DgvGetEnumValues.DataSource = null;
             String id = TxtGetEnumValues_Id.Text.Trim();
             if (id.Length > 0)
-            {        
+            {
                 var result = _client.Enumerations.GetValues(id);
                 DgvGetEnumValues.DataSource = result;
             }
@@ -81,7 +75,7 @@ namespace MetasysServices_TestClient.Forms
                 var values = new List<String>();
                 foreach (DataGridViewRow dr in DgvCreate_Values.Rows)
                 {
-                    String value = (dr.Cells[0].Value != null)? dr.Cells[0].Value.ToString() : "";
+                    String value = (dr.Cells[0].Value != null) ? dr.Cells[0].Value.ToString() : "";
                     if (value.Length > 0)
                     {
                         values.Add(value);

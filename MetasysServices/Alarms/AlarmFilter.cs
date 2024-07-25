@@ -8,7 +8,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// Filters to get alarms when using API v2 or v3.
     /// </summary>
     public class AlarmFilter : TimeFilter
-    {       
+    {
         /// <summary>
         /// The inclusive priority range, from 0 to 255, of the alarm.
         /// </summary>
@@ -46,6 +46,6 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The system category of the requested alarms.
         /// </summary>
-        public int? Category { get; set; }      
+        public int? Category { get; set; }
     }
 }

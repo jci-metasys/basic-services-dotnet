@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
+using System.Text;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -13,7 +13,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </remarks>
     [Flags]
     public enum OriginApplicationsEnum
-    {   
+    {
         /// <summary>
         /// Origin Application: AlarmEvent (Enum id 0)
         /// </summary>

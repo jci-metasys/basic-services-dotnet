@@ -1,16 +1,16 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Newtonsoft.Json.Linq;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// MetasysObject is a structure that holds information about a Metasys object.
     /// </summary>
-    public class MetasysObject: Utils.ObjectUtil
+    public class MetasysObject : Utils.ObjectUtil
     {
         /// <summary>The item reference of the Metasys object.</summary>
         [JsonProperty(Required = Required.Always)]
@@ -22,11 +22,11 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <summary>The name of the Metasys object.</summary>
         [JsonProperty(Required = Required.Always)]
-        public string Name { set; get; }   
+        public string Name { set; get; }
 
         /// <summary>The description of the Metasys object.</summary>
         public string Description { set; get; }
-        
+
         /// <summary>
         /// The actual Metasys Object type.
         /// </summary>
@@ -60,7 +60,7 @@ namespace JohnsonControls.Metasys.BasicServices
         public string ObjectCategory { get; set; }
 
         /// <summary>The direct children objects of the Metasys object.</summary>
-        public IEnumerable<MetasysObject> Children { set;  get; }
+        public IEnumerable<MetasysObject> Children { set; get; }
 
         /// <summary>
         /// The number of direct children objects.
@@ -84,10 +84,10 @@ namespace JohnsonControls.Metasys.BasicServices
         public string Classification { get; set; }
         private const string DefaultClassification = "object";
 
-        internal MetasysObject(JToken token, ApiVersion version, IEnumerable<MetasysObject> children = null, MetasysObjectTypeEnum? type =null)
+        internal MetasysObject(JToken token, ApiVersion version, IEnumerable<MetasysObject> children = null, MetasysObjectTypeEnum? type = null)
         {
-            Children = children??new List<MetasysObject>(); // Return empty list by convention for null         
-            ChildrenCount = Children?.Count()??0; // Children count is 0 when children is null                                 
+            Children = children ?? new List<MetasysObject>(); // Return empty list by convention for null         
+            ChildrenCount = Children?.Count() ?? 0; // Children count is 0 when children is null                                 
             Type = type;
 
             JObject jobj = token.ToObject<JObject>();
@@ -112,7 +112,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
             try
             {
-                Description = jobj.ContainsKey("description") ? token["description"].Value<string>(): null;
+                Description = jobj.ContainsKey("description") ? token["description"].Value<string>() : null;
             }
             catch
             {
@@ -171,7 +171,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             try
             {
-                ObjectCategory = jobj.ContainsKey("objectCategory") ? token["objectCategory"].Value<string>() : null;                
+                ObjectCategory = jobj.ContainsKey("objectCategory") ? token["objectCategory"].Value<string>() : null;
             }
             catch
             {
@@ -188,7 +188,7 @@ namespace JohnsonControls.Metasys.BasicServices
             }
             try
             {
-                if (jobj.ContainsKey("classification")) 
+                if (jobj.ContainsKey("classification"))
                 {
                     var tokenValue = token["classification"].Value<string>().Trim();
                     Classification = tokenValue == string.Empty ? DefaultClassification : tokenValue;
@@ -223,24 +223,24 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 var other = @object;
                 bool areEqual = ((this.Id == null && other.Id == null) || (this.Id != null && this.Id.Equals(other.Id))) &&
-                    ((this.ItemReference == null && other.ItemReference == null) || 
+                    ((this.ItemReference == null && other.ItemReference == null) ||
                         (this.ItemReference != null && this.ItemReference.Equals(other.ItemReference))) &&
-                    ((this.Description == null && other.Description == null) || 
+                    ((this.Description == null && other.Description == null) ||
                         (this.Description != null && this.Description.Equals(other.Description))) &&
                     this.ChildrenCount == other.ChildrenCount;
-                    
+
                 if (areEqual)
                 {
                     if (this.Children == null ^ other.Children == null)
                     {
                         return false;
-                    } 
+                    }
                     else if (this.Children != null && other.Children != null)
                     {
                         return Enumerable.SequenceEqual(this.Children, other.Children);
                     }
                 }
-                return areEqual; 
+                return areEqual;
             }
             return false;
         }
@@ -258,13 +258,13 @@ namespace JohnsonControls.Metasys.BasicServices
             if (Children != null)
             {
                 var arrCode = 0;
-                foreach(var item in Children)
+                foreach (var item in Children)
                 {
                     arrCode += item.GetHashCode();
                 }
                 code = (code * 7) + arrCode;
             }
-                
+
             return code;
         }
     }

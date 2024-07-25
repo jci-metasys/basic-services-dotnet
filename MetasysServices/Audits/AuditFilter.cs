@@ -14,31 +14,31 @@ namespace JohnsonControls.Metasys.BasicServices
         /// See /enumSets/578/members for possible values.
         /// Example: 1,2.
         /// </summary>
-       public OriginApplicationsEnum OriginApplications { get; set; }
+        public OriginApplicationsEnum OriginApplications { get; set; }
 
         /// <summary>
         /// Filter by comma-separated list of class levels.
         /// See /enumSets/578/members for possible values.
         /// Example: 1,2.
         /// </summary>
-      public ClassLevelsEnum ClassesLevels { get; set; }
+        public ClassLevelsEnum ClassesLevels { get; set; }
 
         /// <summary>
         /// Added to call into API v4.
         /// </summary>
-      public string ClassLevels { get; set; }
+        public string ClassLevels { get; set; }
 
         /// <summary>
         /// Filter by comma-separated list of the action types.
         /// See /enumSets/578/members for possible values.
         /// Example: 1,2.
         /// </summary>
-       public ActionTypeEnum ActionTypes { get; set; }
+        public ActionTypeEnum ActionTypes { get; set; }
 
         /// <summary>
         /// Determines whether discarded audits will be excluded from results.
         /// Default is false (discarded audits will not be excluded).
         /// </summary>
-       public bool? ExcludeDiscarded { get; set; }
+        public bool? ExcludeDiscarded { get; set; }
     }
 }

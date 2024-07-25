@@ -1,6 +1,6 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Globalization;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
@@ -105,8 +105,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 StartTime = DateTime.Parse(args[0], null, DateTimeStyles.RoundtripKind),
                 EndTime = DateTime.Parse(args[1], null, DateTimeStyles.RoundtripKind),
                 //OriginApplications = args[2].ToLower() != "null" ? args[2] : "1,2",
-               // ClassLevels = args[3].ToLower() != "null" ? args[3] : "1,2",
-               // ActionTypes = args[4].ToLower() != "null" ? args[4] : "1,2",
+                // ClassLevels = args[3].ToLower() != "null" ? args[3] : "1,2",
+                // ActionTypes = args[4].ToLower() != "null" ? args[4] : "1,2",
                 ExcludeDiscarded = !string.IsNullOrEmpty(args[5]) ? Convert.ToBoolean(args[5]) : false,
                 Page = args[6].ToLower() != "null" ? Convert.ToInt32(args[6]) : 0,
                 PageSize = args[7].ToLower() != "null" ? Convert.ToInt32(args[7]) : 0,

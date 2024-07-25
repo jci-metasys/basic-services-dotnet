@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Globalization;
-using JohnsonControls.Metasys.BasicServices;
-using Newtonsoft.Json;
+﻿using JohnsonControls.Metasys.BasicServices;
 using MetasysServices_TestClient.Forms;
+using System;
+using System.Globalization;
+using System.Windows.Forms;
 
 namespace MetasysServices_TestClient
 {
@@ -18,7 +10,7 @@ namespace MetasysServices_TestClient
     {
         private MetasysClient _client;
         private ApiVersion _version;
-        private Boolean _enableTabs = false;
+        private bool _enableTabs = false;
         private readonly Activities _frmActivities = new Activities();
         private readonly Alarms _frmAlarms = new Alarms();
         private readonly Audits _frmAudits = new Audits();
@@ -67,7 +59,7 @@ namespace MetasysServices_TestClient
             //Create a new 'client' object
             _version = (ApiVersion)Enum.Parse(typeof(ApiVersion), cmbVersion.Text);
             _ = int.TryParse(TxtTimeout.Text.ToString(), out int timeout);
-            _client = new MetasysClient(txtHost.Text, true, _version, culture,timeout: timeout != 0 ? timeout: 300);
+            _client = new MetasysClient(txtHost.Text, true, _version, culture, timeout: timeout != 0 ? timeout : 300);
             if (_client != null)
             {
                 _frmActivities.Client = _client;
@@ -84,7 +76,6 @@ namespace MetasysServices_TestClient
                 _frmMiscellanea.Client = _client;
 
                 _frmSpaces.LoadComboBox();
-                //_frmNetworkDevices.LoadComboBox();
 
                 //Do the login using the credentials got from the UI
                 var token = _client.TryLogin(txtUsername.Text, txtPassword.Text);
@@ -135,11 +126,5 @@ namespace MetasysServices_TestClient
                 MessageBox.Show("You must Login before to change 'Tab'!", "Caution", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
-        //private static string FormatJson(object obj)
-        //{
-        //    //dynamic parsedJson = JsonConvert.DeserializeObject(json);
-        //    return JsonConvert.SerializeObject(obj, Formatting.Indented);
-        //}
     }
 }

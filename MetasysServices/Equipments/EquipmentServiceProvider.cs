@@ -1,4 +1,10 @@
-﻿using System;
+﻿using Flurl;
+using Flurl.Http;
+using JohnsonControls.Metasys.BasicServices.Utils;
+using log4net.Config;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,12 +12,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Flurl;
-using Flurl.Http;
-using log4net.Config;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using JohnsonControls.Metasys.BasicServices.Utils;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -51,7 +51,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> Get(int? page = null, int? pageSize = null)
         {
-            return GetAsync(page,pageSize).GetAwaiter().GetResult();
+            return GetAsync(page, pageSize).GetAwaiter().GetResult();
         }
         /// <inheritdoc/>
         public async Task<IEnumerable<MetasysObject>> GetAsync(int? page = null, int? pageSize = null)
@@ -91,7 +91,7 @@ namespace JohnsonControls.Metasys.BasicServices
                     string objectId = point.ObjectUrl.Split('/').Last();
                     point.ObjectId = ParseObjectIdentifier(objectId);
                     // Retrieve attribute Id from full URL 
-                    string attributeId = (point.Attribute != null)? point.Attribute.Split('.').Last() : String.Empty;
+                    string attributeId = (point.Attribute != null) ? point.Attribute.Split('.').Last() : String.Empty;
                     if (attributeId == String.Empty)
                     {
                         attributeId = (point.AttributeUrl != null) ? point.AttributeUrl.Split('/').Last() : String.Empty;

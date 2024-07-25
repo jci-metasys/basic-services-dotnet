@@ -1,7 +1,7 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
@@ -17,7 +17,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         }
         public void Run()
         {
-            try {
+            try
+            {
                 Console.WriteLine("\n\nGetSpaceTypes...");
 
                 IEnumerable<MetasysObjectType> spaceTypes = client.GetSpaceTypes();
@@ -28,7 +29,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 // Select a space type
                 Console.WriteLine("\nPlease enter the Space Type ID to retrieve all related spaces:");
                 string spaceType = Console.ReadLine();
-                IEnumerable<MetasysObject> spaces = client.GetSpaces((SpaceTypeEnum)Enum.Parse(typeof(SpaceTypeEnum),spaceType));
+                IEnumerable<MetasysObject> spaces = client.GetSpaces((SpaceTypeEnum)Enum.Parse(typeof(SpaceTypeEnum), spaceType));
                 Console.WriteLine($"Spaces found: {spaces.Count()}");
                 foreach (var space in spaces)
                 {
@@ -42,9 +43,10 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 foreach (var o in spaceEquipment)
                 {
                     Console.WriteLine($"\n{o.Id}: {o.Name}, {o.ItemReference}");
-                }               
+                }
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 log.Logger.Error(string.Format("An error occured while getting space information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }

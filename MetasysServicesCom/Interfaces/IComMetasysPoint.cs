@@ -17,39 +17,39 @@ namespace JohnsonControls.Metasys.ComServices
         string EquipmentName { get; set; }
 
         /// <summary>The Short name of the Point.</summary>
-        string ShortName {  set; get; }
+        string ShortName { set; get; }
 
         /// <summary>The Label of the Point.</summary>
-        string Label {  set; get; }
+        string Label { set; get; }
 
         /// <summary>
         /// Category of the Point.
         /// </summary>
-        string Category {  set; get; }
+        string Category { set; get; }
 
         /// <summary>
         /// Flag that states when the attribute object contains data suitable to display
         /// </summary>
-        bool IsDisplayData {  set; get; }
+        bool IsDisplayData { set; get; }
 
         /// <summary>
         /// The ID of the object where the point is mapped
         /// </summary>
-        string ObjectId { get;  set; }
+        string ObjectId { get; set; }
 
         /// <summary>
         /// Full URL of the attribute where the point is mapped
         /// </summary>
-        string AttributeUrl { get;  set; }
+        string AttributeUrl { get; set; }
 
         /// <summary>
         /// Full URL of the object where the point is mapped
         /// </summary>
-        string ObjectUrl { get;  set; }
+        string ObjectUrl { get; set; }
 
         /// <summary>
         /// Value of the attribute where the point is mapped
         /// </summary>
-        IComVariant PresentValue { get;  set; }
+        IComVariant PresentValue { get; set; }
     }
 }

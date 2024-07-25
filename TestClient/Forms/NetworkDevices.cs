@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Windows.Forms;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace MetasysServices_TestClient.Forms
 {
@@ -41,7 +34,7 @@ namespace MetasysServices_TestClient.Forms
             string type = TxtGetTypes_TypeID.Text;
             if (_client != null)
             {
-                var result = _client.NetworkDevices.Get((type.Length > 0) ? type : null) ;
+                var result = _client.NetworkDevices.Get((type.Length > 0) ? type : null);
                 DgvGet.DataSource = result;
             }
         }

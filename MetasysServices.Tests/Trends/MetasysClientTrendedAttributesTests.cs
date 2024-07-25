@@ -1,13 +1,8 @@
 ﻿
 using JohnsonControls.Metasys.BasicServices;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using MetasysAttribute = JohnsonControls.Metasys.BasicServices.MetasysAttribute;
 
 namespace MetasysServices.Tests
@@ -16,7 +11,7 @@ namespace MetasysServices.Tests
     /// Tests for Trends.
     /// </summary>
     public class MetasysClientTrendedAttributesTests : MetasysClientTestsBase
-    {      
+    {
         [Test]
         public void TestGetTrendedAttributesNone()
         {
@@ -26,7 +21,7 @@ namespace MetasysServices.Tests
             ""self"": ""https://hostname/api/v2/objects/" + mockid + @"/trendedAttributes""
             }";
             httpTest.RespondWith(response);
-            var trendedAttributes = client.Trends.GetTrendedAttributes(mockid); 
+            var trendedAttributes = client.Trends.GetTrendedAttributes(mockid);
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/trendedAttributes")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -44,14 +39,14 @@ namespace MetasysServices.Tests
                 .Times(1);
             PrintMessage($"TestGetTrendedAttributesNotFoundThrowsException: {e.Message}");
         }
-       
+
         [Test]
         public void TestGetTrendedAttributes()
-        {           
+        {
             var response = @"{
             ""total"": 1,           
-            ""items"": ["+Attribute+ @"],
-            ""self"": ""https://hostname/api/v2/objects/"+mockid+@"/trendedAttributes""
+            ""items"": [" + Attribute + @"],
+            ""self"": ""https://hostname/api/v2/objects/" + mockid + @"/trendedAttributes""
             ";
             httpTest.RespondWith(response);
             httpTest.RespondWith(AttributeDetail);
@@ -65,13 +60,13 @@ namespace MetasysServices.Tests
             // SDK Object matching the responsee
             var attribute = new MetasysAttribute
             {
-                Id=85,
-                Description="Present Value"
+                Id = 85,
+                Description = "Present Value"
             };
             Assert.AreEqual(attribute, trendedAttributes.ElementAt(0));
         }
-      
-        
+
+
         [Test]
         public void TestGetTrendedAttributesMissingItems()
         {
@@ -81,16 +76,16 @@ namespace MetasysServices.Tests
             ""self"": ""https://hostname/api/v2/objects/" + mockid + @"/trendedAttributes""
             ";
             httpTest.RespondWith(response);
-            Assert.Throws<MetasysObjectException>(()=>client.Trends.GetTrendedAttributes(mockid));
+            Assert.Throws<MetasysObjectException>(() => client.Trends.GetTrendedAttributes(mockid));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/trendedAttributes")
                  .WithVerb(HttpMethod.Get)
-                 .Times(1);        
+                 .Times(1);
         }
 
         [Test]
         public void TestGetTrendedAttributesMissingValuesThrowsException()
         {
-            string attr= string.Concat("{",
+            string attr = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\"}");
             var response = @"{
@@ -98,7 +93,7 @@ namespace MetasysServices.Tests
             ""items"": [" + attr + @"],
             ""self"": ""https://hostname/api/v2/objects/" + mockid + @"/trendedAttributes""
             ";
-            httpTest.RespondWith(response);           
+            httpTest.RespondWith(response);
             var e = Assert.Throws<MetasysObjectException>(() =>
               client.Trends.GetTrendedAttributes(mockid));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/trendedAttributes")

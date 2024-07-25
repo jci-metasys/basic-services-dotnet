@@ -1,8 +1,8 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.ComServices;
+using System;
 using System.Globalization;
 using System.Reflection;
-using JohnsonControls.Metasys.BasicServices;
-using JohnsonControls.Metasys.ComServices;
 
 namespace MetasysServicesComExampleApp.FeaturesDemo
 {
@@ -20,7 +20,8 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
 
         public void Run()
         {
-            try {
+            try
+            {
                 Console.WriteLine("Enter alarm id to get alarm details: ");
                 string alarmId = Console.ReadLine();
 
@@ -111,7 +112,8 @@ namespace MetasysServicesComExampleApp.FeaturesDemo
                     Console.WriteLine("\nInvalid Input");
                 }
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 log.Logger.Error(string.Format("An error occured while getting alarm information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }

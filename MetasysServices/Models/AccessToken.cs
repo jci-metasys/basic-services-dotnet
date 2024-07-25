@@ -17,14 +17,14 @@ namespace JohnsonControls.Metasys.BasicServices
         /// The Metasys Username that requested the Access Token.
         /// </summary>
         public string IssuedTo { get; private set; }
-        
+
         /// <summary>The session access token for bearer authentication.</summary>
         /// <value>String in the format "Bearer ..."</value>
         public string Token { private set; get; }
 
         /// <summary>Expiration date in UTC time.</summary>
         public DateTime Expires { private set; get; }
-       
+
         /// <summary>
         /// Initialize an AccessToken Object with all required information.
         /// </summary>
@@ -37,9 +37,9 @@ namespace JohnsonControls.Metasys.BasicServices
             Issuer = issuer;
             IssuedTo = issuedTo;
             Token = token;
-            Expires = expires;           
+            Expires = expires;
         }
-        
+
         /// <summary>
         /// Returns a value indicating whither this instance has values equal to a specified object.
         /// </summary>
@@ -52,7 +52,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 return (this.Token == null && other.Token == null || (this.Token != null && other.Token != null &&
                     other.Token.Equals(this.Token) &&
                     other.Expires.Equals(this.Expires) &&
-                    other.IssuedTo.Equals(this.IssuedTo) && 
+                    other.IssuedTo.Equals(this.IssuedTo) &&
                     other.Issuer.Equals(this.Issuer)));
             }
             return false;

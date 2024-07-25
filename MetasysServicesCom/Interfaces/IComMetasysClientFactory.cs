@@ -23,7 +23,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <param name="cultureInfo"></param>
         /// <param name="logClientErrors">Set this flag to false to disable logging of client errors.</param>
         /// <returns>LegacyMetasysClient Instance</returns>
-        ILegacyMetasysClient GetLegacyClient(string hostname, bool ignoreCertificateErrors = false, string version = "v2", string cultureInfo = null, bool logClientErrors=true);
+        ILegacyMetasysClient GetLegacyClient(string hostname, bool ignoreCertificateErrors = false, string version = "v2", string cultureInfo = null, bool logClientErrors = true);
 
         /// <summary>
         /// Retrieve a Credential Manager object for the given target.

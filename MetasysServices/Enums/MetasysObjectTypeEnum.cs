@@ -12,14 +12,14 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Generic Metasys Object.
         /// </summary>
-        Object=1,
+        Object = 1,
         /// <summary>
         /// Metasys Object of type Space.
         /// </summary>
-        Space=2,
+        Space = 2,
         /// <summary>
         /// Metasys Object of type Equipment.
         /// </summary>
-        Equipment=3
+        Equipment = 3
     }
 }

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.BasicServices.Enums;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using JohnsonControls.Metasys.BasicServices;
-using JohnsonControls.Metasys.BasicServices.Enums;
 
 namespace JohnsonControls.Metasys.BasicServices
 {

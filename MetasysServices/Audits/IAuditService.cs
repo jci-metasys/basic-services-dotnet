@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Flurl.Http;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using Flurl.Http;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// Defines method to provide audit infos for endpoints of the Metasys Audit API.
     /// </summary>
-    public interface IAuditService:IBasicService
+    public interface IAuditService : IBasicService
     {
         /// <summary>
         /// Retrieves the specified audit.

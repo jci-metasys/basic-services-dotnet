@@ -32,9 +32,9 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             var assembly = Assembly.GetExecutingAssembly();
             ILoggerRepository repository = LogManager.GetRepository(assembly);
-            XmlConfigurator.Configure(repository, new FileInfo(Path.Combine(Path.GetDirectoryName(assembly.Location),"log4net.config")));
+            XmlConfigurator.Configure(repository, new FileInfo(Path.Combine(Path.GetDirectoryName(assembly.Location), "log4net.config")));
             return LogManager.GetLogger(repository.Name, sourceType);
         }
-       
+
     }
 }

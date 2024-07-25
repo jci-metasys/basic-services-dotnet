@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Newtonsoft.Json;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -65,15 +65,15 @@ namespace JohnsonControls.Metasys.BasicServices
             // Calculate hash on each properties one by one
             if (Message != null)
                 code = (code * 7) + Message.GetHashCode();
-                code = (code * 7) + IsAckRequired.GetHashCode();
+            code = (code * 7) + IsAckRequired.GetHashCode();
             if (this.Type != null)
                 code = (code * 7) + Type.GetHashCode();
-                code = (code * 7) + Priority.GetHashCode();
+            code = (code * 7) + Priority.GetHashCode();
             if (this.Category != null)
                 code = (code * 7) + Category.GetHashCode();
             if (this.AnnotationsUrl != null)
                 code = (code * 7) + AnnotationsUrl.GetHashCode();
-                code = (code * 7) + AnnotationCount.GetHashCode();
+            code = (code * 7) + AnnotationCount.GetHashCode();
             if (this.Self != null)
                 code = (code * 7) + Self.GetHashCode();
             if (this.TriggerValue != null)

@@ -1,4 +1,10 @@
-﻿using System;
+﻿using Flurl;
+using Flurl.Http;
+using JohnsonControls.Metasys.BasicServices.Utils;
+using log4net.Config;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,12 +12,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Flurl;
-using Flurl.Http;
-using log4net.Config;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using JohnsonControls.Metasys.BasicServices.Utils;
 
 namespace JohnsonControls.Metasys.BasicServices
 {

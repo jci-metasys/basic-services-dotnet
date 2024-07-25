@@ -83,7 +83,7 @@ namespace JohnsonControls.Metasys.ComServices
 
         /// <summary> Filter by comma-separated list of action type the user or system performed. </summary>
         /// <remarks> Possible values from 'auditActionTypeEnumSet' Metasys enum set. Example: 'auditActionTypeEnumSet.writeAuditActionType'. </remarks>
-         string ActionType { get; set; }
+        string ActionType { get; set; }
 
         /// <summary> Filter by comma-separated list of users that initiated the action being audited. </summary>
         /// <remarks> Example of values: 'metasysuser'. </remarks> 

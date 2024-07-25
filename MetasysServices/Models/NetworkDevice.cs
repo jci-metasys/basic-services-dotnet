@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -86,7 +86,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var o = (NetworkDevice)obj;
                 // Compare each properties one by one for better performance
                 return this.Id == o.Id && this.ItemReference == o.ItemReference
-                    && this.Name == o.Name && this.ObjectType == o.ObjectType ;
+                    && this.Name == o.Name && this.ObjectType == o.ObjectType;
             }
             return false;
         }

@@ -8,8 +8,8 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// 
     /// </summary>
-    public interface ITrendService:IBasicService
-    {       
+    public interface ITrendService : IBasicService
+    {
         /// <summary>
         /// Get the list of trended attributes for the given object.
         /// </summary>    
@@ -21,9 +21,9 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         /// <exception cref="MetasysHttpNotFoundException"></exception>
         /// <exception cref="MetasysObjectException"></exception>
-        List<MetasysAttribute>GetTrendedAttributes(Guid id);
+        List<MetasysAttribute> GetTrendedAttributes(Guid id);
         /// <inheritdoc cref="ITrendService.GetTrendedAttributes(Guid)"/>
-        Task<List<MetasysAttribute>>GetTrendedAttributesAsync(Guid id);
+        Task<List<MetasysAttribute>> GetTrendedAttributesAsync(Guid id);
 
         /// <summary>
         /// Retrieves available samples for the given object attribute, filtered by startTime and endTime.

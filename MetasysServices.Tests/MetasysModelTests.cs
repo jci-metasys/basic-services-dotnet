@@ -1,10 +1,9 @@
-using System;
-using NUnit.Framework;
 using JohnsonControls.Metasys.BasicServices;
-using System.Globalization;
 using Newtonsoft.Json.Linq;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
-using System.Collections;
+using System.Globalization;
 
 namespace MetasysServices.Tests
 {
@@ -76,9 +75,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestMetasysObjectEqual(ApiVersion version) {
+        public void TestMetasysObjectEqual(ApiVersion version)
+        {
             string obj, obj2;
-            if (version < ApiVersion.v3) {
+            if (version < ApiVersion.v3)
+            {
                 obj = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555555\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
@@ -91,7 +92,9 @@ namespace MetasysServices.Tests
                     "\"name\": \"name2\",",
                     "\"description\": \"description2\",",
                     $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
-            } else {
+            }
+            else
+            {
                 obj = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555555\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
@@ -132,14 +135,18 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestVariantArrayEqual(ApiVersion version) {
+        public void TestVariantArrayEqual(ApiVersion version)
+        {
             Guid id = new("11111111-2222-3333-4444-555555555555");
             Guid idCopy = new("11111111-2222-3333-4444-555555555555");
             string json1, json2;
-            if (version < ApiVersion.v3) {
+            if (version < ApiVersion.v3)
+            {
                 json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
                 json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
-            } else {
+            }
+            else
+            {
                 json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
                 json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
             }
@@ -151,11 +158,13 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestVariantEqual(ApiVersion version) {
+        public void TestVariantEqual(ApiVersion version)
+        {
             Guid id = new("11111111-2222-3333-4444-555555555555");
             Guid idCopy = new("11111111-2222-3333-4444-555555555555");
             string data;
-            if (version < ApiVersion.v3) {
+            if (version < ApiVersion.v3)
+            {
                 data = @"{
                     ""item"": {
                         ""presentValue"": {
@@ -165,7 +174,9 @@ namespace MetasysServices.Tests
                         }
                         }
                     }";
-            } else {
+            }
+            else
+            {
                 data = @"{
                     ""item"": {
                         ""presentValue"": {
@@ -186,17 +197,21 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestVariantMultipleEqual(ApiVersion version) {
+        public void TestVariantMultipleEqual(ApiVersion version)
+        {
             Guid id = new("11111111-2222-3333-4444-555555555555");
             Guid idCopy = new("11111111-2222-3333-4444-555555555555");
             string json;
-            if (version < ApiVersion.v3) {
+            if (version < ApiVersion.v3)
+            {
                 json = @"{
                     ""item"": {
                         ""attr"": ""stringvalue""
                         }
                     }";
-            } else {
+            }
+            else
+            {
                 json = @"{
                     ""item"": {
                         ""attr"": ""stringvalue""
@@ -221,8 +236,8 @@ namespace MetasysServices.Tests
             string date = "2030-01-01T00:00:00Z";
             DateTime dateTime1 = DateTime.Parse(date).ToUniversalTime();
             DateTime dateTime2 = DateTime.Parse(date).ToUniversalTime();
-            var token1 = new AccessToken("fake_issuer1", "fake_issued_to1","Bearer faketoken", dateTime1);
-            var token2 = new AccessToken("fake_issuer2", "fake_issued_to2","Bearer faketokem", dateTime2);
+            var token1 = new AccessToken("fake_issuer1", "fake_issued_to1", "Bearer faketoken", dateTime1);
+            var token2 = new AccessToken("fake_issuer2", "fake_issued_to2", "Bearer faketokem", dateTime2);
             Assert.AreNotEqual(token1.GetHashCode(), token2.GetHashCode());
             Assert.AreNotEqual(token1, token2);
         }
@@ -234,8 +249,8 @@ namespace MetasysServices.Tests
             string date2 = "2030-01-01T00:00:01Z";
             DateTime dateTime1 = DateTime.Parse(date1).ToUniversalTime();
             DateTime dateTime2 = DateTime.Parse(date2).ToUniversalTime();
-            var token1 = new AccessToken("fake_issuer", "fake_issued_to","Bearer faketoken", dateTime1);
-            var token2 = new AccessToken("fake_issuer", "fake_issued_to","Bearer faketoken", dateTime2);
+            var token1 = new AccessToken("fake_issuer", "fake_issued_to", "Bearer faketoken", dateTime1);
+            var token2 = new AccessToken("fake_issuer", "fake_issued_to", "Bearer faketoken", dateTime2);
 
             Assert.AreNotEqual(token1.GetHashCode(), token2.GetHashCode());
             Assert.AreNotEqual(token1, token2);
@@ -278,9 +293,11 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestMetasysObjectDoesNotEqual(ApiVersion version) {
+        public void TestMetasysObjectDoesNotEqual(ApiVersion version)
+        {
             string obj, obj2, obj3;
-            if (version < ApiVersion.v3) {
+            if (version < ApiVersion.v3)
+            {
                 obj = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555555\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
@@ -299,7 +316,9 @@ namespace MetasysServices.Tests
                     "\"name\": \"name3\",",
                     "\"description\": \"description3\",",
                     $"\"typeUrl\": \"https://hostname/api/{version}/enumSets/508/members/197\"}}");
-            } else {
+            }
+            else
+            {
                 obj = string.Concat("{",
                     "\"id\": \"11111111-2222-3333-4444-555555555555\",",
                     "\"itemReference\": \"fully:qualified/reference\",",
@@ -348,15 +367,19 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestVariantArrayDoesNotEqual(ApiVersion version) {
+        public void TestVariantArrayDoesNotEqual(ApiVersion version)
+        {
             Guid id = new("11111111-2222-3333-4444-555555555555");
             Guid id2 = new("11111111-2222-3333-4444-555555555555");
 
             string json1, json2;
-            if (version < ApiVersion.v3) {
+            if (version < ApiVersion.v3)
+            {
                 json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
                 json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 3 ] }}";
-            } else {
+            }
+            else
+            {
                 json1 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 2 ] }}";
                 json2 = "{\"item\": { \"" + "attr" + "\": [ 0, 1, 3 ] }}";
             }
@@ -368,10 +391,12 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestVariantDoesNotEqual(ApiVersion version) {
+        public void TestVariantDoesNotEqual(ApiVersion version)
+        {
             Guid id = new("11111111-2222-3333-4444-555555555555");
             string data, data2, data3;
-            if (version < ApiVersion.v3) {
+            if (version < ApiVersion.v3)
+            {
                 data = @"{
                 ""item"": {
                     ""presentValue"": {
@@ -398,7 +423,9 @@ namespace MetasysServices.Tests
                         }
                         }
                     }";
-            } else {
+            }
+            else
+            {
                 data = @"{
                 ""item"": {
                     ""presentValue"": {
@@ -438,11 +465,13 @@ namespace MetasysServices.Tests
 
         [TestCase(ApiVersion.v2)]
         [TestCase(ApiVersion.v3)]
-        public void TestVariantMultipleDoesNotEqual(ApiVersion version) {
+        public void TestVariantMultipleDoesNotEqual(ApiVersion version)
+        {
             Guid id = new("11111111-2222-3333-4444-555555555555");
             Guid id2 = new("11111111-2222-3333-4444-555555555555");
             string json1, json2;
-            if (version < ApiVersion.v3) {
+            if (version < ApiVersion.v3)
+            {
                 json1 = @"{
                     ""item"": {
                         ""attr"": ""stringvalue""
@@ -453,7 +482,9 @@ namespace MetasysServices.Tests
                         ""attr"": ""stringvalwe""
                         }
                     }";
-            } else {
+            }
+            else
+            {
                 json1 = @"{
                     ""item"": {
                         ""attr"": ""stringvalue""

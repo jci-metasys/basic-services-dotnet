@@ -26,7 +26,7 @@ namespace JohnsonControls.Metasys.BasicServices.Utils
             Username = new SecureString();
             Password = new SecureString();
             user.ToCharArray().ToList().ForEach(c => Username.AppendChar(c));
-            psw.ToCharArray().ToList().ForEach(c => Password.AppendChar(c));           
+            psw.ToCharArray().ToList().ForEach(c => Password.AppendChar(c));
         }
     }
 }

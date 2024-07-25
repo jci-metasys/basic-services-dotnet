@@ -1,7 +1,6 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using System;
 using System.Linq;
 using System.Net.Http;
 

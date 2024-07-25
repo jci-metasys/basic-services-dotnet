@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using JohnsonControls.Metasys.BasicServices;
+﻿using JohnsonControls.Metasys.BasicServices;
 using JohnsonControls.Metasys.BasicServices.Utils;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace WeatherForecastApp
@@ -15,7 +15,7 @@ namespace WeatherForecastApp
             // Add support for JSON Config File
             IConfiguration config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("AppSettings.json", optional: false, reloadOnChange:true)
+            .AddJsonFile("AppSettings.json", optional: false, reloadOnChange: true)
             .Build();
             // Define the Metasys API version
             ApiVersion apiVersion = ApiVersion.v4;
@@ -23,7 +23,7 @@ namespace WeatherForecastApp
             var hostnameTarget = config.GetSection("CredentialManager:Targets:MetasysServer").Value;
             // Hostname is stored in the Credential Manager using password field
             var secureHostname = CredentialUtil.GetCredential(hostnameTarget);
-            MetasysClient metasysClient = new MetasysClient(CredentialUtil.convertToUnSecureString(secureHostname.Password),true, apiVersion);
+            MetasysClient metasysClient = new MetasysClient(CredentialUtil.convertToUnSecureString(secureHostname.Password), true, apiVersion);
             // Retrieve Metasys Credentials to login
             var credTarget = config.GetSection("CredentialManager:Targets:MetasysCredentials").Value;
             // Use TryLogin overload that accepts Credential Manager Target
@@ -62,22 +62,22 @@ namespace WeatherForecastApp
             MetasysObject Rain = weatherForecast.FindByName("Rain");
             MetasysObject Snow = weatherForecast.FindByName("Snow");
             // Use commands to write the results
-            string adjustCommand = "Adjust"; 
+            string adjustCommand = "Adjust";
             if (apiVersion > ApiVersion.v3)
             {
                 adjustCommand = "adjustCommand";
             }
             var date = OpenWeatherMapClient.UnixTimeStampToDateTime(forecast.dt);
-            metasysClient.SendCommand(Day.Id, adjustCommand, new List<object> {date.Day});
-            metasysClient.SendCommand(Month.Id, adjustCommand, new List<object> {date.Month});
-            metasysClient.SendCommand(Year.Id, adjustCommand, new List<object> {date.Year});
-            metasysClient.SendCommand(Hour.Id, adjustCommand, new List<object> {date.Hour});
-            metasysClient.SendCommand(Minute.Id, adjustCommand, new List<object> {date.Minute});
-            metasysClient.SendCommand(Temperature.Id, adjustCommand, new List<object> {forecast.main.temp});
-            metasysClient.SendCommand(Humidity.Id, adjustCommand, new List<object> {forecast.main.humidity});
+            metasysClient.SendCommand(Day.Id, adjustCommand, new List<object> { date.Day });
+            metasysClient.SendCommand(Month.Id, adjustCommand, new List<object> { date.Month });
+            metasysClient.SendCommand(Year.Id, adjustCommand, new List<object> { date.Year });
+            metasysClient.SendCommand(Hour.Id, adjustCommand, new List<object> { date.Hour });
+            metasysClient.SendCommand(Minute.Id, adjustCommand, new List<object> { date.Minute });
+            metasysClient.SendCommand(Temperature.Id, adjustCommand, new List<object> { forecast.main.temp });
+            metasysClient.SendCommand(Humidity.Id, adjustCommand, new List<object> { forecast.main.humidity });
             if (forecast.rain != null)
             {
-                metasysClient.SendCommand(Rain.Id, adjustCommand, new List<object> { forecast.rain.ThreeHours});
+                metasysClient.SendCommand(Rain.Id, adjustCommand, new List<object> { forecast.rain.ThreeHours });
             }
             else
             {

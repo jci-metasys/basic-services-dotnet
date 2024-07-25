@@ -1,11 +1,10 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.BasicServices.Utils;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using JohnsonControls.Metasys.BasicServices;
 using MetasysAttribute = JohnsonControls.Metasys.BasicServices.MetasysAttribute;
-using JohnsonControls.Metasys.BasicServices.Utils;
-using Newtonsoft.Json;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
@@ -21,13 +20,13 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         }
 
         #region CREATING A CLIENT
-        
+
         private void CreateClientSignature1()
         {
             /* SNIPPET 1: START */
             var client = new MetasysClient("hostname");
             /* SNIPPET 1: END */
-       
+
         }
 
         private void CreateClientSignature2()
@@ -54,7 +53,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             {
                 // Your Try logic here...
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 log.Logger.Error(string.Format("An error occured - {0}", ex.Message));
             }
             /* SNIPPET 4: END */
@@ -64,7 +64,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             /* SNIPPET 5: START */
             // Changing Api version after creating a client
-            var client = new MetasysClient("hostname",version: ApiVersion.v3);
+            var client = new MetasysClient("hostname", version: ApiVersion.v3);
             client.Version = ApiVersion.v2;
             /* SNIPPET 5: END */
         }
@@ -229,7 +229,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         {
             /* SNIPPET 1: START */
             List<Command> commands = client.GetCommands(objectId).ToList();
-            Command command= commands.FindById("adjust");
+            Command command = commands.FindById("adjust");
             Console.WriteLine(command);
             /*
                 {
@@ -254,7 +254,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 2: START */
             Command adjust = commands.FindById("adjust");
             Command operatorOverride = commands.FindById("operatorOverride");
-            Command release = commands.FindById("release"); 
+            Command release = commands.FindById("release");
             Console.WriteLine(release);
             /*                        
               {
@@ -438,7 +438,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 }
                */
             // Get direct children (1 level) with internal objects
-            directChildren = client.GetObjects(parentId, includeInternalObjects:true).ToList();  
+            directChildren = client.GetObjects(parentId, includeInternalObjects: true).ToList();
             // Get descendant for 2 levels (it could take long time, depending on the number of objects)
             List<MetasysObject> level2Descendants = client.GetObjects(parentId, 2).ToList();
             MetasysObject level1Parent = level2Descendants.FindByName("Time");

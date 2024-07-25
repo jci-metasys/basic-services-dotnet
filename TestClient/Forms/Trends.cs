@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Windows.Forms;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace MetasysServices_TestClient.Forms
 {
@@ -39,12 +32,13 @@ namespace MetasysServices_TestClient.Forms
         {
             DgvGetTrendedAttributes.DataSource = null;
             String objectId = TxtGetTrendedAttributes_ObjectID.Text.Trim();
-            if (! String.IsNullOrEmpty(objectId))
+            if (!String.IsNullOrEmpty(objectId))
             {
                 Guid id = new Guid(objectId);
                 var result = _client.Trends.GetTrendedAttributes(id);
                 DgvGetTrendedAttributes.DataSource = result;
-            } else
+            }
+            else
             {
                 MessageBox.Show("The parameter 'Object ID' is mandatory!", "Warning");
             }

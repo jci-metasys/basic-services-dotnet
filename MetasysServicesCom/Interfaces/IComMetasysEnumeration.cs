@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace JohnsonControls.Metasys.ComServices
-{    
+{
     /// <summary>
     /// A specialized DTO for COM that holds information about a Metasys Enumeration object.
     /// </summary>

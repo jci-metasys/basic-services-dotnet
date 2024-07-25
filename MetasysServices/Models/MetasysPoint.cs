@@ -10,7 +10,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Point is a structure that holds information about an object attribute mapped to a point.
     /// </summary>
-    public class MetasysPoint: Utils.ObjectUtil
+    public class MetasysPoint : Utils.ObjectUtil
     {
         /// <summary>
         /// The name of the Equipment that contains the Point
@@ -27,7 +27,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Flag that states when the attribute object contains data suitable to display
         /// </summary>
-        public bool IsDisplayData {  set; get; }
+        public bool IsDisplayData { set; get; }
         /// <summary>
         /// The ID of the object where the point is mapped
         /// </summary>
@@ -35,7 +35,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Full URL of the attribute where the point is mapped
         /// </summary>
-        public string AttributeUrl {get;   set; }
+        public string AttributeUrl { get; set; }
         /// <summary>
         /// Attribute where the point is mapped
         /// </summary>
@@ -43,12 +43,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Full URL of the object where the point is mapped
         /// </summary>
-        public string ObjectUrl { get;  set; }
+        public string ObjectUrl { get; set; }
         /// <summary>
         /// Value of the attribute where the point is mapped
         /// </summary>
-        public Variant PresentValue { get;  set; }
-        
+        public Variant PresentValue { get; set; }
+
         /// <summary>
         /// Default Constructor for Point.
         /// </summary>
@@ -57,9 +57,9 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         internal MetasysPoint(JToken token)
-        {                   
+        {
             try
-            {          
+            {
                 EquipmentName = token["equipmentName"].Value<string>();
                 ShortName = token["shortName"].Value<string>();
                 Label = token["label"].Value<string>();
@@ -83,13 +83,13 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     Attribute = null;
                 }
-                ObjectUrl = token["objectUrl"].Value<string>();            
+                ObjectUrl = token["objectUrl"].Value<string>();
                 PresentValue = null;
             }
             catch (Exception e)
             {
                 throw new MetasysObjectException(token.ToString(), e);
-            }         
+            }
         }
 
 

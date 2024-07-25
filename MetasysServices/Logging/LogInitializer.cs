@@ -20,8 +20,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         public LogInitializer(Type source)
         {
-            LogFactory logFactory = LogFactory.Instance;                           
-            Logger = logFactory.CreateLogger(source);         
+            LogFactory logFactory = LogFactory.Instance;
+            Logger = logFactory.CreateLogger(source);
         }
     }
 }

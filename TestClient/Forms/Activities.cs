@@ -1,13 +1,7 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace MetasysServices_TestClient.Forms
 {
@@ -49,7 +43,7 @@ namespace MetasysServices_TestClient.Forms
             DgvGet.DataSource = null;
             ActivityFilter activityFilter;
             if (!ChkGet_NoFilters.Checked)
-            { 
+            {
                 activityFilter = new ActivityFilter();
 
                 activityFilter.ActivityType = CmbGet_ActivityType.Text;
@@ -94,7 +88,8 @@ namespace MetasysServices_TestClient.Forms
             {
                 DgvGet.DataSource = result.Items;
                 LblGet_ItemCounter.Text = "Items: " + result.Items.Count.ToString();
-            } else
+            }
+            else
                 LblGet_ItemCounter.Text = "Items: 0";
 
 
@@ -104,7 +99,7 @@ namespace MetasysServices_TestClient.Forms
         {
             filter_Type = "";
             var frm = new EnumSelectMulti(_client, "alarmValueEnumSet");
-            if (frm.ShowDialog() == DialogResult.OK) 
+            if (frm.ShowDialog() == DialogResult.OK)
             {
                 filter_Type = frm.SelectionResult;
             };

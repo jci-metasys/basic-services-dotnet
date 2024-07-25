@@ -8,7 +8,7 @@ namespace JohnsonControls.Metasys.ComServices
     [ComVisible(true)]
     [Guid("b778bc2d-5eb8-46ba-96e0-a6c3d4a59671")]
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
-    public interface IComPagedResult 
+    public interface IComPagedResult
     {
         /// <summary>
         /// The total number of elements. 

@@ -1,5 +1,5 @@
-﻿using System;
-using JohnsonControls.Metasys.BasicServices;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {

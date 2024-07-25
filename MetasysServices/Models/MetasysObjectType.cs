@@ -46,8 +46,8 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 var other = (MetasysObjectType)obj;
                 return this.Id.Equals(other.Id) &&
-                    ((this.DescriptionEnumerationKey == null && other.DescriptionEnumerationKey == null) || 
-                        (this.DescriptionEnumerationKey != null && 
+                    ((this.DescriptionEnumerationKey == null && other.DescriptionEnumerationKey == null) ||
+                        (this.DescriptionEnumerationKey != null &&
                             this.DescriptionEnumerationKey.Equals(other.DescriptionEnumerationKey)));
             }
             return false;

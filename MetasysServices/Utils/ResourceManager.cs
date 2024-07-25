@@ -1,21 +1,21 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Globalization;
 using System.Resources;
-using JohnsonControls.Metasys.BasicServices;
-using System.Collections;
+using System.Text;
 
 namespace JohnsonControls.Metasys.BasicServices.Utils
 {
     /// <summary>
     /// Utility that helps the management of resources.
     /// </summary>
-    public static class ResourceManager 
+    public static class ResourceManager
     {
         /// <summary>Resource Manager to provide localized translations.</summary>
         static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager("JohnsonControls.Metasys.BasicServices.Resources.MetasysResources", typeof(MetasysClient).Assembly);
-        
+
         /// <summary>Dictionary to provide keys from the commandIdEnumSet.</summary>
         /// <value>Keys as en-US translations, values as the commandIdEnumSet Enumerations.</value>
         static Dictionary<string, string> CommandEnumerations;

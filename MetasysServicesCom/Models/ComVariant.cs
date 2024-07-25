@@ -10,7 +10,7 @@ namespace JohnsonControls.Metasys.ComServices
     [Guid("e4df7bb3-3be4-420d-8a73-f93ddad4681f")]
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
-    public class ComVariant:IComVariant
+    public class ComVariant : IComVariant
     {
         // Note: in order to correctly work with VBA registered types, class need to implement a defined interface. Neither inheritance nor encapsulation will work when the defined class is in another assembly
 

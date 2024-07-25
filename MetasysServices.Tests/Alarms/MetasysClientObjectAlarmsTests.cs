@@ -1,12 +1,8 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 
 namespace MetasysServices.Tests
 {
@@ -14,8 +10,8 @@ namespace MetasysServices.Tests
     /// Tests for Alarms.
     /// </summary>
     public class MetasysClientObjectAlarmsTests : MetasysClientTestsBase
-    {        
-       
+    {
+
         [Test]
         public void TestGetObjectAlarmsNone()
         {
@@ -27,7 +23,7 @@ namespace MetasysServices.Tests
             ""self"": ""https://hostname/api/v2/alarms?pageSize=100&excludePending=false&excludeAcknowledged=false&excludeDiscarded=false&page=1&sort=creationTime""
             ";
             httpTest.RespondWith(response);
-            var alarms = client.Alarms.GetForObject(mockid,new AlarmFilter { }); // No filter
+            var alarms = client.Alarms.GetForObject(mockid, new AlarmFilter { }); // No filter
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -96,7 +92,7 @@ namespace MetasysServices.Tests
             Assert.AreEqual(expected, alarms.Items.ElementAt(0));
         }
 
-        
+
         [Test]
         public void TestGetObjectAlarmsMissingItems()
         {
@@ -108,16 +104,16 @@ namespace MetasysServices.Tests
             ""self"": ""https://hostname/api/v2/alarms?pageSize=1&excludePending=false&excludeAcknowledged=false&excludeDiscarded=false&page=1&sort=creationTime""
             ";
             httpTest.RespondWith(response);
-            Assert.Throws<MetasysObjectException>(()=>client.Alarms.GetForObject(mockid, new AlarmFilter { }));
+            Assert.Throws<MetasysObjectException>(() => client.Alarms.GetForObject(mockid, new AlarmFilter { }));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/objects/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
-                .Times(1);          
+                .Times(1);
         }
 
         [Test]
         public void TestObjectAlarmMissingValuesThrowsException()
         {
-            string alarm= string.Concat("{",
+            string alarm = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\"}");
             var response = @"{

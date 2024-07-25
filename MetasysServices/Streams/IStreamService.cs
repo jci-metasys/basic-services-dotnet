@@ -1,11 +1,11 @@
-﻿using System;
+﻿using EvtSource;
+using Flurl.Http;
+using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using EvtSource;
-using Flurl.Http;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace JohnsonControls.Metasys.BasicServices
 {

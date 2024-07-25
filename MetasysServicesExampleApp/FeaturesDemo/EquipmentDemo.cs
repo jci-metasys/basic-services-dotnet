@@ -1,7 +1,7 @@
-﻿using System;
+﻿using JohnsonControls.Metasys.BasicServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using JohnsonControls.Metasys.BasicServices;
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
@@ -17,7 +17,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
         }
         public void Run()
         {
-            try {             
+            try
+            {
                 // Select a point
                 Console.WriteLine("\nPlease enter the equipment ID to retrieve all related points:");
                 string equipmentID = Console.ReadLine();
@@ -28,7 +29,8 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                     Console.WriteLine($"\n{p.ShortName}: {p.Label}, {p.PresentValue?.StringValue}");
                 }
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 log.Logger.Error(string.Format("An error occured while getting space information - {0}", exception.Message));
                 Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
             }

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json.Linq;
 using System.Linq;
+using System.Text;
 
 namespace JohnsonControls.Metasys.BasicServices.Utils
 {

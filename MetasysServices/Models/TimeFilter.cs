@@ -7,7 +7,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Temporal filter for a timeline based request.
     /// </summary>
-    public class TimeFilter: BasicFilter
+    public class TimeFilter : BasicFilter
     {
         /// <summary>
         /// Earliest start time.

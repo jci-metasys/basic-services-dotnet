@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Reflection;
+using System.Text;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     internal class Reflector
     {
-      public static void SetField(Object obj, String fieldName, object value)
+        public static void SetField(Object obj, String fieldName, object value)
         {
             Type type = obj.GetType();
             FieldInfo field = type.GetField(

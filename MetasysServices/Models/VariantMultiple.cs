@@ -15,13 +15,13 @@ namespace JohnsonControls.Metasys.BasicServices
         public Guid Id { private set; get; }
 
         /// <summary>The list of Variants.</summary>
-        public IEnumerable<Variant> Values {set; get; }
+        public IEnumerable<Variant> Values { set; get; }
 
         internal VariantMultiple(Guid id, IEnumerable<Variant> values)
         {
             Id = id;
             Values = values;
-        }       
+        }
 
         /// <summary>
         /// Returns a value indicating whither this instance has values equal to a specified object.
@@ -38,13 +38,13 @@ namespace JohnsonControls.Metasys.BasicServices
                     if (this.Values == null ^ other.Values == null)
                     {
                         return false;
-                    } 
+                    }
                     else if (this.Values != null && other.Values != null)
                     {
                         return Enumerable.SequenceEqual(this.Values, other.Values);
                     }
                 }
-                return areEqual;                
+                return areEqual;
             }
             return false;
         }
@@ -57,7 +57,7 @@ namespace JohnsonControls.Metasys.BasicServices
             if (Values != null)
             {
                 var arrCode = 0;
-                foreach(var item in Values)
+                foreach (var item in Values)
                 {
                     arrCode += item.GetHashCode();
                 }

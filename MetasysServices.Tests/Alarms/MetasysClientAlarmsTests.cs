@@ -1,12 +1,8 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 
 namespace MetasysServices.Tests
 {
@@ -15,7 +11,7 @@ namespace MetasysServices.Tests
     /// </summary>
     public class MetasysClientAlarmsTests : MetasysClientTestsBase
     {
-             
+
         [Test]
         public void TestGetAlarmsNone()
         {
@@ -33,7 +29,7 @@ namespace MetasysServices.Tests
                 .Times(1);
             Assert.AreEqual(0, alarms.Items.Count);
         }
-     
+
         [Test]
         public void TestGetAlarmsOnePage()
         {
@@ -41,7 +37,7 @@ namespace MetasysServices.Tests
             ""total"": 1,
             ""next"": null,
             ""previous"": null,
-            ""items"": ["+Alarm+@"],
+            ""items"": [" + Alarm + @"],
             ""self"": ""https://hostname/api/v2/alarms?pageSize=100&excludePending=false&excludeAcknowledged=false&excludeDiscarded=false&page=1&sort=creationTime""
             ";
             httpTest.RespondWith(response);
@@ -61,7 +57,7 @@ namespace MetasysServices.Tests
             ""total"": 2,
             ""next"": ""https://hostname/api/v2/alarms?pageSize=1&excludePending=false&excludeAcknowledged=false&excludeDiscarded=false&page=2&sort=creationTime"",
             ""previous"": null,
-            ""items"": [" +Alarm+@"],
+            ""items"": [" + Alarm + @"],
             ""self"": ""https://hostname/api/v2/alarms?pageSize=1&excludePending=false&excludeAcknowledged=false&excludeDiscarded=false&page=1&sort=creationTime""
             ";
             httpTest
@@ -87,7 +83,7 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            var alarms = client.Alarms.Get(new AlarmFilter { Type=71});
+            var alarms = client.Alarms.Get(new AlarmFilter { Type = 71 });
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")
                 .WithVerb(HttpMethod.Get)
@@ -107,7 +103,7 @@ namespace MetasysServices.Tests
             ""self"": ""https://hostname/api/v2/alarms?pageSize=1&excludePending=false&excludeAcknowledged=false&excludeDiscarded=false&page=1&sort=creationTime""
             ";
             httpTest.RespondWith(response);
-            Assert.Throws<MetasysObjectException>(()=>client.Alarms.Get(new AlarmFilter { }));
+            Assert.Throws<MetasysObjectException>(() => client.Alarms.Get(new AlarmFilter { }));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -116,7 +112,7 @@ namespace MetasysServices.Tests
         [Test]
         public void TestAlarmMissingValuesThrowsException()
         {
-            string Alarm= string.Concat("{",
+            string Alarm = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\"}");
             var response = @"{
@@ -128,7 +124,7 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            var e = Assert.Throws<MetasysObjectException>(() => 
+            var e = Assert.Throws<MetasysObjectException>(() =>
                 client.Alarms.Get(new AlarmFilter { }));
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/alarms")

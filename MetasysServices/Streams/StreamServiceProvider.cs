@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -27,7 +27,7 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <summary>
     /// Provide methods for the endpoints of the Metasys Stream API v4.
     /// </summary>
-    public sealed class StreamServiceProvider : BasicServiceProvider, IDisposable,  IStreamService
+    public sealed class StreamServiceProvider : BasicServiceProvider, IDisposable, IStreamService
     {
         private bool _isDisposed = false;
 
@@ -61,7 +61,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Access Token
         /// </summary>
-        public  AccessToken AccessToken
+        public AccessToken AccessToken
         {
             get
             {
@@ -116,7 +116,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc/>
         public void LoadCOVSubscriptions(IEnumerable<Guid> ids)
         {
-            if ((ids != null) && (ids.Count() > 0)) 
+            if ((ids != null) && (ids.Count() > 0))
             {
                 var body = new Newtonsoft.Json.Linq.JObject
                 {
@@ -201,7 +201,7 @@ namespace JohnsonControls.Metasys.BasicServices
                         Debug.Write(ex.Message);
                     }
                 });
-            
+
             _channel.Writer.Complete();
         }
 
@@ -221,7 +221,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
                 //var tokenResponse = await _tokenProvider.GetAccessTokenAsync();
                 //_token = tokenResponse.AccessToken;
-                
+
                 if (accessToken != null)
                 {
                     var uri = new Uri(_serverUrl.AppendPathSegments("api", Version, "stream").SetQueryParam("access_token", Token));
@@ -239,7 +239,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public async Task<string> SubscribeAsync(Guid requestId, string method, string relativeUrl, Dictionary<string, string> query = null, dynamic body= null)
+        public async Task<string> SubscribeAsync(Guid requestId, string method, string relativeUrl, Dictionary<string, string> query = null, dynamic body = null)
         {
             string bodyContent = body != null ? JsonConvert.SerializeObject(body) : null;
             string subscriptionInfoId = "";
@@ -284,7 +284,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
             if (!_requestIdToSubscriptionMap.TryGetValue(requestId, out SubscriptionInfo subscriptionInfo))
             {
-               // _logger.LogDebug($"Subscription for request {requestId} not found for server {_serverUrl}.");
+                // _logger.LogDebug($"Subscription for request {requestId} not found for server {_serverUrl}.");
                 return;
             }
 
@@ -366,7 +366,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         private void Stream_MessageReceived(object sender, EventSourceMessageEventArgs e)
-        {            
+        {
             if (!e.Event.ToLower().Equals("message"))
             {
                 //_logger.LogDebug($"Received an event on stream for message : [{e.Event}]");
@@ -386,19 +386,19 @@ namespace JohnsonControls.Metasys.BasicServices
                 case "activity.alarm.new":
                 case "activity.alarm.ack":
                     _ = HandleActivitySubscriptionAsync(e);
-                    break;           
-                
+                    break;
+
                 case "message": // streaming heartbeat - why does it come through without an "Event"?
                     break;
-                
+
                 case "object.values.heartbeat":
                     // _logger.LogDebug($"Heartbeat \"{e.Event}\" received with timestamp {e.Message}.");
                     // todo: act if heartbeat stops
                     OnHeartBeatOccurred(e);
                     break;
-                
+
                 default:
-                   // _logger.LogWarning($"Got an event we don't handle yet \"{e.Event}\" with data \"{e.Message}\" from server {_serverUrl}.");
+                    // _logger.LogWarning($"Got an event we don't handle yet \"{e.Event}\" with data \"{e.Message}\" from server {_serverUrl}.");
                     break;
             }
         }
@@ -410,7 +410,7 @@ namespace JohnsonControls.Metasys.BasicServices
             var newAlarm = new StreamMessage(e.Event, e.Message);
             if (!_subscriptionIdToRequestIdMap.ContainsKey(subscriptionId))
             {
-               // _logger.LogWarning($"Got an alarm for subscriptionId that is not associated with a known requestId");
+                // _logger.LogWarning($"Got an alarm for subscriptionId that is not associated with a known requestId");
                 return;
             }
             newAlarm.RequestId = _subscriptionIdToRequestIdMap[subscriptionId];
@@ -445,7 +445,7 @@ namespace JohnsonControls.Metasys.BasicServices
                             }; // messages missing stream id, can't correlate to specific request id
                             if (_requestIdToSubscriptionMap.TryGetValue(requestId, out var subscriptioninfo))
                                 cov.SubscriptionId = subscriptioninfo.Id;
-                           // _logger.LogDebug("Writing COV to channel...");
+                            // _logger.LogDebug("Writing COV to channel...");
                             await _channel.Writer.WriteAsync(cov);
                         }
                     }
@@ -540,7 +540,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (values.Count < maxNumber)
             {
-                if (msg.Event == "activity.alarm.new" || msg.Event == "activity.alarm.ack") 
+                if (msg.Event == "activity.alarm.new" || msg.Event == "activity.alarm.ack")
                 {
                     values.Add(msg);
                 };
@@ -558,9 +558,9 @@ namespace JohnsonControls.Metasys.BasicServices
             if (values.Count < maxNumber)
             {
                 if (msg.Event == "activity.audit.new")
-                { 
+                {
                     values.Add(msg);
-                } ;
+                };
             }
             else
             {
@@ -572,12 +572,12 @@ namespace JohnsonControls.Metasys.BasicServices
 
         private async Task HandleHelloEventAsync(EventSourceMessageEventArgs e)
         {
-           // _logger.LogDebug($"Got a hello with streamId {e.Message} from server {_serverUrl}");
+            // _logger.LogDebug($"Got a hello with streamId {e.Message} from server {_serverUrl}");
             _streamId = Newtonsoft.Json.Linq.JToken.Parse(e.Message).ToString();
             var st = new StreamMessage(e.Event, e.Message);
             await _channel.Writer.WriteAsync(st);
             SubscribeAllRequest();
-            _initializeStreamTaskSource.TrySetResult(true);            
+            _initializeStreamTaskSource.TrySetResult(true);
         }
 
         private void SubscribeAllRequest()
@@ -588,14 +588,15 @@ namespace JohnsonControls.Metasys.BasicServices
                 {
                     var requestId = Guid.NewGuid();
                     _ = await SubscribeAsync(requestId, request.Method, request.RelativeUrl, request.Params, request.Body);
-                
+
                     _requestIds.Add(requestId);
                 });
 
                 Thread.Sleep(3000);// wait for subcriptions to complete
                 //_initializeStreamTaskSource.TrySetResult(true);
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 var e = ex.Message;
             }
@@ -673,7 +674,7 @@ namespace JohnsonControls.Metasys.BasicServices
         #endregion
 
 
-#region "COV Values" ========================================================================================================
+        #region "COV Values" ========================================================================================================
         /// <summary>
         /// Variable to keep the list of current COV stream messages
         /// </summary>
@@ -770,9 +771,9 @@ namespace JohnsonControls.Metasys.BasicServices
                 OnCOVValueChanged(arg);
             }
         }
-#endregion
+        #endregion
 
-#region "Alarm Events" ======================================================================================================
+        #region "Alarm Events" ======================================================================================================
         /// <summary>
         /// Variable to keep the list of current Alarm event messages
         /// </summary>
@@ -839,9 +840,9 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             AlarmOccurred?.Invoke(this, e);
         }
-#endregion
+        #endregion
 
-#region "AUDIT EVENTS"
+        #region "AUDIT EVENTS"
         /// <summary>
         /// Variable to keep the list of current Audit event messages
         /// </summary>

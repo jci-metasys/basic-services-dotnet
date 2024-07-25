@@ -1,12 +1,8 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 
 namespace MetasysServices.Tests
 {
@@ -14,8 +10,8 @@ namespace MetasysServices.Tests
     /// Tests for Alarms.
     /// </summary>
     public class MetasysClientNetworkDeviceAlarmsTests : MetasysClientTestsBase
-    {        
-       
+    {
+
         [Test]
         public void TestGetNetworkDeviceAlarmsNone()
         {
@@ -108,7 +104,7 @@ namespace MetasysServices.Tests
             ";
             httpTest.RespondWith(response);
 
-            Assert.Throws<MetasysObjectException>(()=>client.Alarms.GetForNetworkDevice(mockid, new AlarmFilter { }));
+            Assert.Throws<MetasysObjectException>(() => client.Alarms.GetForNetworkDevice(mockid, new AlarmFilter { }));
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/networkDevices/{mockid}/alarms")
                 .WithVerb(HttpMethod.Get)
                 .Times(1);
@@ -117,7 +113,7 @@ namespace MetasysServices.Tests
         [Test]
         public void TestObjectAlarmMissingValuesThrowsException()
         {
-            string alarm= string.Concat("{",
+            string alarm = string.Concat("{",
                 "\"id\": \"", mockid, "\",",
                 "\"typeUrl\": \"https://hostname/api/v2/enumSets/1766/members/3\"}");
             var response = @"{

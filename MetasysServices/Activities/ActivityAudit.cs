@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Newtonsoft.Json;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -97,7 +97,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 code = (code * 7) + Description.GetHashCode();
             if (this.AnnotationsUrl != null)
                 code = (code * 7) + AnnotationsUrl.GetHashCode();
-                code = (code * 7) + AnnotationCount.GetHashCode();
+            code = (code * 7) + AnnotationCount.GetHashCode();
             return code;
         }
 

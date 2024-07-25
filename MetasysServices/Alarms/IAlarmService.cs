@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Flurl.Http;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using Flurl.Http;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// Defines method to provide alarm infos for endpoints of the Metasys Alarm API.
     /// </summary>
-    public interface IAlarmsService:IBasicService
+    public interface IAlarmsService : IBasicService
     {
         ///// <summary>
         ///// Set an Alarm as 'acknowledged' or 'discared'.
