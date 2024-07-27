@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+// Disable warnings on obsolete methods since we still want to test them
+#pragma  warning disable CS0618
+
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
     public class GeneralDemo
@@ -94,7 +97,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Console.Write("\nEnter one new value for this attribute (this will be applied to both objects): ");
                 object change = Console.ReadLine();
 
-                // Get original values, this code will throw an exception if the 
+                // Get original values, this code will throw an exception if the
                 Variant result1Attr3 = client.ReadProperty(id1, attribute3);
                 Variant result2Attr3 = client.ReadProperty(id2, attribute3);
                 Console.WriteLine($"{result1Attr3.Id} {result1Attr3.Attribute} original value: {result1Attr3.StringValue}");

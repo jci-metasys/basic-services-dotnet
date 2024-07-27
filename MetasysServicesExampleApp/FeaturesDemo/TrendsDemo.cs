@@ -1,6 +1,9 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
 using System;
 
+// Disable warnings on obsolete methods since we still want to use them (for now)
+ #pragma  warning disable CS0618
+
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
     public class TrendsDemo

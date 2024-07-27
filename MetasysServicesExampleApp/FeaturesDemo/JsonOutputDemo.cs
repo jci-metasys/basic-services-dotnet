@@ -6,6 +6,9 @@ using System.Globalization;
 using System.Linq;
 using MetasysAttribute = JohnsonControls.Metasys.BasicServices.MetasysAttribute;
 
+// Disable warnings on obsolete methods since we still want to use them (for now)
+ #pragma  warning disable CS0618
+
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
     public class JsonOutputDemo

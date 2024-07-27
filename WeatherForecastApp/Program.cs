@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+// Disable warnings on obsolete methods since we still want to use them (for now)
+#pragma  warning disable CS0618
+
 namespace WeatherForecastApp
 {
     class Program
@@ -33,7 +36,7 @@ namespace WeatherForecastApp
             var secureContainer = CredentialUtil.GetCredential(containerTarget);
 
             // Get parent object of Weather Forecast to retrieve related children (securely stored in Credential Manager)
-            Guid parentObjectId = metasysClient.GetObjectIdentifier(CredentialUtil.convertToUnSecureString(secureContainer.Password));
+            var parentObjectId = metasysClient.GetObjectIdentifier(CredentialUtil.convertToUnSecureString(secureContainer.Password));
             IEnumerable<MetasysObject> weatherForecast = metasysClient.GetObjects(parentObjectId, 1);
             // Retrieve latitude and longitude to get weather forecast
             MetasysObject latitudePoint = weatherForecast.FindByName("Latitude");
@@ -46,7 +49,7 @@ namespace WeatherForecastApp
             // Forecast API key is securely stored in Credential manager
             var apiKeyTarget = config.GetSection("CredentialManager:Targets:OpenWeather").Value;
             var secureApiKey = CredentialUtil.GetCredential(apiKeyTarget);
-            // Get Next Five Days forecast every 3 hours           
+            // Get Next Five Days forecast every 3 hours
             OpenWeatherMapClient weatherMapclient = new OpenWeatherMapClient(CredentialUtil.convertToUnSecureString(secureApiKey.Password));
             ForecastResult forecastResult = weatherMapclient.GetForecast(latitude, longitude).GetAwaiter().GetResult();
             // Get the closest forecast to be written
@@ -81,7 +84,7 @@ namespace WeatherForecastApp
             }
             else
             {
-                // Reset values in case there is no rain 
+                // Reset values in case there is no rain
                 metasysClient.SendCommand(Rain.Id, adjustCommand, new List<object> { 0 });
             }
             if (forecast.snow != null)
