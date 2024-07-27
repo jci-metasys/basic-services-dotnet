@@ -1,8 +1,6 @@
 ﻿using JohnsonControls.Metasys.BasicServices;
 using System;
 
-// Disable warnings on obsolete methods since we still want to use them (for now)
- #pragma  warning disable CS0618
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
@@ -25,7 +23,7 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 string object1 = Console.ReadLine();
                 Console.WriteLine("\n\nGetObjectIdentifier...");
                 // These variables are needed to run the other sections
-                Guid id1 = client.GetObjectIdentifier(object1);
+                var id1 = client.GetObjectIdentifier(object1);
                 Console.WriteLine($"{object1} id: {id1}");
             }
             catch (Exception exception)

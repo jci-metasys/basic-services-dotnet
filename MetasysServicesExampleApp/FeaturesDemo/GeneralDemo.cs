@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-// Disable warnings on obsolete methods since we still want to test them
-#pragma  warning disable CS0618
 
 namespace MetasysServicesExampleApp.FeaturesDemo
 {
@@ -34,13 +32,13 @@ namespace MetasysServicesExampleApp.FeaturesDemo
                 Console.WriteLine("\n\nGetObjectIdentifier...");
 
                 // These variables are needed to run the other sections
-                Guid id1 = client.GetObjectIdentifier(object1);
+                var id1 = client.GetObjectIdentifier(object1);
                 Console.WriteLine($"{object1} id: {id1}");
 
-                Guid id2 = client.GetObjectIdentifier(object2);
+                var id2 = client.GetObjectIdentifier(object2);
                 Console.WriteLine($"{object2} id: {id2}");
 
-                List<Guid> ids = new List<Guid>() { id1, id2 };
+                List<ObjectId> ids = [id1, id2];
                 #endregion
 
                 #region ReadProperty

@@ -6,9 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-// Disable warnings on obsolete methods since we still want to use them (for now)
-#pragma  warning disable CS0618
-
 namespace WeatherForecastApp
 {
     class Program

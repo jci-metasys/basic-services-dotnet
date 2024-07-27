@@ -3,8 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-// Disable warnings on obsolete methods since we still want to test them
-#pragma  warning disable CS0618
+
 namespace MetasysServices_TestClient.Forms
 {
     public partial class Objects : Form
