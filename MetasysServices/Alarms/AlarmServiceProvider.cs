@@ -106,12 +106,12 @@ namespace JohnsonControls.Metasys.BasicServices
 
         //FindById ------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
-        public Alarm FindById(Guid alarmId)
+        public Alarm FindById(ActivityId alarmId)
         {
             return FindByIdAsync(alarmId).GetAwaiter().GetResult();
         }
         /// <inheritdoc/>
-        public async Task<Alarm> FindByIdAsync(Guid alarmId)
+        public async Task<Alarm> FindByIdAsync(ActivityId alarmId)
         {
             CheckVersion(Version);
 
@@ -188,13 +188,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        private void Edit(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
+        private void Edit(ActivityId alarmId, ActivityManagementStatusEnum action, string annotationText = null)
         {
             EditAsync(alarmId, action, annotationText).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        private async Task EditAsync(Guid alarmId, ActivityManagementStatusEnum action, string annotationText = null)
+        private async Task EditAsync(ActivityId alarmId, ActivityManagementStatusEnum action, string annotationText = null)
         {
             CheckVersion(Version);
 
@@ -219,13 +219,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public void Discard(Guid alarmId, string annotationText = null)
+        public void Discard(ActivityId alarmId, string annotationText = null)
         {
             DiscardAsync(alarmId, annotationText).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task DiscardAsync(Guid alarmId, string annotationText = null)
+        public async Task DiscardAsync(ActivityId alarmId, string annotationText = null)
         {
             CheckVersion(Version);
 
@@ -250,13 +250,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public void Acknowledge(Guid alarmId, string annotationText = null)
+        public void Acknowledge(ActivityId alarmId, string annotationText = null)
         {
             AcknowledgeAsync(alarmId, annotationText).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task AcknowledgeAsync(Guid alarmId, string annotationText = null)
+        public async Task AcknowledgeAsync(ActivityId alarmId, string annotationText = null)
         {
             CheckVersion(Version);
 
@@ -281,13 +281,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public IEnumerable<AlarmAnnotation> GetAnnotations(Guid alarmId)
+        public IEnumerable<AlarmAnnotation> GetAnnotations(ActivityId alarmId)
         {
             return GetAnnotationsAsync(alarmId).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<AlarmAnnotation>> GetAnnotationsAsync(Guid alarmId)
+        public async Task<IEnumerable<AlarmAnnotation>> GetAnnotationsAsync(ActivityId alarmId)
         {
             CheckVersion(Version);
 

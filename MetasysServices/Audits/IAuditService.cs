@@ -16,10 +16,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="auditId">The identifier of the audit.</param>
         /// <returns>The specified audit details.</returns>
-        Audit FindById(Guid auditId);
+        Audit FindById(ActivityId auditId);
 
-        /// <inheritdoc cref="IAuditService.FindById(Guid)"/>
-        Task<Audit> FindByIdAsync(Guid auditId);
+        /// <inheritdoc cref="IAuditService.FindById(ActivityId)"/>
+        Task<Audit> FindByIdAsync(ActivityId auditId);
 
         /// <summary>
         /// Retrieves a collection of audits.
@@ -36,10 +36,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </summary>
         /// <param name="auditId"></param>
         /// <returns></returns>
-        IEnumerable<AuditAnnotation> GetAnnotations(Guid auditId);
+        IEnumerable<AuditAnnotation> GetAnnotations(ActivityId auditId);
 
-        /// <inheritdoc cref="IAuditService.GetAnnotations(Guid)"/>
-        Task<IEnumerable<AuditAnnotation>> GetAnnotationsAsync(Guid auditId);
+        /// <inheritdoc cref="IAuditService.GetAnnotations(ActivityId)"/>
+        Task<IEnumerable<AuditAnnotation>> GetAnnotationsAsync(ActivityId auditId);
 
         /// <summary>
         /// Retrieves a collection of audits for the specified object.
@@ -58,10 +58,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id">The identifier of the Audit.</param>
         /// <param name="annotationText">Text of the annotation to report the reason of the discard.</param>
         /// <exception cref="MetasysUnsupportedApiVersion"></exception>
-        void Discard(Guid id, string annotationText);
+        void Discard(ActivityId id, string annotationText);
 
-        /// <inheritdoc cref="IAuditService.Discard(Guid , string)"/>
-        Task DiscardAsync(Guid id, string annotationText);
+        /// <inheritdoc cref="IAuditService.Discard(ActivityId , string)"/>
+        Task DiscardAsync(ActivityId id, string annotationText);
 
         /// <summary>
         /// Add an Annotation to the specified Audit.
@@ -69,10 +69,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id">The identifier of the Audit.</param>
         /// <param name="text">The text of the Annotation.</param>
         /// <exception cref="MetasysUnsupportedApiVersion"></exception>
-        void AddAnnotation(Guid id, string text);
+        void AddAnnotation(ActivityId id, string text);
 
-        /// <inheritdoc cref="IAuditService.AddAnnotation(Guid, string)"/>
-        Task AddAnnotationAsync(Guid id, string text);
+        /// <inheritdoc cref="IAuditService.AddAnnotation(ActivityId, string)"/>
+        Task AddAnnotationAsync(ActivityId id, string text);
 
         /// <summary>
         /// Add many Annotations given a list of requests containing the Id of the Audits and the text of the Annotations.

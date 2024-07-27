@@ -34,7 +34,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public async Task<Audit> FindByIdAsync(Guid auditId)
+        public async Task<Audit> FindByIdAsync(ActivityId auditId)
         {
             CheckVersion(Version);
 
@@ -108,7 +108,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<AuditAnnotation>> GetAnnotationsAsync(Guid auditId)
+        public async Task<IEnumerable<AuditAnnotation>> GetAnnotationsAsync(ActivityId auditId)
         {
             CheckVersion(Version);
 
@@ -138,7 +138,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public Audit FindById(Guid auditId)
+        public Audit FindById(ActivityId auditId)
         {
             return FindByIdAsync(auditId).GetAwaiter().GetResult();
         }
@@ -156,19 +156,19 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public IEnumerable<AuditAnnotation> GetAnnotations(Guid auditId)
+        public IEnumerable<AuditAnnotation> GetAnnotations(ActivityId auditId)
         {
             return GetAnnotationsAsync(auditId).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public void Discard(Guid id, string annotationText)
+        public void Discard(ActivityId id, string annotationText)
         {
             DiscardAsync(id, annotationText).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task DiscardAsync(Guid id, string annotationText)
+        public async Task DiscardAsync(ActivityId id, string annotationText)
         {
             try
             {
@@ -202,13 +202,13 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <inheritdoc/>
-        public void AddAnnotation(Guid id, string text)
+        public void AddAnnotation(ActivityId id, string text)
         {
             AddAnnotationAsync(id, text).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc/>
-        public async Task AddAnnotationAsync(Guid id, string text)
+        public async Task AddAnnotationAsync(ActivityId id, string text)
         {
             try
             {
@@ -407,7 +407,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var respIds = r["id"].Value<string>().Split('_');
 
                 Result resultItem = new Result();
-                resultItem.Id = new Guid(respIds[0]); ;
+                resultItem.Id = new ActivityId(respIds[0]); ;
                 resultItem.Status = r["status"].Value<int>();
                 resultItem.Annotation = respIds[1];
                 results.Add(resultItem);
@@ -522,7 +522,7 @@ namespace JohnsonControls.Metasys.BasicServices
     public class Result
     {
         /// <summary>The id of the Audit affected by the call.</summary>
-        public Guid Id { set; get; }
+        public ActivityId Id { set; get; }
 
         /// <summary>The Status of the call.</summary>
         public int Status { set; get; }
