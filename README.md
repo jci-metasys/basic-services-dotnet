@@ -1,4 +1,5 @@
-# Metasys Basic Services <!-- omit in toc --> <a href="https://www.nuget.org/packages/JohnsonControls.Metasys.BasicServices/" rel="Johnson Controls Metasys BasicServices">![Nuget](https://img.shields.io/nuget/v/JohnsonControls.Metasys.BasicServices)</a>
+<!-- omit in toc -->
+# Metasys Basic Services <a href="https://www.nuget.org/packages/JohnsonControls.Metasys.BasicServices/" rel="Johnson Controls Metasys BasicServices">![Nuget](https://img.shields.io/nuget/v/JohnsonControls.Metasys.BasicServices)</a>
 
 This project provides a library for accessing the most common services of the Metasys Server API.
 The intent is to provide an API that is very similar to the original MSSDA
@@ -18,7 +19,7 @@ For versioning information see the [changelog](CHANGELOG.md).
   - [Login and Access Tokens](#login-and-access-tokens)
   - [Localization of Metasys Enumerations](#localization-of-metasys-enumerations)
   - [Metasys Objects](#metasys-objects)
-    - [Get Object Id](#Get-object-Id)
+    - [Get Object Id](#get-object-id)
     - [Get a Property](#get-a-property)
     - [Write a Property](#write-a-property)
     - [Get and Send Commands](#get-and-send-commands)
@@ -53,7 +54,7 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Get Alarms for an Object](#get-alarms-for-an-object)
     - [Get Alarms for a Network Device](#get-alarms-for-a-network-device)
     - [Get Alarm Annotations](#get-alarm-annotations)
-    - [Acknowlege an Alarm](#acknowledge-an-alarm)
+    - [Acknowledge an Alarm](#acknowledge-an-alarm)
     - [Discard an Alarm](#discard-an-alarm)
   - [Audits](#audits)
     - [Get Audits](#get-audits)
@@ -76,20 +77,20 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Edit a Custom Enumeration](#edit-a-custom-enumeration)
     - [Replace a Custom Enumeration](#replace-a-custom-enumeration)
     - [Delete a Custom Enumeration](#delete-a-custom-enumeration)
-  - [Streams](#Streams)
+  - [Streams](#streams)
     - [Reading Object PresentValue COV](#reading-object-presentvalue-cov)
     - [Collecting Alarm Events](#collecting-alarm-events)
     - [Collecting Audit Events](#collecting-audit-events)
     - [Keep the Stream Alive](#keep-the-stream-alive)
   - ['Ad-Hoc' call](#ad-hoc-call)
     - [SendAsync](#sendasync)
-  - [Activities](#Activities)
-    - [Get Activities](#get-activities)
+  - [Activities](#activities-1)
+    - [Get Activities](#get-activities-1)
     - [Multiple Actions](#multiple-actions)
 - [Usage (COM)](#usage-com)
   - [Creating a Client](#creating-a-client-1)
   - [Login and Access Tokens](#login-and-access-tokens-1)
-  - [Metasys Objects](#metasys-objects)
+  - [Metasys Objects](#metasys-objects-1)
     - [Get Object Id](#get-object-id-1)
     - [Get a Property](#get-a-property-1)
     - [Write a Property](#write-a-property-1)
@@ -123,7 +124,7 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Get Alarms for an Object](#get-alarms-for-an-object-1)
     - [Get Alarms for a Network Device](#get-alarms-for-a-network-device-1)
     - [Get Alarm Annotations](#get-alarm-annotations-1)
-    - [Acknowlege an Alarm](#acknowledge-an-alarm-1)
+    - [Acknowledge an Alarm](#acknowledge-an-alarm-1)
     - [Discard an Alarm](#discard-an-alarm-1)
   - [Audits](#audits-1)
     - [Get Audits](#get-audits-1)
@@ -146,7 +147,7 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Edit a Custom Enumeration](#edit-a-custom-enumeration-1)
     - [Replace a Custom Enumeration](#replace-a-custom-enumeration-1)
     - [Delete a Custom Enumeration](#delete-a-custom-enumeration-1)
-  - [Streams](#Streams-1)
+  - [Streams](#streams-1)
     - [Reading Object PresentValue COV](#reading-object-presentvalue-cov-1)
     - [Collecting Alarm Events](#collecting-alarm-events-1)
     - [Collecting Audit Events](#collecting-audit-events-1)
@@ -280,9 +281,15 @@ client.Hostname = "WIN2016-VM2";
 ### Login and Access Tokens
 
 After creating the client, to login use the method **`TryLogin`**.
-The signature has two overloads: the first uses the Credential Manager target to read the credentials, whilst the second takes a username and password.
-Both signatures take an optional parameter to automatically refresh the access token during the client's lifetime. 
-The default token refresh policy is true. See more information [here](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager) on how to use Credential Manager. If something goes wrong while accessing a Credential Manager target, MetasysClient raises a CredManException. Keep in mind that Credential Manager is available on Windows and is not going to work on other platforms. However, MetasysClient Class could be extended by developers to implement different secure vaults support.
+The signature has several overloads: 
+
+- the first uses the Credential Manager target to read the credentials,
+- another takes a username and password with the password passed as a `SecureString`
+- the last one takes a username and password in plain text (the one is not recommended as it leaves the password in clear text).
+
+All of them refresh the access token during the client's lifetime.
+
+See more information [here](https://support.microsoft.com/en-us/help/4026814/windows-accessing-credential-manager) on how to use Credential Manager. If something goes wrong while accessing a Credential Manager target, MetasysClient raises a CredManException. Keep in mind that Credential Manager is available on Windows and is not going to work on other platforms. However, MetasysClient Class could be extended by developers to implement different secure vaults support.
 
 **Notice: when developing an application that uses a system account always logged without user input, the preferred way to login is to store the username and password in the Credential Manager vault.**
 
@@ -2289,5 +2296,3 @@ See [CONTRIBUTING](CONTRIBUTING).
 - zh-TW
 ### Customizing Windows IIS for Metasys API
 To get further information about customizing Windows IIS for Metasys API click [here](https://docs.johnsoncontrols.com/bas/r/Metasys-Server/11.0/Metasys-Server-Installation-and-Upgrade-Instructions/Customizing-Windows-IIS-for-Metasys-API)
-
-

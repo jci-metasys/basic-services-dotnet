@@ -87,15 +87,11 @@ namespace MetasysServicesExampleApp.FeaturesDemo
             /* SNIPPET 1: START */
             // Automatically refresh token using plain credentials
             client.TryLogin("username", "password");
-            // Do not automatically refresh token using plain credentials
-            client.TryLogin("username", "password", false);
             /* SNIPPET 1: END */
 
             /* SNIPPET 2: START */
             // Read target from Credential Manager and automatically refresh token
             client.TryLogin("metasys-energy-app");
-            // Read target from Credential Manager and do not refresh token
-            client.TryLogin("metasys-energy-app", false);
             /* SNIPPET 2: END */
 
             /* SNIPPET 3: START */

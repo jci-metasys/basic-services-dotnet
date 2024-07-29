@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -119,16 +120,29 @@ namespace JohnsonControls.Metasys.BasicServices
 
 
         /// <summary>
-        /// Attempts to login to the given host and retrieve an access token.
+        /// <s>Attempts to login to the given host and retrieve an access token.</s>
         /// </summary>
+        /// <remarks><b>It's recommended that you use one of the other variants that do not
+        /// pass a password in plaintext.</b> You can use <see cref="SecretStore"/> to save and
+        /// retrieve passwords from your operating systems keystore.
+        /// <para>
+        /// <b>This method is deprecated.</b> Please use one of the TryLogin methods instead.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="TryLogin(string, SecureString)"/>
+        /// <seealso cref="TryLogin(string)"/>
+        /// <seealso cref="TryLogin()"/>
+        /// <seealso cref="SecretStore"/>
         /// <returns>Access Token.</returns>
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysTokenException"></exception>
+        [Obsolete("Use TryLogin(string,string) instead.")]
         AccessToken TryLogin(string username, string password, bool refresh = true);
-        /// <inheritdoc cref="IMetasysClient.TryLogin(string, string, bool)"/>
+        /// <inheritdoc cref="TryLogin(string, string, bool)"/>
+        [Obsolete("Use TryLoginAsync(string,string) instead.")]
         Task<AccessToken> TryLoginAsync(string username, string password, bool refresh = true);
 
 
@@ -193,10 +207,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Read many attribute values given the Guids of the objects.
         /// </summary>
         /// <returns>
-        /// A list of VariantMultiple with all the specified attributes (if existing).        
+        /// A list of VariantMultiple with all the specified attributes (if existing).
         /// </returns>
         /// <param name="ids"></param>
-        /// <param name="attributeNames"></param>        
+        /// <param name="attributeNames"></param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysPropertyException"></exception>
         IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids, IEnumerable<string> attributeNames);
@@ -306,8 +320,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </remarks>
         /// <param name="id">The ID of the parent object.</param>
         /// <param name="levels">The depth of the children to retrieve.</param>
-        /// <param name="includeInternalObjects">Set it to true to see also internal objects that are not displayed in the Metasys tree. </param>      
-        /// <param name="includeExtensions">Set it to true to get also the extensions of the object.</param>      
+        /// <param name="includeInternalObjects">Set it to true to see also internal objects that are not displayed in the Metasys tree. </param>
+        /// <param name="includeExtensions">Set it to true to get also the extensions of the object.</param>
         /// <remarks> The flag includeInternalObjects applies since Metasys API v3. </remarks>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
@@ -321,7 +335,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="objectId"></param>
         /// <param name="objectType">The object type enum set.</param>
         /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>        
+        /// <exception cref="MetasysHttpParsingException"></exception>
         IEnumerable<MetasysObject> GetObjects(Guid objectId, string objectType);
 
         /// <inheritdoc cref="IMetasysClient.GetObjects(Guid, string)"/>
@@ -407,15 +421,79 @@ namespace JohnsonControls.Metasys.BasicServices
         #endregion
 
         /// <summary>
-        /// Attempts to login to the given host using Credential Manager and retrieve an access token.
+        /// <s>Attempts to login to the given host using Credential Manager and retrieve an access token.</s>
         /// </summary>
+        /// <remarks>
+        /// <b>This method is deprecated.</b> Use <see cref="TryLogin(string)"/> or
+        /// <see cref="TryLoginAsync(string)"/> instead.
+        /// </remarks>
         /// <param name="credManTarget">The Credential Manager target where to pick the credentials.</param>
         /// <param name="refresh">Flag to set automatic access token refreshing to keep session active.</param>
         /// <remarks> This method can be overridden by extended class with other Credential Manager implementations. </remarks>
+        [Obsolete("Use TryLogin() instead.")]
         AccessToken TryLogin(string credManTarget, bool refresh = true);
 
-        /// <inheritdoc cref="IMetasysClient.TryLogin(string, bool)"/>
+        /// <inheritdoc cref="TryLogin(string, bool)"/>
+        [Obsolete("Use TryLoginAsync() instead.")]
         Task<AccessToken> TryLoginAsync(string credManTarget, bool refresh = true);
+
+
+        /// <summary>
+        /// Attempts to connect to the configured Metasys hostname.
+        /// </summary>
+        /// <remarks>
+        /// This method attempts to locate credentials for the specified host name in a credential manager and
+        /// if it finds credentials it attempts to login to Metasys using those credentials.
+        /// <para>
+        /// The supported credential managers are Credential Manager for Windows, Keychain for macOS and
+        /// libsecret (Gnome passwords) for Linux.
+        /// </para>
+        /// </remarks>
+        public AccessToken TryLogin();
+        /// <inheritdoc cref="TryLogin()"/>
+        public Task<AccessToken> TryLoginAsync();
+
+        /// <summary>
+        /// Attempts to connect to the configured Metasys hostname 
+        /// </summary>
+        /// <remarks>
+        /// This method attempts to locate a password for the specified host name and user name in a credential manager
+        /// and if it finds the password attempts to login to Metasys.
+        /// <para>
+        /// The supported credential managers are Credential Manager for Windows, Keychain for macOS and
+        /// libsecret (Gnome passwords) for Linux.
+        /// </para>
+        /// </remarks>
+        /// <param name="username"></param>
+        public AccessToken TryLogin(string username);
+        /// <inheritdoc cref="TryLogin(string)"/>
+        public Task<AccessToken> TryLoginAsync(string username);
+
+
+        /// <summary>
+        /// Attempts to connect to Metasys using specified user name and password.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        public AccessToken TryLogin(string username, SecureString password);
+        /// <inheritdoc cref="TryLogin(string, SecureString)"/>
+        public Task<AccessToken> TryLoginAsync(string username, SecureString password);
+
+        /// <summary>
+        /// Attempts to connect to Metasys using specified user name and password
+        /// </summary>
+        /// <remarks>
+        /// <b>This method is not recommended for production sites</b>. Please use 
+        /// <see cref="TryLogin(string, SecureString)"/> or <see cref="TryLogin(string)"/>
+        /// or <see cref="TryLogin()"/> instead.
+        /// </remarks>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        public AccessToken TryLogin(string username, string password);
+        /// <inheritdoc cref="TryLogin(string, string)"/>
+        public Task<AccessToken> TryLoginAsync(string username, string password);
+
+
 
         /// <summary>
         /// Returns the current server time in UTC format.
@@ -429,7 +507,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <summary>
         /// Send an HTTP request as an asynchronous operation.
-        /// 
+        ///
         /// <para>
         /// This method currently only supports 1 value per header rather than multiple. In a future revision, this is planned to be addressed.
         /// </para>
