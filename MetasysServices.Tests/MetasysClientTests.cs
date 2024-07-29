@@ -1,6 +1,7 @@
 using Flurl.Http;
 using JohnsonControls.Metasys.BasicServices;
 using JohnsonControls.Metasys.BasicServices.Enums;
+using JohnsonControls.Metasys.BasicServices.Utils;
 using Newtonsoft.Json.Linq;
 using Nito.AsyncEx;
 using NUnit.Framework;
@@ -49,8 +50,13 @@ namespace MetasysServices.Tests
 
             httpTest.ShouldHaveCalled($"https://hostname/api/v2/login")
                 .WithVerb(HttpMethod.Post)
+                .With(call =>
+                    {
+                        var actualContent = ((CapturedByteArrayContent)call.Request.Content).Content;
+                        return actualContent == "{\"username\":\"username\",\"password\":\"password\"}";
+                    })
                 .WithContentType("application/json")
-                .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"")
+                //  .WithRequestBody("{\"username\":\"username\",\"password\":\"password\"}")
                 .Times(1);
             var token = client.GetAccessToken();
             var expected = new AccessToken("hostname", "username", "Bearer faketokenLoginAsync", dateTime2);
