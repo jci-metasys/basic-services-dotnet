@@ -5,8 +5,8 @@ namespace JohnsonControls.Metasys.BasicServices;
 
 public interface ISecretStore
 {
-    void AddPassword(string server, string username, SecureString password);
-    void AddOrReplacePassword(string server, string username, SecureString password);
+    void AddPassword(string hostName, string userName, SecureString password);
+    void AddOrReplacePassword(string hostName, string userName, SecureString password);
 
-    bool TryGetPassword(string server, string username, out SecureString password);
+    bool TryGetPassword(string hostName, string userName, out SecureString password);
 }

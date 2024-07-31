@@ -9,14 +9,14 @@ namespace JohnsonControls.Metasys.BasicServices;
 
 
 
-public static class Keychain
+public class Keychain : ISecretStore
 {
     private const string SecurityLibrary = "/System/Library/Frameworks/Security.framework/Security";
 
     [DllImport(SecurityLibrary)]
-    public static extern int SecKeychainItemDelete(IntPtr itemRef);
+    private static extern int SecKeychainItemDelete(IntPtr itemRef);
     [DllImport(SecurityLibrary)]
-    public static extern int SecKeychainAddGenericPassword(
+    private static extern int SecKeychainAddGenericPassword(
         IntPtr keychain,
         uint serviceNameLength,
         string serviceName,
@@ -27,7 +27,7 @@ public static class Keychain
         IntPtr itemRef);
 
     [DllImport(SecurityLibrary)]
-    public static extern int SecKeychainFindGenericPassword(
+    private static extern int SecKeychainFindGenericPassword(
         IntPtr keychain,
         uint serviceNameLength,
         string serviceName,
@@ -38,7 +38,7 @@ public static class Keychain
         out IntPtr itemRef);
 
     [DllImport(SecurityLibrary)]
-    public static extern int SecKeychainItemFreeContent(
+    private static extern int SecKeychainItemFreeContent(
         IntPtr attrList,
         IntPtr data);
 
@@ -64,17 +64,17 @@ public static class Keychain
         }
     }
 
-    public static void AddPassword(string serviceName, string accountName, SecureString password)
+    public void AddPassword(string hostName, string userName, SecureString password)
     {
         AssertRunningOnMacOS();
 
         var passwordData = SecureStringToByteArray(password);
         var status = SecKeychainAddGenericPassword(
             IntPtr.Zero,
-            (uint)serviceName.Length,
-            serviceName,
-            (uint)accountName.Length,
-            accountName,
+            (uint)hostName.Length,
+            hostName,
+            (uint)userName.Length,
+            userName,
             (uint)passwordData.Length,
             passwordData,
             IntPtr.Zero);
@@ -86,7 +86,7 @@ public static class Keychain
         }
     }
 
-    public static bool TryGetPassword(string serviceName, string accountName, out SecureString password)
+    public bool TryGetPassword(string hostName, string userName, out SecureString password)
     {
         AssertRunningOnMacOS();
 
@@ -96,10 +96,10 @@ public static class Keychain
 
         var status = SecKeychainFindGenericPassword(
             IntPtr.Zero,
-            (uint)serviceName.Length,
-            serviceName,
-            (uint)accountName.Length,
-            accountName,
+            (uint)hostName.Length,
+            hostName,
+            (uint)userName.Length,
+            userName,
             out passwordLength,
             out passwordData,
             out itemRef);
@@ -132,7 +132,7 @@ public static class Keychain
             return false;
         }
     }
-    public static void AddOrReplacePassword(string serviceName, string accountName, SecureString newPassword)
+    public void AddOrReplacePassword(string hostName, string userName, SecureString newPassword)
     {
 
         AssertRunningOnMacOS();
@@ -145,10 +145,10 @@ public static class Keychain
             IntPtr passwordData;
             var status = SecKeychainFindGenericPassword(
                 IntPtr.Zero,
-                (uint)serviceName.Length,
-                serviceName,
-                (uint)accountName.Length,
-                accountName,
+                (uint)hostName.Length,
+                hostName,
+                (uint)userName.Length,
+                userName,
                 out passwordLength,
                 out passwordData,
                 out itemRef);
@@ -159,12 +159,12 @@ public static class Keychain
                 status = SecKeychainItemDelete(itemRef);
                 if (status != 0)
                 {
-                    throw new InvalidOperationException($"The entry for {serviceName}.{accountName} could not be replaced.");
+                    throw new InvalidOperationException($"The entry for {hostName}.{userName} could not be replaced.");
                 }
             }
 
             // Add the new password
-            AddPassword(serviceName, accountName, newPassword);
+            AddPassword(hostName, userName, newPassword);
         }
         finally
         {
@@ -176,18 +176,20 @@ public static class Keychain
         }
     }
 
-    public static void DeleteKeychainEntry(string serviceName, string accountName, bool exceptionIfNotFound = false)
+    public static void DeleteKeychainEntry(string hostName, string userName, bool exceptionIfNotFound = false)
     {
+        AssertRunningOnMacOS();
+
         IntPtr itemRef = IntPtr.Zero;
         uint passwordLength;
         IntPtr passwordData;
 
         int result = SecKeychainFindGenericPassword(
             IntPtr.Zero,
-            (uint)serviceName.Length,
-            serviceName,
-            (uint)accountName.Length,
-            accountName,
+            (uint)hostName.Length,
+            hostName,
+            (uint)userName.Length,
+            userName,
             out passwordLength,
             out passwordData,
             out itemRef
@@ -198,13 +200,13 @@ public static class Keychain
             result = SecKeychainItemDelete(itemRef);
             if (result != 0)
             {
-                throw new InvalidOperationException($"The entry for {serviceName}.{accountName} could not be deleted.");
+                throw new InvalidOperationException($"The entry for {hostName}.{userName} could not be deleted.");
             }
 
         }
         else if (exceptionIfNotFound)
         {
-            throw new InvalidOperationException($"The entry for {serviceName}.{accountName} could not be found.");
+            throw new InvalidOperationException($"The entry for {hostName}.{userName} could not be found.");
         }
 
         if (passwordData != IntPtr.Zero)
@@ -213,7 +215,7 @@ public static class Keychain
         }
     }
 
-    public static bool HasKeychainEntry(string serviceName)
+    public static bool HasKeychainEntry(string hostName)
     {
         IntPtr searchRef = IntPtr.Zero;
         IntPtr itemRef = IntPtr.Zero;

@@ -10,11 +10,11 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                secretStore = new MacSecretStore();
+                secretStore = new Keychain();
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                secretStore = new LinuxKeyring();
+                secretStore = new LinuxLibSecret();
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -27,19 +27,19 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         static readonly ISecretStore secretStore;
-        public static void AddOrReplacePassword(string server, string username, SecureString password)
+        public static void AddOrReplacePassword(string hostName, string userName, SecureString password)
         {
-            secretStore.AddOrReplacePassword(server, username, password);
+            secretStore.AddOrReplacePassword(hostName, userName, password);
         }
 
-        public static void AddPassword(string server, string username, SecureString password)
+        public static void AddPassword(string hostName, string userName, SecureString password)
         {
-            secretStore.AddPassword(server, username, password);
+            secretStore.AddPassword(hostName, userName, password);
         }
 
-        public static bool TryGetPassword(string server, string username, out SecureString password)
+        public static bool TryGetPassword(string hostName, string userName, out SecureString password)
         {
-            return secretStore.TryGetPassword(server, username, out password);
+            return secretStore.TryGetPassword(hostName, userName, out password);
         }
     }
 

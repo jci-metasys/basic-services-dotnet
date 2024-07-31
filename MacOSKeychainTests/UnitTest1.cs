@@ -29,6 +29,8 @@ internal static class SecureStringExtensions
             Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString.Value);
         }
 
+
+
     }
 
     public static SecureString ToSecureString(this string insecure)
@@ -39,11 +41,34 @@ internal static class SecureStringExtensions
         return secure;
     }
 }
+[TestFixture]
+public class LinuxTests
+{
+    [SetUp]
+    public void Setup()
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            Assert.Ignore("Tests are ignored because they are not running on macOS.");
+        }
+    }
+    [Test]
+    public void Tests()
+    {
+        var libsecret = new LinuxLibSecret();
+        libsecret.AddPassword("welch12.go.johnsoncontrols.com", "api", "password".ToSecureString());
+
+        var result = libsecret.TryGetPassword("welch12.go.johnsoncontrols.com", "api", out SecureString password);
+
+    }
+}
+
 
 [TestFixture]
 public class Tests
 {
 
+    private static readonly Keychain Keychain = new();
 
     [SetUp]
     public void Setup()
@@ -129,6 +154,8 @@ public class Tests
     [Test]
     public void Test2()
     {
+
+
         var result = Keychain.TryGetPassword("welch12.go.johnsoncontrols.com", "api", out SecureString securePassword);
         var password = securePassword.ToPlainString();
 
