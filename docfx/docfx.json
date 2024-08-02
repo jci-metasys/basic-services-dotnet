@@ -17,7 +17,7 @@
       {
         "files": [
           "index.md",
-          "**/*.{md,yml}",
+          "**/*.{md,yml}"
         ],
         "exclude": [
           "_site/**"
