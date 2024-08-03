@@ -1,5 +1,6 @@
 using Flurl;
 using Flurl.Http;
+using Flurl.Util;
 using JohnsonControls.Metasys.BasicServices.Utils;
 using Newtonsoft.Json.Linq;
 using System;
@@ -124,7 +125,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 if (Spaces != null) { Spaces.Version = version.Value; }
                 if (Streams != null) { Streams.Version = version.Value; }
                 if (Trends != null) { Trends.Version = version.Value; }
-                base.Version = value;
+                // override the base version as well
+                base.Version = version.Value;
             }
         }
 
@@ -491,6 +493,26 @@ namespace JohnsonControls.Metasys.BasicServices
         #region "OBJECTS" // ========================================================================================================
 
         // GetObjects ---------------------------------------------------------------------------------------------------------------
+
+        /// <inheritdoc/>
+        public MetasysObject GetObjects(bool includeExtensions = false, bool includeInternal = false, int levels = 1)
+        {
+            return GetObjectsAsync(includeExtensions, includeInternal, levels).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<MetasysObject> GetObjectsAsync(bool includeExtensions = false, bool includeInternal = false, int levels = 1)
+        {
+            if (levels > 1 || levels < 0) throw new ArgumentOutOfRangeException(nameof(levels), "The only supported values are 0 and 1.");
+            Dictionary<string, string> parameters = new Dictionary<string, string>
+            {
+                ["includeExtensions"] = includeExtensions.ToInvariantString().ToLower(),
+                ["includeInternal"] = includeInternal.ToInvariantString().ToLower(),
+                ["depth"] = levels.ToInvariantString()
+            };
+            return (await base.GetObjectsAsync(null, parameters)).First();
+        }
+
+
         /// <inheritdoc/>
         public IEnumerable<MetasysObject> GetObjects(ObjectId id, int levels = 1, bool includeInternalObjects = false, bool includeExtensions = false)
         {

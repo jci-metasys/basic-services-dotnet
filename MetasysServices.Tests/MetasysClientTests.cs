@@ -1,6 +1,7 @@
 using Flurl.Http;
 using JohnsonControls.Metasys.BasicServices;
 using JohnsonControls.Metasys.BasicServices.Enums;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nito.AsyncEx;
 using NUnit.Framework;
@@ -1678,6 +1679,62 @@ namespace MetasysServices.Tests
         #endregion
 
         #region GetObjects Tests
+
+        readonly string RootObjects = JsonConvert.SerializeObject(new
+        {
+            self = "https://welch12.go.johnsoncontrols.com/api/v6/objects/0352a3d7-baa2-5eae-b4ab-f20d485045d2/objects?flatten=true&includeExtensions=true&includeInternal=false&depth=1&includeModificationConstraints=false",
+            items = (List<object>)[
+                new
+                {
+                    name = "Site",
+                    label = "Site",
+                    id = "0352a3d7-baa2-5eae-b4ab-f20d485045d2",
+                    itemReference = "welch12:welch12/$site",
+                    parentUrl = (string) null,
+                    items = new[] {
+                        new
+                        {
+                            name = "User Views",
+                            label = "UserTrees",
+                            id = "f0900868-3b53-57b1-987b-f12dd92d7a2d",
+                            itemReference = "welch12:welch12/$site.UserTrees",
+                            parentUrl = "/objects/0352a3d7-baa2-5eae-b4ab-f20d485045d2"
+                        }
+                    }
+                }
+
+            ]
+
+        });
+
+
+        [Test]
+        public void TestGetObjectsRoot()
+        {
+            httpTest.RespondWith(RootObjects);
+
+            var originalApiVersion = client.Version;
+            client.Version = ApiVersion.v4;
+
+            try
+            {
+                var rootObject = client.GetObjects();
+
+                httpTest.ShouldHaveCalled("https://hostname/api/v4/objects")
+                    .WithoutQueryParamValue("flatten", true)
+                    .WithoutQueryParamValue("includeExtensions", false)
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+
+                Assert.That(rootObject.ItemReference, Is.EqualTo("welch12:welch12/$site"));
+                Assert.That(rootObject.ChildrenCount, Is.EqualTo(1));
+            }
+            finally
+            {
+                client.Version = originalApiVersion;
+            }
+        }
+
 
         [Test]
         public void TestGetObjectsNone()
