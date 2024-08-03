@@ -179,7 +179,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// If <paramref name="id"/> is specified then this method returns the children of the specified object (and any of their children if level > 1).
         /// If <c>id</d> is <c>null</c> then this method returns the root object (and it's children; unless level is 0).
         /// </returns>
-        protected async Task<List<MetasysObject>> GetObjectsAsync(Guid? id, Dictionary<string, string> parameters = null)
+        protected async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid? id, Dictionary<string, string> parameters = null)
         {
             if (Version <= ApiVersion.v3)
             {
@@ -197,7 +197,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 return [rootObject];
             }
-            return rootObject.Children.ToList();
+            return rootObject.Children;
         }
 
 
@@ -206,6 +206,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Level indicates how deep to retrieve objects.
         /// </summary>
         /// <remarks>
+        /// This should only be called when version is 3 or less. Starting with v4 we support depth directly.
+        /// <para>
         /// A level of 1 only retrieves immediate children of the parent object.
         /// <para> This should not be called on a site that supports REST API 4 or later as it makes a series of recursive calls that can
         /// be handled in one call to the api</para>
@@ -338,6 +340,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
+        /// Gets the type from a token retrieved from a typeUrl
         /// </summary>
         /// <param name="typeToken"></param>
         /// <exception cref="MetasysHttpException"></exception>
@@ -545,6 +548,7 @@ namespace JohnsonControls.Metasys.BasicServices
             JToken response = null;
             // Create URL with base resource
             Url url = new Url(resource);
+            // Concatenate segments with base resource url
             url.AppendPathSegments(pathSegments);
             // Set query parameters according to the input dictionary
             if (parameters != null)
@@ -570,6 +574,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         /// <summary>
+        /// Get typed items for the given resource asynchronously.
         /// </summary>
         /// <remarks>Optionally accepts query string parameters and additional path segments.</remarks>
         /// <typeparam name="T"></typeparam>
@@ -585,6 +590,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
 
         /// <summary>
+        /// Gets all items for the given resource asynchronously by requesting each available page.
         /// </summary>
         /// <param name="resource">The main resource to read.</param>
         /// <param name="parameters">Query string parameters in Key Value format.</param>
@@ -715,6 +721,7 @@ namespace JohnsonControls.Metasys.BasicServices
             // Concatenate batch segment to use batch request and prepare the list of requests
             url.AppendPathSegments("batch");
             var objectsRequests = new List<ObjectRequest>();
+            // Concatenate batch segment to use batch request and prepare the list of requests
             foreach (var id in ids)
             {
                 foreach (var r in resources)
@@ -756,6 +763,7 @@ namespace JohnsonControls.Metasys.BasicServices
             // Concatenate batch segment to use batch request and prepare the list of requests
             url.AppendPathSegments("batch");
             var objectsRequests = new List<ObjectRequest>();
+            // Concatenate batch segment to use batch request and prepare the list of requests
             foreach (var r in requests)
             {
                 Url relativeUrl = new Url(r.ObjectId.ToString());
@@ -817,6 +825,7 @@ namespace JohnsonControls.Metasys.BasicServices
             // Concatenate batch segment to use batch request and prepare the list of requests
             url.AppendPathSegments("batch");
             var objectsRequests = new List<ObjectRequest>();
+            // Concatenate batch segment to use batch request and prepare the list of requests
             foreach (var r in requests)
             {
                 Url relativeUrl = new Url(r.ObjectId.ToString());
@@ -889,6 +898,7 @@ namespace JohnsonControls.Metasys.BasicServices
             // Concatenate batch segment to use batch request and prepare the list of requests
             url.AppendPathSegments("batch");
             var objectsRequests = new List<ObjectRequest>();
+            // Concatenate batch segment to use batch request and prepare the list of requests
             foreach (var r in requests)
             {
                 string activityManagementStatus = "";
