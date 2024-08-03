@@ -1,0 +1,14 @@
+*.bat           eol=lf
+*.cache         eol=lf
+*.config        eol=lf
+*.cs            eol=lf
+*.csproj        eol=lf
+*.DotSettings   eol=lf
+*.editorconfig  eol=lf
+*.gitignore     eol=lf
+*.json          eol=lf
+*.md            eol=lf
+*.settings      eol=lf
+*.sln           eol=lf
+*.txt           eol=lf
+*.yml           eol=lf
