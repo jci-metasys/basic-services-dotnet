@@ -1901,6 +1901,127 @@ namespace MetasysServices.Tests
             PrintMessage($"TestGetObjectsUnauthorizedThrowsException: {e.Message}");
         }
 
+
+        #region Large JSON Example
+        const string GetObjectsResponseThreeLevelsV4 = @"
+        {
+            ""self"": ""https://r12adsdaily.cg.na.jci.com/api/v4/objects/9b9b3a80-bc5b-582a-8879-b1f1d1a0c5e4/objects?flatten=false&includeExtensions=true&includeInternal=false&depth=2"",
+            ""items"": [
+                {
+                    ""itemReference"": ""R12AdsDaily:R12AdsDaily-e2"",
+                    ""hasChildrenMatchingQuery"": true,
+                    ""name"": ""R12AdsDaily-e2"",
+                    ""id"": ""9b9b3a80-bc5b-582a-8879-b1f1d1a0c5e4"",
+                    ""objectType"": ""objectTypeEnumSet.n50Class"",
+                    ""classification"": ""device"",
+                    ""items"": [
+                        {
+                            ""itemReference"": ""R12AdsDaily:R12AdsDaily-e2/Field Bus MSTP1"",
+                            ""hasChildrenMatchingQuery"": true,
+                            ""name"": ""Field Bus MSTP1"",
+                            ""id"": ""aaeb5c40-9f36-5066-904d-fa81bab16fa6"",
+                            ""objectType"": ""objectTypeEnumSet.fieldBusClass"",
+                            ""classification"": ""integration"",
+                            ""items"": [
+                                {
+                                    ""itemReference"": ""R12AdsDaily:R12AdsDaily-e2/Field Bus MSTP1.FAC2612-5"",
+                                    ""hasChildrenMatchingQuery"": true,
+                                    ""name"": ""AHU-1"",
+                                    ""id"": ""773e4df4-af2d-5c3c-8011-2795e7c6fcbc"",
+                                    ""objectType"": ""objectTypeEnumSet.fieldDeviceClass"",
+                                    ""classification"": ""controller"",
+                                    ""items"": []
+                                },
+                                {
+                                    ""itemReference"": ""R12AdsDaily:R12AdsDaily-e2/Field Bus MSTP1.AHU-1B"",
+                                    ""hasChildrenMatchingQuery"": true,
+                                    ""name"": ""SDA-F1-AHU-1"",
+                                    ""id"": ""3644d0b6-130f-5131-b573-71298f414b41"",
+                                    ""objectType"": ""objectTypeEnumSet.fieldDeviceClass"",
+                                    ""classification"": ""controller"",
+                                    ""items"": []
+                                }
+                            ]
+                        },
+                        {
+                            ""itemReference"": ""R12AdsDaily:R12AdsDaily-e2/Field Bus MSTP2"",
+                            ""hasChildrenMatchingQuery"": true,
+                            ""name"": ""Field Bus MSTP2"",
+                            ""id"": ""f2c7cae9-5942-5769-8afc-58060ae67727"",
+                            ""objectType"": ""objectTypeEnumSet.fieldBusClass"",
+                            ""classification"": ""integration"",
+                            ""items"": [
+                                {
+                                    ""itemReference"": ""R12AdsDaily:R12AdsDaily-e2/Field Bus MSTP2.AHU-2"",
+                                    ""hasChildrenMatchingQuery"": true,
+                                    ""name"": ""SD-F2-AHU-2"",
+                                    ""id"": ""ff796531-9b5f-572d-b21a-a44681acbc36"",
+                                    ""objectType"": ""objectTypeEnumSet.fieldDeviceClass"",
+                                    ""classification"": ""controller"",
+                                    ""items"": []
+                                }
+                            ]
+                        },
+                        {
+                            ""itemReference"": ""R12AdsDaily:R12AdsDaily-e2/VRF"",
+                            ""hasChildrenMatchingQuery"": true,
+                            ""name"": ""VRF"",
+                            ""id"": ""524e084d-159e-53cd-bae9-c91ab3f21d03"",
+                            ""objectType"": ""objectTypeEnumSet.containerClass"",
+                            ""classification"": ""folder"",
+                            ""items"": [
+                                {
+                                    ""itemReference"": ""R12AdsDaily:R12AdsDaily-e2/VRF.VRF-1"",
+                                    ""hasChildrenMatchingQuery"": true,
+                                    ""name"": ""IDU-1"",
+                                    ""id"": ""06de2cd1-2c08-536f-bd50-bf883d55dedb"",
+                                    ""objectType"": ""objectTypeEnumSet.containerClass"",
+                                    ""classification"": ""folder"",
+                                    ""items"": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+        ";
+
+        #endregion
+
+        [Test]
+        public void TestObjectsLevel3WithV4()
+        {
+            // This should not recurse like earlier versions. It should just fetch with a depth of 3 (one call)
+            // and assemble the correct response, which should leave off the root object per library design
+            // Arrange
+            httpTest.RespondWith(GetObjectsResponseThreeLevelsV4);
+            var originalApiVersion = client.Version;
+            try
+            {
+
+                client.Version = ApiVersion.v4;
+
+                // Act
+                var objects = client.GetObjects(mockid, 3);
+
+                // Assert
+                httpTest.ShouldHaveCalled($"https://hostname/api/v4/objects/{mockid}/objects")
+                    .WithQueryParamValue("flatten", "false")
+                    .WithQueryParamValue("includeInternal", "false")
+                    .WithQueryParamValue("includeExtensions", "false")
+                    .Times(1);
+
+                Assert.That(httpTest.CallLog.Count, Is.EqualTo(1));
+
+                Assert.That(objects.Count(), Is.EqualTo(3));
+            }
+            finally
+            {
+                client.Version = originalApiVersion;
+            }
+        }
+
         #endregion
 
         #region GetSpaces Tests

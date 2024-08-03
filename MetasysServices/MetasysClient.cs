@@ -124,6 +124,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 if (Spaces != null) { Spaces.Version = version.Value; }
                 if (Streams != null) { Streams.Version = version.Value; }
                 if (Trends != null) { Trends.Version = version.Value; }
+                base.Version = value;
             }
         }
 
@@ -513,10 +514,12 @@ namespace JohnsonControls.Metasys.BasicServices
                 parameters = new Dictionary<string, string>
                 {
                     { "depth", levels.ToString() },
-                    { "flatten", "true".ToString() }, //This parameter is needed to get the data in a 'flat' way and keep consistency in the logic to retrieve the objects
-                    { "includeExtensions", includeExtensions.ToString() },
-                    { "includeInternal", includeInternalObjects.ToString() } //This param has different name when version > v3
+                    { "flatten", "false" },
+                    { "includeExtensions", includeExtensions.ToString().ToLower() },
+                    { "includeInternal", includeInternalObjects.ToString().ToLower() } //This param has different name when version > v3
                 };
+
+                return await GetObjectsAsync(id, parameters);
             }
 
             var objects = await GetObjectChildrenAsync(id, parameters, levels).ConfigureAwait(false);
