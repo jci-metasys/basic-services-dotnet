@@ -40,6 +40,7 @@
       "_appName": "Metasys Services",
       "_appTitle": "Metasys Services",
       "_enableSearch": true,
+      "_appLogoPath": "images/metasys-logo-small.svg",
       "pdf": false
     }
   }
