@@ -10,9 +10,9 @@ namespace JohnsonControls.Metasys.BasicServices
     /// <remarks> This is available since Metasys API v5. </remarks>
     public class Activity
     {
-        /// <summary> Activity Unique Identifier (GUID) </summary>
+        /// <summary> Activity Unique Identifier </summary>
         [JsonProperty(Required = Required.Always)]
-        public Guid Id { get; set; }
+        public ActivityId Id { get; set; }
 
         /// <summary> Item fully qualified reference </summary>
         [JsonProperty(Required = Required.Always)]
@@ -42,12 +42,12 @@ namespace JohnsonControls.Metasys.BasicServices
         public Guid ObjectId { get; set; }
 
         /// <summary>
-        /// Alarm object (in case the activityType = alarm) 
+        /// Alarm object (in case the activityType = alarm)
         /// </summary>
         public ActivityAlarm Alarm { get; set; }
 
         /// <summary>
-        /// Audit object (in case the activityType = audit) 
+        /// Audit object (in case the activityType = audit)
         /// </summary>
         public ActivityAudit Audit { get; set; }
 

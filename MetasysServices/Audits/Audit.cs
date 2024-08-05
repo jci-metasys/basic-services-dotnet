@@ -12,10 +12,10 @@ namespace JohnsonControls.Metasys.BasicServices
     public class Audit
     {
         /// <summary>
-        /// The identifier of the audit(GUID).
+        /// The identifier of the audit.
         /// </summary>
         [JsonProperty(Required = Required.Always)]
-        public Guid Id { get; set; }
+        public ActivityId Id { get; set; }
 
         /// <summary>
         /// The dateTime representing the creation time when this audit message was created.
