@@ -124,6 +124,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 if (Spaces != null) { Spaces.Version = version.Value; }
                 if (Streams != null) { Streams.Version = version.Value; }
                 if (Trends != null) { Trends.Version = version.Value; }
+                base.Version = value;
             }
         }
 
@@ -325,7 +326,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var response = await Client.Request("refreshToken")
                                                     .GetJsonAsync<JToken>()
                                                     .ConfigureAwait(false);
-                // Since it's a refresh, get issue info from the current token                
+                // Since it's a refresh, get issue info from the current token
                 CreateAccessToken(AccessToken.Issuer, AccessToken.IssuedTo, response);
                 // Set the new value of the Token to the StreamClient
                 if (Streams != null)
@@ -512,10 +513,12 @@ namespace JohnsonControls.Metasys.BasicServices
                 parameters = new Dictionary<string, string>
                 {
                     { "depth", levels.ToString() },
-                    { "flatten", "true".ToString() }, //This parameter is needed to get the data in a 'flat' way and keep consistency in the logic to retrieve the objects
-                    { "includeExtensions", includeExtensions.ToString() },
-                    { "includeInternal", includeInternalObjects.ToString() } //This param has different name when version > v3
+                    { "flatten", "false" },
+                    { "includeExtensions", includeExtensions.ToString().ToLower() },
+                    { "includeInternal", includeInternalObjects.ToString().ToLower() } //This param has different name when version > v3
                 };
+
+                return await GetObjectsAsync(id, parameters);
             }
 
             var objects = await GetObjectChildrenAsync(id, parameters, levels).ConfigureAwait(false);
@@ -564,7 +567,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             // Sanitize given itemReference
             var normalizedItemReference = itemReference.Trim().ToUpper();
-            // Returns cached value when available, otherwise perform request         
+            // Returns cached value when available, otherwise perform request
             if (!IdentifiersDictionary.ContainsKey(normalizedItemReference))
             {
                 JToken response = null;
@@ -957,7 +960,7 @@ namespace JohnsonControls.Metasys.BasicServices
         //{
         //    DateTime now = DateTime.UtcNow;
         //    TimeSpan delay = AccessToken.Expires - now.AddSeconds(-1); // minimum renew gap of 1 sec in advance
-        //    // Renew one minute before expiration if there is more than one minute time 
+        //    // Renew one minute before expiration if there is more than one minute time
         //    if (delay > new TimeSpan(0, 1, 0))
         //    {
         //        delay.Subtract(new TimeSpan(0, 1, 0));
@@ -982,7 +985,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
 
         /// <summary>
-        /// Overload of ReadPropertyAsync for internal use where Exception suppress is needed, e.g. ReadPropertyMultiple 
+        /// Overload of ReadPropertyAsync for internal use where Exception suppress is needed, e.g. ReadPropertyMultiple
         /// </summary>
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
@@ -1003,7 +1006,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Creates the body for the WriteProperty and WritePropertyMultiple requests as a dictionary.
         /// </summary>
-        /// <param name="attributeValues">The (attribute, value) pairs.</param>      
+        /// <param name="attributeValues">The (attribute, value) pairs.</param>
         /// <returns>Dictionary of the attribute, value pairs.</returns>
         private Dictionary<string, object> GetWritePropertyBody(IEnumerable<(string Attribute, object Value)> attributeValues)
         {
@@ -1040,7 +1043,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         ///// <summary>
-        ///// Gets the type from a token retrieved from a typeUrl 
+        ///// Gets the type from a token retrieved from a typeUrl
         ///// </summary>
         ///// <param name="typeToken"></param>
         ///// <exception cref="MetasysHttpException"></exception>
@@ -1144,7 +1147,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var m = multiples.SingleOrDefault(s => s.Id == objId);
                 if (m == null)
                 {
-                    // Add a new multiple for the current object                   
+                    // Add a new multiple for the current object
                     multiples.Add(new VariantMultiple(objId, values));
                 }
                 else
@@ -1241,4 +1244,3 @@ namespace JohnsonControls.Metasys.BasicServices
     }
 
 }
-

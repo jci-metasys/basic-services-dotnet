@@ -193,10 +193,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Read many attribute values given the Guids of the objects.
         /// </summary>
         /// <returns>
-        /// A list of VariantMultiple with all the specified attributes (if existing).        
+        /// A list of VariantMultiple with all the specified attributes (if existing).
         /// </returns>
         /// <param name="ids"></param>
-        /// <param name="attributeNames"></param>        
+        /// <param name="attributeNames"></param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysPropertyException"></exception>
         IEnumerable<VariantMultiple> ReadPropertyMultiple(IEnumerable<Guid> ids, IEnumerable<string> attributeNames);
@@ -306,11 +306,13 @@ namespace JohnsonControls.Metasys.BasicServices
         /// </remarks>
         /// <param name="id">The ID of the parent object.</param>
         /// <param name="levels">The depth of the children to retrieve.</param>
-        /// <param name="includeInternalObjects">Set it to true to see also internal objects that are not displayed in the Metasys tree. </param>      
-        /// <param name="includeExtensions">Set it to true to get also the extensions of the object.</param>      
+        /// <param name="includeInternalObjects">Set it to true to see also internal objects that are not displayed in the Metasys tree. </param>
+        /// <param name="includeExtensions">Set it to true to get also the extensions of the object.</param>
         /// <remarks> The flag includeInternalObjects applies since Metasys API v3. </remarks>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
+        /// <returns>A collection of zero or more objects that are children of the specified object with the given <paramref name="id"/>
+        /// </returns>
         IEnumerable<MetasysObject> GetObjects(Guid id, int levels = 1, bool includeInternalObjects = false, bool includeExtensions = false);
         /// <inheritdoc cref="IMetasysClient.GetObjects(Guid, int, bool, bool)"/>
         Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid id, int levels = 1, bool includeInternalObjects = false, bool includeExtensions = false);
@@ -321,7 +323,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="objectId"></param>
         /// <param name="objectType">The object type enum set.</param>
         /// <exception cref="MetasysHttpException"></exception>
-        /// <exception cref="MetasysHttpParsingException"></exception>        
+        /// <exception cref="MetasysHttpParsingException"></exception>
         IEnumerable<MetasysObject> GetObjects(Guid objectId, string objectType);
 
         /// <inheritdoc cref="IMetasysClient.GetObjects(Guid, string)"/>
@@ -429,7 +431,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
         /// <summary>
         /// Send an HTTP request as an asynchronous operation.
-        /// 
+        ///
         /// <para>
         /// This method currently only supports 1 value per header rather than multiple. In a future revision, this is planned to be addressed.
         /// </para>

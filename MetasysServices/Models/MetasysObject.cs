@@ -33,13 +33,13 @@ namespace JohnsonControls.Metasys.BasicServices
         public MetasysObjectTypeEnum? Type { get; set; }
 
         /// <summary>
-        /// The resource type detail reference. 
+        /// The resource type detail reference.
         /// </summary>
         /// <remarks> This is available only on Metasys API v2 and v1. </remarks>
         public string TypeUrl { get; set; }
 
         /// <summary>
-        /// The resource type detail reference. 
+        /// The resource type detail reference.
         /// </summary>
         /// <remarks> This is available since Metasys API v3. </remarks>
         public string ObjectType { get; set; }
@@ -65,8 +65,8 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The number of direct children objects.
         /// </summary>
-        /// <value>The number of children or -1 if there is no children data.</value>
-        public int ChildrenCount { set; get; }
+        /// <value>The number of children.</value>
+        public int ChildrenCount => Children.Count();
 
         /// <summary>
         /// Name of the Equipment Definition mapped with the Equipment Instance
@@ -84,12 +84,30 @@ namespace JohnsonControls.Metasys.BasicServices
         public string Classification { get; set; }
         private const string DefaultClassification = "object";
 
+        /// <summary>
+        /// Create a tree of objects out of a root node
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="version"></param>
+        internal MetasysObject(JToken token, ApiVersion version)
+        {
+            var root = token;
+            var children = root["items"] as JArray;
+            Initialize(root, version);
+
+            Children = children?.Select(child => new MetasysObject(child, version)).ToList() ?? [];
+        }
+
         internal MetasysObject(JToken token, ApiVersion version, IEnumerable<MetasysObject> children = null, MetasysObjectTypeEnum? type = null)
         {
-            Children = children ?? new List<MetasysObject>(); // Return empty list by convention for null         
-            ChildrenCount = Children?.Count() ?? 0; // Children count is 0 when children is null                                 
+            Children = children ?? new List<MetasysObject>(); // Return empty list by convention for null
+            // = Children?.Count() ?? 0; // Children count is 0 when children is null
             Type = type;
+            Initialize(token, version);
+        }
 
+        private void Initialize(JToken token, ApiVersion version)
+        {
             JObject jobj = token.ToObject<JObject>();
             try
             {
@@ -153,7 +171,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 try
                 {
-                    // Object Type is available since API v3 only on object detail. 
+                    // Object Type is available since API v3 only on object detail.
                     ObjectType = jobj.ContainsKey("objectType") ? token["objectType"].Value<string>() : null;
                 }
                 catch
