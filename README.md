@@ -364,11 +364,11 @@ If the enumeration key is desired over the translated value use the EnumerationK
 <br/>
 
 #### Get Object Id
-In order to use most of the methods in MetasysClient the identifier (Id) of the target object must be known.  
-This Id is in the form of a Guid and can be requested using the method **`GetObjectIdentifier`** given you know the 'Fully Qualified Reference' (FQR) of the object:
+In order to use most of the methods in MetasysClient the identifier (Id) of the target object must be known.
+This Id can be requested using the method **`GetObjectIdentifier`** given you know the 'Fully Qualified Reference' (FQR) of the object:
 
 ```csharp
-Guid objectId = client.GetObjectIdentifier("Win2016-VM2:vNAE2343996/Field Bus MSTP1.VAV-08.ZN-SP");
+ObjectId objectId = client.GetObjectIdentifier("Win2016-VM2:vNAE2343996/Field Bus MSTP1.VAV-08.ZN-SP");
 Console.WriteLine(objectId);
 /*        
 d5d96cd3-db4a-52e0-affd-8bc3393c30ec
@@ -376,9 +376,19 @@ d5d96cd3-db4a-52e0-affd-8bc3393c30ec
 ```
 <br/>
 
+> [!Tip]\
+> The `ObjectId` has implicit conversions to/from `string` so in many cases you can just treat it like a string.
+> For example, in the following example we store the `objectId` in a `string` and can still pass it to `ReadProperty` which
+> expected an `ObjectId`.
+
+```csharp
+string objectId = "d5d96cd3-db4a-52e0-affd-8bc3393c30ec";
+var propertyValue = client.ReadProperty(objectId, "presentValue");
+```
+
 #### Get a Property
-In order to get a property you must know the Guid of the target object and then you can use the method **`ReadProperty`**. 
-An object called "Variant" is returned when getting a property from an object. 
+In order to get a property you must know the Id of the target object and then you can use the method **`ReadProperty`**.
+A value of type `Variant` is returned when getting a property from an object.
 Variant contains the property received in many different forms. There is a bit of intuition when handling a Variant since it will not explicitly provide the type of object received by the server. If the server cannot find the target object or attribute on the object this method will throw a MetasysHttpNotFoundException.
 ```csharp
 Variant property = client.ReadProperty(objectId, "presentValue");
@@ -405,7 +415,7 @@ To get multiple properties from multiple objects in one action use the method **
 This can be very useful if the objects all are of the same type or have the same target properties.
 
 ```csharp
-List<Guid> ids = new List<Guid> { id1, id2 };
+List<ObjectId> ids = new List<ObjectId> { id1, id2 };
 List<string> attributes = new List<string> { "name", "description", "presentValue" };
 IEnumerable<VariantMultiple> results = client.ReadPropertyMultiple(ids, attributes);
 VariantMultiple multiple1 = results.FindById(id1);
@@ -450,17 +460,17 @@ Variant multiple1Description = multiple1.FindAttributeByName("description");
 <br/>
 
 #### Write a Property
-In order to write a property you must have the Guid of the object and know the attribute name and type
-and then you have to use the method **`WriteProperty`**.  
+In order to write a property you must have the Id of the object and know the attribute name and type
+and then you have to use the method **`WriteProperty`**.
 ```csharp
-Guid id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1");
+ObjectId id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1");
 client.WriteProperty(id, "description", "This is an AV.");
 ```
 <br/>
 
 To change the same attribute values of many objects use the method **`WritePropertyMultiple`**. 
 ```csharp
-List<Guid> ids = new List<Guid> { id1, id2 };
+List<ObjectId> ids = new List<ObjectId> { id1, id2 };
 // Write to many attributes values using a list of tuples
 List<(string, object)> attributesList = new List<(string, object)> { ("description", "This is an AV.") };
 client.WritePropertyMultiple(ids, attributesList);
@@ -629,12 +639,13 @@ client.SendCommand(objectId, release.CommandId, list3);
 <br/>
 
 #### Get Children
-To get the child objects of an object use the method **`GetObjects`**.  
-This method requires the identifier (Guid) of the parent object and an optional number of levels to retrieve. 
-The default is 1 level or just the immediate children of the object. 
+To get the child objects of an object use the method **`GetObjects`**.
+This method requires the identifier of the parent object and an optional number of levels to retrieve.
+The default is 1 level or just the immediate children of the object.
 Depending on the number of objects on your server this method can take a very long time to complete.
+Starting with version 4 of the API it is much more efficient to use levels > 1 than in previous versions of the API.
 ```csharp
-Guid parentId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB");
+ObjectId parentId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB");
 // Get direct children (1 level)
 List<MetasysObject> directChildren = client.GetObjects(parentId).ToList();
 MetasysObject lastChild = directChildren.LastOrDefault();
@@ -789,15 +800,15 @@ To get a single network device use the method **`NetworkDevices.FindById`** whic
 <br/>
 
 #### Get Network Device Children
-To retrieves the collection of network devices that are children of the specified network device use the method **`NetworkDevices.GetChildren`** which return a list of Metasys Objects according to the network device Id (Guid) passed as parameter.
+To retrieves the collection of network devices that are children of the specified network device use the method **`NetworkDevices.GetChildren`** which return a list of Metasys Objects according to the network device Id passed as parameter.
 <br/>
 
 #### Get Network Devices Hosting an Equipment
-To retrieve the collection of network devices that host the specified equipment instance use the method **`NetworkDevices.GetHostingAnEquipment`** which return a list of Metasys Objects according to the equipment Id (Guid) passed as parameter.
+To retrieve the collection of network devices that host the specified equipment instance use the method **`NetworkDevices.GetHostingAnEquipment`** which return a list of Metasys Objects according to the equipment Id passed as parameter.
 <br/>
 
 #### Get Network Devices Serving a Space
-To retrieve the collection of network devices that are serving the specified space use the method **`NetworkDevices.GetServingASpace`** which return a list of Metasys Objects according to the space Id (Guid) passed as parameter.
+To retrieve the collection of network devices that are serving the specified space use the method **`NetworkDevices.GetServingASpace`** which return a list of Metasys Objects according to the space Id passed as parameter.
 <br/>
 
 
@@ -1269,7 +1280,7 @@ To get a single audit you can use the method **`Audits.FindById`** which returns
 
 #### Get Audits for an Object
 To get the audits of a specific Object you can use the method **`Audits.GetForObject`**.  
-The Guid of the parent object is required as parameter.
+The Id of the parent object is required as parameter.
 ```csharp
 AuditFilter auditFilter = new AuditFilter{};
 var objectId="17ac1932-18d8-518c-8012-420c77bea86b";
@@ -1313,12 +1324,12 @@ client.Audits.Discard(auditId, annotationText);
 > Available since API v3
 > 
 To discard multiple Audits you can use the method **`Audits.DiscardMultiple`**.  
-It takes a list of 'BatchRequestParam' objects (specifing the list of Audits Guid and annotations) and it returns a list of 'Result' objects.
+It takes a list of 'BatchRequestParam' objects (specifing the list of Audit Guids and annotations) and it returns a list of 'Result' objects.
 ```csharp
 var requests = new List<BatchRequestParam>();
-BatchRequestParam request1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST DISCARD ANNOTATION" };
+BatchRequestParam request1 = new BatchRequestParam { ObjectId = "e0fb025a-d8a2-4258-91ea-c4026c1620d1", Resource = "THIS IS THE FIRST DISCARD ANNOTATION" };
 requests.Add(request1);
-BatchRequestParam request2 = new BatchRequestParam { ObjectId = new Guid("5ff1341e-dbf1-4eaf-b9a1-987f51dabefa"), Resource = "THIS IS THE SECOND DISCARD ANNOTATION" };
+BatchRequestParam request2 = new BatchRequestParam { ObjectId = "5ff1341e-dbf1-4eaf-b9a1-987f51dabefa", Resource = "THIS IS THE SECOND DISCARD ANNOTATION" };
 requests.Add(request2);
 
 IEnumerable<Result> results = client.Audits.DiscardMultiple(requests);
@@ -1350,12 +1361,12 @@ client.Audits.AddAnnotation(auditId, annotationText);
 > Available since API v3
 > 
 To add multiple Annotations to an Audit you can use the method **`Audits.AddAnnotationMultiple`**.  
-It takes a list of 'BatchRequestParam' objects (specifing the list of Audits Guid and annotations) and it returns a list of 'Result' objects.
-```csharp
+It takes a list of 'BatchRequestParam' objects (specifing the list of Audit Guids and annotations) and it returns a list of 'Result' objects.
+```sharp
 var requests = new List<BatchRequestParam>();
-BatchRequestParam request1 = new BatchRequestParam { ObjectId = new Guid("e0fb025a-d8a2-4258-91ea-c4026c1620d1"), Resource = "THIS IS THE FIRST AUDIT ANNOTATION" };
+BatchRequestParam request1 = new BatchRequestParam { ObjectId = "e0fb025a-d8a2-4258-91ea-c4026c1620d1", Resource = "THIS IS THE FIRST AUDIT ANNOTATION" };
 requests.Add(request1);
-BatchRequestParam request2 = new BatchRequestParam { ObjectId = new Guid("5ff1341e-dbf1-4eaf-b9a1-987f51dabefa"), Resource = "THIS IS THE SECOND AUDIT ANNOTATION" };
+BatchRequestParam request2 = new BatchRequestParam { ObjectId = "5ff1341e-dbf1-4eaf-b9a1-987f51dabefa", Resource = "THIS IS THE SECOND AUDIT ANNOTATION" };
 requests.Add(request2);
 
 IEnumerable<Result> results = client.Audits.AddAnnotationMultiple(requests);
@@ -1378,10 +1389,10 @@ All services about trends are provided by **`Trends`** local instance of Metasys
 <br/>
 
 #### Get Object Trended Attributes
-To get the trended attributes of a specified Metasys object you can use the method **`Trends.GetTrendedAttributes`**.  
-This method requires the object Id (Guid) as parameter and it returns a list of 'MetasysAttribute' objects.
+To get the trended attributes of a specified Metasys object you can use the method **`Trends.GetTrendedAttributes`**.
+This method requires the object Id as parameter and it returns a list of 'MetasysAttribute' objects.
 ```csharp
-Guid trendedObjectId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB.10FEC11 - V6 Unit.E4 Network Outdoor Temperature");
+ObjectId trendedObjectId = client.GetObjectIdentifier("WIN-21DJ9JV9QH6:EECMI-NCE25-2/FCB.10FEC11 - V6 Unit.E4 Network Outdoor Temperature");
 
 // Get attributes where trend extension is configured
 List<MetasysAttribute> trendedAttributes = client.Trends.GetTrendedAttributes(trendedObjectId);
@@ -1389,8 +1400,8 @@ List<MetasysAttribute> trendedAttributes = client.Trends.GetTrendedAttributes(tr
 <br/>
 
 #### Get Samples
-To get the samples related the a trended attribute of an object you can use the method **`Trends.GetSamples`**.  
-This method requires the object Id (Guid), the attribute Id (numeric or enumerated value) and a 'TimeFilter' object. 
+To get the samples related the a trended attribute of an object you can use the method **`Trends.GetSamples`**.
+This method requires the object Id, the attribute Id (numeric or enumerated value) and a 'TimeFilter' object.
 It returns a 'PagedResult' list of 'Sample' objects.
 ```csharp
 int attributeId = trendedAttributes[0].Id;
@@ -1431,14 +1442,14 @@ If you try to retrieve values from an object that has no valid trended attribute
 > Available since API v3
 > 
 To the trended attributes of a specified network device you can use the method **`Trends.GetNetDevTrendedAttributes`**.
-This method requires the network device Id (Guid) as parameter and it returns a list of 'MetasysAttribute' objects.
+This method requires the network device Id as parameter and it returns a list of 'MetasysAttribute' objects.
 <br/>
 
 #### Get Network Device Samples
 > Available since API v3
-> 
-To get the samples related the a trended attribute of a network device you can use the method **`Trends.GetNetDevSamples`**.  
-This method requires the object Id (Guid), the attribute Id (numeric or enumerated value) and a 'TimeFilter' object. 
+>
+To get the samples related the a trended attribute of a network device you can use the method **`Trends.GetNetDevSamples`**.
+This method requires the object Id, the attribute Id (numeric or enumerated value) and a 'TimeFilter' object.
 It returns a 'PagedResult' list of 'Sample' objects.
 <br/>
 
@@ -1584,7 +1595,7 @@ In the Activity filter you can specify parameters as:
 
 #### Multiple Actions
 This method **`Activities.ActionMultiple`** is useful to perform batch actions as discard/acknowledge an alarm/audit given a list of requests containing the info necessary to perform the actions.
-It takes a list of 'BatchRequestParam' objects (specifing the list of Audit or Alarm Guids and annotations) and it returns a list of 'Result' objects.
+It takes a list of 'BatchRequestParam' objects (specifying the list of Audit or Alarm Guids and annotations) and it returns a list of 'Result' objects.
 
 ## Usage (COM)
 
@@ -1643,9 +1654,9 @@ Set token = client.TryLogin("vault-target")
 ### Metasys Objects
 
 #### Get Object Id
-In order to use most of the methods in LegacyMetasysClient the id of the target object must be known. 
-To retrieve the identifier of an object use the method **`GetObjectIdentifier`**.  
-This method requires the Fully Qualified Reference (FQR) of the object and returns the id as a string (in the form of a Guid).
+In order to use most of the methods in LegacyMetasysClient the id of the target object must be known.
+To retrieve the identifier of an object use the method **`GetObjectIdentifier`**.
+This method requires the Fully Qualified Reference (FQR) of the object and returns the id as a string.
 
 ```vb
 Dim id As String
@@ -1654,8 +1665,8 @@ id = client.GetObjectIdentifier("siteName:naeName/Folder1.AV1")
 <br/>
 
 #### Get a Property
-In order to get a property you must know the Guid of the target object and then you can use the method **`ReadProperty`**. 
-An object called "ComVariant" is returned when getting a property from an object. 
+In order to get a property you must know the Id of the target object and then you can use the method **`ReadProperty`**.
+An object called "ComVariant" is returned when getting a property from an object.
 ```vb
 Dim result As ComVariant
 Set result = client.ReadProperty(id, "presentValue")
@@ -1690,8 +1701,8 @@ variants=id1.Variants
 
 #### Write a Property
 
-In order to write a property you must have the Guid of the object and know the attribute name and type
-and then you have to use the method **`WriteProperty`**. 
+In order to write a property you must have the Id of the object and know the attribute name and type
+and then you have to use the method **`WriteProperty`**.
 
 ```vb
 Dim id As String
@@ -2005,7 +2016,7 @@ To get a single audit you can use the method **`GetSingleAudit`** which returns 
 
 #### Get Audits for an Object
 To get the audits of a specific Object you can use the method **`GetAuditsForAnObject`**.  
-The Guid of the parent object is required as parameter.
+The Id of the parent object is required as parameter.
 ```vb
 Set objectAuditsPager = client.GetAuditsForAnObject(objId, filter)
 Dim objectAudits() As Object
@@ -2108,7 +2119,7 @@ attrs = client.GetTrendedAttributes(objId)
 
 #### Get Samples
 To get the samples related the a trended attribute of an object you can use the method **`GetSamples`**.  
-This method requires the object Id (Guid), the attribute Id (numeric or enumerated value) and a 'ComTimeFilter' object. 
+This method requires the object Id, the attribute Id (numeric or enumerated value) and a 'ComTimeFilter' object. 
 It returns a 'ComPagedResult' list of 'ComSample' objects.
 ```vb
 Dim attr As ComAttribute
@@ -2149,7 +2160,7 @@ This method requires the network device Id as parameter and it returns a list of
 > Available since API v3
 > 
 To get the samples related the a trended attribute of a network device you can use the method **`GetNetDevSamples`**.  
-This method requires the object Id (Guid), the attribute Id (numeric or enumerated value) and a 'ComTimeFilter' object. 
+This method requires the object Id, the attribute Id (numeric or enumerated value) and a 'ComTimeFilter' object. 
 It returns a 'ComPagedResult' list of 'ComSample' objects.
 <br/>
 
