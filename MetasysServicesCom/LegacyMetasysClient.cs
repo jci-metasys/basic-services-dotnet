@@ -88,7 +88,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <inheritdoc/>
         public IComAccessToken TryLogin(string username, string password, bool refresh = true)
         {
-            return Mapper.Map<IComAccessToken>(Client.TryLogin(username, password, refresh));
+            return Mapper.Map<IComAccessToken>(Client.TryLogin(username, password));
         }
         /// <inheritdoc/>
         public string TryLogin2(string username, string password, bool refresh = true)
@@ -96,7 +96,7 @@ namespace JohnsonControls.Metasys.ComServices
             string res;
             try
             {
-                AccessToken accToken = Client.TryLogin(username, password, refresh);
+                AccessToken accToken = Client.TryLogin(username, password);
                 res = accToken.Token.ToString();
             }
             catch (Exception ex)
@@ -111,7 +111,7 @@ namespace JohnsonControls.Metasys.ComServices
         /// <inheritdoc/>
         public IComAccessToken TryLoginWithCredMan(string target, bool refresh = true)
         {
-            return Mapper.Map<IComAccessToken>(Client.TryLogin(target, refresh));
+            return Mapper.Map<IComAccessToken>(Client.TryLogin(target));
         }
 
         // GetAccessToken -----------------------------------------------------------------------------------------------------------

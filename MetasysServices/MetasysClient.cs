@@ -5,10 +5,10 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -253,37 +253,108 @@ namespace JohnsonControls.Metasys.BasicServices
         #region "LOGIN" // ==========================================================================================================
         // TryLogin -------------------------------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
+        [Obsolete("Use TryLogin(string,SecureString) instead.")]
         public AccessToken TryLogin(string username, string password, bool refresh = true)
         {
             return TryLoginAsync(username, password, true).GetAwaiter().GetResult();
         }
         /// <inheritdoc/>
-        public async Task<AccessToken> TryLoginAsync(string username, string password, bool refresh = true)
+        [Obsolete("Use TryLoginAsync(string,SecureString) instead.")]
+        public Task<AccessToken> TryLoginAsync(string username, string password, bool refresh = true)
         {
+            var securePassword = new SecureString();
+            password.ToCharArray().ToList().ForEach(securePassword.AppendChar);
+            return TryLoginAsync(username, securePassword);
+        }
+        
+        /// <inheritdoc/>
+        public AccessToken TryLogin()
+        {
+            return TryLoginAsync().GetAwaiter().GetResult();
+        }
+
+
+        /// <inheritdoc/>
+        public Task<AccessToken> TryLoginAsync()
+        {
+            if (SecretStore.TryGetCredentials(hostname, out string username, out SecureString password))
+            {
+                return TryLoginAsync(username, password);
+            }
+            throw new CredManException($"Cannot locate credentials for {hostname}");
+
+        }
+
+        /// <inheritdoc/>
+        public AccessToken TryLogin(string username)
+        {
+            return TryLoginAsync(username).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public Task<AccessToken> TryLoginAsync(string username)
+        {
+            if (SecretStore.TryGetPassword(hostname, username, out SecureString password))
+            {
+                return TryLoginAsync(username, password);
+            }
+            throw new CredManException($"Cannot locate credentials for {hostname}");
+        }
+
+        /// <inheritdoc/>
+        public AccessToken TryLogin(string username, string password)
+        {
+            return TryLoginAsync(username, password).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc/>
+        public Task<AccessToken> TryLoginAsync(string username, string password)
+        {
+            var securePassword = new SecureString();
+            password.ToCharArray().ToList().ForEach(securePassword.AppendChar);
+            securePassword.MakeReadOnly();
+            return TryLoginAsync(username, securePassword);
+        }
+
+        /// <inheritdoc/>
+        public AccessToken TryLogin(string username, SecureString password)
+        {
+            return TryLoginAsync(username, password).GetAwaiter().GetResult();
+        }
+        /// <inheritdoc/>
+        public async Task<AccessToken> TryLoginAsync(string username, SecureString password)
+        {
+
             try
             {
+                // The using declaration ensures Dispose is called on credentials to clear password chars from memory
+                using var credentials = new MetasysCredentials(username, password);
+
                 var response = await Client.Request("login")
-                    .PostJsonAsync(new { username, password })
+                    .WithHeader("Content-Type", "application/json")
+                    .PostAsync(new CapturedByteArrayContent(credentials.EncodedPayload))
                     .ReceiveJson<JToken>()
                     .ConfigureAwait(false);
 
-                this.RefreshToken = true;
-
+                RefreshToken = true;
                 CreateAccessToken(Hostname, username, response);
+
                 if (Streams != null)
                 {
-                    Streams.AccessToken = this.AccessToken; ;
+                    Streams.AccessToken = AccessToken; ;
                 }
             }
             catch (FlurlHttpException e)
             {
                 ThrowHttpException(e);
             }
-            return this.AccessToken;
+            return AccessToken;
+
         }
 
         // TryLogin (2) -------------------------------------------------------------------------------------------------------------
         /// <inheritdoc/>
+        [Obsolete("Use TryLogin(string) instead.")]
         public virtual AccessToken TryLogin(string credManTarget, bool refresh = true)
         {
             return TryLoginAsync(credManTarget, true).GetAwaiter().GetResult();
@@ -294,7 +365,7 @@ namespace JohnsonControls.Metasys.BasicServices
             // Retrieve credentials first
             var credentials = CredentialUtil.GetCredential(credManTarget);
             // Get the control back to TryLogin method
-            return await TryLoginAsync(CredentialUtil.convertToUnSecureString(credentials.Username), CredentialUtil.convertToUnSecureString(credentials.Password), true).ConfigureAwait(false);
+            return await TryLoginAsync(CredentialUtil.convertToUnSecureString(credentials.Username), credentials.Password).ConfigureAwait(false);
         }
 
         // GetAccessToken -----------------------------------------------------------------------------------------------------------
@@ -325,7 +396,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var response = await Client.Request("refreshToken")
                                                     .GetJsonAsync<JToken>()
                                                     .ConfigureAwait(false);
-                // Since it's a refresh, get issue info from the current token                
+                // Since it's a refresh, get issue info from the current token
                 CreateAccessToken(AccessToken.Issuer, AccessToken.IssuedTo, response);
                 // Set the new value of the Token to the StreamClient
                 if (Streams != null)
@@ -564,7 +635,7 @@ namespace JohnsonControls.Metasys.BasicServices
         {
             // Sanitize given itemReference
             var normalizedItemReference = itemReference.Trim().ToUpper();
-            // Returns cached value when available, otherwise perform request         
+            // Returns cached value when available, otherwise perform request
             if (!IdentifiersDictionary.ContainsKey(normalizedItemReference))
             {
                 JToken response = null;
@@ -957,7 +1028,7 @@ namespace JohnsonControls.Metasys.BasicServices
         //{
         //    DateTime now = DateTime.UtcNow;
         //    TimeSpan delay = AccessToken.Expires - now.AddSeconds(-1); // minimum renew gap of 1 sec in advance
-        //    // Renew one minute before expiration if there is more than one minute time 
+        //    // Renew one minute before expiration if there is more than one minute time
         //    if (delay > new TimeSpan(0, 1, 0))
         //    {
         //        delay.Subtract(new TimeSpan(0, 1, 0));
@@ -982,7 +1053,7 @@ namespace JohnsonControls.Metasys.BasicServices
 
 
         /// <summary>
-        /// Overload of ReadPropertyAsync for internal use where Exception suppress is needed, e.g. ReadPropertyMultiple 
+        /// Overload of ReadPropertyAsync for internal use where Exception suppress is needed, e.g. ReadPropertyMultiple
         /// </summary>
         /// <param name="id"></param>
         /// <param name="attributeName"></param>
@@ -1003,7 +1074,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// Creates the body for the WriteProperty and WritePropertyMultiple requests as a dictionary.
         /// </summary>
-        /// <param name="attributeValues">The (attribute, value) pairs.</param>      
+        /// <param name="attributeValues">The (attribute, value) pairs.</param>
         /// <returns>Dictionary of the attribute, value pairs.</returns>
         private Dictionary<string, object> GetWritePropertyBody(IEnumerable<(string Attribute, object Value)> attributeValues)
         {
@@ -1040,7 +1111,7 @@ namespace JohnsonControls.Metasys.BasicServices
         }
 
         ///// <summary>
-        ///// Gets the type from a token retrieved from a typeUrl 
+        ///// Gets the type from a token retrieved from a typeUrl
         ///// </summary>
         ///// <param name="typeToken"></param>
         ///// <exception cref="MetasysHttpException"></exception>
@@ -1144,7 +1215,7 @@ namespace JohnsonControls.Metasys.BasicServices
                 var m = multiples.SingleOrDefault(s => s.Id == objId);
                 if (m == null)
                 {
-                    // Add a new multiple for the current object                   
+                    // Add a new multiple for the current object
                     multiples.Add(new VariantMultiple(objId, values));
                 }
                 else
@@ -1237,8 +1308,8 @@ namespace JohnsonControls.Metasys.BasicServices
                 return new Url(Url.Combine(baseUri.GetLeftPart(UriPartial.Authority), "/api/", requestUri));
             }
         }
+
         #endregion
     }
 
 }
-
