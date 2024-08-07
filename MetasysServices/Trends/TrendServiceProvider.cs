@@ -140,11 +140,14 @@ namespace JohnsonControls.Metasys.BasicServices
                 string unitsUrl = string.Empty;
                 try
                 {
-                    sample.Timestamp = s["timestamp"].Value<DateTime>();
-                    sample.IsReliable = s["isReliable"].Value<Boolean>();
-                    sample.Value = s["value"]["value"].Value<double>();
-                    unitsUrl = s["value"]["units"].Value<string>();
-                    sample.Unit = ResourceManager.Localize(unitsUrl, _CultureInfo);
+                    sample.Timestamp = (DateTime)s["sampleTime"];
+                    if (s["reliability"] != null && s["reliability"].ToString() == "reliabilityEnumSet.reliable")
+                    {
+                        sample.IsReliable = true;
+                    }
+                    else
+                        sample.IsReliable = false;
+                    sample.Value = s["value"].Value<double>();
                 }
                 catch (ArgumentNullException e)
                 {
