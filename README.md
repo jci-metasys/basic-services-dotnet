@@ -1,4 +1,5 @@
-# Metasys Basic Services <!-- omit in toc --> <a href="https://www.nuget.org/packages/JohnsonControls.Metasys.BasicServices/" rel="Johnson Controls Metasys BasicServices">![Nuget](https://img.shields.io/nuget/v/JohnsonControls.Metasys.BasicServices)</a>
+<!-- omit in toc --> 
+# Metasys Basic Services <a href="https://www.nuget.org/packages/JohnsonControls.Metasys.BasicServices/" rel="Johnson Controls Metasys BasicServices">![Nuget](https://img.shields.io/nuget/v/JohnsonControls.Metasys.BasicServices)</a>
 
 This project provides a library for accessing the most common services of the Metasys Server API.
 The intent is to provide an API that is very similar to the original MSSDA
@@ -18,7 +19,7 @@ For versioning information see the [changelog](CHANGELOG.md).
   - [Login and Access Tokens](#login-and-access-tokens)
   - [Localization of Metasys Enumerations](#localization-of-metasys-enumerations)
   - [Metasys Objects](#metasys-objects)
-    - [Get Object Id](#Get-object-Id)
+    - [Get Object Id](#get-object-id)
     - [Get a Property](#get-a-property)
     - [Write a Property](#write-a-property)
     - [Get and Send Commands](#get-and-send-commands)
@@ -53,7 +54,7 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Get Alarms for an Object](#get-alarms-for-an-object)
     - [Get Alarms for a Network Device](#get-alarms-for-a-network-device)
     - [Get Alarm Annotations](#get-alarm-annotations)
-    - [Acknowlege an Alarm](#acknowledge-an-alarm)
+    - [Acknowledge an Alarm](#acknowledge-an-alarm)
     - [Discard an Alarm](#discard-an-alarm)
   - [Audits](#audits)
     - [Get Audits](#get-audits)
@@ -76,20 +77,20 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Edit a Custom Enumeration](#edit-a-custom-enumeration)
     - [Replace a Custom Enumeration](#replace-a-custom-enumeration)
     - [Delete a Custom Enumeration](#delete-a-custom-enumeration)
-  - [Streams](#Streams)
+  - [Streams](#streams)
     - [Reading Object PresentValue COV](#reading-object-presentvalue-cov)
     - [Collecting Alarm Events](#collecting-alarm-events)
     - [Collecting Audit Events](#collecting-audit-events)
     - [Keep the Stream Alive](#keep-the-stream-alive)
   - ['Ad-Hoc' call](#ad-hoc-call)
     - [SendAsync](#sendasync)
-  - [Activities](#Activities)
-    - [Get Activities](#get-activities)
+  - [Activities](#activities-1)
+    - [Get Activities](#get-activities-1)
     - [Multiple Actions](#multiple-actions)
 - [Usage (COM)](#usage-com)
   - [Creating a Client](#creating-a-client-1)
   - [Login and Access Tokens](#login-and-access-tokens-1)
-  - [Metasys Objects](#metasys-objects)
+  - [Metasys Objects](#metasys-objects-1)
     - [Get Object Id](#get-object-id-1)
     - [Get a Property](#get-a-property-1)
     - [Write a Property](#write-a-property-1)
@@ -123,7 +124,7 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Get Alarms for an Object](#get-alarms-for-an-object-1)
     - [Get Alarms for a Network Device](#get-alarms-for-a-network-device-1)
     - [Get Alarm Annotations](#get-alarm-annotations-1)
-    - [Acknowlege an Alarm](#acknowledge-an-alarm-1)
+    - [Acknowledge an Alarm](#acknowledge-an-alarm-1)
     - [Discard an Alarm](#discard-an-alarm-1)
   - [Audits](#audits-1)
     - [Get Audits](#get-audits-1)
@@ -146,7 +147,7 @@ For versioning information see the [changelog](CHANGELOG.md).
     - [Edit a Custom Enumeration](#edit-a-custom-enumeration-1)
     - [Replace a Custom Enumeration](#replace-a-custom-enumeration-1)
     - [Delete a Custom Enumeration](#delete-a-custom-enumeration-1)
-  - [Streams](#Streams-1)
+  - [Streams](#streams-1)
     - [Reading Object PresentValue COV](#reading-object-presentvalue-cov-1)
     - [Collecting Alarm Events](#collecting-alarm-events-1)
     - [Collecting Audit Events](#collecting-audit-events-1)
@@ -1275,7 +1276,7 @@ Console.WriteLine(audit);
 <br/>
 
 #### Get Single Audit
-To get a single audit you can use the method **`Audits.FindById`** which returns an Audit object with all the details given the Guid.
+To get a single audit you can use the method **`Audits.FindById`** which returns an Audit object with all the details given the Id.
 <br/>
 
 #### Get Audits for an Object
@@ -1290,7 +1291,7 @@ var objectAudits = client.Audits.GetForObject(objectId, auditFilter);
 
 #### Get Audit Annotations
 To get the annotations of an audit you can use the method **`Audits.GetAnnotations`**.   
-It required the Guid of the audit and returns a collection of 'AuditAnnotation' objects.
+It requires the Id of the audit and returns a collection of 'AuditAnnotation' objects.
 ```csharp
 IEnumerable<AuditAnnotation> annotations = client.Audits.GetAnnotations(audit.Id);
 AuditAnnotation firstAnnotation = annotations.FirstOrDefault();
@@ -1314,7 +1315,7 @@ Console.WriteLine(firstAnnotation);
 To allow for discarding an audit you can use the method **`Audits.Discard`**.  
 This method expects an audit Id and optionally you can also add an annotation.
 ```csharp
-Guid auditId = new Guid("9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf");
+var auditId = "9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf";
 string annotationText = "Reason why the audit has been discarded";
 client.Audits.Discard(auditId, annotationText);
 ``` 
@@ -1324,7 +1325,7 @@ client.Audits.Discard(auditId, annotationText);
 > Available since API v3
 > 
 To discard multiple Audits you can use the method **`Audits.DiscardMultiple`**.  
-It takes a list of 'BatchRequestParam' objects (specifing the list of Audit Guids and annotations) and it returns a list of 'Result' objects.
+It takes a list of 'BatchRequestParam' objects (specifying the list of Audit Ids and annotations) and it returns a list of 'Result' objects.
 ```csharp
 var requests = new List<BatchRequestParam>();
 BatchRequestParam request1 = new BatchRequestParam { ObjectId = "e0fb025a-d8a2-4258-91ea-c4026c1620d1", Resource = "THIS IS THE FIRST DISCARD ANNOTATION" };
@@ -1349,9 +1350,9 @@ Console.WriteLine(resultItem);
 > Available since API v3
 > 
 To add an Annotation to an Audit you can use the method **`Audits.AddAnnotation`**.   
-It takes the Guid of the Audit and the text of the annotation you want to add. It doesn't return a value.
+It takes the Id of the Audit and the text of the annotation you want to add. It doesn't return a value.
 ```csharp
-Guid auditId = new Guid("9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf");
+var auditId = "9cf1c11d-a8cc-48e6-9e4c-f02af26e8fdf";
 string annotationText = "This is the text of the annotation";
 client.Audits.AddAnnotation(auditId, annotationText);
 ``` 
@@ -1361,8 +1362,8 @@ client.Audits.AddAnnotation(auditId, annotationText);
 > Available since API v3
 > 
 To add multiple Annotations to an Audit you can use the method **`Audits.AddAnnotationMultiple`**.  
-It takes a list of 'BatchRequestParam' objects (specifing the list of Audit Guids and annotations) and it returns a list of 'Result' objects.
-```sharp
+It takes a list of 'BatchRequestParam' objects (specifying the list of Audit Ids and annotations) and it returns a list of 'Result' objects.
+```csharp
 var requests = new List<BatchRequestParam>();
 BatchRequestParam request1 = new BatchRequestParam { ObjectId = "e0fb025a-d8a2-4258-91ea-c4026c1620d1", Resource = "THIS IS THE FIRST AUDIT ANNOTATION" };
 requests.Add(request1);
@@ -2011,7 +2012,7 @@ pages=auditsPager.PageCount
 <br/>
 
 #### Get Single Audit
-To get a single audit you can use the method **`GetSingleAudit`** which returns an 'ComAudit' object with all the details given the Guid.
+To get a single audit you can use the method **`GetSingleAudit`** which returns an 'ComAudit' object with all the details given the Id.
 <br/>
 
 #### Get Audits for an Object
@@ -2027,7 +2028,7 @@ objectAudits = objectAuditsPager.Items
 
 #### Get Audit Annotations
 To get the annotations of an audit you can use the method **`GetAuditAnnotations`**.   
-It required the Guid of the audit and returns a collection of 'AuditAnnotation' objects.
+It requires the Id of the audit and returns a collection of 'AuditAnnotation' objects.
 ```vb
 Dim auditId As String
 auditId = "6c999f43-6007-5137-b6d3-c30b93fb70ec"
@@ -2074,7 +2075,7 @@ result = client.DiscardAuditMultiple(auditId)
 > Available since API v3
 > 
 To add an Annotation to an Audit you can use the method **`AddAuditAnnotation`**.   
-It takes the Guid of the Audit and the text of the annotation you want to add. It doesn't return a value.
+It takes the Id of the Audit and the text of the annotation you want to add. It doesn't return a value.
 <br/>
 
 #### Add Multiple Audit Annotations
@@ -2300,5 +2301,3 @@ See [CONTRIBUTING](CONTRIBUTING).
 - zh-TW
 ### Customizing Windows IIS for Metasys API
 To get further information about customizing Windows IIS for Metasys API click [here](https://docs.johnsoncontrols.com/bas/r/Metasys-Server/11.0/Metasys-Server-Installation-and-Upgrade-Instructions/Customizing-Windows-IIS-for-Metasys-API)
-
-

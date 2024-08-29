@@ -17,10 +17,10 @@ namespace JohnsonControls.Metasys.BasicServices
         public string Self { get; set; }
 
         /// <summary>
-        /// Alarm Unique Identifier (GUID)
+        /// Alarm Unique Identifier
         /// </summary>
         [JsonProperty(Required = Required.Always)]
-        public Guid Id { get; set; }
+        public ActivityId Id { get; set; }
 
         /// <summary>
         /// Item fully qualified reference
