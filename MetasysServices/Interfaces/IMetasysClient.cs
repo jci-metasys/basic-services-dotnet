@@ -297,6 +297,27 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <inheritdoc cref="IMetasysClient.GetNetworkDeviceTypes()"/>
         Task<IEnumerable<MetasysObjectType>> GetNetworkDeviceTypesAsync();
 
+        /// <summary>
+        /// Gets the root object and its direct children
+        /// </summary>
+        /// <remarks>
+        /// This method only works if the site supports Version 4 of the Metasys REST API or later.
+        /// </remarks>
+        /// <param name="includeExtensions">Set it to true to get also the extensions of the object.</param>
+        /// <param name="includeInternal">Set it to true to get the internal objects</param>
+        /// <param name="levels">
+        /// The number of levels to retrieve. This can only be 0 or 1. It defaults to 1.
+        ///
+        /// A value of 0 returns the root object only.
+        ///
+        /// A value of 1 returns the root and its children.
+        /// </param>
+        /// <returns>The root object. If <paramref name="levels"/> is set to 1 the <see cref="MetasysObject.Children"/>
+        /// property of the root object will contain the children.</returns>
+        MetasysObject GetObjects(bool includeExtensions = false, bool includeInternal = false, int levels = 1);
+        /// <inheritdoc cref="GetObjects(bool, bool, int)"/>
+        Task<MetasysObject> GetObjectsAsync(bool includeExtensions = false, bool includeInternal = false, int levels = 1);
+
 
         /// <summary>
         /// Gets all child objects given a parent id.

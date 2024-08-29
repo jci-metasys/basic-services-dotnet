@@ -174,12 +174,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        /// <exception cref="InvalidOperationException">If <see cref="Vers"/> is less than <see cref="ApiVersion.v4"/></exception>
+        /// <exception cref="InvalidOperationException">If <see cref="ApiVersion"/> is less than <see cref="ApiVersion.v4"/></exception>
         /// <returns>
         /// If <paramref name="id"/> is specified then this method returns the children of the specified object (and any of their children if level > 1).
         /// If <c>id</c> is <c>null</c> then this method returns the root object (and it's children; unless level is 0).
         /// </returns>
-        protected async Task<List<MetasysObject>> GetObjectsAsync(Guid? id, Dictionary<string, string> parameters = null)
+        protected async Task<IEnumerable<MetasysObject>> GetObjectsAsync(Guid? id, Dictionary<string, string> parameters = null)
         {
             if (Version <= ApiVersion.v3)
             {
@@ -197,7 +197,7 @@ namespace JohnsonControls.Metasys.BasicServices
             {
                 return [rootObject];
             }
-            return rootObject.Children.ToList();
+            return rootObject.Children;
         }
 
 
@@ -206,7 +206,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// Level indicates how deep to retrieve objects.
         /// </summary>
         /// <remarks>
+        /// This should only be called when version is 3 or less. Starting with v4 we support depth directly.
+        /// <para>
         /// A level of 1 only retrieves immediate children of the parent object.
+        /// </para>
         /// <para> This should not be called on a site that supports REST API 4 or later as it makes a series of recursive calls that can
         /// be handled in one call to the api</para>
         /// </remarks>
