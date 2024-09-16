@@ -174,12 +174,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        /// <exception cref="InvalidOperationException">If <see cref="Vers"/> is less than <see cref="ApiVersion.v4"/></exception>
+        /// <exception cref="InvalidOperationException">If <see cref="Version"/> is less than <see cref="ApiVersion.v4"/></exception>
         /// <returns>
         /// If <paramref name="id"/> is specified then this method returns the children of the specified object (and any of their children if level > 1).
         /// If <c>id</c> is <c>null</c> then this method returns the root object (and it's children; unless level is 0).
         /// </returns>
-        protected async Task<List<MetasysObject>> GetObjectsAsync(Guid? id, Dictionary<string, string> parameters = null)
+        protected async Task<List<MetasysObject>> GetObjectsAsync(ObjectId? id, Dictionary<string, string> parameters = null)
         {
             if (Version <= ApiVersion.v3)
             {
