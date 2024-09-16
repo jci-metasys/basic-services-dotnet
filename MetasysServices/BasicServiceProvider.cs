@@ -162,12 +162,53 @@ namespace JohnsonControls.Metasys.BasicServices
             return objects;
         }
 
+
+        /// <summary>
+        /// Gets objects from the server
+        /// </summary>
+        /// <remarks>
+        /// This method requires that Version 4 or greater of the API is being used. It overrides
+        /// the value of any <c>flatten</c> parameter to be `false` so that we get back a tree of
+        /// objects.
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">If <see cref="Vers"/> is less than <see cref="ApiVersion.v4"/></exception>
+        /// <returns>
+        /// If <paramref name="id"/> is specified then this method returns the children of the specified object (and any of their children if level > 1).
+        /// If <c>id</c> is <c>null</c> then this method returns the root object (and it's children; unless level is 0).
+        /// </returns>
+        protected async Task<List<MetasysObject>> GetObjectsAsync(Guid? id, Dictionary<string, string> parameters = null)
+        {
+            if (Version <= ApiVersion.v3)
+            {
+                throw new InvalidOperationException("This method requires v4 or later of the REST API");
+            }
+
+            object[] pathSegments = id == null ? ((List<object>)[]).ToArray() : [id.ToString(), "objects"];
+
+            parameters["flatten"] = "false";
+            var result = await GetRequestAsync("objects", parameters, pathSegments);
+            var firstNode = result["items"][0];
+            var rootObject = new MetasysObject(firstNode, Version);
+
+            if (id == null)
+            {
+                return [rootObject];
+            }
+            return rootObject.Children.ToList();
+        }
+
+
         /// <summary>
         /// Gets all child objects given a parent id asynchronously by requesting each available page.
         /// Level indicates how deep to retrieve objects.
         /// </summary>
         /// <remarks>
         /// A level of 1 only retrieves immediate children of the parent object.
+        /// <para> This should not be called on a site that supports REST API 4 or later as it makes a series of recursive calls that can
+        /// be handled in one call to the api</para>
         /// </remarks>
         /// <param name="id">The id of the object.</param>
         /// <param name="parameters">Query string parameters in Key/Value format.</param>
@@ -176,6 +217,10 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <exception cref="MetasysHttpParsingException"></exception>
         protected async Task<List<TreeObject>> GetObjectChildrenAsync(Object id, Dictionary<string, string> parameters = null, int levels = 1)
         {
+            if (Version > ApiVersion.v3)
+            {
+                throw new InvalidOperationException("This operation doesn't exist for API > 3");
+            }
             if (levels < 1)
             {
                 return null;
