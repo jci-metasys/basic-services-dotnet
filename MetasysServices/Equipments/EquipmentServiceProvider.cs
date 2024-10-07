@@ -89,14 +89,14 @@ namespace JohnsonControls.Metasys.BasicServices
                     MetasysPoint point = new MetasysPoint(item);
                     // Retrieve object Id from full URL
                     string objectId = point.ObjectUrl.Split('/').Last();
-                    point.ObjectId = ParseObjectIdentifier(objectId);
+                    point.ObjectId = objectId;
                     // Retrieve attribute Id from full URL
                     string attributeId = (point.Attribute != null) ? point.Attribute.Split('.').Last() : String.Empty;
                     if (attributeId == String.Empty)
                     {
                         attributeId = (point.AttributeUrl != null) ? point.AttributeUrl.Split('/').Last() : String.Empty;
                     }
-                    if (point.ObjectId != Guid.Empty) // Sometime can happen that there are empty Guids.
+                    if (!string.IsNullOrWhiteSpace(point.ObjectId)) // Sometime can happen that there are empty Guids.
                     {
                         // Collect Guids to perform read property multiple in "one call" (supporting only presentValue so far)
                         if ((attributeId == "85" | attributeId == "presentValue") && readAttributeValue)

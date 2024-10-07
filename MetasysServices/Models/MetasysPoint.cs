@@ -31,7 +31,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <summary>
         /// The ID of the object where the point is mapped
         /// </summary>
-        public Guid ObjectId { get; set; }
+        public ObjectId ObjectId { get; set; }
         /// <summary>
         /// Full URL of the attribute where the point is mapped
         /// </summary>

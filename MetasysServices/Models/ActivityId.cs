@@ -19,6 +19,10 @@ namespace JohnsonControls.Metasys.BasicServices
     public record struct ActivityId(string Value) : IEquatable<ActivityId>, IEquatable<string>, IEquatable<Guid>
     {
 
+        /// <summary>
+        /// Creates a default instance of <see cref="ActivityId"/> that is synonymous
+        /// with an empty string.
+        /// </summary>
         public ActivityId() : this("")
         {
 
