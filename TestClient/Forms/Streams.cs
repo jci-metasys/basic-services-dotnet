@@ -253,10 +253,10 @@ namespace MetasysServices_TestClient.Forms
 
                         itemReference = modbusPath + controllerName + cnum + "." + pre + idx;
 
-                        Guid id = _client.GetObjectIdentifier(itemReference);
+                        ObjectId id = _client.GetObjectIdentifier(itemReference);
                         if (id != null)
                         {
-                            _points.Add(new Point() { Name = pre + idx, Id = id, ItemReference = itemReference });
+                            _points.Add(new Point() { Name = pre + idx, Id = new Guid(id.ToString()), ItemReference = itemReference });
                             Thread.Sleep(100);
                         }
                     }

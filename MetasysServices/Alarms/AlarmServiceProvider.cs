@@ -1,7 +1,6 @@
 ﻿using Flurl;
 using Flurl.Http;
 using JohnsonControls.Metasys.BasicServices.Utils;
-using log4net.Config;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

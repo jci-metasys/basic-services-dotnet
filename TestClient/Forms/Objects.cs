@@ -178,14 +178,13 @@ namespace MetasysServices_TestClient.Forms
             if (DgvReadPropertyMultiple_Ids.Rows.Count > 0 && DgvReadPropertyMultiple_Attrs.Rows.Count > 0)
             {
                 // Prepare the list of Ids
-                var ids = new List<Guid>();
+                var ids = new List<ObjectId>();
                 foreach (DataGridViewRow dr in DgvReadPropertyMultiple_Ids.Rows)
                 {
                     var id = dr.Cells[DgvReadPropertyMultiple_Ids_Id.Name].Value;
                     if (id != null && id.ToString().Length > 0)
                     {
-                        Guid guid = new Guid(id.ToString());
-                        ids.Add(guid);
+                        ids.Add(id.ToString());
                     }
                 }
                 // Prepare the list of Attributes
@@ -251,14 +250,13 @@ namespace MetasysServices_TestClient.Forms
             if (DgvWritePropertyMultiple_Ids.Rows.Count > 0 && DgvWritePropertyMultiple_Attrs.Rows.Count > 0)
             {
                 // Prepare the list of Ids
-                var ids = new List<Guid>();
+                var ids = new List<ObjectId>();
                 foreach (DataGridViewRow dr in DgvWritePropertyMultiple_Ids.Rows)
                 {
                     var id = dr.Cells[DgvWritePropertyMultiple_Ids_Id.Name].Value;
                     if (id != null && id.ToString().Length > 0)
                     {
-                        Guid guid = new Guid(id.ToString());
-                        ids.Add(guid);
+                        ids.Add(id.ToString());
                     }
                 }
                 // Prepare the list of Attributes

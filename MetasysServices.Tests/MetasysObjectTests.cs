@@ -1,7 +1,7 @@
-using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using System.Linq;
 
 namespace JohnsonControls.Metasys.BasicServices;
 

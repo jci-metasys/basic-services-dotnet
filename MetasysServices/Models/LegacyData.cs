@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace JohnsonControls.Metasys.BasicServices
+﻿namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// LegacyData is a structure that holds information about Legacy Information.

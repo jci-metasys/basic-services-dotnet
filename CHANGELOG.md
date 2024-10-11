@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.5] - 2024-10-11
+### Changed
+- Fixed the issue of trend samples (property names has been changed in the sample object).
+- Fixed issue in the method 'GetObjects()' when it used depths > 1.
+- Made changes to use ActivityId for activities, audits, and alarms.
+- Made changes to use ObjectId for object Ids instead of Guid in ServiceClient.
+- Enabled the use of docfx to generate a static site for the documentation.
+
 ## [6.0.4] - 2024-07-25
 ### Changed
 - Fixed issue related to the method 'GetObjects()' (specifically related to the attribute 'Classification')

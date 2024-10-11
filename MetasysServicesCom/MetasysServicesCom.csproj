@@ -6,7 +6,7 @@
     <None Remove="App1.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="System.Buffers" Version="4.5.1" />
   </ItemGroup>
   <PropertyGroup>
@@ -23,7 +23,7 @@
     <Authors>Johnson Controls</Authors>
     <Description>Metasys Services Object Library</Description>
     <PackageId />
-    <Version>6.0.4</Version>
+    <Version>6.0.5</Version>
     <PackageReleaseNotes>- Fixed issue related to the method 'GetObjects()'
 - Updated the dictionaries of all the supported locales
 - Cleaned up unnecessary code</PackageReleaseNotes>    

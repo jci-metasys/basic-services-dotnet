@@ -46,6 +46,9 @@
             this.lblToken = new System.Windows.Forms.Label();
             this.TabMain = new System.Windows.Forms.TabControl();
             this.TpgLogin = new System.Windows.Forms.TabPage();
+            this.LblTimeoutExample = new System.Windows.Forms.Label();
+            this.LblTimeout = new System.Windows.Forms.Label();
+            this.TxtTimeout = new System.Windows.Forms.TextBox();
             this.LblLogin_Title1 = new System.Windows.Forms.Label();
             this.BtnGetAccessToken = new System.Windows.Forms.Button();
             this.BtnRefresh = new System.Windows.Forms.Button();
@@ -62,9 +65,6 @@
             this.TpgMiscellanea = new System.Windows.Forms.TabPage();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.TxtTimeout = new System.Windows.Forms.TextBox();
-            this.LblTimeout = new System.Windows.Forms.Label();
-            this.LblTimeoutExample = new System.Windows.Forms.Label();
             this.TabMain.SuspendLayout();
             this.TpgLogin.SuspendLayout();
             this.SuspendLayout();
@@ -265,7 +265,33 @@
             this.TpgLogin.Padding = new System.Windows.Forms.Padding(3);
             this.TpgLogin.Size = new System.Drawing.Size(1080, 450);
             this.TpgLogin.TabIndex = 4;
-            this.TpgLogin.Text = "LOGIN";
+            this.TpgLogin.Text = "AUTHENTICATION";
+            // 
+            // LblTimeoutExample
+            // 
+            this.LblTimeoutExample.AutoSize = true;
+            this.LblTimeoutExample.Location = new System.Drawing.Point(208, 157);
+            this.LblTimeoutExample.Name = "LblTimeoutExample";
+            this.LblTimeoutExample.Size = new System.Drawing.Size(209, 13);
+            this.LblTimeoutExample.TabIndex = 32;
+            this.LblTimeoutExample.Text = "Example: 100 (optional, default is 300 sec.)";
+            // 
+            // LblTimeout
+            // 
+            this.LblTimeout.AutoSize = true;
+            this.LblTimeout.Location = new System.Drawing.Point(3, 157);
+            this.LblTimeout.Name = "LblTimeout";
+            this.LblTimeout.Size = new System.Drawing.Size(91, 13);
+            this.LblTimeout.TabIndex = 31;
+            this.LblTimeout.Text = "Request Timeout:";
+            this.LblTimeout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TxtTimeout
+            // 
+            this.TxtTimeout.Location = new System.Drawing.Point(103, 154);
+            this.TxtTimeout.Name = "TxtTimeout";
+            this.TxtTimeout.Size = new System.Drawing.Size(98, 20);
+            this.TxtTimeout.TabIndex = 30;
             // 
             // LblLogin_Title1
             // 
@@ -406,32 +432,6 @@
             this.TpgMiscellanea.Size = new System.Drawing.Size(1080, 450);
             this.TpgMiscellanea.TabIndex = 6;
             this.TpgMiscellanea.Text = "MISCELLANEA";
-            // 
-            // TxtTimeout
-            // 
-            this.TxtTimeout.Location = new System.Drawing.Point(103, 154);
-            this.TxtTimeout.Name = "TxtTimeout";
-            this.TxtTimeout.Size = new System.Drawing.Size(98, 20);
-            this.TxtTimeout.TabIndex = 30;
-            // 
-            // LblTimeout
-            // 
-            this.LblTimeout.AutoSize = true;
-            this.LblTimeout.Location = new System.Drawing.Point(3, 157);
-            this.LblTimeout.Name = "LblTimeout";
-            this.LblTimeout.Size = new System.Drawing.Size(91, 13);
-            this.LblTimeout.TabIndex = 31;
-            this.LblTimeout.Text = "Request Timeout:";
-            this.LblTimeout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LblTimeoutExample
-            // 
-            this.LblTimeoutExample.AutoSize = true;
-            this.LblTimeoutExample.Location = new System.Drawing.Point(208, 157);
-            this.LblTimeoutExample.Name = "LblTimeoutExample";
-            this.LblTimeoutExample.Size = new System.Drawing.Size(209, 13);
-            this.LblTimeoutExample.TabIndex = 32;
-            this.LblTimeoutExample.Text = "Example: 100 (optional, default is 300 sec.)";
             // 
             // MainUI
             // 

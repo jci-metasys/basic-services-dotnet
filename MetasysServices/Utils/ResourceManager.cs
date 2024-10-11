@@ -1,10 +1,7 @@
-﻿using JohnsonControls.Metasys.BasicServices;
-using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Resources;
-using System.Text;
 
 namespace JohnsonControls.Metasys.BasicServices.Utils
 {

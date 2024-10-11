@@ -3,15 +3,10 @@ using Flurl.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Reflection;
-using System.Resources;
 using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.BasicServices

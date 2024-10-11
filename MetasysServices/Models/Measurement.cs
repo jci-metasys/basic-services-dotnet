@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace JohnsonControls.Metasys.BasicServices
+﻿namespace JohnsonControls.Metasys.BasicServices
 {
     /// <summary>
     /// A measurement expressed in terms of value and unit.

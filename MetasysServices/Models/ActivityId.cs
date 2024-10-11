@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Diagnostics;
-using System.Security.Policy;
 
 namespace JohnsonControls.Metasys.BasicServices
 {
@@ -18,7 +15,10 @@ namespace JohnsonControls.Metasys.BasicServices
     /// </remarks>
     public record struct ActivityId(string Value) : IEquatable<ActivityId>, IEquatable<string>, IEquatable<Guid>
     {
-
+        /// <summary>
+        /// Creates a default instance of <see cref="ActivityId"/> that is synonymous
+        /// with an empty string.
+        /// </summary>
         public ActivityId() : this("")
         {
 

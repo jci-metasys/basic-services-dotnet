@@ -1,8 +1,5 @@
 ﻿using Flurl.Http;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 
 namespace JohnsonControls.Metasys.BasicServices
 {

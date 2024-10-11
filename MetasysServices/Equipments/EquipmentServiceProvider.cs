@@ -1,16 +1,10 @@
 ﻿using Flurl;
 using Flurl.Http;
-using JohnsonControls.Metasys.BasicServices.Utils;
-using log4net.Config;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.BasicServices
@@ -96,23 +90,24 @@ namespace JohnsonControls.Metasys.BasicServices
                     {
                         attributeId = (point.AttributeUrl != null) ? point.AttributeUrl.Split('/').Last() : String.Empty;
                     }
-                    if (point.ObjectId != Guid.Empty) // Sometime can happen that there are empty Guids.
+                    if (point.ObjectId == "") // Sometime can happen that there are empty Guids.
                     {
-                        // Collect Guids to perform read property multiple in "one call" (supporting only presentValue so far)
-                        if ((attributeId == "85" | attributeId == "presentValue") && readAttributeValue)
-                        {
-                            JToken resp = await Client.Request(new Url("objects")
-                                                .AppendPathSegments(point.ObjectId, "attributes", "presentValue"))
-                                                .GetJsonAsync<JToken>()
-                                                .ConfigureAwait(false);
-                            Variant result = new Variant(point.ObjectId, resp, "presentValue", Culture, Version);
-                            point.PresentValue = result;
-                            points.Add(point);
-                        }
-                        else
-                        {
-                            points.Add(point);
-                        }
+                        continue;
+                    }
+                    // Collect Guids to perform read property multiple in "one call" (supporting only presentValue so far)
+                    if ((attributeId == "85" | attributeId == "presentValue") && readAttributeValue)
+                    {
+                        JToken resp = await Client.Request(new Url("objects")
+                                            .AppendPathSegments(point.ObjectId, "attributes", "presentValue"))
+                                            .GetJsonAsync<JToken>()
+                                            .ConfigureAwait(false);
+                        Variant result = new Variant(point.ObjectId, resp, "presentValue", Culture, Version);
+                        point.PresentValue = result;
+                        points.Add(point);
+                    }
+                    else
+                    {
+                        points.Add(point);
                     }
                 }
             }

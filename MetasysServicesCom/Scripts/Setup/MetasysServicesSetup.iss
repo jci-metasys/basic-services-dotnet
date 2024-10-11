@@ -4,9 +4,8 @@
 
 #define MyAppName "Metasys Services COM"
 #define MyAppShortName "MetasysServicesCOM"
-#define MyAppVersion "6.0.4"
+#define MyAppVersion "6.0.5"
 #define MyAppPublisher "Johnson Controls"
-
 
 [Setup]
 PrivilegesRequired=admin

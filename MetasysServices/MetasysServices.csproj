@@ -13,12 +13,14 @@
     <PackageId>JohnsonControls.Metasys.BasicServices</PackageId>
     <PackageProjectUrl>https://github.com/metasys-server/basic-services-dotnet</PackageProjectUrl>
     <PackageTags>Johnson Controls, Metasys, API, .NET, Services</PackageTags>
-    <PackageReleaseNotes>- Fixed issue related to the method 'GetObjects()'
-- Updated the dictionaries of all the supported locales
-- Cleaned up unnecessary code</PackageReleaseNotes>
+    <PackageReleaseNotes>- Fixed the issue of trend samples (property names has been changed in the sample object).
+- Fixed issue in the method 'GetObjects()' when it used depths &gt; 1.
+- Made changes to use ActivityId for activities, audits, and alarms.
+- Made changes to use ObjectId for object Ids instead of Guid in ServiceClient.
+- Enabled the use of docfx to generate a static site for the documentation.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>6.0.4</Version>
+    <Version>6.0.5</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -57,11 +59,11 @@
   <ItemGroup>
     <PackageReference Include="3v.EvtSource" Version="2.0.0" />
     <PackageReference Include="CredentialManagement.Standard" Version="1.0.4" />
-    <PackageReference Include="Flurl" Version="2.8.2" />
+    <PackageReference Include="Flurl" Version="4.0.0" />
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
-    <PackageReference Include="log4net" Version="2.0.15" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.34.0" />
-    <PackageReference Include="System.Threading.Channels" Version="7.0.0" />
+    <PackageReference Include="log4net" Version="3.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.2" />
+    <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

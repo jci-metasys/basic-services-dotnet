@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace JohnsonControls.Metasys.BasicServices.Enums
+﻿namespace JohnsonControls.Metasys.BasicServices.Enums
 {
     /// <summary>
     /// Network Devices Classification Enumeration.

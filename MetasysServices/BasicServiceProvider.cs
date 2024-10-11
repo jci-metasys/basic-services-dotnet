@@ -1,19 +1,14 @@
 ﻿using Flurl;
 using Flurl.Http;
-using JohnsonControls.Metasys.BasicServices;
 using JohnsonControls.Metasys.BasicServices.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Resources;
 using System.Threading.Tasks;
 
 namespace JohnsonControls.Metasys.BasicServices
@@ -174,12 +169,12 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="id"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        /// <exception cref="InvalidOperationException">If <see cref="Vers"/> is less than <see cref="ApiVersion.v4"/></exception>
+        /// <exception cref="InvalidOperationException">If <see cref="Version"/> is less than <see cref="ApiVersion.v4"/></exception>
         /// <returns>
         /// If <paramref name="id"/> is specified then this method returns the children of the specified object (and any of their children if level > 1).
         /// If <c>id</c> is <c>null</c> then this method returns the root object (and it's children; unless level is 0).
         /// </returns>
-        protected async Task<List<MetasysObject>> GetObjectsAsync(Guid? id, Dictionary<string, string> parameters = null)
+        protected async Task<List<MetasysObject>> GetObjectsAsync(ObjectId? id, Dictionary<string, string> parameters = null)
         {
             if (Version <= ApiVersion.v3)
             {
@@ -215,7 +210,7 @@ namespace JohnsonControls.Metasys.BasicServices
         /// <param name="levels">The number of levels to retrieve children.</param>
         /// <exception cref="MetasysHttpException"></exception>
         /// <exception cref="MetasysHttpParsingException"></exception>
-        protected async Task<List<TreeObject>> GetObjectChildrenAsync(Object id, Dictionary<string, string> parameters = null, int levels = 1)
+        protected async Task<List<TreeObject>> GetObjectChildrenAsync(ObjectId id, Dictionary<string, string> parameters = null, int levels = 1)
         {
             if (Version > ApiVersion.v3)
             {
@@ -698,8 +693,7 @@ namespace JohnsonControls.Metasys.BasicServices
             var json = JsonConvert.SerializeObject(obj);
             var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             // Check and in case removes some items not allowed for a specific request
-            String activityType;
-            if (dictionary.TryGetValue("ActivityType", out activityType))
+            if (dictionary.TryGetValue("ActivityType", out string activityType))
             {
                 if (activityType == "audit")
                 {
@@ -771,7 +765,7 @@ namespace JohnsonControls.Metasys.BasicServices
             // Concatenate batch segment to use batch request and prepare the list of requests
             foreach (var r in requests)
             {
-                Url relativeUrl = new Url(r.ObjectId.ToString());
+                Url relativeUrl = new(r.ObjectId.ToString());
                 relativeUrl.AppendPathSegments(paths); // e.g. "00000000-0000-0000-0000-000000000001/annotations"
 
                 object body;
