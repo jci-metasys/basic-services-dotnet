@@ -39,8 +39,8 @@
     <Reference Include="EvtSource, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\3v.EvtSource.2.0.0\lib\netstandard2.0\EvtSource.dll</HintPath>
     </Reference>
-    <Reference Include="Flurl, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.4.0.0\lib\net472\Flurl.dll</HintPath>
+    <Reference Include="Flurl, Version=2.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.2.8.2\lib\net40\Flurl.dll</HintPath>
     </Reference>
     <Reference Include="Flurl.Http, Version=2.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.Http.2.4.2\lib\net46\Flurl.Http.dll</HintPath>
