@@ -1,67 +1,59 @@
-﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Linq;
+using System.Text.Json.Nodes;
 
-namespace JohnsonControls.Metasys.BasicServices.Utils
+namespace JohnsonControls.Metasys.BasicServices.Utils;
+/// <summary>
+/// Utility that provides useful methods to handle Json values.
+/// </summary>
+
+public class ObjectUtil
 {
     /// <summary>
-    /// Utility that provides useful methods to handle Json values.
+    /// Get the string value of a JToken field.
     /// </summary>
-
-    public class ObjectUtil
+    /// <param name="jToken"></param>
+    /// <param name="field"></param>
+    /// <returns></returns>
+    public static string GetJTokenValue(JsonNode jToken, string field)
     {
-        /// <summary>
-        /// Get the string value of a JToken field.
-        /// </summary>
-        /// <param name="jToken"></param>
-        /// <param name="field"></param>
-        /// <returns></returns>
-        public static string GetJTokenValue(JToken jToken, string field)
+        string res = string.Empty;
+        try
         {
-            string res = string.Empty;
-            try
+            if (jToken is JsonObject jObj && jObj.ContainsKey(field) && jObj[field] != null)
             {
-                if (jToken != null)
-                {
-                    if ((jToken.Contains(field)) && (jToken[field] != null))
-                    {
-                        res = jToken[field].Value<string>();
-                    };
-                };
+                res = (string)jObj[field];
             }
-            catch (ArgumentNullException e)
-            {
-                // Something went wrong on object parsing
-                throw new MetasysObjectException(e);
-            }
-            return res;
         }
-        /// <summary>
-        /// Get the date value of a JToken field.
-        /// </summary>
-        /// <param name="jToken"></param>
-        /// <param name="field"></param>
-        /// <returns></returns>
-        public static DateTime GetJTokenDate(JToken jToken, string field)
+        catch (ArgumentNullException e)
         {
-            DateTime res = DateTime.UtcNow;
-            try
-            {
-                if (jToken != null)
-                {
-                    if (jToken.Contains(field) && (jToken[field] != null))
-                    {
-                        res = jToken[field].Value<DateTime>();
-                    };
-                };
-            }
-            catch (ArgumentNullException e)
-            {
-                // Something went wrong on object parsing
-                throw new MetasysObjectException(e);
-            }
-            return res;
+            // Something went wrong on object parsing
+            throw new MetasysObjectException(e);
         }
-
+        return res;
     }
+
+    /// <summary>
+    /// Get the date value of a JToken field.
+    /// </summary>
+    /// <param name="jToken"></param>
+    /// <param name="field"></param>
+    /// <returns></returns>
+    public static DateTime GetJTokenDate(JsonNode jToken, string field)
+    {
+        DateTime res = DateTime.UtcNow;
+        try
+        {
+            if (jToken is JsonObject jObj && jObj.ContainsKey(field) && jObj[field] != null)
+            {
+                res = jObj[field].GetValue<DateTime>();
+            }
+        }
+        catch (ArgumentNullException e)
+        {
+            // Something went wrong on object parsing
+            throw new MetasysObjectException(e);
+        }
+        return res;
+    }
+
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WeatherForecastApp
 {
@@ -52,13 +52,13 @@ namespace WeatherForecastApp
 
     public class Rain
     {
-        [JsonProperty("3h")]
+        [JsonPropertyName("3h")]
         public float ThreeHours { get; set; }
     }
 
     public class Snow
     {
-        [JsonProperty("3h")]
+        [JsonPropertyName("3h")]
         public float ThreeHours { get; set; }
     }
 

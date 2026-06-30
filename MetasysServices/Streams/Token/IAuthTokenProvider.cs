@@ -1,20 +1,18 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
-namespace JohnsonControls.Metasys.BasicServices.Token
+namespace JohnsonControls.Metasys.BasicServices.Token;
+/// <summary>
+/// Interface for Authorization Token Provider.
+/// </summary>
+public interface IAuthTokenProvider
 {
     /// <summary>
-    /// Interface for Authorization Token Provider.
+    /// Get Access Token (async).
     /// </summary>
-    public interface IAuthTokenProvider
-    {
-        /// <summary>
-        /// Get Access Token (async).
-        /// </summary>
-        Task<AccessTokenResponse> GetAccessTokenAsync();
+    Task<AccessTokenResponse> GetAccessTokenAsync();
 
-        /// <summary>
-        /// Get Refresh Token (async).
-        /// </summary>
-        Task<AccessTokenResponse> GetRefreshTokenAsync(string oldToken);
-    }
+    /// <summary>
+    /// Get Refresh Token (async).
+    /// </summary>
+    Task<AccessTokenResponse> GetRefreshTokenAsync(string oldToken);
 }

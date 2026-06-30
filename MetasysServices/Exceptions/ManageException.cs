@@ -1,35 +1,33 @@
-﻿using Flurl.Http;
+using Flurl.Http;
 using System.Net;
 
-namespace JohnsonControls.Metasys.BasicServices
+namespace JohnsonControls.Metasys.BasicServices;
+/// <summary>
+/// Manage Http exceptions.
+/// </summary>
+public sealed class ManageException
 {
     /// <summary>
-    /// Manage Http exceptions.
+    /// Throws a Metasys Exception from a Flurl.Http exception.
     /// </summary>
-    public sealed class ManageException
+    /// <param name="exception">The exception to catch.</param>
+    public static void ThrowHttpException(FlurlHttpException exception)
     {
-        /// <summary>
-        /// Throws a Metasys Exception from a Flurl.Http exception.
-        /// </summary>
-        /// <param name="exception">The exception to catch.</param>
-        public static void ThrowHttpException(FlurlHttpException exception)
+        if ((HttpStatusCode)exception.Call.Response.StatusCode == HttpStatusCode.NotFound)
         {
-            if (exception.Call.Response.StatusCode == HttpStatusCode.NotFound)
-            {
-                throw new MetasysHttpNotFoundException(exception);
-            }
-            if (exception.GetType() == typeof(FlurlParsingException))
-            {
-                throw new MetasysHttpParsingException((FlurlParsingException)exception);
-            }
-            else if (exception.GetType() == typeof(FlurlHttpTimeoutException))
-            {
-                throw new MetasysHttpTimeoutException((FlurlHttpTimeoutException)exception);
-            }
-            else
-            {
-                throw new MetasysHttpException(exception);
-            }
+            throw new MetasysHttpNotFoundException(exception);
+        }
+        if (exception.GetType() == typeof(FlurlParsingException))
+        {
+            throw new MetasysHttpParsingException((FlurlParsingException)exception);
+        }
+        else if (exception.GetType() == typeof(FlurlHttpTimeoutException))
+        {
+            throw new MetasysHttpTimeoutException((FlurlHttpTimeoutException)exception);
+        }
+        else
+        {
+            throw new MetasysHttpException(exception);
         }
     }
 }

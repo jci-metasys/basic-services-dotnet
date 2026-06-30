@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ namespace WeatherForecastApp
             uri.Query = $"APPID={this.apiKey}&lat={latitude}&lon={longitude}&units=metric";
             var response = await client.GetAsync(uri.ToString());
             var stringResult = await response.Content.ReadAsStringAsync();
-            var forecastResult = JsonConvert.DeserializeObject<ForecastResult>(stringResult);
+            var forecastResult = JsonSerializer.Deserialize<ForecastResult>(stringResult);
             return forecastResult;
         }
 

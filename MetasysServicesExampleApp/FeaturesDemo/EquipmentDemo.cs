@@ -1,40 +1,36 @@
-﻿using JohnsonControls.Metasys.BasicServices;
+using JohnsonControls.Metasys.BasicServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MetasysServicesExampleApp.FeaturesDemo
+namespace MetasysServicesExampleApp.FeaturesDemo;
+public class EquipmentDemo
 {
-    public class EquipmentDemo
-    {
-        private MetasysClient client;
-        private LogInitializer log;
+    private MetasysClient client;
 
-        public EquipmentDemo(MetasysClient client)
+    public EquipmentDemo(MetasysClient client)
+    {
+        this.client = client;
+    }
+    public void Run()
+    {
+        try
         {
-            this.client = client;
-            log = new LogInitializer(typeof(SpacesDemo));
+            // Select a point
+            Console.WriteLine("\nPlease enter the equipment ID to retrieve all related points:");
+            string equipmentID = Console.ReadLine();
+            IEnumerable<MetasysPoint> equipmentPoints = client.Equipments.GetPoints((ObjectId)new Guid(equipmentID));
+            Console.WriteLine($"Points found: {equipmentPoints.Count()}");
+            foreach (var p in equipmentPoints)
+            {
+                Console.WriteLine($"\n{p.ShortName}: {p.Label}, {p.PresentValue?.StringValue}");
+            }
         }
-        public void Run()
+        catch (Exception exception)
         {
-            try
-            {
-                // Select a point
-                Console.WriteLine("\nPlease enter the equipment ID to retrieve all related points:");
-                string equipmentID = Console.ReadLine();
-                IEnumerable<MetasysPoint> equipmentPoints = client.GetEquipmentPoints(new Guid(equipmentID));
-                Console.WriteLine($"Points found: {equipmentPoints.Count()}");
-                foreach (var p in equipmentPoints)
-                {
-                    Console.WriteLine($"\n{p.ShortName}: {p.Label}, {p.PresentValue?.StringValue}");
-                }
-            }
-            catch (Exception exception)
-            {
-                log.Logger.Error(string.Format("An error occured while getting space information - {0}", exception.Message));
-                Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
-            }
-            Console.ReadLine();
+            Console.Error.WriteLine(string.Format("An error occured while getting space information - {0}", exception.Message));
+            Console.WriteLine("\n \nAn Error occurred. Press Enter to return to Main Menu");
         }
+        Console.ReadLine();
     }
 }

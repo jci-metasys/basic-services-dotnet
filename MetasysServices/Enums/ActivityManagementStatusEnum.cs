@@ -1,22 +1,20 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
-namespace JohnsonControls.Metasys.BasicServices
+namespace JohnsonControls.Metasys.BasicServices;
+/// <summary>
+/// Enumeration of possible values for editing an Alarm.
+/// </summary>
+
+public enum ActivityManagementStatusEnum
 {
     /// <summary>
-    /// Enumeration of possible values for editing an Alarm.
+    /// Acknowledged Alarm
     /// </summary>
-
-    public enum ActivityManagementStatusEnum
-    {
-        /// <summary>
-        /// Acknowledged Alarm
-        /// </summary>
-        [Description("Acknowledged")]
-        acknowledged = 0,
-        /// <summary>
-        /// Discared Alarm
-        /// </summary>
-        [Description("Discarded")]
-        discarded = 1
-    }
+    [Description("Acknowledged")]
+    acknowledged = 0,
+    /// <summary>
+    /// Discared Alarm
+    /// </summary>
+    [Description("Discarded")]
+    discarded = 1
 }

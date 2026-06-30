@@ -1,26 +1,24 @@
-﻿using System.Linq;
+using System.Linq;
 
-namespace JohnsonControls.Metasys.BasicServices
+namespace JohnsonControls.Metasys.BasicServices;
+/// <summary>
+/// Provides Subscription Info
+/// </summary>
+internal class SubscriptionInfo
 {
     /// <summary>
-    /// Provides Subscription Info
+    /// Subscription Identifier (String)
     /// </summary>
-    internal class SubscriptionInfo
+    public string Id { get; }
+
+    /// <summary>
+    /// Subscription Url
+    /// </summary>
+    public string Url { get; }
+
+    public SubscriptionInfo(string subscriptionUrl)
     {
-        /// <summary>
-        /// Subscription Identifier (String)
-        /// </summary>
-        public string Id { get; }
-
-        /// <summary>
-        /// Subscription Url
-        /// </summary>
-        public string Url { get; }
-
-        public SubscriptionInfo(string subscriptionUrl)
-        {
-            Url = subscriptionUrl;
-            Id = subscriptionUrl.Split('/').Last();
-        }
+        Url = subscriptionUrl;
+        Id = subscriptionUrl.Split('/').Last();
     }
 }

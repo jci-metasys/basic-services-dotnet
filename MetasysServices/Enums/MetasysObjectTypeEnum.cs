@@ -1,21 +1,19 @@
-﻿namespace JohnsonControls.Metasys.BasicServices
+namespace JohnsonControls.Metasys.BasicServices;
+/// <summary>
+/// Collection of Metasys Object Types.
+/// </summary>
+public enum MetasysObjectTypeEnum
 {
     /// <summary>
-    /// Collection of Metasys Object Types.
+    /// Generic Metasys Object.
     /// </summary>
-    public enum MetasysObjectTypeEnum
-    {
-        /// <summary>
-        /// Generic Metasys Object.
-        /// </summary>
-        Object = 1,
-        /// <summary>
-        /// Metasys Object of type Space.
-        /// </summary>
-        Space = 2,
-        /// <summary>
-        /// Metasys Object of type Equipment.
-        /// </summary>
-        Equipment = 3
-    }
+    Object = 1,
+    /// <summary>
+    /// Metasys Object of type Space.
+    /// </summary>
+    Space = 2,
+    /// <summary>
+    /// Metasys Object of type Equipment.
+    /// </summary>
+    Equipment = 3
 }

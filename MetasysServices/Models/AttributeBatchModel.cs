@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace JohnsonControls.Metasys.BasicServices
+namespace JohnsonControls.Metasys.BasicServices;
+internal class AttributeBatchModel
 {
-    internal class AttributeBatchModel
-    {
-        public string Method { get; set; }
-        public List<Request> Requests { get; set; }
-    }
+    public string Method { get; set; }
+    public List<Request> Requests { get; set; }
+}
 
-    internal class Request
-    {
-        public string Id { get; set; }
-        public string RelativeUrl { get; set; }
-    }
+internal class Request
+{
+    public string Id { get; set; }
+    public string RelativeUrl { get; set; }
 }

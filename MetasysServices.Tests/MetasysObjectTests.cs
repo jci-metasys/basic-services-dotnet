@@ -1,5 +1,4 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 using System.Linq;
 
@@ -13,7 +12,7 @@ public class MetasysObjectTests
     public void Test()
     {
         // Arrange
-        var objectTree = JsonConvert.DeserializeObject<JToken>(ObjectTreeThreeLevels);
+        var objectTree = JsonNode.Parse(ObjectTreeThreeLevels);
 
         // Act
         var metasysObject = new MetasysObject(objectTree, ApiVersion.v4);

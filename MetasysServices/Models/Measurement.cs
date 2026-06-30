@@ -1,53 +1,51 @@
-﻿namespace JohnsonControls.Metasys.BasicServices
+namespace JohnsonControls.Metasys.BasicServices;
+/// <summary>
+/// A measurement expressed in terms of value and unit.
+/// </summary>
+public class Measurement
 {
     /// <summary>
-    /// A measurement expressed in terms of value and unit.
+    /// The value of measurement.
     /// </summary>
-    public class Measurement
+    public string Value { get; set; }
+    /// <summary>
+    /// Route to the endpoind for the current unit enumset.
+    /// </summary>
+    /// <remarks> This is available only in Metasys API v2 and v1. </remarks>
+    public string UnitsUrl { get; set; }
+    /// <summary>
+    /// Fully qualified enumeration value for the unit.
+    /// </summary>
+    /// <remarks> This is available since Metasys API v3. </remarks>
+    public string Units { get; set; }
+
+    /// <summary>
+    /// Returns a value indicating whether this instance has values equal to a specified object.
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    public override bool Equals(object? obj)
     {
-        /// <summary>
-        /// The value of measurement.
-        /// </summary>
-        public string Value { get; set; }
-        /// <summary>
-        /// Route to the endpoind for the current unit enumset.
-        /// </summary>
-        /// <remarks> This is available only in Metasys API v2 and v1. </remarks>
-        public string UnitsUrl { get; set; }
-        /// <summary>
-        /// Fully qualified enumeration value for the unit.
-        /// </summary>
-        /// <remarks> This is available since Metasys API v3. </remarks>
-        public string Units { get; set; }
-
-        /// <summary>
-        /// Returns a value indicating whether this instance has values equal to a specified object.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
+        if (obj != null && obj is Measurement)
         {
-            if (obj != null && obj is Measurement)
-            {
-                var o = (Measurement)obj;
-                // Compare each properties one by one for better performance
-                return this.Value == o.Value && this.UnitsUrl == o.UnitsUrl && this.Units == o.Units;
-            }
-            return false;
+            var o = (Measurement)obj;
+            // Compare each properties one by one for better performance
+            return this.Value == o.Value && this.UnitsUrl == o.UnitsUrl && this.Units == o.Units;
         }
-
-        /// <summary></summary>
-        public override int GetHashCode()
-        {
-            var code = 13;
-            // Calculate hash on each properties one by one
-            code = (code * 7) + Value.GetHashCode();
-            if (UnitsUrl != null)
-                code = (code * 7) + UnitsUrl.GetHashCode();
-            if (this.Units != null)
-                code = (code * 7) + Units.GetHashCode();
-            return code;
-        }
-
+        return false;
     }
+
+    /// <summary></summary>
+    public override int GetHashCode()
+    {
+        var code = 13;
+        // Calculate hash on each properties one by one
+        code = (code * 7) + Value.GetHashCode();
+        if (UnitsUrl != null)
+            code = (code * 7) + UnitsUrl.GetHashCode();
+        if (this.Units != null)
+            code = (code * 7) + Units.GetHashCode();
+        return code;
+    }
+
 }
